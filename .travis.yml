@@ -1,0 +1,21 @@
+language: python
+
+python:
+  - "3.4"
+  - "2.7"
+
+branches:
+  only:
+    - master
+
+# command to install requirements
+install:
+  - python setup.py -q develop
+  - pip install -r requirements-test.txt
+
+# command to run tests, e.g. python setup.py test
+script:
+  - nosetests --with-coverage --cover-package=netconfig_gen
+
+after_success:
+  coveralls
