@@ -2,9 +2,9 @@
 import sys
 from setuptools import setup, find_packages
 
-# avoid networkx ImportError
+# avoid ImportError
 sys.path.insert(0, 'netconfig_gen')
-from info import get_version
+from version import get_version
 sys.path.remove('netconfig_gen')
 
 
