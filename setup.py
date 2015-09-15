@@ -33,19 +33,16 @@ def get_install_requires():
             continue
         # add line to requirements
         requirements.append(line.replace('\n', ''))
-    # add py2-ipaddress if python2
-    if sys.version_info.major < 3:
-        requirements.append('py2-ipaddress')
     return requirements
 
 
 setup(
     name='netjsonconfig',
     version=get_version(),
-    description="TODO",
+    description="Converts NetJSON DeviceConfiguration objects to real router configurations",
     long_description=open('README.rst').read(),
     author='Federico Capoano (nemesisdesign)',
-    author_email='ninux-dev@ml.ninux.org',
+    author_email='f.capoano@cineca.it',
     license='MIT',
     url='https://github.com/openwisp/netjsonconfig',
     packages=find_packages(exclude=['tests', 'tests.*', 'docs', 'docs.*']),
