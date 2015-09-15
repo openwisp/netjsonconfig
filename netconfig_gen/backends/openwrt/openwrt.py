@@ -36,7 +36,8 @@ class OpenWrt(object):
 
     def _clean(self, output):
         return output.replace('    ', '')\
-                     .replace('option', '    option')
+                     .replace('option', '    option')\
+                     .replace('list', '    list')
 
     def _gen_network(self):
         t = self.env.get_template('network.uci')

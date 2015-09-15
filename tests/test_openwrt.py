@@ -29,7 +29,6 @@ class TestOpenWrt(unittest.TestCase):
 
 config interface 'lo'
     option ifname 'lo'
-    option proto 'static'
-    option ipaddr '127.0.0.1/8'
+    list ipaddr '127.0.0.1/8'
 """
         self.assertEqual(o.gen(), expected)

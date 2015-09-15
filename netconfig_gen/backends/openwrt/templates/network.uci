@@ -3,12 +3,11 @@ package network
 {% for interface in interfaces %}
 config interface '{{ interface.name }}'
     option ifname '{{ interface.name }}'
-{% for address in interface.addresses %}
-    {% if address.family == 'ipv4' %}
-        option proto '{{ address.proto }}'
-        option ipaddr '{{ address.address }}/{{ address.mask }}'
-    {% elif address.family == 'ipv6' %}
-        option ip6addr '{{ address.address }}/{{ address.mask }}'
-    {% endif %}
-{% endfor %}
+    {% for address in interface.addresses %}
+        {% if address.family == 'ipv4' %}
+            list ipaddr '{{ address.address }}/{{ address.mask }}'
+        {% elif address.family == 'ipv6' %}
+            list ip6addr '{{ address.address }}/{{ address.mask }}'
+        {% endif %}
+    {% endfor %}
 {% endfor %}
