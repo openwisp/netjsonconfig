@@ -105,3 +105,35 @@ config interface 'eth0'
     option proto 'dhcp'
 """
         self.assertEqual(o.gen(), expected)
+
+    def test_multiple_dhcp(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4"
+                        },
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv6"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'dhcp'
+
+config interface 'eth0_2'
+    option ifname 'eth0'
+    option proto 'dhcpv6'
+"""
+        self.assertEqual(o.gen(), expected)

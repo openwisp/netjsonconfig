@@ -54,6 +54,7 @@ class OpenWrt(object):
             for address in interface.get('addresses', []):
                 address_key = None
                 address_value = None
+                proto = address.get('proto', 'static')
                 if counter > 1:
                     name = '{name}_{counter}'.format(name=uci_name, counter=counter)
                 else:
@@ -62,12 +63,13 @@ class OpenWrt(object):
                     address_key = 'ipaddr'
                 elif address['family'] == 'ipv6':
                     address_key = 'ip6addr'
+                    proto = proto.replace('dhcp', 'dhcpv6')
                 if address.get('address') and address.get('mask'):
                     address_value = '{address}/{mask}'.format(**address)
                 uci_interfaces.append({
                     'uci_name': name,
                     'name': interface['name'],
-                    'proto': address.get('proto', 'static'),
+                    'proto': proto,
                     'address_key': address_key,
                     'address_value': address_value
                 })
