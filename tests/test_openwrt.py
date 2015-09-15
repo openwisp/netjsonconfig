@@ -31,7 +31,7 @@ config interface 'lo'
     option proto 'static'
     option ipaddr '127.0.0.1/8'
 """
-        self.assertEqual(o.gen(), expected)
+        self.assertEqual(o.render(), expected)
 
     def test_multiple_ip(self):
         o = OpenWrt({
@@ -80,7 +80,7 @@ config interface 'eth0_1_3'
     option proto 'static'
     option ip6addr 'fd87::1/128'
 """
-        self.assertEqual(o.gen(), expected)
+        self.assertEqual(o.render(), expected)
 
     def test_dhcp(self):
         o = OpenWrt({
@@ -104,7 +104,7 @@ config interface 'eth0'
     option ifname 'eth0'
     option proto 'dhcp'
 """
-        self.assertEqual(o.gen(), expected)
+        self.assertEqual(o.render(), expected)
 
     def test_multiple_dhcp(self):
         o = OpenWrt({
@@ -136,4 +136,4 @@ config interface 'eth0_2'
     option ifname 'eth0'
     option proto 'dhcpv6'
 """
-        self.assertEqual(o.gen(), expected)
+        self.assertEqual(o.render(), expected)

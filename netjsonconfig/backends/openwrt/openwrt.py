@@ -19,7 +19,7 @@ class OpenWrt(object):
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt', 'templates'),
                                trim_blocks=True)
 
-    def gen(self):
+    def render(self):
         output = ''
         for renderer_class in self.renderers:
             renderer = renderer_class(self.config, self.env)
