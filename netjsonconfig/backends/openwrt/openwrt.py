@@ -37,19 +37,39 @@ class OpenWrt(object):
     def _clean(self, output):
         return output.replace('    ', '')\
                      .replace('option', '    option')\
-                     .replace('list', '    list')
+                     .replace('list', '    list')[0:-1]
 
     def _gen_network(self):
         t = self.env.get_template('network.uci')
         interfaces = self._prepare_interfaces()
+        # import pdb; pdb.set_trace()
         return t.render(interfaces=interfaces)
 
     def _prepare_interfaces(self):
-        interfaces = self.config.get('interfaces')[:]
-        proto_set = set()
+        interfaces = self.config.get('interfaces')
+        uci_interfaces = []
         for interface in interfaces:
+            counter = 1
+            uci_name = interface['name'].replace('.', '_')
             for address in interface.get('addresses', []):
-                proto_set.add(address.get('proto', 'static'))
-            interface['uci_name'] = interface['name'].replace('.', '_')
-            interface['proto'] = list(proto_set)[0]
-        return interfaces
+                address_key = None
+                address_value = None
+                if counter > 1:
+                    name = '{name}_{counter}'.format(name=uci_name, counter=counter)
+                else:
+                    name = uci_name
+                if address['family'] == 'ipv4':
+                    address_key = 'ipaddr'
+                elif address['family'] == 'ipv6':
+                    address_key = 'ip6addr'
+                if address.get('address') and address.get('mask'):
+                    address_value = '{address}/{mask}'.format(**address)
+                uci_interfaces.append({
+                    'uci_name': name,
+                    'name': interface['name'],
+                    'proto': address.get('proto', 'static'),
+                    'address_key': address_key,
+                    'address_value': address_value
+                })
+                counter += 1
+        return uci_interfaces

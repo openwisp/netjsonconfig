@@ -4,15 +4,8 @@ package network
 config interface '{{ interface.uci_name }}'
     option ifname '{{ interface.name }}'
     option proto '{{ interface.proto }}'
-    {% for address in interface.addresses %}
-        {% if address.family == 'ipv4' %}
-            {% if address.address and address.mask %}
-                list ipaddr '{{ address.address }}/{{ address.mask }}'
-            {% endif %}
-        {% elif address.family == 'ipv6' %}
-            {% if address.address and address.mask %}
-                list ip6addr '{{ address.address }}/{{ address.mask }}'
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+    {% if interface.address_value %}
+        option {{ interface.address_key }} '{{ interface.address_value }}'
+    {% endif %}
+
 {% endfor %}
