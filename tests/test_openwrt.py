@@ -29,6 +29,7 @@ class TestOpenWrt(unittest.TestCase):
 
 config interface 'lo'
     option ifname 'lo'
+    option proto 'static'
     list ipaddr '127.0.0.1/8'
 """
         self.assertEqual(o.gen(), expected)
@@ -44,16 +45,19 @@ config interface 'lo'
                         {
                             "address": "192.168.1.1",
                             "mask": 24,
+                            "proto": "static",
                             "family": "ipv4"
                         },
                         {
                             "address": "192.168.2.1",
                             "mask": 24,
+                            "proto": "static",
                             "family": "ipv4"
                         },
                         {
                             "address": "fd87::1",
                             "mask": 128,
+                            "proto": "static",
                             "family": "ipv6"
                         }
                     ]
@@ -64,6 +68,7 @@ config interface 'lo'
 
 config interface 'eth0'
     option ifname 'eth0'
+    option proto 'static'
     list ipaddr '192.168.1.1/24'
     list ipaddr '192.168.2.1/24'
     list ip6addr 'fd87::1/128'

@@ -3,6 +3,7 @@ package network
 {% for interface in interfaces %}
 config interface '{{ interface.name }}'
     option ifname '{{ interface.name }}'
+    option proto '{{ interface.proto }}'
     {% for address in interface.addresses %}
         {% if address.family == 'ipv4' %}
             list ipaddr '{{ address.address }}/{{ address.mask }}'

@@ -41,4 +41,14 @@ class OpenWrt(object):
 
     def _gen_network(self):
         t = self.env.get_template('network.uci')
-        return t.render(interfaces=self.config.get('interfaces'))
+        interfaces = self._prepare_interfaces()
+        return t.render(interfaces=interfaces)
+
+    def _prepare_interfaces(self):
+        interfaces = self.config.get('interfaces')[:]
+        proto_set = set()
+        for interface in interfaces:
+            for address in interface.get('addresses', []):
+                proto_set.add(address.get('proto', 'static'))
+            interface['proto'] = list(proto_set)[0]
+        return interfaces
