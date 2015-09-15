@@ -64,7 +64,57 @@ TODO
 
 .. code-block:: python
 
-    from netjsonconfig import TODO
+    from netjsonconfig import OpenWrt
+
+    o = OpenWrt({
+        "type": "DeviceConfiguration",
+        "interfaces": [
+            {
+                "name": "eth0.1",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "address": "192.168.1.1",
+                        "mask": 24,
+                        "proto": "static",
+                        "family": "ipv4"
+                    },
+                    {
+                        "address": "192.168.2.1",
+                        "mask": 24,
+                        "proto": "static",
+                        "family": "ipv4"
+                    },
+                    {
+                        "address": "fd87::1",
+                        "mask": 128,
+                        "proto": "static",
+                        "family": "ipv6"
+                    }
+                ]
+            }
+        ]
+    })
+    print(o.render())
+
+Will print::
+
+    package network
+
+    config interface 'eth0_1'
+        option ifname 'eth0.1'
+        option proto 'static'
+        option ipaddr '192.168.1.1/24'
+
+    config interface 'eth0_1_2'
+        option ifname 'eth0.1'
+        option proto 'static'
+        option ipaddr '192.168.2.1/24'
+
+    config interface 'eth0_1_3'
+        option ifname 'eth0.1'
+        option proto 'static'
+        option ip6addr 'fd87::1/128'
 
 Running tests
 -------------
