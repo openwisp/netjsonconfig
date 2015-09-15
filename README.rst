@@ -23,7 +23,11 @@ netjsonconfig
 
 ------------
 
-TODO
+Converts NetJSON DeviceConfiguration objects to real router configurations.
+
+**Currently we are working only on OpenWrt support**.
+
+**Work in progress**.
 
 Install stable version from pypi
 --------------------------------
@@ -59,8 +63,6 @@ If you want to contribute, install your cloned fork:
 
 Basic Usage Example
 -------------------
-
-TODO
 
 .. code-block:: python
 
@@ -154,7 +156,7 @@ See test coverage with:
 Contributing
 ------------
 
-1. Join the `ninux-dev mailing list`_
+1. Announce your intentions in the `issue tracker <https://github.com/openwisp/netjsonconfig/issues>`__
 2. Fork this repo and install it
 3. Follow `PEP8, Style Guide for Python Code`_
 4. Write code
