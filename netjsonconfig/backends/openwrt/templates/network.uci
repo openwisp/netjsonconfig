@@ -6,9 +6,13 @@ config interface '{{ interface.uci_name }}'
     option proto '{{ interface.proto }}'
     {% for address in interface.addresses %}
         {% if address.family == 'ipv4' %}
-            list ipaddr '{{ address.address }}/{{ address.mask }}'
+            {% if address.address and address.mask %}
+                list ipaddr '{{ address.address }}/{{ address.mask }}'
+            {% endif %}
         {% elif address.family == 'ipv6' %}
-            list ip6addr '{{ address.address }}/{{ address.mask }}'
+            {% if address.address and address.mask %}
+                list ip6addr '{{ address.address }}/{{ address.mask }}'
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endfor %}

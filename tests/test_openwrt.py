@@ -73,3 +73,27 @@ config interface 'eth0_1'
     list ip6addr 'fd87::1/128'
 """
         self.assertEqual(o.gen(), expected)
+
+    def test_dhcp(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'dhcp'
+"""
+        self.assertEqual(o.gen(), expected)
