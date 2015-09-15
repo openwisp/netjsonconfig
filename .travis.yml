@@ -15,7 +15,7 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - nosetests --with-coverage --cover-package=netconfig_gen
+  - nosetests --with-coverage --cover-package=netjsonconfig
 
 after_success:
   coveralls

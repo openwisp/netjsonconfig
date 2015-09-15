@@ -3,9 +3,9 @@ import sys
 from setuptools import setup, find_packages
 
 # avoid ImportError
-sys.path.insert(0, 'netconfig_gen')
+sys.path.insert(0, 'netjsonconfig')
 from version import get_version
-sys.path.remove('netconfig_gen')
+sys.path.remove('netjsonconfig')
 
 
 if sys.argv[-1] == 'setup.py':
@@ -33,18 +33,21 @@ def get_install_requires():
             continue
         # add line to requirements
         requirements.append(line.replace('\n', ''))
+    # add py2-ipaddress if python2
+    if sys.version_info.major < 3:
+        requirements.append('py2-ipaddress')
     return requirements
 
 
 setup(
-    name='netconfig_gen',
+    name='netjsonconfig',
     version=get_version(),
     description="TODO",
     long_description=open('README.rst').read(),
     author='Federico Capoano (nemesisdesign)',
     author_email='ninux-dev@ml.ninux.org',
     license='MIT',
-    url='https://github.com/openwisp/netconfig_gen',
+    url='https://github.com/openwisp/netjsonconfig',
     packages=find_packages(exclude=['tests', 'tests.*', 'docs', 'docs.*']),
     zip_safe=False,
     classifiers=[

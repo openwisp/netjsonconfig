@@ -1,25 +1,25 @@
-netconfig-gen
+netjsonconfig
 =============
 
-.. image:: https://travis-ci.org/openwisp/netconfig-gen.png
-   :target: https://travis-ci.org/openwisp/netconfig-gen
+.. image:: https://travis-ci.org/openwisp/netjsonconfig.png
+   :target: https://travis-ci.org/openwisp/netjsonconfig
 
-.. image:: https://coveralls.io/repos/openwisp/netconfig-gen/badge.png
-  :target: https://coveralls.io/r/openwisp/netconfig-gen
+.. image:: https://coveralls.io/repos/openwisp/netjsonconfig/badge.png
+  :target: https://coveralls.io/r/openwisp/netjsonconfig
 
-.. image:: https://landscape.io/github/openwisp/netconfig-gen/master/landscape.png
-   :target: https://landscape.io/github/openwisp/netconfig-gen/master
+.. image:: https://landscape.io/github/openwisp/netjsonconfig/master/landscape.png
+   :target: https://landscape.io/github/openwisp/netjsonconfig/master
    :alt: Code Health
 
-.. image:: https://requires.io/github/openwisp/netconfig-gen/requirements.png?branch=master
-   :target: https://requires.io/github/openwisp/netconfig-gen/requirements/?branch=master
+.. image:: https://requires.io/github/openwisp/netjsonconfig/requirements.png?branch=master
+   :target: https://requires.io/github/openwisp/netjsonconfig/requirements/?branch=master
    :alt: Requirements Status
 
-.. image:: https://badge.fury.io/py/netconfig-gen.png
-   :target: http://badge.fury.io/py/netconfig-gen
+.. image:: https://badge.fury.io/py/netjsonconfig.png
+   :target: http://badge.fury.io/py/netjsonconfig
 
-.. image:: https://img.shields.io/pypi/dm/netconfig-gen.svg
-   :target: https://pypi.python.org/pypi/netconfig-gen
+.. image:: https://img.shields.io/pypi/dm/netjsonconfig.svg
+   :target: https://pypi.python.org/pypi/netjsonconfig
 
 ------------
 
@@ -32,7 +32,7 @@ Install from pypi:
 
 .. code-block:: shell
 
-    pip install netconfig-gen
+    pip install netjsonconfig
 
 Install development version
 ---------------------------
@@ -41,20 +41,20 @@ Install tarball:
 
 .. code-block:: shell
 
-    pip install https://github.com/openwisp/netconfig-gen/tarball/master
+    pip install https://github.com/openwisp/netjsonconfig/tarball/master
 
 Alternatively you can install via pip using git:
 
 .. code-block:: shell
 
-    pip install -e git+git://github.com/openwisp/netconfig-gen#egg=netconfig_gen
+    pip install -e git+git://github.com/openwisp/netjsonconfig#egg=netjsonconfig
 
 If you want to contribute, install your cloned fork:
 
 .. code-block:: shell
 
-    git clone git@github.com:<your_fork>/netconfig-gen.git
-    cd netconfig-gen
+    git clone git@github.com:<your_fork>/netjsonconfig.git
+    cd netjsonconfig
     python setup.py develop
 
 Basic Usage Example
@@ -64,7 +64,7 @@ TODO
 
 .. code-block:: python
 
-    from netconfig_gen import TODO
+    from netjsonconfig import TODO
 
 Running tests
 -------------
@@ -73,8 +73,8 @@ Install your forked repo:
 
 .. code-block:: shell
 
-    git clone git://github.com/<your_fork>/netconfig-gen
-    cd netconfig-gen/
+    git clone git://github.com/<your_fork>/netjsonconfig
+    cd netjsonconfig/
     python setup.py develop
 
 Install test requirements:
@@ -99,7 +99,7 @@ See test coverage with:
 
 .. code-block:: shell
 
-    coverage run --source=netconfig_gen runtests.py && coverage report
+    coverage run --source=netjsonconfig runtests.py && coverage report
 
 Contributing
 ------------

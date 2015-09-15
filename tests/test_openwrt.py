@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from netconfig_gen import OpenWrt
+from netjsonconfig import OpenWrt
 
 
 class TestOpenWrt(unittest.TestCase):

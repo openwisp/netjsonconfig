@@ -12,7 +12,7 @@ class OpenWrt(object):
 
     def __init__(self, config):
         self.config = config
-        self.env = Environment(loader=PackageLoader('netconfig_gen.backends.openwrt', 'templates'),
+        self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt', 'templates'),
                                trim_blocks=True)
 
     def parse(self, config):
