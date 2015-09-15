@@ -38,7 +38,7 @@ config interface 'lo'
             "type": "DeviceConfiguration",
             "interfaces": [
                 {
-                    "name": "eth0",
+                    "name": "eth0.1",
                     "type": "ethernet",
                     "addresses": [
                         {
@@ -65,8 +65,8 @@ config interface 'lo'
         })
         expected = """package network
 
-config interface 'eth0'
-    option ifname 'eth0'
+config interface 'eth0_1'
+    option ifname 'eth0.1'
     option proto 'static'
     list ipaddr '192.168.1.1/24'
     list ipaddr '192.168.2.1/24'

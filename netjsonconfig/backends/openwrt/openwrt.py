@@ -50,5 +50,6 @@ class OpenWrt(object):
         for interface in interfaces:
             for address in interface.get('addresses', []):
                 proto_set.add(address.get('proto', 'static'))
+            interface['uci_name'] = interface['name'].replace('.', '_')
             interface['proto'] = list(proto_set)[0]
         return interfaces
