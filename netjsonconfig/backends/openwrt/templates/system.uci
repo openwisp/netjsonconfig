@@ -1,0 +1,7 @@
+{% if not is_empty %}
+    package system
+
+    config system
+        option hostname '{{ system.hostname }}'
+        option timezone '{{ system.timezone }}'
+{% endif %}

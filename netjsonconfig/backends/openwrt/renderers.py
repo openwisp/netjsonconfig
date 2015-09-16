@@ -76,3 +76,25 @@ class NetworkRenderer(BaseRenderer):
             counter += 1
 
         return uci_routes
+
+
+class SystemRenderer(BaseRenderer):
+    """
+    Renders content importable with:
+        uci import system
+    """
+    block_name = 'system'
+
+    def get_context(self):
+        system = self._get_system()
+        return dict(system=system,
+                    is_empty=system is None)
+
+    def _get_system(self):
+        general = self.config.get('general', None)
+        if general is None:
+            return None
+        return {
+            'hostname': general.get('hostname', 'OpenWRT'),
+            'timezone': general.get('timezone', 'UTC'),
+        }

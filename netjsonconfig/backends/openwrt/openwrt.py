@@ -1,7 +1,7 @@
 import json
 
 from .schema import schema
-from .renderers import NetworkRenderer
+from .renderers import NetworkRenderer, SystemRenderer
 from ...exceptions import ValidationError
 
 from jinja2 import Environment, PackageLoader
@@ -11,6 +11,7 @@ class OpenWrt(object):
     """ OpenWrt Backend """
     schema = schema
     renderers = [
+        SystemRenderer,
         NetworkRenderer
     ]
 

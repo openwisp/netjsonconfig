@@ -267,3 +267,19 @@ config route6
     option source 'fd87::10'
 """
         self.assertEqual(o.render(), expected)
+
+    def test_system(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "general": {
+                "hostname": "test_system",
+                "timezone": "CET-1CEST,M3.5.0,M10.5.0/3"
+            }
+        })
+        expected = """package system
+
+config system
+    option hostname 'test_system'
+    option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
+"""
+        self.assertEqual(o.render(), expected)

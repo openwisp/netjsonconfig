@@ -30,6 +30,11 @@ schema = {
                 "description": {
                     "id": "description",
                     "type": "string"
+                },
+                "timezone": {
+                    "id": "timezone",
+                    "type": "string",
+                    "default": "UTC"
                 }
             }
         },
