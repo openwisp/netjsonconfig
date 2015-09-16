@@ -1,28 +1,30 @@
-package network
+{% if not is_empty %}
+    package network
 
-{% for interface in interfaces %}
-config interface '{{ interface.uci_name }}'
-    option ifname '{{ interface.name }}'
-    option proto '{{ interface.proto }}'
-    {% if interface.address_value %}
-        option {{ interface.address_key }} '{{ interface.address_value }}'
-    {% endif %}
+    {% for interface in interfaces %}
+    config interface '{{ interface.uci_name }}'
+        option ifname '{{ interface.name }}'
+        option proto '{{ interface.proto }}'
+        {% if interface.address_value %}
+            option {{ interface.address_key }} '{{ interface.address_value }}'
+        {% endif %}
 
-{% endfor %}
-{% for route in routes %}
-config {{ route.version }}{% if route.version == 'route' %} '{{ route.name }}'{% endif %}
+    {% endfor %}
+    {% for route in routes %}
+    config {{ route.version }}{% if route.version == 'route' %} '{{ route.name }}'{% endif %}
 
-    option interface '{{ route.interface }}'
-    option target '{{ route.target }}'
-    {% if route.version == 'route' %}
-    option netmask '{{ route.netmask }}'
-    {% endif %}
-    option gateway '{{ route.gateway }}'
-    {% if route.metric %}
-        option metric '{{ route.metric }}'
-    {% endif %}
-    {% if route.source %}
-        option source '{{ route.source }}'
-    {% endif %}
+        option interface '{{ route.interface }}'
+        option target '{{ route.target }}'
+        {% if route.version == 'route' %}
+        option netmask '{{ route.netmask }}'
+        {% endif %}
+        option gateway '{{ route.gateway }}'
+        {% if route.metric %}
+            option metric '{{ route.metric }}'
+        {% endif %}
+        {% if route.source %}
+            option source '{{ route.source }}'
+        {% endif %}
 
-{% endfor %}
+    {% endfor %}
+{% endif %}

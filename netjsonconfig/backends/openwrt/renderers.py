@@ -10,13 +10,15 @@ class NetworkRenderer(BaseRenderer):
     block_name = 'network'
 
     def get_context(self):
-        return {
-            'interfaces': self._get_interfaces(),
-            'routes': self._get_routes(),
-        }
+        interfaces = self._get_interfaces()
+        routes = self._get_routes()
+        is_empty = not interfaces and not routes
+        return dict(interfaces=interfaces,
+                    routes=routes,
+                    is_empty=is_empty)
 
     def _get_interfaces(self):
-        interfaces = self.config.get('interfaces')
+        interfaces = self.config.get('interfaces', [])
         # results container
         uci_interfaces = []
         for interface in interfaces:
@@ -57,12 +59,12 @@ class NetworkRenderer(BaseRenderer):
         # results container
         uci_routes = []
         counter = 1
-
+        # build uci_routes
         for route in routes:
             network = ip_interface(route['destination'])
             version = 'route' if network.version == 4 else 'route6'
             target = network.ip if network.version == 4 else network.network
-            uci_route = {
+            uci_routes.append({
                 'version': version,
                 'name': 'route{0}'.format(counter),
                 'interface': route['device'],
@@ -71,10 +73,8 @@ class NetworkRenderer(BaseRenderer):
                 'gateway': route['next'],
                 'metric': route.get('cost'),
                 'source': route.get('source')
-            }
-            uci_routes.append(uci_route)
+            })
             counter += 1
-
         return uci_routes
 
 
@@ -92,9 +92,9 @@ class SystemRenderer(BaseRenderer):
 
     def _get_system(self):
         general = self.config.get('general', None)
-        if general is None:
-            return None
-        return {
-            'hostname': general.get('hostname', 'OpenWRT'),
-            'timezone': general.get('timezone', 'UTC'),
-        }
+        if general:
+            return {
+                'hostname': general.get('hostname', 'OpenWRT'),
+                'timezone': general.get('timezone', 'UTC'),
+            }
+        return None
