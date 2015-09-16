@@ -201,16 +201,69 @@ config interface 'eth1'
 
 config route 'route1'
     option interface 'eth1'
-    option 'target' '192.168.3.1'
-    option 'netmask' '255.255.255.0'
-    option 'gateway' '192.168.2.1'
+    option target '192.168.3.1'
+    option netmask '255.255.255.0'
+    option gateway '192.168.2.1'
 
 config route 'route2'
     option interface 'eth1'
-    option 'target' '192.168.4.1'
-    option 'netmask' '255.255.255.0'
-    option 'gateway' '192.168.2.2'
+    option target '192.168.4.1'
+    option netmask '255.255.255.0'
+    option gateway '192.168.2.2'
     option metric '2'
     option source '192.168.1.10'
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_ipv6_routes(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "eth1",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "address": "fd87::1",
+                            "mask": 128,
+                            "proto": "static",
+                            "family": "ipv6"
+                        }
+                    ]
+                }
+            ],
+            "routes": [
+                {
+                    "device": "eth1",
+                    "destination": "fd89::1/128",
+                    "next": "fd88::1"
+                },
+                {
+                    "device": "eth1",
+                    "destination": "fd90::1/128",
+                    "next": "fd88::2",
+                    "cost": 3,
+                    "source": "fd87::10"
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'static'
+    option ip6addr 'fd87::1/128'
+
+config route6
+    option interface 'eth1'
+    option target 'fd89::1/128'
+    option gateway 'fd88::1'
+
+config route6
+    option interface 'eth1'
+    option target 'fd90::1/128'
+    option gateway 'fd88::2'
+    option metric '3'
+    option source 'fd87::10'
 """
         self.assertEqual(o.render(), expected)

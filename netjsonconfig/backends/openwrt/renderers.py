@@ -60,10 +60,13 @@ class NetworkRenderer(BaseRenderer):
 
         for route in routes:
             network = ip_interface(route['destination'])
+            version = 'route' if network.version == 4 else 'route6'
+            target = network.ip if network.version == 4 else network.network
             uci_route = {
+                'version': version,
                 'name': 'route{0}'.format(counter),
                 'interface': route['device'],
-                'target': str(network.ip),
+                'target': str(target),
                 'netmask': str(network.netmask),
                 'gateway': route['next'],
                 'metric': route.get('cost'),

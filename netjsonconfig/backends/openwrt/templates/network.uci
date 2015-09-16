@@ -10,11 +10,14 @@ config interface '{{ interface.uci_name }}'
 
 {% endfor %}
 {% for route in routes %}
-config route '{{ route.name }}'
+config {{ route.version }}{% if route.version == 'route' %} '{{ route.name }}'{% endif %}
+
     option interface '{{ route.interface }}'
-    option 'target' '{{ route.target }}'
-    option 'netmask' '{{ route.netmask }}'
-    option 'gateway' '{{ route.gateway }}'
+    option target '{{ route.target }}'
+    {% if route.version == 'route' %}
+    option netmask '{{ route.netmask }}'
+    {% endif %}
+    option gateway '{{ route.gateway }}'
     {% if route.metric %}
         option metric '{{ route.metric }}'
     {% endif %}
