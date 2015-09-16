@@ -9,3 +9,17 @@ config interface '{{ interface.uci_name }}'
     {% endif %}
 
 {% endfor %}
+{% for route in routes %}
+config route '{{ route.name }}'
+    option interface '{{ route.interface }}'
+    option 'target' '{{ route.target }}'
+    option 'netmask' '{{ route.netmask }}'
+    option 'gateway' '{{ route.gateway }}'
+    {% if route.metric %}
+        option metric '{{ route.metric }}'
+    {% endif %}
+    {% if route.source %}
+        option source '{{ route.source }}'
+    {% endif %}
+
+{% endfor %}

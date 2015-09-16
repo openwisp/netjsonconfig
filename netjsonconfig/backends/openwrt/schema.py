@@ -370,16 +370,21 @@ schema = {
                 "title": "Route",
                 "additionalProperties": True,
                 "required": [
+                    "device",
                     "destination",
                     "next"
                 ],
                 "properties": {
-                    "destination": {
-                        "id": "destination",
+                    "device": {
+                        "id": "device",
                         "type": "string"
                     },
                     "next": {
                         "id": "next",
+                        "type": "string"
+                    },
+                    "destination": {
+                        "id": "destination",
                         "type": "string"
                     }
                 }

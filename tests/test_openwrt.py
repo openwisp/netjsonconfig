@@ -53,7 +53,6 @@ config interface 'lo'
     option proto 'static'
     option ipaddr '127.0.0.1/8'
 """
-        print(o.render())
         self.assertEqual(o.render(), expected)
 
     def test_multiple_ip(self):
@@ -103,8 +102,6 @@ config interface 'eth0_1_3'
     option proto 'static'
     option ip6addr 'fd87::1/128'
 """
-        print(o.render())
-        print(expected)
         self.assertEqual(o.render(), expected)
 
     def test_dhcp(self):
@@ -160,5 +157,60 @@ config interface 'eth0'
 config interface 'eth0_2'
     option ifname 'eth0'
     option proto 'dhcpv6'
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_ipv4_routes(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "eth1",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ],
+            "routes": [
+                {
+                    "device": "eth1",
+                    "destination": "192.168.3.1/24",
+                    "next": "192.168.2.1"
+                },
+                {
+                    "device": "eth1",
+                    "destination": "192.168.4.1/24",
+                    "next": "192.168.2.2",
+                    "cost": 2,
+                    "source": "192.168.1.10"
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'static'
+    option ipaddr '192.168.1.1/24'
+
+config route 'route1'
+    option interface 'eth1'
+    option 'target' '192.168.3.1'
+    option 'netmask' '255.255.255.0'
+    option 'gateway' '192.168.2.1'
+
+config route 'route2'
+    option interface 'eth1'
+    option 'target' '192.168.4.1'
+    option 'netmask' '255.255.255.0'
+    option 'gateway' '192.168.2.2'
+    option metric '2'
+    option source '192.168.1.10'
 """
         self.assertEqual(o.render(), expected)

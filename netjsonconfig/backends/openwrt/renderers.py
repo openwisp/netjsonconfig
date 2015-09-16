@@ -1,4 +1,5 @@
 from ..base import BaseRenderer
+from ipaddress import ip_interface
 
 
 class NetworkRenderer(BaseRenderer):
@@ -9,6 +10,12 @@ class NetworkRenderer(BaseRenderer):
     block_name = 'network'
 
     def get_context(self):
+        return {
+            'interfaces': self._get_interfaces(),
+            'routes': self._get_routes(),
+        }
+
+    def _get_interfaces(self):
         interfaces = self.config.get('interfaces')
         # results container
         uci_interfaces = []
@@ -43,4 +50,26 @@ class NetworkRenderer(BaseRenderer):
                     'address_value': address_value
                 })
                 counter += 1
-        return {'interfaces': uci_interfaces}
+        return uci_interfaces
+
+    def _get_routes(self):
+        routes = self.config.get('routes', [])
+        # results container
+        uci_routes = []
+        counter = 1
+
+        for route in routes:
+            network = ip_interface(route['destination'])
+            uci_route = {
+                'name': 'route{0}'.format(counter),
+                'interface': route['device'],
+                'target': str(network.ip),
+                'netmask': str(network.netmask),
+                'gateway': route['next'],
+                'metric': route.get('cost'),
+                'source': route.get('source')
+            }
+            uci_routes.append(uci_route)
+            counter += 1
+
+        return uci_routes
