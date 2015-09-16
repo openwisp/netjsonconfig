@@ -23,7 +23,7 @@ netjsonconfig
 
 ------------
 
-Converts NetJSON DeviceConfiguration objects to real router configurations.
+Converts `NetJSON <http://netjson.org>`__ DeviceConfiguration objects to real router configurations.
 
 **Currently we are working only on OpenWrt support**.
 
