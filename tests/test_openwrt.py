@@ -2,6 +2,7 @@ import json
 import unittest
 
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 
 
 class TestOpenWrt(unittest.TestCase):
@@ -27,6 +28,21 @@ class TestOpenWrt(unittest.TestCase):
         }
         o = OpenWrt(config)
         self.assertEqual(json.loads(o.json(indent=4)), config)
+
+    def test_validate(self):
+        o = OpenWrt({})
+        with self.assertRaises(ValidationError):
+            o.validate()
+
+        o = OpenWrt({'type': 'WRONG'})
+        with self.assertRaises(ValidationError):
+            o.validate()
+
+        o = OpenWrt({'type': 'DeviceConfiguration'})
+        o.validate()
+        o.config['type'] = 'CHANGED'
+        with self.assertRaises(ValidationError):
+            o.validate()
 
     def test_loopback(self):
         o = OpenWrt({

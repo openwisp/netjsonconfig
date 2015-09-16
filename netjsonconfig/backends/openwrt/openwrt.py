@@ -1,4 +1,6 @@
 import json
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 
 from .schema import schema
 from .renderers import NetworkRenderer, SystemRenderer
@@ -21,6 +23,7 @@ class OpenWrt(object):
                                trim_blocks=True)
 
     def render(self):
+        self.validate()
         output = ''
         for renderer_class in self.renderers:
             renderer = renderer_class(self.config, self.env)
@@ -28,7 +31,11 @@ class OpenWrt(object):
         return output
 
     def validate(self):
-        raise ValidationError()
+        try:
+            validate(self.config, self.schema)
+        except JsonSchemaValidationError as e:
+            raise ValidationError(e)
 
     def json(self, *args, **kwargs):
+        self.validate()
         return json.dumps(self.config, *args, **kwargs)
