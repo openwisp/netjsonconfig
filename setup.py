@@ -33,6 +33,9 @@ def get_install_requires():
             continue
         # add line to requirements
         requirements.append(line.replace('\n', ''))
+    # add py2-ipaddress if python2
+    if sys.version_info.major < 3:
+        requirements.append('py2-ipaddress')
     return requirements
 
 
