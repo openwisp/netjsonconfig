@@ -1,0 +1,13 @@
+{% if not is_empty %}
+    package wireless
+
+    {% for radio in radios %}
+        config wifi-device '{{ radio.name }}'
+        {% for key, value in radio.iteritems() %}
+            {% if key != 'name' %}
+                option {{ key }} '{{ value }}'
+            {% endif %}
+        {% endfor %}
+
+    {% endfor %}
+{% endif %}

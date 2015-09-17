@@ -1,5 +1,7 @@
-from ..base import BaseRenderer
+from collections import OrderedDict
 from ipaddress import ip_interface
+
+from ..base import BaseRenderer
 
 
 class NetworkRenderer(BaseRenderer):
@@ -83,3 +85,62 @@ class SystemRenderer(BaseRenderer):
                 'timezone': general.get('timezone', 'UTC'),
             }
         return None
+
+
+class WirelessRenderer(BaseRenderer):
+    """
+    Renders content importable with:
+        uci import wireless
+    """
+
+    def _get_radios(self):
+        radios = self.config.get('radios', [])
+        uci_radios = []
+        for radio in radios:
+            uci_radio = radio.copy()
+            # rename tx_power to txpower
+            uci_radio['txpower'] = radio['tx_power']
+            del uci_radio['tx_power']
+            # rename driver to type
+            uci_radio['type'] = radio['driver']
+            del uci_radio['driver']
+            # determine hwmode option
+            uci_radio['hwmode'] = self.__get_hwmode(radio)
+            del uci_radio['protocol']
+            # determine channel width
+            if radio['driver'] == 'mac80211':
+                uci_radio['htmode'] = self.__get_htmode(radio)
+            elif radio['driver'] in ['ath9k', 'ath5k']:
+                uci_radio['chanbw'] = radio['channel_width']
+            del uci_radio['channel_width']
+            # ensure country is uppercase
+            if uci_radio.get('country'):
+                uci_radio['country'] = uci_radio['country'].upper()
+            # covert disabled boolean to integer
+            if uci_radio.get('disabled'):
+                uci_radio['disabled'] = int(uci_radio['disabled'])
+            # sort keys in OrderedDict
+            uci_radios.append(OrderedDict(sorted(uci_radio.items())))
+        return uci_radios
+
+    def __get_hwmode(self, radio):
+        """
+        possible return values are: 11a, 11b, 11g
+        """
+        protocol = radio['protocol']
+        if protocol not in ['802.11n', '802.11ac']:
+            return protocol.replace('802.', '')
+        elif protocol == '802.11n' and radio['channel'] <= 13:
+            return '11g'
+        return '11a'
+
+    def __get_htmode(self, radio):
+        """
+        only for mac80211 driver
+        """
+        if radio['protocol'] == '802.11n':
+            return 'HT{0}'.format(radio['channel_width'])
+        elif radio['protocol'] == '802.11ac':
+            return 'VHT{0}'.format(radio['channel_width'])
+        # disables n
+        return 'NONE'
