@@ -510,3 +510,39 @@ config wifi-device 'radio0'
     option type 'mac80211'
 """
         self.assertEqual(o.render(), expected)
+
+    def test_radio_wrong_driver(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "iamwrong",
+                    "protocol": "802.11ac",
+                    "channel": 132,
+                    "channel_width": 80,
+                    "tx_power": 8
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+
+    def test_radio_wrong_protocol(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11ad",  # ad is not supported by OpenWRT yet
+                    "channel": 132,
+                    "channel_width": 80,
+                    "tx_power": 8
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
