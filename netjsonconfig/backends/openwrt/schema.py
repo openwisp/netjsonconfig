@@ -153,15 +153,15 @@ schema = {
                 }
             }
         },
-        "physical_devices": {
-            "id": "physical_devices",
+        "radios": {
+            "id": "radios",
             "type": "array",
-            "title": "Physical Devices",
+            "title": "Radios",
             "uniqueItems": True,
             "additionalItems": True,
             "items": {
                 "type": "object",
-                "title": "Physical Device",
+                "title": "Radio",
                 "additionalProperties": True,
                 "required": [
                     "name",
@@ -172,6 +172,10 @@ schema = {
                 "properties": {
                     "name": {
                         "id": "name",
+                        "type": "string"
+                    },
+                    "phy": {
+                        "id": "phy",
                         "type": "string"
                     },
                     "channel": {
@@ -185,6 +189,17 @@ schema = {
                     "tx_power": {
                         "id": "tx_power",
                         "type": "number"
+                    },
+                    "country": {
+                        "id": "country",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 2
+                    },
+                    "disabled": {
+                        "id": "disabled",
+                        "type": "boolean",
+                        "default": False
                     }
                 }
             }
@@ -287,8 +302,8 @@ schema = {
                         "title": "Wireless",
                         "additionalProperties": True,
                         "properties": {
-                            "physical_device": {
-                                "id": "physical_device",
+                            "radio": {
+                                "id": "radio",
                                 "type": "string"
                             },
                             "bitrate": {
