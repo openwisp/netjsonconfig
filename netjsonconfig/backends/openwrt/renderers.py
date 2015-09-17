@@ -7,15 +7,6 @@ class NetworkRenderer(BaseRenderer):
     Renders content importable with:
         uci import network
     """
-    block_name = 'network'
-
-    def get_context(self):
-        interfaces = self._get_interfaces()
-        routes = self._get_routes()
-        is_empty = not interfaces and not routes
-        return dict(interfaces=interfaces,
-                    routes=routes,
-                    is_empty=is_empty)
 
     def _get_interfaces(self):
         interfaces = self.config.get('interfaces', [])
@@ -83,12 +74,6 @@ class SystemRenderer(BaseRenderer):
     Renders content importable with:
         uci import system
     """
-    block_name = 'system'
-
-    def get_context(self):
-        system = self._get_system()
-        return dict(system=system,
-                    is_empty=system is None)
 
     def _get_system(self):
         general = self.config.get('general', None)

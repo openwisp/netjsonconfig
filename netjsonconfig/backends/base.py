@@ -25,10 +25,30 @@ class BaseRenderer(object):
 
     def render(self):
         """
-        Renders block
+        Renders config block with jinja2 templating engine
         """
-        template_name = '{0}.uci'.format(self.block_name)
+        # determine block name
+        default_name = str(self.__class__.__name__).replace('Renderer', '').lower()
+        block_name = getattr(self, 'block_name') or default_name
+        # get jinja2 template
+        template_name = '{0}.uci'.format(block_name)
         template = self.env.get_template(template_name)
+        # render template and cleanup
         context = self.get_context()
         output = template.render(**context)
         return self.cleanup(output)
+
+    def get_context(self):
+        """
+        Builds context that is passed to jinja2 templates
+        """
+        # get list of private methods that start with "_get_"
+        methods = [method for method in dir(self) if method.startswith('_get_')]
+        context = {}
+        # build context
+        for method in methods:
+            key = method.replace('_get_', '')
+            context[key] = getattr(self, method)()
+        # determine if all context values are empty
+        context['is_empty'] = not any(context.values())
+        return context
