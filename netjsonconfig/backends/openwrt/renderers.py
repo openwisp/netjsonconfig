@@ -79,15 +79,15 @@ class SystemRenderer(BaseRenderer):
     """
 
     def _get_system(self):
-        general = self.config.get('general', None)
+        general = self.config.get('general', {}).copy()
         if general:
             timezone_human = general.get('timezone', 'Coordinated Universal Time')
             timezone_value = timezones[timezone_human]
-            return {
+            general.update({
                 'hostname': general.get('hostname', 'OpenWRT'),
                 'timezone': timezone_value,
-            }
-        return None
+            })
+        return OrderedDict(sorted(general.items()))
 
 
 class WirelessRenderer(BaseRenderer):

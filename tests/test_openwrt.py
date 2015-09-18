@@ -289,12 +289,14 @@ config route6
             "type": "DeviceConfiguration",
             "general": {
                 "hostname": "test_system",
-                "timezone": "Europe/Rome"
+                "timezone": "Europe/Rome",
+                "custom_setting": "1"
             }
         })
         expected = """package system
 
 config system
+    option custom_setting '1'
     option hostname 'test_system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
 """
