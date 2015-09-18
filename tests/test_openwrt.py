@@ -290,7 +290,10 @@ config route6
             "general": {
                 "hostname": "test_system",
                 "timezone": "Europe/Rome",
-                "custom_setting": "1"
+                "custom_setting": "1",
+                "empty_setting1": None,
+                "empty_setting2": "",
+                "empty_setting3": [],
             }
         })
         expected = """package system
@@ -499,7 +502,8 @@ config wifi-device 'radio1'
                     "channel_width": 80,
                     "tx_power": 8,
                     "diversity": "1",
-                    "country_ie": "1"
+                    "country_ie": "1",
+                    "empty_setting": ""
                 }
             ]
         })

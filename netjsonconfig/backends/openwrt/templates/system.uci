@@ -3,6 +3,8 @@
 
     config system
     {% for key, value in system.items() %}
-        option {{ key }} '{{ value }}'
+        {% if value %}
+            option {{ key }} '{{ value }}'
+        {% endif %}
     {% endfor %}
 {% endif %}
