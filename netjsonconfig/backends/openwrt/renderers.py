@@ -68,19 +68,28 @@ class NetworkRenderer(BaseRenderer):
         counter = 1
         # build uci_routes
         for route in routes:
+            # prepare UCI route directive
+            uci_route = route.copy()
+            del uci_route['device']
+            del uci_route['next']
+            del uci_route['destination']
+            if uci_route.get('cost'):
+                del uci_route['cost']
             network = ip_interface(route['destination'])
             version = 'route' if network.version == 4 else 'route6'
             target = network.ip if network.version == 4 else network.network
-            uci_routes.append({
+            uci_route.update({
                 'version': version,
                 'name': 'route{0}'.format(counter),
                 'interface': route['device'],
                 'target': str(target),
-                'netmask': str(network.netmask),
                 'gateway': route['next'],
                 'metric': route.get('cost'),
                 'source': route.get('source')
             })
+            if network.version == 4:
+                uci_route['netmask'] = str(network.netmask)
+            uci_routes.append(OrderedDict(sorted(uci_route.items())))
             counter += 1
         return uci_routes
 

@@ -11,20 +11,13 @@
 
     {% endfor %}
     {% for route in routes %}
-    config {{ route.version }}{% if route.version == 'route' %} '{{ route.name }}'{% endif %}
+        config {{ route.version }}{% if route.version == 'route' %} '{{ route.name }}'{% endif %}
 
-        option interface '{{ route.interface }}'
-        option target '{{ route.target }}'
-        {% if route.version == 'route' %}
-        option netmask '{{ route.netmask }}'
-        {% endif %}
-        option gateway '{{ route.gateway }}'
-        {% if route.metric %}
-            option metric '{{ route.metric }}'
-        {% endif %}
-        {% if route.source %}
-            option source '{{ route.source }}'
-        {% endif %}
+            {% for key, value in route.items() %}
+                {% if key not in ['name', 'version'] and value %}
+                    option {{ key }} '{{ value }}'
+                {% endif %}
+            {% endfor %}
 
     {% endfor %}
 {% endif %}

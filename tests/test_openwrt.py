@@ -204,7 +204,10 @@ config interface 'eth0_2'
                     "destination": "192.168.4.1/24",
                     "next": "192.168.2.2",
                     "cost": 2,
-                    "source": "192.168.1.10"
+                    "source": "192.168.1.10",
+                    "table": 2,
+                    "onlink": 1,
+                    "mtu": 1450
                 }
             ]
         })
@@ -216,18 +219,21 @@ config interface 'eth1'
     option proto 'static'
 
 config route 'route1'
-    option interface 'eth1'
-    option target '192.168.3.1'
-    option netmask '255.255.255.0'
     option gateway '192.168.2.1'
+    option interface 'eth1'
+    option netmask '255.255.255.0'
+    option target '192.168.3.1'
 
 config route 'route2'
-    option interface 'eth1'
-    option target '192.168.4.1'
-    option netmask '255.255.255.0'
     option gateway '192.168.2.2'
+    option interface 'eth1'
     option metric '2'
+    option mtu '1450'
+    option netmask '255.255.255.0'
+    option onlink '1'
     option source '192.168.1.10'
+    option table '2'
+    option target '192.168.4.1'
 """
         self.assertEqual(o.render(), expected)
 
@@ -271,16 +277,16 @@ config interface 'eth1'
     option proto 'static'
 
 config route6
+    option gateway 'fd88::1'
     option interface 'eth1'
     option target 'fd89::1/128'
-    option gateway 'fd88::1'
 
 config route6
-    option interface 'eth1'
-    option target 'fd90::1/128'
     option gateway 'fd88::2'
+    option interface 'eth1'
     option metric '3'
     option source 'fd87::10'
+    option target 'fd90::1/128'
 """
         self.assertEqual(o.render(), expected)
 
