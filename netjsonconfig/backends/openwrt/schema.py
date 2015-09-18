@@ -47,6 +47,31 @@ schema = merge_dict(default_schema, {
     }
 })
 
+# add interface protos
+schema['properties']['interfaces']['items']['properties']\
+      ['addresses']['items']['properties']['proto']['enum'] += [
+    'dhcpv6',
+    'ppp',
+    'pppoe',
+    'pppoa',
+    '3g',
+    'qmi',
+    'ncm',
+    'hnet',
+    'pptp',
+    '6in4',
+    'aiccu',
+    '6to4',
+    '6rd',
+    'dslite',
+    'l2tp',
+    'relay',
+    'gre',
+    'gretap',
+    'grev6',
+    'grev6tap'
+]
+
 # mark driver and protocol as required
 schema['properties']['radios']['items']['required'] += [
     'driver',

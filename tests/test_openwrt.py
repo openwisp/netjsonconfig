@@ -284,6 +284,28 @@ config route6
 """
         self.assertEqual(o.render(), expected)
 
+    def test_additional_proto(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "mobile0",
+                    "addresses": [
+                        {
+                            "proto": "3g"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'mobile0'
+    option ifname 'mobile0'
+    option proto '3g'
+"""
+        self.assertEqual(o.render(), expected)
+
     def test_system(self):
         o = OpenWrt({
             "type": "DeviceConfiguration",

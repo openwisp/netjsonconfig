@@ -30,9 +30,9 @@ class NetworkRenderer(BaseRenderer):
                     name = '{name}_{counter}'.format(name=uci_name, counter=counter)
                 else:
                     name = uci_name
-                if address['family'] == 'ipv4':
+                if address.get('family') == 'ipv4':
                     address_key = 'ipaddr'
-                elif address['family'] == 'ipv6':
+                elif address.get('family') == 'ipv6':
                     address_key = 'ip6addr'
                     proto = proto.replace('dhcp', 'dhcpv6')
                 if address.get('address') and address.get('mask'):
