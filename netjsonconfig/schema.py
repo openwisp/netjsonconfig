@@ -301,28 +301,17 @@ schema = {
                     "wireless": {
                         "id": "wireless",
                         "type": "object",
-                        "title": "Wireless",
+                        "title": "Wireless settings",
                         "additionalProperties": True,
+                        "required": [
+                            "radio",
+                            "mode",
+                            "ssid"
+                        ],
                         "properties": {
                             "radio": {
                                 "id": "radio",
                                 "type": "string"
-                            },
-                            "bitrate": {
-                                "id": "bitrate",
-                                "type": "number"
-                            },
-                            "ack_distance": {
-                                "id": "ack_distance",
-                                "type": "number"
-                            },
-                            "rts_threshold": {
-                                "id": "rts_threshold",
-                                "type": "number"
-                            },
-                            "frag_threshold": {
-                                "id": "frag_threshold",
-                                "type": "number"
                             },
                             "mode": {
                                 "id": "mode",
@@ -343,6 +332,11 @@ schema = {
                             "bssid": {
                                 "id": "bssid",
                                 "type": "string"
+                            },
+                            "hidden": {
+                                "id": "bssid",
+                                "type": "boolean",
+                                "default": False
                             },
                             "encryption": {
                                 "id": "encryption",
