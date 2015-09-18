@@ -3,7 +3,7 @@
 
     {% for radio in radios %}
         config wifi-device '{{ radio.name }}'
-        {% for key, value in radio.iteritems() %}
+        {% for key, value in radio.items() %}
             {% if key != 'name' %}
                 option {{ key }} '{{ value }}'
             {% endif %}
