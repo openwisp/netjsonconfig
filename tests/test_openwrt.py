@@ -305,6 +305,17 @@ config system
 """
         self.assertEqual(o.render(), expected)
 
+    def test_system_invalid_timezone(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "general": {
+                "hostname": "test_system",
+                "timezone": "WRONG",
+            }
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+
     def test_radio(self):
         o = OpenWrt({
             "type": "DeviceConfiguration",
