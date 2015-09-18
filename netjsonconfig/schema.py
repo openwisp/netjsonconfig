@@ -336,8 +336,8 @@ schema = {
                                     "802.11s"
                                 ]
                             },
-                            "essid": {
-                                "id": "essid",
+                            "ssid": {
+                                "id": "ssid",
                                 "type": "string"
                             },
                             "bssid": {
