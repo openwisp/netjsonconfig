@@ -465,8 +465,6 @@ config wifi-device 'radio1'
     option txpower '3'
     option type 'mac80211'
 """
-        print(o.render())
-        print(expected)
         self.assertEqual(o.render(), expected)
 
     def test_radio_2ghz_mac80211(self):
