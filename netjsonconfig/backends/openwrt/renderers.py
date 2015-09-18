@@ -1,8 +1,8 @@
-from collections import OrderedDict
 from ipaddress import ip_interface
 
 from .timezones import timezones
 from ..base import BaseRenderer
+from ...utils import sorted_dict
 
 
 class NetworkRenderer(BaseRenderer):
@@ -57,7 +57,7 @@ class NetworkRenderer(BaseRenderer):
                 if address_key and address_value:
                     uci_interface[address_key] = address_value
                 # append to interface list
-                uci_interfaces.append(OrderedDict(sorted(uci_interface.items())))
+                uci_interfaces.append(sorted_dict(uci_interface))
                 counter += 1
         return uci_interfaces
 
@@ -89,7 +89,7 @@ class NetworkRenderer(BaseRenderer):
             })
             if network.version == 4:
                 uci_route['netmask'] = str(network.netmask)
-            uci_routes.append(OrderedDict(sorted(uci_route.items())))
+            uci_routes.append(sorted_dict(uci_route))
             counter += 1
         return uci_routes
 
@@ -109,7 +109,7 @@ class SystemRenderer(BaseRenderer):
                 'hostname': general.get('hostname', 'OpenWRT'),
                 'timezone': timezone_value,
             })
-        return OrderedDict(sorted(general.items()))
+        return sorted_dict(general)
 
 
 class WirelessRenderer(BaseRenderer):
@@ -144,8 +144,8 @@ class WirelessRenderer(BaseRenderer):
             # covert disabled boolean to integer
             if uci_radio.get('disabled'):
                 uci_radio['disabled'] = int(uci_radio['disabled'])
-            # sort keys in OrderedDict
-            uci_radios.append(OrderedDict(sorted(uci_radio.items())))
+            # append sorted dict
+            uci_radios.append(sorted_dict(uci_radio))
         return uci_radios
 
     def __get_hwmode(self, radio):

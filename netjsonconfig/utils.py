@@ -1,3 +1,6 @@
+from collections import OrderedDict
+
+
 def merge_dict(source, destination):
     """
     run me with nosetests --with-doctest netjsonconfig/utils.py
@@ -16,3 +19,7 @@ def merge_dict(source, destination):
             destination[key] = value
 
     return destination
+
+
+def sorted_dict(dictionary):
+    return OrderedDict(sorted(dictionary.items()))
