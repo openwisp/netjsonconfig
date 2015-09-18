@@ -12,6 +12,9 @@ class NetworkRenderer(BaseRenderer):
     """
 
     def _get_interfaces(self):
+        """
+        converts interfaces object to UCI interface directives
+        """
         interfaces = self.config.get('interfaces', [])
         # results container
         uci_interfaces = []
@@ -21,6 +24,13 @@ class NetworkRenderer(BaseRenderer):
             uci_name = interface['name'].replace('.', '_')
             # address list defaults to empty list
             for address in interface.get('addresses', []):
+                # prepare new UCI interface directive
+                uci_interface = interface.copy()
+                if uci_interface.get('addresses'):
+                    del uci_interface['addresses']
+                if uci_interface.get('type'):
+                    del uci_interface['type']
+                # default values
                 address_key = None
                 address_value = None
                 # proto defaults to static
@@ -37,14 +47,17 @@ class NetworkRenderer(BaseRenderer):
                     proto = proto.replace('dhcp', 'dhcpv6')
                 if address.get('address') and address.get('mask'):
                     address_value = '{address}/{mask}'.format(**address)
-                # append to results
-                uci_interfaces.append({
-                    'uci_name': name,
-                    'name': interface['name'],
-                    'proto': proto,
-                    'address_key': address_key,
-                    'address_value': address_value
+                # update interface dict
+                uci_interface.update({
+                    'name': name,
+                    'ifname': interface['name'],
+                    'proto': proto
                 })
+                # add address if any (with correct option name)
+                if address_key and address_value:
+                    uci_interface[address_key] = address_value
+                # append to interface list
+                uci_interfaces.append(OrderedDict(sorted(uci_interface.items())))
                 counter += 1
         return uci_interfaces
 

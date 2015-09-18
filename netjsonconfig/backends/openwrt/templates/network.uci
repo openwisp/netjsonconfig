@@ -2,12 +2,12 @@
     package network
 
     {% for interface in interfaces %}
-    config interface '{{ interface.uci_name }}'
-        option ifname '{{ interface.name }}'
-        option proto '{{ interface.proto }}'
-        {% if interface.address_value %}
-            option {{ interface.address_key }} '{{ interface.address_value }}'
-        {% endif %}
+        config interface '{{ interface.name }}'
+            {% for key, value in interface.items() %}
+                {% if key != 'name' and value %}
+                    option {{ key }} '{{ value }}'
+                {% endif %}
+            {% endfor %}
 
     {% endfor %}
     {% for route in routes %}

@@ -66,8 +66,8 @@ class TestOpenWrt(unittest.TestCase):
 
 config interface 'lo'
     option ifname 'lo'
-    option proto 'static'
     option ipaddr '127.0.0.1/8'
+    option proto 'static'
 """
         self.assertEqual(o.render(), expected)
 
@@ -105,18 +105,18 @@ config interface 'lo'
 
 config interface 'eth0_1'
     option ifname 'eth0.1'
-    option proto 'static'
     option ipaddr '192.168.1.1/24'
+    option proto 'static'
 
 config interface 'eth0_1_2'
     option ifname 'eth0.1'
-    option proto 'static'
     option ipaddr '192.168.2.1/24'
+    option proto 'static'
 
 config interface 'eth0_1_3'
     option ifname 'eth0.1'
-    option proto 'static'
     option ip6addr 'fd87::1/128'
+    option proto 'static'
 """
         self.assertEqual(o.render(), expected)
 
@@ -212,8 +212,8 @@ config interface 'eth0_2'
 
 config interface 'eth1'
     option ifname 'eth1'
-    option proto 'static'
     option ipaddr '192.168.1.1/24'
+    option proto 'static'
 
 config route 'route1'
     option interface 'eth1'
@@ -267,8 +267,8 @@ config route 'route2'
 
 config interface 'eth1'
     option ifname 'eth1'
-    option proto 'static'
     option ip6addr 'fd87::1/128'
+    option proto 'static'
 
 config route6
     option interface 'eth1'
@@ -302,6 +302,35 @@ config route6
 
 config interface 'mobile0'
     option ifname 'mobile0'
+    option proto '3g'
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_interface_custom_attrs(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "mobile0",
+                    "mtu": 1400,
+                    "enabled": "0",
+                    "custom_attr": "yes",
+                    "empty": "",
+                    "addresses": [
+                        {
+                            "proto": "3g"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'mobile0'
+    option custom_attr 'yes'
+    option enabled '0'
+    option ifname 'mobile0'
+    option mtu '1400'
     option proto '3g'
 """
         self.assertEqual(o.render(), expected)
