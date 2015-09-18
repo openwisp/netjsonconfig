@@ -143,9 +143,6 @@ class WirelessRenderer(BaseRenderer):
             # ensure country is uppercase
             if uci_radio.get('country'):
                 uci_radio['country'] = uci_radio['country'].upper()
-            # covert disabled boolean to integer
-            if uci_radio.get('disabled'):
-                uci_radio['disabled'] = int(uci_radio['disabled'])
             # append sorted dict
             uci_radios.append(sorted_dict(uci_radio))
         return uci_radios

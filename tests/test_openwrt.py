@@ -206,7 +206,7 @@ config interface 'eth0_2'
                     "cost": 2,
                     "source": "192.168.1.10",
                     "table": 2,
-                    "onlink": 1,
+                    "onlink": True,
                     "mtu": 1450
                 }
             ]
@@ -319,7 +319,7 @@ config interface 'mobile0'
                 {
                     "name": "mobile0",
                     "mtu": 1400,
-                    "enabled": "0",
+                    "enabled": False,
                     "custom_attr": "yes",
                     "empty": "",
                     "addresses": [
@@ -347,10 +347,9 @@ config interface 'mobile0'
             "general": {
                 "hostname": "test_system",
                 "timezone": "Europe/Rome",
-                "custom_setting": "1",
+                "custom_setting": True,
                 "empty_setting1": None,
-                "empty_setting2": "",
-                "empty_setting3": [],
+                "empty_setting2": ""
             }
         })
         expected = """package system
@@ -567,8 +566,8 @@ config wifi-device 'radio1'
                     "channel": 132,
                     "channel_width": 80,
                     "tx_power": 8,
-                    "diversity": "1",
-                    "country_ie": "1",
+                    "diversity": True,
+                    "country_ie": True,
                     "empty_setting": ""
                 }
             ]
@@ -642,6 +641,7 @@ config wifi-device 'radio0'
                         "radio": "radio0",
                         "mode": "access_point",
                         "ssid": "MyWifiAP",
+                        "hidden": True
                     }
                 }
             ],
@@ -676,6 +676,7 @@ config wifi-device 'radio0'
 
 config wifi-iface
     option device 'radio0'
+    option hidden '1'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyWifiAP'

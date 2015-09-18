@@ -3,7 +3,7 @@
 
     config system
     {% for key, value in system.items() %}
-        {% if value %}
+        {% if value not in ['', None] %}
             option {{ key }} '{{ value }}'
         {% endif %}
     {% endfor %}

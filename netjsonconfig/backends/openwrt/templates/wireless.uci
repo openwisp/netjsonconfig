@@ -4,7 +4,7 @@
     {% for radio in radios %}
         config wifi-device '{{ radio.name }}'
         {% for key, value in radio.items() %}
-            {% if key != 'name' and value %}
+            {% if key != 'name' and value not in ['', None] %}
                 option {{ key }} '{{ value }}'
             {% endif %}
         {% endfor %}
@@ -13,7 +13,9 @@
     {% for wifi_interface in wifi_interfaces %}
         config wifi-iface
         {% for key, value in wifi_interface.items() %}
-            option {{ key }} '{{ value }}'
+            {% if value not in ['', None] %}
+                option {{ key }} '{{ value }}'
+            {% endif %}
         {% endfor %}
 
     {% endfor %}
