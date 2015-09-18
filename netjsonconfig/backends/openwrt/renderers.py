@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from ipaddress import ip_interface
 
+from .timezones import timezones
 from ..base import BaseRenderer
 
 
@@ -80,9 +81,11 @@ class SystemRenderer(BaseRenderer):
     def _get_system(self):
         general = self.config.get('general', None)
         if general:
+            timezone_human = general.get('timezone', 'Coordinated Universal Time')
+            timezone_value = timezones[timezone_human]
             return {
                 'hostname': general.get('hostname', 'OpenWRT'),
-                'timezone': general.get('timezone', 'UTC'),
+                'timezone': timezone_value,
             }
         return None
 

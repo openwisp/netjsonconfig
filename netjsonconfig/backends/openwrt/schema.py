@@ -1,7 +1,8 @@
 """
 OpenWrt specific JSON-Schema definition
 """
-from netjsonconfig.schema import schema as default_schema
+from ...schema import schema as default_schema
+from .timezones import timezones
 
 schema = default_schema.copy()
 
@@ -10,7 +11,8 @@ schema['properties']['general']['properties'].update({
     "timezone": {
         "id": "timezone",
         "type": "string",
-        "default": "UTC"
+        "default": "Coordinated Universal Time",
+        "enum": list(timezones.keys())
     }
 })
 

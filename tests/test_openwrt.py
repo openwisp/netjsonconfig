@@ -289,7 +289,7 @@ config route6
             "type": "DeviceConfiguration",
             "general": {
                 "hostname": "test_system",
-                "timezone": "CET-1CEST,M3.5.0,M10.5.0/3"
+                "timezone": "Europe/Rome"
             }
         })
         expected = """package system
