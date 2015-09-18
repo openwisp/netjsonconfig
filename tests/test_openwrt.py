@@ -622,3 +622,62 @@ config wifi-device 'radio0'
         })
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_wifi_interfaces(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ],
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                    }
+                }
+            ],
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option ipaddr '192.168.1.1/24'
+    option proto 'static'
+
+package wireless
+
+config wifi-device 'radio0'
+    option channel '3'
+    option htmode 'HT20'
+    option hwmode '11g'
+    option phy 'phy0'
+    option txpower '3'
+    option type 'mac80211'
+
+config wifi-iface
+    option device 'radio0'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'MyWifiAP'
+"""
+        self.assertEqual(o.render(), expected)

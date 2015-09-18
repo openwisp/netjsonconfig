@@ -10,4 +10,11 @@
         {% endfor %}
 
     {% endfor %}
+    {% for wifi_interface in wifi_interfaces %}
+        config wifi-iface
+        {% for key, value in wifi_interface.items() %}
+            option {{ key }} '{{ value }}'
+        {% endfor %}
+
+    {% endfor %}
 {% endif %}

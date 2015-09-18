@@ -28,7 +28,12 @@ class OpenWrt(object):
         output = ''
         for renderer_class in self.renderers:
             renderer = renderer_class(self.config, self.env)
-            output += renderer.render()
+            additional_output = renderer.render()
+            # add an additional new line
+            # to separate blocks
+            if output and additional_output:
+                output += '\n'
+            output += additional_output
         return output
 
     def validate(self):

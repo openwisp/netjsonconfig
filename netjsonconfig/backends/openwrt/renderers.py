@@ -30,6 +30,8 @@ class NetworkRenderer(BaseRenderer):
                     del uci_interface['addresses']
                 if uci_interface.get('type'):
                     del uci_interface['type']
+                if uci_interface.get('wireless'):
+                    del uci_interface['wireless']
                 # default values
                 address_key = None
                 address_value = None
@@ -169,3 +171,30 @@ class WirelessRenderer(BaseRenderer):
             return 'VHT{0}'.format(radio['channel_width'])
         # disables n
         return 'NONE'
+
+    def _get_wifi_interfaces(self):
+        wifi_interfaces = [i for i in self.config.get('interfaces', []) if 'wireless' in i]
+        # results container
+        uci_wifi_ifaces = []
+        for wifi_interface in wifi_interfaces:
+            wireless = wifi_interface['wireless']
+            # prepare UCI wifi-iface directive
+            uci_wifi = wireless.copy()
+            if uci_wifi.get('encryption'):
+                del uci_wifi['encryption']
+            # rename radio to device
+            uci_wifi['device'] = wireless['radio']
+            del uci_wifi['radio']
+            # determine mode
+            modes = {
+                'access_point': 'ap',
+                'station': 'sta',
+                'adhoc': 'adhoc',
+                'wds': 'wds',
+                'monitor': 'monitor',
+                '802.11s': 'mesh'
+            }
+            uci_wifi['mode'] = modes[wireless['mode']]
+            uci_wifi['network'] = wifi_interface['name']
+            uci_wifi_ifaces.append(sorted_dict(uci_wifi))
+        return uci_wifi_ifaces
