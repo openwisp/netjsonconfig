@@ -484,34 +484,7 @@ config wifi-device 'radio1'
 """
         self.assertEqual(o.render(), expected)
 
-    def test_radio_ac(self):
-        o = OpenWrt({
-            "type": "DeviceConfiguration",
-            "radios": [
-                {
-                    "name": "radio0",
-                    "phy": "phy0",
-                    "driver": "mac80211",
-                    "protocol": "802.11ac",
-                    "channel": 132,
-                    "channel_width": 80,
-                    "tx_power": 8
-                }
-            ]
-        })
-        expected = """package wireless
-
-config wifi-device 'radio0'
-    option channel '132'
-    option htmode 'VHT80'
-    option hwmode '11a'
-    option phy 'phy0'
-    option txpower '8'
-    option type 'mac80211'
-"""
-        self.assertEqual(o.render(), expected)
-
-    def test_radio_custom_attr(self):
+    def test_radio_ac_and_custom_attrs(self):
         o = OpenWrt({
             "type": "DeviceConfiguration",
             "radios": [
