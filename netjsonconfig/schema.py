@@ -342,31 +342,38 @@ schema = {
                                 "id": "encryption",
                                 "type": "object",
                                 "title": "Encryption",
+                                "required": [
+                                    "enabled",
+                                    "protocol",
+                                    "key"
+                                ],
                                 "properties": {
                                     "enabled": {
                                         "id": "enabled",
                                         "type": "boolean"
                                     },
-                                    "wpa": {
-                                        "id": "wpa",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "authentication": {
-                                        "id": "authentication",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
+                                    "protocol": {
+                                        "id": "protocol",
+                                        "type": "string",
+                                        "enum": [
+                                            "wep_open",
+                                            "wep_shared",
+                                            "wpa_personal",
+                                            "wpa2_personal",
+                                            "wpa_personal_mixed",
+                                            "wpa_enterprise",
+                                            "wpa2_enterprise",
+                                            "wpa_enterprise_mixed",
+                                            "wps"
+                                        ]
                                     },
                                     "ciphers": {
                                         "id": "ciphers",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        }
+                                        "type": "array"
+                                    },
+                                    "key": {
+                                        "id": "key",
+                                        "type": "string"
                                     }
                                 }
                             }

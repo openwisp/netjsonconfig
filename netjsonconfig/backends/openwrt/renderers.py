@@ -177,8 +177,6 @@ class WirelessRenderer(BaseRenderer):
             wireless = wifi_interface['wireless']
             # prepare UCI wifi-iface directive
             uci_wifi = wireless.copy()
-            if uci_wifi.get('encryption'):
-                del uci_wifi['encryption']
             # rename radio to device
             uci_wifi['device'] = wireless['radio']
             del uci_wifi['radio']
@@ -193,5 +191,46 @@ class WirelessRenderer(BaseRenderer):
             }
             uci_wifi['mode'] = modes[wireless['mode']]
             uci_wifi['network'] = wifi_interface['name']
+            if uci_wifi.get('encryption'):
+                del uci_wifi['encryption']
+                uci_encryption = self.__get_encryption(wireless)
+                uci_wifi.update(uci_encryption)
             uci_wifi_ifaces.append(sorted_dict(uci_wifi))
         return uci_wifi_ifaces
+
+    def __get_encryption(self, wireless):
+        encryption = wireless.get('encryption', {})
+        enabled = encryption.get('enabled', False)
+        uci = {}
+        encryption_map = {
+            'wep_open': 'wep-open',
+            'wep_shared': 'wep-shared',
+            'wpa_personal': 'psk',
+            'wpa2_personal': 'psk2',
+            'wpa_personal_mixed': 'psk-mixed',
+            'wpa_enterprise': 'wpa',
+            'wpa2_enterprise': 'wpa2',
+            'wpa2_enterprise': 'wpa2',
+            'wpa_enterprise_mixed': 'wpa-mixed',
+            'wps': 'psk'
+        }
+        # if encryption disabled return empty dict
+        if not encryption or not enabled:
+            return uci
+        # otherwise configure encryption
+        protocol = encryption['protocol']
+        # default to protocol raw value in order
+        # to allow customization by child classes
+        uci['encryption'] = encryption_map.get(protocol, protocol)
+        if protocol.startswith('wep'):
+            uci['key'] = '1'
+            uci['key1'] = encryption['key']
+            # tell hostapd/wpa_supplicant key is not hex format
+            if protocol == 'wep_open':
+                uci['key1'] = 's:{0}'.format(uci['key1'])
+        else:
+            uci['key'] = encryption['key']
+        # add ciphers
+        if encryption.get('ciphers'):
+            uci['encryption'] += '+{0}'.format('+'.join(encryption['ciphers']))
+        return uci

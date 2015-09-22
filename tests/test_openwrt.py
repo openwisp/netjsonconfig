@@ -682,3 +682,184 @@ config wifi-iface
     option ssid 'MyWifiAP'
 """
         self.assertEqual(o.render(), expected)
+
+    def test_wifi_encryption_wep_open(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wep",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wep_open",
+                            "key": "wepkey1234567"
+                        }
+                    }
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'dhcp'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option encryption 'wep-open'
+    option key '1'
+    option key1 's:wepkey1234567'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'wep'
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_wifi_encryption_wep_shared(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wep",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wep_shared",
+                            "key": "wepkey1234567"
+                        }
+                    }
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'dhcp'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option encryption 'wep-shared'
+    option key '1'
+    option key1 'wepkey1234567'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'wep'
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_wifi_encryption_wpa_personal(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wpa-personal",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wpa_personal",
+                            "ciphers": [
+                                "tkip"
+                            ],
+                            "key": "passphrase012345"
+                        }
+                    }
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'dhcp'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option encryption 'psk+tkip'
+    option key 'passphrase012345'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'wpa-personal'
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_wifi_encryption_wpa2_personal(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wpa2-personal",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wpa2_personal",
+                            "ciphers": [
+                                "tkip",
+                                "ccmp"
+                            ],
+                            "key": "passphrase012345"
+                        }
+                    }
+                }
+            ]
+        })
+        expected = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'dhcp'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option encryption 'psk2+tkip+ccmp'
+    option key 'passphrase012345'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'wpa2-personal'
+"""
+        self.assertEqual(o.render(), expected)
