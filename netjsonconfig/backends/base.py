@@ -14,8 +14,8 @@ class BaseRenderer(object):
         """
         # correct indentation
         output = output.replace('    ', '')\
-                       .replace('option', '    option')\
-                       .replace('list', '    list')
+                       .replace('option', '\toption')\
+                       .replace('list', '\tlist')
         # convert True to 1 and False to 0
         output = output.replace('True', '1')\
                        .replace('False', '0')

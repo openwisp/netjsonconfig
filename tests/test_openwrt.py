@@ -8,6 +8,12 @@ from netjsonconfig.exceptions import ValidationError
 class TestOpenWrt(unittest.TestCase):
     """ OpenWrt tests """
 
+    def _tabs(self, string):
+        """
+        replace 4 spaces with 1 tab
+        """
+        return string.replace('    ', '\t')
+
     def test_json(self):
         config = {
             "type": "DeviceConfiguration",
@@ -62,13 +68,13 @@ class TestOpenWrt(unittest.TestCase):
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'lo'
     option ifname 'lo'
     option ipaddr '127.0.0.1/8'
     option proto 'static'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_multiple_ip(self):
@@ -101,7 +107,7 @@ config interface 'lo'
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0_1'
     option ifname 'eth0.1'
@@ -117,7 +123,7 @@ config interface 'eth0_1_3'
     option ifname 'eth0.1'
     option ip6addr 'fd87::1/128'
     option proto 'static'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_dhcp(self):
@@ -136,12 +142,12 @@ config interface 'eth0_1_3'
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option ifname 'eth0'
     option proto 'dhcp'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_multiple_dhcp(self):
@@ -164,7 +170,7 @@ config interface 'eth0'
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option ifname 'eth0'
@@ -173,7 +179,7 @@ config interface 'eth0'
 config interface 'eth0_2'
     option ifname 'eth0'
     option proto 'dhcpv6'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_ipv4_routes(self):
@@ -211,7 +217,7 @@ config interface 'eth0_2'
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'eth1'
     option ifname 'eth1'
@@ -234,7 +240,7 @@ config route 'route2'
     option source '192.168.1.10'
     option table '2'
     option target '192.168.4.1'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_ipv6_routes(self):
@@ -269,7 +275,7 @@ config route 'route2'
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'eth1'
     option ifname 'eth1'
@@ -287,7 +293,7 @@ config route6
     option metric '3'
     option source 'fd87::10'
     option target 'fd90::1/128'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_additional_proto(self):
@@ -304,12 +310,12 @@ config route6
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'mobile0'
     option ifname 'mobile0'
     option proto '3g'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_interface_custom_attrs(self):
@@ -330,7 +336,7 @@ config interface 'mobile0'
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'mobile0'
     option custom_attr 'yes'
@@ -338,7 +344,7 @@ config interface 'mobile0'
     option ifname 'mobile0'
     option mtu '1400'
     option proto '3g'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_system(self):
@@ -352,13 +358,13 @@ config interface 'mobile0'
                 "empty_setting2": ""
             }
         })
-        expected = """package system
+        expected = self._tabs("""package system
 
 config system
     option custom_setting '1'
     option hostname 'test_system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_system_invalid_timezone(self):
@@ -399,7 +405,7 @@ config system
                 }
             ]
         })
-        expected = """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '140'
@@ -419,7 +425,7 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '18'
     option type 'mac80211'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_radio_2ghz_mac80211(self):
@@ -446,7 +452,7 @@ config wifi-device 'radio1'
                 }
             ]
         })
-        expected = """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '3'
@@ -463,7 +469,7 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '3'
     option type 'mac80211'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_radio_2ghz_mac80211(self):
@@ -490,7 +496,7 @@ config wifi-device 'radio1'
                 }
             ]
         })
-        expected = """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '3'
@@ -507,7 +513,7 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '4'
     option type 'mac80211'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_radio_2ghz_athk(self):
@@ -534,7 +540,7 @@ config wifi-device 'radio1'
                 }
             ]
         })
-        expected = """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option chanbw '5'
@@ -551,7 +557,7 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '4'
     option type 'ath9k'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_radio_ac_and_custom_attrs(self):
@@ -572,7 +578,7 @@ config wifi-device 'radio1'
                 }
             ]
         })
-        expected = """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '132'
@@ -583,7 +589,7 @@ config wifi-device 'radio0'
     option phy 'phy0'
     option txpower '8'
     option type 'mac80211'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_radio_wrong_driver(self):
@@ -659,7 +665,7 @@ config wifi-device 'radio0'
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -682,7 +688,7 @@ config wifi-iface
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyWifiAP'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_wifi_encryption_wep_open(self):
@@ -712,7 +718,7 @@ config wifi-iface
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -728,7 +734,7 @@ config wifi-iface
     option mode 'ap'
     option network 'wlan0'
     option ssid 'wep'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_wifi_encryption_wep_shared(self):
@@ -758,7 +764,7 @@ config wifi-iface
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -774,7 +780,7 @@ config wifi-iface
     option mode 'ap'
     option network 'wlan0'
     option ssid 'wep'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_wifi_encryption_wpa_personal(self):
@@ -807,7 +813,7 @@ config wifi-iface
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -822,7 +828,7 @@ config wifi-iface
     option mode 'ap'
     option network 'wlan0'
     option ssid 'wpa-personal'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_wifi_encryption_wpa2_personal(self):
@@ -856,7 +862,7 @@ config wifi-iface
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -871,7 +877,7 @@ config wifi-iface
     option mode 'ap'
     option network 'wlan0'
     option ssid 'wpa2-personal'
-"""
+""")
         self.assertEqual(o.render(), expected)
 
     def test_multiple_ssid(self):
@@ -910,7 +916,7 @@ config wifi-iface
                 }
             ]
         })
-        expected = """package network
+        expected = self._tabs("""package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -931,5 +937,5 @@ config wifi-iface
     option mode 'adhoc'
     option network 'wlan0'
     option ssid 'adhoc-ssid'
-"""
+""")
         self.assertEqual(o.render(), expected)
