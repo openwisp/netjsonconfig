@@ -299,81 +299,86 @@ schema = {
                         ]
                     },
                     "wireless": {
-                        "id": "wireless",
-                        "type": "object",
-                        "title": "Wireless settings",
-                        "additionalProperties": True,
-                        "required": [
-                            "radio",
-                            "mode",
-                            "ssid"
-                        ],
-                        "properties": {
-                            "radio": {
-                                "id": "radio",
-                                "type": "string"
-                            },
-                            "mode": {
-                                "id": "mode",
-                                "type": "string",
-                                "enum": [
-                                    "access_point",
-                                    "station",
-                                    "adhoc",
-                                    "wds",
-                                    "monitor",
-                                    "802.11s"
-                                ]
-                            },
-                            "ssid": {
-                                "id": "ssid",
-                                "type": "string"
-                            },
-                            "bssid": {
-                                "id": "bssid",
-                                "type": "string"
-                            },
-                            "hidden": {
-                                "id": "bssid",
-                                "type": "boolean",
-                                "default": False
-                            },
-                            "encryption": {
-                                "id": "encryption",
-                                "type": "object",
-                                "title": "Encryption",
-                                "required": [
-                                    "enabled",
-                                    "protocol",
-                                    "key"
-                                ],
-                                "properties": {
-                                    "enabled": {
-                                        "id": "enabled",
-                                        "type": "boolean"
-                                    },
-                                    "protocol": {
-                                        "id": "protocol",
-                                        "type": "string",
-                                        "enum": [
-                                            "wep_open",
-                                            "wep_shared",
-                                            "wpa_personal",
-                                            "wpa2_personal",
-                                            "wpa_personal_mixed",
-                                            "wpa_enterprise",
-                                            "wpa2_enterprise",
-                                            "wpa_enterprise_mixed",
-                                            "wps"
-                                        ]
-                                    },
-                                    "ciphers": {
-                                        "id": "ciphers",
-                                        "type": "array"
-                                    },
-                                    "key": {
-                                        "id": "key",
-                                        "type": "string"
+                        "type": "array",
+                        "title": "Wireless interfaces",
+                        "uniqueItems": True,
+                        "additionalItems": True,
+                        "items": {
+                            "type": "object",
+                            "title": "Wireless Interface",
+                            "additionalProperties": True,
+                            "required": [
+                                "radio",
+                                "mode",
+                                "ssid"
+                            ],
+                            "properties": {
+                                "radio": {
+                                    "id": "radio",
+                                    "type": "string"
+                                },
+                                "mode": {
+                                    "id": "mode",
+                                    "type": "string",
+                                    "enum": [
+                                        "access_point",
+                                        "station",
+                                        "adhoc",
+                                        "wds",
+                                        "monitor",
+                                        "802.11s"
+                                    ]
+                                },
+                                "ssid": {
+                                    "id": "ssid",
+                                    "type": "string"
+                                },
+                                "bssid": {
+                                    "id": "bssid",
+                                    "type": "string"
+                                },
+                                "hidden": {
+                                    "id": "bssid",
+                                    "type": "boolean",
+                                    "default": False
+                                },
+                                "encryption": {
+                                    "id": "encryption",
+                                    "type": "object",
+                                    "title": "Encryption",
+                                    "required": [
+                                        "enabled",
+                                        "protocol",
+                                        "key"
+                                    ],
+                                    "properties": {
+                                        "enabled": {
+                                            "id": "enabled",
+                                            "type": "boolean"
+                                        },
+                                        "protocol": {
+                                            "id": "protocol",
+                                            "type": "string",
+                                            "enum": [
+                                                "wep_open",
+                                                "wep_shared",
+                                                "wpa_personal",
+                                                "wpa2_personal",
+                                                "wpa_personal_mixed",
+                                                "wpa_enterprise",
+                                                "wpa2_enterprise",
+                                                "wpa_enterprise_mixed",
+                                                "wps"
+                                            ]
+                                        },
+                                        "ciphers": {
+                                            "id": "ciphers",
+                                            "type": "array"
+                                        },
+                                        "key": {
+                                            "id": "key",
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
