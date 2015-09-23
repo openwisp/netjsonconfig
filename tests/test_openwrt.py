@@ -84,6 +84,7 @@ config interface 'lo'
                 {
                     "name": "eth0.1",
                     "type": "ethernet",
+                    "autostart": True,
                     "addresses": [
                         {
                             "address": "192.168.1.1",
@@ -110,16 +111,19 @@ config interface 'lo'
         expected = self._tabs("""package network
 
 config interface 'eth0_1'
+    option auto '1'
     option ifname 'eth0.1'
     option ipaddr '192.168.1.1/24'
     option proto 'static'
 
 config interface 'eth0_1_2'
+    option auto '1'
     option ifname 'eth0.1'
     option ipaddr '192.168.2.1/24'
     option proto 'static'
 
 config interface 'eth0_1_3'
+    option auto '1'
     option ifname 'eth0.1'
     option ip6addr 'fd87::1/128'
     option proto 'static'

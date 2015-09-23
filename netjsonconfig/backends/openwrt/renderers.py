@@ -26,12 +26,16 @@ class NetworkRenderer(BaseRenderer):
             for address in interface.get('addresses', []):
                 # prepare new UCI interface directive
                 uci_interface = interface.copy()
+                if uci_interface.get('autostart'):
+                    uci_interface['auto'] = interface['autostart']
+                    del uci_interface['autostart']
                 if uci_interface.get('addresses'):
                     del uci_interface['addresses']
                 if uci_interface.get('type'):
                     del uci_interface['type']
                 if uci_interface.get('wireless'):
                     del uci_interface['wireless']
+
                 # default values
                 address_key = None
                 address_value = None
