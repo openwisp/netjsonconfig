@@ -64,7 +64,7 @@ class NetworkRenderer(BaseRenderer):
                 if address_key and address_value:
                     uci_interface[address_key] = address_value
                 # determine if must be type bridge
-                bridges = self.backend._net_bridges.copy()
+                bridges = self.backend._net_bridges.copy()  # noqa
                 if interface['name'] in list(bridges.keys()):
                     bridge_members = bridges[interface['name']]
                     uci_interface['type'] = 'bridge'
@@ -216,7 +216,7 @@ class WirelessRenderer(BaseRenderer):
                 if wifi_interface.get('_attached'):
                     network += wifi_interface['_attached']
                 uci_wifi['network'] = ' '.join(network)
-                # determine encryption for wifi 
+                # determine encryption for wifi
                 if uci_wifi.get('encryption'):
                     del uci_wifi['encryption']
                     uci_encryption = self.__get_encryption(wireless)
@@ -235,7 +235,6 @@ class WirelessRenderer(BaseRenderer):
             'wpa2_personal': 'psk2',
             'wpa_personal_mixed': 'psk-mixed',
             'wpa_enterprise': 'wpa',
-            'wpa2_enterprise': 'wpa2',
             'wpa2_enterprise': 'wpa2',
             'wpa_enterprise_mixed': 'wpa-mixed',
             'wps': 'psk'

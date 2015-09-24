@@ -52,7 +52,8 @@ class OpenWrt(object):
         OpenWRT declare bridges in /etc/config/network
         but wireless interfaces are attached to ethernet ones
         with declarations that go in /etc/config/wireless
-        this method
+        this method populates a few auxiliary data structures
+        that are used to generate the correct UCI bridge settings
         """
         wifi = {}
         bridges = {}
