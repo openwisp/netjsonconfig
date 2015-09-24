@@ -33,7 +33,7 @@ class TestOpenWrt(unittest.TestCase):
             ]
         }
         o = OpenWrt(config)
-        self.assertEqual(json.loads(o.json(indent=4)), config)
+        self.assertEqual(json.loads(o.json()), config)
 
     def test_validate(self):
         o = OpenWrt({})
