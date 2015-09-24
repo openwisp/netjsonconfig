@@ -35,7 +35,8 @@ class NetworkRenderer(BaseRenderer):
                     del uci_interface['type']
                 if uci_interface.get('wireless'):
                     del uci_interface['wireless']
-
+                if uci_interface.get('_attached'):
+                    del uci_interface['_attached']
                 # default values
                 address_key = None
                 address_value = None
@@ -62,6 +63,14 @@ class NetworkRenderer(BaseRenderer):
                 # add address if any (with correct option name)
                 if address_key and address_value:
                     uci_interface[address_key] = address_value
+                # determine if must be type bridge
+                bridges = self.backend._net_bridges.copy()
+                if interface['name'] in list(bridges.keys()):
+                    bridge_members = bridges[interface['name']]
+                    uci_interface['type'] = 'bridge'
+                    uci_interface['ifname'] = ' '.join(bridge_members)
+                    # ensure type "bridge" is only given to one logical interface
+                    del bridges[interface['name']]
                 # append to interface list
                 uci_interfaces.append(sorted_dict(uci_interface))
                 counter += 1
@@ -198,7 +207,16 @@ class WirelessRenderer(BaseRenderer):
                     '802.11s': 'mesh'
                 }
                 uci_wifi['mode'] = modes[wireless['mode']]
-                uci_wifi['network'] = wifi_interface['name']
+                # wifi interface will be attached
+                # to the relative section in /etc/config/network
+                # but might be also attached to other interfaces
+                # indicated in "_attached", which is populated
+                # in OpenWrt.__find_bridges method
+                network = [wifi_interface['name']]
+                if wifi_interface.get('_attached'):
+                    network += wifi_interface['_attached']
+                uci_wifi['network'] = ' '.join(network)
+                # determine encryption for wifi 
                 if uci_wifi.get('encryption'):
                     del uci_wifi['encryption']
                     uci_encryption = self.__get_encryption(wireless)

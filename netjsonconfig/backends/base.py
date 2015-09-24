@@ -4,9 +4,10 @@ class BaseRenderer(object):
     """
     block_name = None
 
-    def __init__(self, config, env):
-        self.config = config
-        self.env = env
+    def __init__(self, backend):
+        self.config = backend.config
+        self.env = backend.env
+        self.backend = backend
 
     def cleanup(self, output):
         """

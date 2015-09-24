@@ -943,3 +943,116 @@ config wifi-iface
     option ssid 'adhoc-ssid'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_wifi_bridge(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                },
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "wireless": [
+                        {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open"
+                        }
+                    ]
+                },
+                {
+                    "name": "br-eth0",
+                    "type": "bridge",
+                    "bridge_members": [
+                        "eth0",
+                        "wlan0"
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option ipaddr '192.168.1.1/24'
+    option proto 'static'
+    option type 'bridge'
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'dhcp'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option mode 'ap'
+    option network 'wlan0 eth0'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_eth_bridge(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                },
+                {
+                    "name": "eth1",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ]
+                },
+                {
+                    "name": "br-eth0",
+                    "type": "bridge",
+                    "bridge_members": [
+                        "eth0",
+                        "eth1"
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0 eth1'
+    option ipaddr '192.168.1.1/24'
+    option proto 'static'
+    option type 'bridge'
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'dhcp'
+""")
+        self.assertEqual(o.render(), expected)
