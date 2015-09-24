@@ -126,6 +126,9 @@ class SystemRenderer(BaseRenderer):
             })
         return sorted_dict(general)
 
+    def _get_ntp(self):
+        return sorted_dict(self.config.get('ntp', {}))
+
 
 class WirelessRenderer(BaseRenderer):
     """

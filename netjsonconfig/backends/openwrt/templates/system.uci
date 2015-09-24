@@ -1,10 +1,25 @@
 {% if not is_empty %}
     package system
 
-    config system
-    {% for key, value in system.items() %}
-        {% if value not in ['', None] %}
-            option {{ key }} '{{ value }}'
+    {% if system %}
+        config system
+        {% for key, value in system.items() %}
+            {% if value not in ['', None] %}
+                option {{ key }} '{{ value }}'
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if ntp %}
+        config timeserver 'ntp'
+        {% if ntp.server %}
+            {% for item in ntp.server %}
+                list server '{{ item }}'
+            {% endfor %}
         {% endif %}
-    {% endfor %}
+        {% for key, value in ntp.items() %}
+            {% if key != 'server' and value not in ['', None] %}
+                option {{ key }} '{{ value }}'
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endif %}

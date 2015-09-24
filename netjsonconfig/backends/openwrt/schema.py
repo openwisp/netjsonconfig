@@ -44,6 +44,26 @@ schema = merge_dict(default_schema, {
                 }
             }
         }
+    },
+    "ntp": {
+        "id": "ntp",
+        "type": "object",
+        "title": "ntp settings",
+        "additionalProperties": True,
+        "properties": {
+            "enabled": {
+                "id": "enabled",
+                "type": "boolean"
+            },
+            "enable_server": {
+                "id": "enable_server",
+                "type": "boolean"
+            },
+            "server": {
+                "id": "server",
+                "type": "array"
+            }
+        }
     }
 })
 
