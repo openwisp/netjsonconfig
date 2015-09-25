@@ -216,6 +216,9 @@ schema = {
                 "type": "object",
                 "title": "Interface",
                 "additionalProperties": True,
+                "required": [
+                    "name"
+                ],
                 "properties": {
                     "type": {
                         "id": "type",
