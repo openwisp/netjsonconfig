@@ -327,6 +327,15 @@ config interface 'mobile0'
                             "mask": 24,
                             "proto": "static",
                             "family": "ipv4"
+                        },
+                        # most probably a config that wouldn't work in practice
+                        # but needed to ensure that only the first
+                        # logical interface contains bridge information
+                        {
+                            "address": "10.0.0.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
                         }
                     ]
                 },
@@ -356,6 +365,11 @@ config interface 'eth0'
     option ipaddr '192.168.1.1/24'
     option proto 'static'
     option type 'bridge'
+
+config interface 'eth0_2'
+    option ifname 'eth0'
+    option ipaddr '10.0.0.1/24'
+    option proto 'static'
 
 config interface 'eth1'
     option ifname 'eth1'

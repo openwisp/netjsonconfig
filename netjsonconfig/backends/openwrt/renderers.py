@@ -20,8 +20,14 @@ class NetworkRenderer(BaseRenderer):
         uci_interfaces = []
         for interface in interfaces:
             counter = 1
+            is_bridge = False
             # ensure uci interface name is valid
             uci_name = interface['name'].replace('.', '_')
+            # determine if must be type bridge
+            bridges = self.backend._net_bridges  # noqa
+            if interface['name'] in bridges.keys():
+                is_bridge = True
+                bridge_members = ' '.join(bridges[interface['name']])
             # address list defaults to empty list
             for address in interface.get('addresses', []):
                 # prepare new UCI interface directive
@@ -63,14 +69,11 @@ class NetworkRenderer(BaseRenderer):
                 # add address if any (with correct option name)
                 if address_key and address_value:
                     uci_interface[address_key] = address_value
-                # determine if must be type bridge
-                bridges = self.backend._net_bridges.copy()  # noqa
-                if interface['name'] in list(bridges.keys()):
-                    bridge_members = bridges[interface['name']]
+                if is_bridge:
                     uci_interface['type'] = 'bridge'
-                    uci_interface['ifname'] = ' '.join(bridge_members)
+                    uci_interface['ifname'] = bridge_members
                     # ensure type "bridge" is only given to one logical interface
-                    del bridges[interface['name']]
+                    is_bridge = False
                 # append to interface list
                 uci_interfaces.append(sorted_dict(uci_interface))
                 counter += 1
