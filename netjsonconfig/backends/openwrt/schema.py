@@ -64,6 +64,67 @@ schema = merge_dict(default_schema, {
                 "type": "array"
             }
         }
+    },
+    "ip_rules": {
+        "id": "ip_rules",
+        "type": "array",
+        "title": "Ip rules",
+        "uniqueItems": True,
+        "additionalItems": False,
+        "items": {
+            "type": "object",
+            "title": "Ip rule",
+            "additionalProperties": True,
+            "properties": {
+                "in": {
+                    "id": "in",
+                    "type": "string"
+                },
+                "out": {
+                    "id": "out",
+                    "type": "string"
+                },
+                "src": {
+                    "id": "src",
+                    "type": "string"
+                },
+                "dest": {
+                    "id": "dest",
+                    "type": "string"
+                },
+                "tos": {
+                    "id": "tos",
+                    "type": "integer"
+                },
+                "mark": {
+                    "id": "mark",
+                    "type": "string"
+                },
+                "invert": {
+                    "id": "invert",
+                    "type": "boolean",
+                    "default": False
+                },
+                "lookup": {
+                    "id": "invert",
+                    "type": "string"
+                },
+                "goto": {
+                    "id": "goto",
+                    "type": "integer"
+                },
+                "action": {
+                    "id": "action",
+                    "type": "string",
+                    "enum": [
+                        "prohibit",
+                        "unreachable",
+                        "blackhole",
+                        "throw"
+                    ]
+                }
+            }
+        }
     }
 })
 

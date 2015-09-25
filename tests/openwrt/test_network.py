@@ -413,3 +413,65 @@ config interface 'eth0'
     option proto 'static'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_rules(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "ip_rules": [
+                {
+                    "in": "eth0",
+                    "out": "eth1",
+                    "src": "192.168.1.0/24",
+                    "dest": "192.168.2.0/24",
+                    "tos": 2,
+                    "mark": "0x0/0x1",
+                    "invert": True,
+                    "lookup": "0",
+                    "action": "blackhole"
+                },
+                {
+                    "src": "192.168.1.0/24",
+                    "dest": "192.168.3.0/24",
+                    "goto": 0
+                },
+                {
+                    "in": "vpn",
+                    "dest": "fdca:1234::/64",
+                    "action": "prohibit"
+                },
+                {
+                    "in": "vpn",
+                    "src": "fdca:1235::/64",
+                    "action": "prohibit"
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config rule
+    option action 'blackhole'
+    option dest '192.168.2.0/24'
+    option in 'eth0'
+    option invert '1'
+    option lookup '0'
+    option mark '0x0/0x1'
+    option out 'eth1'
+    option src '192.168.1.0/24'
+    option tos '2'
+
+config rule
+    option dest '192.168.3.0/24'
+    option goto '0'
+    option src '192.168.1.0/24'
+
+config rule6
+    option action 'prohibit'
+    option dest 'fdca:1234::/64'
+    option in 'vpn'
+
+config rule6
+    option action 'prohibit'
+    option in 'vpn'
+    option src 'fdca:1235::/64'
+""")
+        self.assertEqual(o.render(), expected)

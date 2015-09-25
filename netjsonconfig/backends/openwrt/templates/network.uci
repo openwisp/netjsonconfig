@@ -20,4 +20,13 @@
             {% endfor %}
 
     {% endfor %}
+    {% for rule in ip_rules %}
+        config {{ rule.pop('block_name') }}
+            {% for key, value in rule.items() %}
+                {% if value not in ['', None] %}
+                    option {{ key }} '{{ value }}'
+                {% endif %}
+            {% endfor %}
+
+    {% endfor %}
 {% endif %}

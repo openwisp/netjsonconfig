@@ -1,4 +1,4 @@
-from ipaddress import ip_interface
+from ipaddress import ip_interface, ip_network
 
 from .timezones import timezones
 from ..base import BaseRenderer
@@ -112,6 +112,24 @@ class NetworkRenderer(BaseRenderer):
             uci_routes.append(sorted_dict(uci_route))
             counter += 1
         return uci_routes
+
+    def _get_ip_rules(self):
+        rules = self.config.get('ip_rules', [])
+        uci_rules = []
+        for rule in rules:
+            uci_rule = rule.copy()
+            src_net = None
+            dest_net = None
+            family = 4
+            if rule.get('src'):
+                src_net = ip_network(rule['src'])
+            if rule.get('dest'):
+                dest_net = ip_network(rule['dest'])
+            if dest_net or src_net:
+                family = dest_net.version if dest_net else src_net.version
+            uci_rule['block_name'] = 'rule{0}'.format(family).replace('4', '')
+            uci_rules.append(sorted_dict(uci_rule))
+        return uci_rules
 
     def __get_dns_servers(self):
         dns = self.config.get('dns_servers', None)
