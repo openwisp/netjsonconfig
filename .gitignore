@@ -58,5 +58,4 @@ target/
 
 # other
 *.DS_Store*
-*~
-__*
+.__*
