@@ -376,3 +376,40 @@ config interface 'eth1'
     option proto 'dhcp'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_dns(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ],
+            "dns_servers": [
+                "10.11.12.13",
+                "8.8.8.8"
+            ],
+            "dns_search": [
+                "netjson.org",
+                "openwisp.org",
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option dns '10.11.12.13 8.8.8.8'
+    option dns_search 'netjson.org openwisp.org'
+    option ifname 'eth0'
+    option ipaddr '192.168.1.1/24'
+    option proto 'static'
+""")
+        self.assertEqual(o.render(), expected)

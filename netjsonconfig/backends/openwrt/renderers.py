@@ -64,7 +64,9 @@ class NetworkRenderer(BaseRenderer):
                 uci_interface.update({
                     'name': name,
                     'ifname': interface['name'],
-                    'proto': proto
+                    'proto': proto,
+                    'dns': self.__get_dns_servers(),
+                    'dns_search': self.__get_dns_search()
                 })
                 # add address if any (with correct option name)
                 if address_key and address_value:
@@ -110,6 +112,18 @@ class NetworkRenderer(BaseRenderer):
             uci_routes.append(sorted_dict(uci_route))
             counter += 1
         return uci_routes
+
+    def __get_dns_servers(self):
+        dns = self.config.get('dns_servers', None)
+        if dns:
+            dns = ' '.join(dns)
+        return dns
+
+    def __get_dns_search(self):
+        dns = self.config.get('dns_search', None)
+        if dns:
+            dns = ' '.join(dns)
+        return dns
 
 
 class SystemRenderer(BaseRenderer):
