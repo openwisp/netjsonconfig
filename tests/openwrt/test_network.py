@@ -1,18 +1,13 @@
 import unittest
-
 from netjsonconfig import OpenWrt
 
+from .utils import _TabsMixin
 
-class TestNetworkRendererer(unittest.TestCase):
+
+class TestNetworkRendererer(unittest.TestCase, _TabsMixin):
     """
     tests for backends.openwrt.renderers.NetworkRendererer
     """
-    def _tabs(self, string):
-        """
-        replace 4 spaces with 1 tab
-        """
-        return string.replace('    ', '\t')
-
     def test_loopback(self):
         o = OpenWrt({
             "type": "DeviceConfiguration",
