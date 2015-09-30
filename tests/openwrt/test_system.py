@@ -1,5 +1,6 @@
 import unittest
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 
 from .utils import _TabsMixin
 
@@ -60,7 +61,7 @@ config timeserver 'ntp'
                     "sysfs": "tp-link:green:usb1",
                     "trigger": "usbdev",
                     "dev": "1-1.1",
-                    "interval": "50",
+                    "interval": 50,
                 },
                 {
                     "name": "WLAN2G",
@@ -83,4 +84,16 @@ config led 'led_wlan2g'
     option sysfs 'tp-link:blue:wlan2g'
     option trigger 'phy0tpt'
 """)
+        print(o.render())
         self.assertEqual(o.render(), expected)
+
+    def test_led_schema_validation(self):
+        o = OpenWrt({
+            "led": [
+                {
+                    "invalid": True
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()

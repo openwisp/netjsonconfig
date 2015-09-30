@@ -43,144 +43,144 @@ schema = merge_dict(default_schema, {
                     }
                 }
             }
-        }
-    },
-    "ntp": {
-        "id": "ntp",
-        "type": "object",
-        "title": "ntp settings",
-        "additionalProperties": True,
-        "properties": {
-            "enabled": {
-                "id": "enabled",
-                "type": "boolean"
-            },
-            "enable_server": {
-                "id": "enable_server",
-                "type": "boolean"
-            },
-            "server": {
-                "id": "server",
-                "type": "array"
-            }
-        }
-    },
-    "ip_rules": {
-        "id": "ip_rules",
-        "type": "array",
-        "title": "Ip rules",
-        "uniqueItems": True,
-        "additionalItems": True,
-        "items": {
+        },
+        "ntp": {
+            "id": "ntp",
             "type": "object",
-            "title": "Ip rule",
+            "title": "ntp settings",
             "additionalProperties": True,
             "properties": {
-                "in": {
-                    "id": "in",
-                    "type": "string"
-                },
-                "out": {
-                    "id": "out",
-                    "type": "string"
-                },
-                "src": {
-                    "id": "src",
-                    "type": "string"
-                },
-                "dest": {
-                    "id": "dest",
-                    "type": "string"
-                },
-                "tos": {
-                    "id": "tos",
-                    "type": "integer"
-                },
-                "mark": {
-                    "id": "mark",
-                    "type": "string"
-                },
-                "invert": {
-                    "id": "invert",
-                    "type": "boolean",
-                    "default": False
-                },
-                "lookup": {
-                    "id": "invert",
-                    "type": "string"
-                },
-                "goto": {
-                    "id": "goto",
-                    "type": "integer"
-                },
-                "action": {
-                    "id": "action",
-                    "type": "string",
-                    "enum": [
-                        "prohibit",
-                        "unreachable",
-                        "blackhole",
-                        "throw"
-                    ]
-                }
-            }
-        }
-    },
-    "led": {
-        "id": "led",
-        "type": "array",
-        "title": "LED config",
-        "uniqueItems": True,
-        "additionalItems": True,
-        "items": {
-            "type": "object",
-            "title": "LED",
-            "additionalProperties": True,
-            "required": [
-                "name",
-                "sysfs",
-                "trigger"
-            ],
-            "properties": {
-                "name": {
-                    "id": "name",
-                    "type": "string"
-                },
-                "default": {
-                    "id": "default",
+                "enabled": {
+                    "id": "enabled",
                     "type": "boolean"
                 },
-                "dev": {
-                    "id": "dev",
-                    "type": "string"
+                "enable_server": {
+                    "id": "enable_server",
+                    "type": "boolean"
                 },
-                "sysfs": {
-                    "id": "sysfs",
-                    "type": "string"
-                },
-                "trigger": {
-                    "id": "trigger",
-                    "type": "string"
-                },
-                "delayoff": {
-                    "id": "delayoff",
-                    "type": "integer"
-                },
-                "delayon": {
-                    "id": "delayon",
-                    "type": "integer"
-                },
-                "interval": {
-                    "id": "interval",
-                    "type": "integer"
-                },
-                "message": {
-                    "id": "message",
-                    "type": "string"
-                },
-                "mode": {
-                    "id": "mode",
-                    "type": "string"
+                "server": {
+                    "id": "server",
+                    "type": "array"
+                }
+            }
+        },
+        "ip_rules": {
+            "id": "ip_rules",
+            "type": "array",
+            "title": "Ip rules",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "items": {
+                "type": "object",
+                "title": "Ip rule",
+                "additionalProperties": True,
+                "properties": {
+                    "in": {
+                        "id": "in",
+                        "type": "string"
+                    },
+                    "out": {
+                        "id": "out",
+                        "type": "string"
+                    },
+                    "src": {
+                        "id": "src",
+                        "type": "string"
+                    },
+                    "dest": {
+                        "id": "dest",
+                        "type": "string"
+                    },
+                    "tos": {
+                        "id": "tos",
+                        "type": "integer"
+                    },
+                    "mark": {
+                        "id": "mark",
+                        "type": "string"
+                    },
+                    "invert": {
+                        "id": "invert",
+                        "type": "boolean",
+                        "default": False
+                    },
+                    "lookup": {
+                        "id": "invert",
+                        "type": "string"
+                    },
+                    "goto": {
+                        "id": "goto",
+                        "type": "integer"
+                    },
+                    "action": {
+                        "id": "action",
+                        "type": "string",
+                        "enum": [
+                            "prohibit",
+                            "unreachable",
+                            "blackhole",
+                            "throw"
+                        ]
+                    }
+                }
+            }
+        },
+        "led": {
+            "id": "led",
+            "type": "array",
+            "title": "LED config",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "items": {
+                "type": "object",
+                "title": "LED",
+                "additionalProperties": True,
+                "required": [
+                    "name",
+                    "sysfs",
+                    "trigger"
+                ],
+                "properties": {
+                    "name": {
+                        "id": "name",
+                        "type": "string"
+                    },
+                    "default": {
+                        "id": "default",
+                        "type": "boolean"
+                    },
+                    "dev": {
+                        "id": "dev",
+                        "type": "string"
+                    },
+                    "sysfs": {
+                        "id": "sysfs",
+                        "type": "string"
+                    },
+                    "trigger": {
+                        "id": "trigger",
+                        "type": "string"
+                    },
+                    "delayoff": {
+                        "id": "delayoff",
+                        "type": "integer"
+                    },
+                    "delayon": {
+                        "id": "delayon",
+                        "type": "integer"
+                    },
+                    "interval": {
+                        "id": "interval",
+                        "type": "integer"
+                    },
+                    "message": {
+                        "id": "message",
+                        "type": "string"
+                    },
+                    "mode": {
+                        "id": "mode",
+                        "type": "string"
+                    }
                 }
             }
         }
