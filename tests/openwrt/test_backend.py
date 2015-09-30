@@ -45,6 +45,10 @@ class TestBackend(unittest.TestCase):
         with self.assertRaises(ValidationError):
             o.validate()
 
+    def test_type_error(self):
+        with self.assertRaises(TypeError):
+            o = OpenWrt([])
+
     def test_system_invalid_timezone(self):
         o = OpenWrt({
             "type": "DeviceConfiguration",

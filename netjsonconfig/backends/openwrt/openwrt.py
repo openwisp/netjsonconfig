@@ -19,6 +19,12 @@ class OpenWrt(object):
     ]
 
     def __init__(self, config):
+        """
+        :param config: python dict containing a valid NetJSON DeviceConfiguration
+        :raises TypeError: raises an exception if config is not an instance of dict
+        """
+        if not isinstance(config, dict):
+            raise TypeError('Config argument must be an istance of dict or one of its subclasses')
         self.config = config
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt', 'templates'),
                                trim_blocks=True)
