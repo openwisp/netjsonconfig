@@ -70,7 +70,7 @@ schema = merge_dict(default_schema, {
         "type": "array",
         "title": "Ip rules",
         "uniqueItems": True,
-        "additionalItems": False,
+        "additionalItems": True,
         "items": {
             "type": "object",
             "title": "Ip rule",
