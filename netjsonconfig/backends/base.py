@@ -9,6 +9,10 @@ class BaseRenderer(object):
         self.env = backend.env
         self.backend = backend
 
+    @classmethod
+    def get_package(cls):
+        return str(cls.__name__).replace('Renderer', '').lower()
+
     def cleanup(self, output):
         """
         Performs cleanup of output (indentation, new lines)
@@ -30,11 +34,8 @@ class BaseRenderer(object):
         """
         Renders config block with jinja2 templating engine
         """
-        # determine block name
-        default_name = str(self.__class__.__name__).replace('Renderer', '').lower()
-        block_name = getattr(self, 'block_name') or default_name
         # get jinja2 template
-        template_name = '{0}.uci'.format(block_name)
+        template_name = '{0}.uci'.format(self.get_package())
         template = self.env.get_template(template_name)
         # render template and cleanup
         context = self.get_context()
