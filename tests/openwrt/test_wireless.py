@@ -10,7 +10,6 @@ class TestWirelessRendererer(unittest.TestCase, _TabsMixin):
     """
     def test_radio(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "radios": [
                 {
                     "name": "radio0",
@@ -60,7 +59,6 @@ config wifi-device 'radio1'
 
     def test_radio_2ghz_mac80211(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "radios": [
                 {
                     "name": "radio0",
@@ -104,7 +102,6 @@ config wifi-device 'radio1'
 
     def test_radio_2ghz_athk(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "radios": [
                 {
                     "name": "radio0",
@@ -148,7 +145,6 @@ config wifi-device 'radio1'
 
     def test_radio_ac_and_custom_attrs(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "radios": [
                 {
                     "name": "radio0",
@@ -180,7 +176,6 @@ config wifi-device 'radio0'
 
     def test_wifi_interfaces(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -243,7 +238,6 @@ config wifi-iface
 
     def test_wifi_encryption_wep_open(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -289,7 +283,6 @@ config wifi-iface
 
     def test_wifi_encryption_wep_shared(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -335,7 +328,6 @@ config wifi-iface
 
     def test_wifi_encryption_wpa_personal(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -383,7 +375,6 @@ config wifi-iface
 
     def test_wifi_encryption_wpa2_personal(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -432,7 +423,6 @@ config wifi-iface
 
     def test_encryption_disabled(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -479,7 +469,6 @@ config wifi-iface
 
     def test_multiple_ssid(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -539,7 +528,6 @@ config wifi-iface
 
     def test_wifi_bridge(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth0",

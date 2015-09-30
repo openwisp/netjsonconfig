@@ -11,7 +11,6 @@ class TestBackend(unittest.TestCase):
     """
     def test_json(self):
         config = {
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "lo",
@@ -31,10 +30,6 @@ class TestBackend(unittest.TestCase):
         self.assertEqual(json.loads(o.json()), config)
 
     def test_validate(self):
-        o = OpenWrt({})
-        with self.assertRaises(ValidationError):
-            o.validate()
-
         o = OpenWrt({'type': 'WRONG'})
         with self.assertRaises(ValidationError):
             o.validate()
@@ -51,7 +46,6 @@ class TestBackend(unittest.TestCase):
 
     def test_system_invalid_timezone(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "general": {
                 "hostname": "test_system",
                 "timezone": "WRONG",
@@ -62,7 +56,6 @@ class TestBackend(unittest.TestCase):
 
     def test_schema_radio_wrong_driver(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "radios": [
                 {
                     "name": "radio0",
@@ -80,7 +73,6 @@ class TestBackend(unittest.TestCase):
 
     def test_schema_radio_wrong_protocol(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "radios": [
                 {
                     "name": "radio0",

@@ -10,7 +10,6 @@ class TestNetworkRendererer(unittest.TestCase, _TabsMixin):
     """
     def test_loopback(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "lo",
@@ -37,7 +36,6 @@ config interface 'lo'
 
     def test_multiple_ip(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth0.1",
@@ -90,7 +88,6 @@ config interface 'eth0_1_3'
 
     def test_dhcp(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth0",
@@ -114,7 +111,6 @@ config interface 'eth0'
 
     def test_multiple_dhcp(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth0",
@@ -146,7 +142,6 @@ config interface 'eth0_2'
 
     def test_ipv4_routes(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth1",
@@ -207,7 +202,6 @@ config route 'route2'
 
     def test_ipv6_routes(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth1",
@@ -260,7 +254,6 @@ config route6
 
     def test_additional_proto(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "mobile0",
@@ -282,7 +275,6 @@ config interface 'mobile0'
 
     def test_interface_custom_attrs(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "mobile0",
@@ -311,7 +303,6 @@ config interface 'mobile0'
 
     def test_eth_bridge(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth0",
@@ -374,7 +365,6 @@ config interface 'eth1'
 
     def test_dns(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "eth0",
@@ -411,7 +401,6 @@ config interface 'eth0'
 
     def test_rules(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "ip_rules": [
                 {
                     "in": "eth0",

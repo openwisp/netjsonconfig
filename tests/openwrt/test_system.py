@@ -10,7 +10,6 @@ class TestSystemRendererer(unittest.TestCase, _TabsMixin):
     """
     def test_system(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "general": {
                 "hostname": "test_system",
                 "timezone": "Europe/Rome",
@@ -30,7 +29,6 @@ config system
 
     def test_ntp(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "ntp": {
                 "enabled": True,
                 "enable_server": False,
@@ -56,7 +54,6 @@ config timeserver 'ntp'
 
     def test_led_1(self):
         o = OpenWrt({
-            "type": "DeviceConfiguration",
             "led": [
                 {
                     "name": "USB1",
