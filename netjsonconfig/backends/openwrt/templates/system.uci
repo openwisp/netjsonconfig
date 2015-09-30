@@ -22,4 +22,13 @@
             {% endif %}
         {% endfor %}
     {% endif %}
+    {% for led in leds %}
+        config led 'led_{{ led.name.lower() }}'
+            {% for key, value in led.items() %}
+                {% if value not in ['', None] %}
+                    option {{ key }} '{{ value }}'
+                {% endif %}
+            {% endfor %}
+
+    {% endfor %}
 {% endif %}

@@ -125,6 +125,65 @@ schema = merge_dict(default_schema, {
                 }
             }
         }
+    },
+    "led": {
+        "id": "led",
+        "type": "array",
+        "title": "LED config",
+        "uniqueItems": True,
+        "additionalItems": True,
+        "items": {
+            "type": "object",
+            "title": "LED",
+            "additionalProperties": True,
+            "required": [
+                "name",
+                "sysfs",
+                "trigger"
+            ],
+            "properties": {
+                "name": {
+                    "id": "name",
+                    "type": "string"
+                },
+                "default": {
+                    "id": "default",
+                    "type": "boolean"
+                },
+                "dev": {
+                    "id": "dev",
+                    "type": "string"
+                },
+                "sysfs": {
+                    "id": "sysfs",
+                    "type": "string"
+                },
+                "trigger": {
+                    "id": "trigger",
+                    "type": "string"
+                },
+                "delayoff": {
+                    "id": "delayoff",
+                    "type": "integer"
+                },
+                "delayon": {
+                    "id": "delayon",
+                    "type": "integer"
+                },
+                "interval": {
+                    "id": "interval",
+                    "type": "integer"
+                },
+                "message": {
+                    "id": "message",
+                    "type": "string"
+                },
+                "mode": {
+                    "id": "mode",
+                    "type": "string"
+                }
+            }
+        }
     }
 })
 

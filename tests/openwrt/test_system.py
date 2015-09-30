@@ -53,3 +53,37 @@ config timeserver 'ntp'
     option enabled '1'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_led_1(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "led": [
+                {
+                    "name": "USB1",
+                    "sysfs": "tp-link:green:usb1",
+                    "trigger": "usbdev",
+                    "dev": "1-1.1",
+                    "interval": "50",
+                },
+                {
+                    "name": "WLAN2G",
+                    "sysfs": "tp-link:blue:wlan2g",
+                    "trigger": "phy0tpt"
+                }
+            ]
+        })
+        expected = self._tabs("""package system
+
+config led 'led_usb1'
+    option dev '1-1.1'
+    option interval '50'
+    option name 'USB1'
+    option sysfs 'tp-link:green:usb1'
+    option trigger 'usbdev'
+
+config led 'led_wlan2g'
+    option name 'WLAN2G'
+    option sysfs 'tp-link:blue:wlan2g'
+    option trigger 'phy0tpt'
+""")
+        self.assertEqual(o.render(), expected)

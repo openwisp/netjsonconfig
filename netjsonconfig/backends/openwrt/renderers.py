@@ -164,6 +164,13 @@ class SystemRenderer(BaseRenderer):
     def _get_ntp(self):
         return sorted_dict(self.config.get('ntp', {}))
 
+    def _get_leds(self):
+        uci_leds = []
+        for led in self.config.get('led', []):
+            uci_leds.append(sorted_dict(led))
+        # import pdb; pdb.set_trace()
+        return uci_leds
+
 
 class WirelessRenderer(BaseRenderer):
     """
