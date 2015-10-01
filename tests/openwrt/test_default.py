@@ -61,3 +61,17 @@ config core 'main'
     option resourcebase '/luci-static/resources'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_skip(self):
+        o = OpenWrt({"skipme": {"enabled": True}})
+        self.assertEqual(o.render(), '')
+
+    def test_warning(self):
+        o = OpenWrt({
+            "luci": [
+                {
+                    "unrecognized": True
+                }
+            ]
+        })
+        self.assertEqual(o.render(), 'package luci\n\n')

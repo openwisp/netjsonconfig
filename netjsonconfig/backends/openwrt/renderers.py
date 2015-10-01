@@ -1,3 +1,4 @@
+import json
 from ipaddress import ip_interface, ip_network
 
 from .timezones import timezones
@@ -317,9 +318,22 @@ class DefaultRenderer(BaseRenderer):
         custom_packages = {}
         for key, value in self.config.items():
             if key not in ignore_list:
+                block_list = []
                 # sort each config block
                 if isinstance(value, list):
-                    value = [sorted_dict(config) for config in value]
-                custom_packages[key] = value
+                    for block in value[:]:
+                        # config block must be a dict
+                        # with a key named "config_name"
+                        # otherwise it's skipped with a warning
+                        if not isinstance(block, dict) or 'config_name' not in block:
+                            json_block = json.dumps(block, indent=4)
+                            print('Unrecognized config block was skipped:\n\n'
+                                  '{0}\n\n'.format(json_block))
+                            continue
+                        block_list.append(sorted_dict(block))
+                # if not a list just skip
+                else:
+                    continue
+                custom_packages[key] = block_list
         # sort custom packages
         return sorted_dict(custom_packages)
