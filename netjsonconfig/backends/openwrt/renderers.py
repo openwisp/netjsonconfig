@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from ipaddress import ip_interface, ip_network
 
 from .timezones import timezones
@@ -31,7 +32,7 @@ class NetworkRenderer(BaseRenderer):
             # address list defaults to empty list
             for address in interface.get('addresses', []):
                 # prepare new UCI interface directive
-                uci_interface = interface.copy()
+                uci_interface = deepcopy(interface)
                 if uci_interface.get('autostart'):
                     uci_interface['auto'] = interface['autostart']
                     del uci_interface['autostart']
