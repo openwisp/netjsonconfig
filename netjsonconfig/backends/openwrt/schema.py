@@ -183,6 +183,69 @@ schema = merge_dict(default_schema, {
                     }
                 }
             }
+        },
+        "switch": {
+            "id": "switch",
+            "type": "array",
+            "title": "VLANs",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "title": "Programmable Switch",
+            "items": {
+                "type": "object",
+                "additionalProperties": True,
+                "required": [
+                    "name",
+                    "reset",
+                    "enable_vlan",
+                    "vlan"
+                ],
+                "properties": {
+                    "name": {
+                        "id": "name",
+                        "type": "string"
+                    },
+                    "reset": {
+                        "id": "reset",
+                        "type": "boolean"
+                    },
+                    "enable_vlan": {
+                        "id": "enable_vlan",
+                        "type": "boolean"
+                    },
+                    "vlan": {
+                        "id": "vlan",
+                        "type": "array",
+                        "title": "VLANs",
+                        "uniqueItems": True,
+                        "additionalItems": True,
+                        "items": {
+                            "type": "object",
+                            "title": "VLAN",
+                            "additionalProperties": True,
+                            "required": [
+                                "device",
+                                "vlan",
+                                "ports"
+                            ],
+                            "properties": {
+                                "device": {
+                                    "id": "device",
+                                    "type": "string"
+                                },
+                                "vlan": {
+                                    "id": "vlan",
+                                    "type": "integer"
+                                },
+                                "ports": {
+                                    "id": "ports",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 })

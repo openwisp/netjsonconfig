@@ -144,6 +144,14 @@ class NetworkRenderer(BaseRenderer):
             dns = ' '.join(dns)
         return dns
 
+    def _get_switches(self):
+        uci_switches = []
+        for switch in self.config.get('switch', []):
+            uci_switch = sorted_dict(deepcopy(switch))
+            uci_switch['vlan'] = [sorted_dict(vlan) for vlan in uci_switch['vlan']]
+            uci_switches.append(uci_switch)
+        return uci_switches
+
 
 class SystemRenderer(BaseRenderer):
     """

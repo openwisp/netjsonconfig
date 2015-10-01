@@ -29,4 +29,22 @@
             {% endfor %}
 
     {% endfor %}
+    {% for switch in switches %}
+        config switch
+            {% for key, value in switch.items() %}
+                {% if key != 'vlan' and value not in ['', None] %}
+                    option {{ key }} '{{ value }}'
+                {% endif %}
+            {% endfor %}
+
+            {% for vlan in switch.vlan %}
+                config switch_vlan
+                    {% for key, value in vlan.items() %}
+                        {% if value not in ['', None] %}
+                            option {{ key }} '{{ value }}'
+                        {% endif %}
+                    {% endfor %}
+
+            {% endfor %}
+    {% endfor %}
 {% endif %}

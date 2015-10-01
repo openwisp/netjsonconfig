@@ -8,6 +8,8 @@ class TestNetworkRendererer(unittest.TestCase, _TabsMixin):
     """
     tests for backends.openwrt.renderers.NetworkRendererer
     """
+    maxDiff = None
+
     def test_loopback(self):
         o = OpenWrt({
             "interfaces": [
@@ -457,5 +459,68 @@ config rule6
     option action 'prohibit'
     option in 'vpn'
     option src 'fdca:1235::/64'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_switch(self):
+        o = OpenWrt({
+            "switch": [
+                {
+                    "name": "switch0",
+                    "reset": True,
+                    "enable_vlan": True,
+                    "vlan": [
+                        {
+                            "device": "switch0",
+                            "vlan": 1,
+                            "ports": "0t 2 3 4 5"
+                        },
+                        {
+                            "device": "switch0",
+                            "vlan": 2,
+                            "ports": "0t 1"
+                        }
+                    ]
+                },
+                {
+                    "name": "switch1",
+                    "reset": True,
+                    "enable_vlan": True,
+                    "vlan": [
+                        {
+                            "device": "switch1",
+                            "vlan": 3,
+                            "ports": "0t 6 7"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config switch
+    option enable_vlan '1'
+    option name 'switch0'
+    option reset '1'
+
+config switch_vlan
+    option device 'switch0'
+    option ports '0t 2 3 4 5'
+    option vlan '1'
+
+config switch_vlan
+    option device 'switch0'
+    option ports '0t 1'
+    option vlan '2'
+
+config switch
+    option enable_vlan '1'
+    option name 'switch1'
+    option reset '1'
+
+config switch_vlan
+    option device 'switch1'
+    option ports '0t 6 7'
+    option vlan '3'
 """)
         self.assertEqual(o.render(), expected)
