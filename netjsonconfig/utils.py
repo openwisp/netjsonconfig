@@ -3,12 +3,8 @@ from collections import OrderedDict
 
 def merge_dict(source, destination):
     """
-    run me with nosetests --with-doctest netjsonconfig/utils.py
-
-    >>> a = { 'first' : { 'all_rows' : { 'pass' : 'dog', 'number' : '1' } } }
-    >>> b = { 'first' : { 'all_rows' : { 'fail' : 'cat', 'number' : '5' } } }
-    >>> merge(b, a) == { 'first' : { 'all_rows' : { 'pass' : 'dog', 'fail' : 'cat', 'number' : '5' } } }
-    True
+    merge two dicts `source` and `destination`
+    `destination` overwrites `source`
     """
     for key, value in source.items():
         if isinstance(value, dict):
