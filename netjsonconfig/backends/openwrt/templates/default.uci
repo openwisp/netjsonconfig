@@ -1,0 +1,22 @@
+{% if not is_empty %}
+    {% for package, config_blocks in custom_packages.items() %}
+        package {{ package }}
+
+        {% for config_block in config_blocks %}
+            config {{ config_block.config_name }}{% if config_block.config_value %} '{{ config_block.config_value }}'{% endif %}
+
+            {% for key, value in config_block.items() %}
+                {% if not key.startswith('config_') and value not in ['', None] %}
+                    {% if value is string %}
+                        option {{ key }} '{{ value }}'
+                    {% else %}
+                        {% for list_value in value %}
+                            list {{ key }} '{{ list_value }}'
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+    {% endfor %}
+{% endif %}

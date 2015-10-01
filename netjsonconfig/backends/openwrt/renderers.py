@@ -10,7 +10,6 @@ class NetworkRenderer(BaseRenderer):
     Renders content importable with:
         uci import network
     """
-
     def _get_interfaces(self):
         """
         converts interfaces object to UCI interface directives
@@ -149,7 +148,6 @@ class SystemRenderer(BaseRenderer):
     Renders content importable with:
         uci import system
     """
-
     def _get_system(self):
         general = self.config.get('general', {}).copy()
         if general:
@@ -177,7 +175,6 @@ class WirelessRenderer(BaseRenderer):
     Renders content importable with:
         uci import wireless
     """
-
     def _get_radios(self):
         radios = self.config.get('radios', [])
         uci_radios = []
@@ -304,3 +301,24 @@ class WirelessRenderer(BaseRenderer):
         if encryption.get('ciphers'):
             uci['encryption'] += '+{0}'.format('+'.join(encryption['ciphers']))
         return uci
+
+
+class DefaultRenderer(BaseRenderer):
+    """
+    Default OpenWrt Renderer
+    Allows great flexibility in defining UCI configuration in JSON format
+    """
+    def _get_custom_packages(self):
+        # determine config keys to ignore
+        ignore_list = list(self.backend.schema['properties'].keys())
+        ignore_list += self.backend.get_packages()
+        # determine custom packages
+        custom_packages = {}
+        for key, value in self.config.items():
+            if key not in ignore_list:
+                # sort each config block
+                if isinstance(value, list):
+                    value = [sorted_dict(config) for config in value]
+                custom_packages[key] = value
+        # sort custom packages
+        return sorted_dict(custom_packages)
