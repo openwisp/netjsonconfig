@@ -226,7 +226,8 @@ class WirelessRenderer(BaseRenderer):
 
     def _get_wifi_interfaces(self):
         # select interfaces that have type == "wireless"
-        wifi_interfaces = [i for i in self.config.get('interfaces', []) if 'wireless' in i]
+        wifi_interfaces = [i for i in self.config.get('interfaces', [])
+                           if 'wireless' in i]
         # results container
         uci_wifi_ifaces = []
         for wifi_interface in wifi_interfaces:

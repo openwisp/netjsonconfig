@@ -25,12 +25,14 @@ class OpenWrt(object):
         :raises TypeError: raises an exception if config is not an instance of dict
         """
         if not isinstance(config, dict):
-            raise TypeError('Config argument must be an istance of dict or one of its subclasses')
+            raise TypeError('Config argument must be an istance '
+                            'of dict or one of its subclasses')
         # allow omitting NetJSON type
         if 'type' not in config:
             config.update({'type': 'DeviceConfiguration'})
         self.config = config
-        self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt', 'templates'),
+        self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt',
+                                                    'templates'),
                                trim_blocks=True)
         self.__find_bridges()
 
