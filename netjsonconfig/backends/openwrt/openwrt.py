@@ -1,12 +1,15 @@
 import json
+import re
+import tarfile
+from io import BytesIO
+
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
+from jinja2 import Environment, PackageLoader
 
 from . import renderers
 from .schema import schema
 from ...exceptions import ValidationError
-
-from jinja2 import Environment, PackageLoader
 
 
 class OpenWrt(object):
@@ -88,3 +91,26 @@ class OpenWrt(object):
                 if name in wifi.keys():
                     wifi[name]['_attached'] = net_names
         self._net_bridges = net_bridges
+
+    def generate(self, name='openwrt-config'):
+        """
+        Generates tar.gz restorable in OpenWRT with:
+            sysupgrade -r <file>
+        """
+        uci = self.render()
+        tar = tarfile.open('{0}.tar.gz'.format(name), 'w:gz')
+        # create a list with all the packages (and remove empty entries)
+        packages = re.split('package ', uci)
+        if '' in packages:
+            packages.remove('')
+        # for each package create a file with its contents in /etc/config
+        for package in packages:
+            lines = package.split('\n')
+            package_name = lines[0]
+            content_string = '\n'.join(lines[2:])
+            content_byte = BytesIO(content_string.encode('utf8'))
+            info = tarfile.TarInfo(name='/etc/config/{0}'.format(package_name))
+            info.size = len(content_string)
+            tar.addfile(tarinfo=info, fileobj=content_byte)
+        # close archive
+        tar.close()
