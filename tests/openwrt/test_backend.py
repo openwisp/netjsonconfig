@@ -13,7 +13,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     """
     tests for backends.openwrt.OpenWrt
     """
-    def test_json(self):
+    def test_json_method(self):
         config = {
             "interfaces": [
                 {
@@ -33,6 +33,9 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         o = OpenWrt(config)
         self.assertEqual(json.loads(o.json()), config)
 
+    def test_string_argument(self):
+        o = OpenWrt('{}')
+
     def test_validate(self):
         o = OpenWrt({'type': 'WRONG'})
         with self.assertRaises(ValidationError):
@@ -47,6 +50,8 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     def test_type_error(self):
         with self.assertRaises(TypeError):
             o = OpenWrt([])
+        with self.assertRaises(TypeError):
+            o = OpenWrt('NOTJSON[]\{\}')
 
     def test_system_invalid_timezone(self):
         o = OpenWrt({

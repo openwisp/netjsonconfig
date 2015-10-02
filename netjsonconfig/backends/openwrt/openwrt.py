@@ -1,5 +1,6 @@
 import json
 import re
+import six
 import tarfile
 from io import BytesIO
 
@@ -27,9 +28,14 @@ class OpenWrt(object):
         :param config: python dict containing a valid NetJSON DeviceConfiguration
         :raises TypeError: raises an exception if config is not an instance of dict
         """
+        if isinstance(config, six.string_types):
+            try:
+                config = json.loads(config)
+            except ValueError:
+                pass
         if not isinstance(config, dict):
             raise TypeError('Config argument must be an istance '
-                            'of dict or one of its subclasses')
+                            'of dict or a valid JSON string')
         # allow omitting NetJSON type
         if 'type' not in config:
             config.update({'type': 'DeviceConfiguration'})
