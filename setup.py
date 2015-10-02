@@ -60,5 +60,6 @@ setup(
         'Topic :: System :: Networking',
     ],
     install_requires=get_install_requires(),
-    test_suite='nose.collector'
+    test_suite='nose.collector',
+    scripts=['bin/netjsonconfig'],
 )

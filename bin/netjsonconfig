@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+
+import sys
+import argparse
+
+import netjsonconfig
+
+license = """
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+parser = argparse.ArgumentParser(description='Converts a NetJSON DeviceConfiguration object'
+                                             'to working router configurations.',
+                                 epilog=license,
+                                 prog='netjsonconfig')
+
+parser.add_argument('config',
+                    action='store',
+                    type=str,
+                    help='config file or string, must be valid NetJSON DeviceConfiguration')
+
+parser.add_argument('--backend', '-b',
+                    choices=['openwrt'],
+                    action='store',
+                    default='openwrt',
+                    type=str,
+                    help='Configuration backend: openwrt')
+
+parser.add_argument('--method', '-m',
+                    choices=['generate', 'render'],
+                    action='store',
+                    default='generate',
+                    help='Backend method to use. ("generate" creates a tar.gz, "render"'
+                         'returns the entire config as a string)')
+
+parser.add_argument('--verbose',
+                    action='store_true',
+                    default=False,
+                    help='verbose output')
+
+parser.add_argument('--version', '-v',
+                    action='version',
+                    version=netjsonconfig.get_version())
+
+args = parser.parse_args()
+
+# if config argument does not look like JSON try opening a file
+if not args.config.strip().startswith('{'):
+    try:
+        config = open(args.config, 'r').read()
+    except FileNotFoundError:
+        print('\n\tError: file "{0}" not found\n'.format(args.config))
+        sys.exit(1)
+else:
+    config = args.config.strip()
+
+backends = {
+    'openwrt': netjsonconfig.OpenWrt
+}
+
+backend_class = backends[args.backend]
+try:
+    instance = backend_class(config)
+except TypeError:
+    print('\n\tError: config argument contains invalid JSON\n')
+    sys.exit(2)
+
+try:
+    output = getattr(instance, args.method)()
+    if output:
+        print('{0}\n'.format(output))
+except netjsonconfig.exceptions.ValidationError as e:
+    if not args.verbose:
+        print('\n\tError: JSON Schema violation.\n'
+              '\tFor more information repeat the command using --verbose\n')
+    else:
+        print(e)
+    sys.exit(3)

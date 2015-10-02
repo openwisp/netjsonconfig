@@ -118,6 +118,22 @@ Will print::
         option proto 'static'
         option ip6addr 'fd87::1/128'
 
+Command line utility
+--------------------
+
+netjsonconfig ships a command line utility that can be
+used from the interactive shell or in bash scripts::
+
+    netjsonconfig --help
+
+A few common use scenarios:
+
+    # generate tar.gz from a NetJSON DeviceConfiguration object
+    netjsonconfig config.json
+
+    # see output of render OpenWrt render method
+    netjsonconfig --backend openwrt --method render config.json
+
 Running tests
 -------------
 

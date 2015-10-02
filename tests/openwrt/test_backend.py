@@ -47,6 +47,11 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         with self.assertRaises(ValidationError):
             o.validate()
 
+    def test_find_bridge_skip_error(self):
+        o = OpenWrt({'interfaces': ['WRONG']})
+        with self.assertRaises(ValidationError):
+            o.validate()
+
     def test_type_error(self):
         with self.assertRaises(TypeError):
             o = OpenWrt([])

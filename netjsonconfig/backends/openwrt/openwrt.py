@@ -43,7 +43,11 @@ class OpenWrt(object):
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt',
                                                     'templates'),
                                trim_blocks=True)
-        self.__find_bridges()
+        try:
+            self.__find_bridges()
+        except (AttributeError, KeyError):
+            # validation will take care of errors later
+            pass
 
     def render(self):
         self.validate()
