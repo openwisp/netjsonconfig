@@ -4,9 +4,9 @@ from netjsonconfig import OpenWrt
 from .utils import _TabsMixin
 
 
-class TestNetworkRendererer(unittest.TestCase, _TabsMixin):
+class TestNetworkRenderer(unittest.TestCase, _TabsMixin):
     """
-    tests for backends.openwrt.renderers.NetworkRendererer
+    tests for backends.openwrt.renderers.NetworkRenderer
     """
     maxDiff = None
 

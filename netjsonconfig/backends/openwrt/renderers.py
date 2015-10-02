@@ -176,7 +176,6 @@ class SystemRenderer(BaseRenderer):
         uci_leds = []
         for led in self.config.get('led', []):
             uci_leds.append(sorted_dict(led))
-        # import pdb; pdb.set_trace()
         return uci_leds
 
 
@@ -341,7 +340,7 @@ class DefaultRenderer(BaseRenderer):
                             continue
                         block_list.append(sorted_dict(block))
                 # if not a list just skip
-                else:
+                else:  # pragma: nocover
                     continue
                 custom_packages[key] = block_list
         # sort custom packages

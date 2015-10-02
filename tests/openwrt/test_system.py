@@ -5,9 +5,9 @@ from netjsonconfig.exceptions import ValidationError
 from .utils import _TabsMixin
 
 
-class TestSystemRendererer(unittest.TestCase, _TabsMixin):
+class TestSystemRenderer(unittest.TestCase, _TabsMixin):
     """
-    tests for backends.openwrt.renderers.SystemRendererer
+    tests for backends.openwrt.renderers.SystemRenderer
     """
     def test_system(self):
         o = OpenWrt({
@@ -84,7 +84,6 @@ config led 'led_wlan2g'
     option sysfs 'tp-link:blue:wlan2g'
     option trigger 'phy0tpt'
 """)
-        print(o.render())
         self.assertEqual(o.render(), expected)
 
     def test_led_schema_validation(self):
