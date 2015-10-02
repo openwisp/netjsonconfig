@@ -77,6 +77,12 @@ class NetworkRenderer(BaseRenderer):
                     uci_interface['ifname'] = bridge_members
                     # ensure type "bridge" is only given to one logical interface
                     is_bridge = False
+                # merge additional address fields (discard default ones first)
+                address_copy = address.copy()
+                for key in ['address', 'mask', 'proto', 'family']:
+                    if key in address_copy:
+                        del address_copy[key]
+                uci_interface.update(address_copy)
                 # append to interface list
                 uci_interfaces.append(sorted_dict(uci_interface))
                 counter += 1

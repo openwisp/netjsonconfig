@@ -321,6 +321,7 @@ config interface 'mobile0'
                         # logical interface contains bridge information
                         {
                             "address": "10.0.0.1",
+                            "gateway": "10.0.0.10",
                             "mask": 24,
                             "proto": "static",
                             "family": "ipv4"
@@ -355,6 +356,7 @@ config interface 'eth0'
     option type 'bridge'
 
 config interface 'eth0_2'
+    option gateway '10.0.0.10'
     option ifname 'eth0'
     option ipaddr '10.0.0.1/24'
     option proto 'static'
