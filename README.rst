@@ -124,15 +124,18 @@ Command line utility
 netjsonconfig ships a command line utility that can be
 used from the interactive shell or in bash scripts::
 
-    netjsonconfig --help
+   netjsonconfig --help
 
-A few common use scenarios:
+A few common use scenarios::
 
-    # generate tar.gz from a NetJSON DeviceConfiguration object
-    netjsonconfig config.json
+   # generate tar.gz from a NetJSON DeviceConfiguration object
+   netjsonconfig --backend openwrt config.json
 
-    # see output of render OpenWrt render method
-    netjsonconfig --backend openwrt --method render config.json
+   # see output of OpenWrt render method
+   netjsonconfig --backend openwrt --method render config.json
+   
+   # abbreviated options
+   netjsonconfig -b openwrt -m render config.json
 
 Running tests
 -------------
