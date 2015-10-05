@@ -10,5 +10,6 @@ def get_version():
         version = '%s pre-alpha' % version
     else:
         if VERSION[3] != 'final':
-            version = '%s %s' % (version, VERSION[3])
+            mapping = {'alpha': 'a', 'beta': 'b', 'rc': 'c'}
+            version = '%s%s' % (version, mapping[VERSION[3]])
     return version
