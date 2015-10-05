@@ -273,7 +273,7 @@ class WirelessRenderer(BaseRenderer):
                 network = [wifi_interface['name']]
                 if wifi_interface.get('_attached'):
                     network += wifi_interface['_attached']
-                uci_wifi['network'] = ' '.join(network)
+                uci_wifi['network'] = ' '.join(network).replace('.', '_')
                 # determine encryption for wifi
                 if uci_wifi.get('encryption'):
                     del uci_wifi['encryption']

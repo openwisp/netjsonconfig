@@ -530,7 +530,7 @@ config wifi-iface
         o = OpenWrt({
             "interfaces": [
                 {
-                    "name": "eth0",
+                    "name": "eth0.1",
                     "type": "ethernet",
                     "addresses": [
                         {
@@ -561,7 +561,7 @@ config wifi-iface
                     "name": "br-eth0",
                     "type": "bridge",
                     "bridge_members": [
-                        "eth0",
+                        "eth0.1",
                         "wlan0"
                     ]
                 }
@@ -569,8 +569,8 @@ config wifi-iface
         })
         expected = self._tabs("""package network
 
-config interface 'eth0'
-    option ifname 'eth0'
+config interface 'eth0_1'
+    option ifname 'eth0.1'
     option ipaddr '192.168.1.1/24'
     option proto 'static'
     option type 'bridge'
@@ -584,7 +584,7 @@ package wireless
 config wifi-iface
     option device 'radio0'
     option mode 'ap'
-    option network 'wlan0 eth0'
+    option network 'wlan0 eth0_1'
     option ssid 'open'
 """)
         self.assertEqual(o.render(), expected)
