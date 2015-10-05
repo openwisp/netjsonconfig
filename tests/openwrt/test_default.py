@@ -18,7 +18,9 @@ class TestDefaultRenderer(unittest.TestCase, _TabsMixin):
                     "config_value": "main",
                     "lang": "auto",
                     "resourcebase": "/luci-static/resources",
-                    "mediaurlbase": "/luci-static/bootstrap"
+                    "mediaurlbase": "/luci-static/bootstrap",
+                    "number": 4,
+                    "boolean": True
                 }
             ],
             "firewall": [
@@ -56,8 +58,10 @@ config rule
 package luci
 
 config core 'main'
+    option boolean '1'
     option lang 'auto'
     option mediaurlbase '/luci-static/bootstrap'
+    option number '4'
     option resourcebase '/luci-static/resources'
 """)
         self.assertEqual(o.render(), expected)

@@ -7,12 +7,12 @@
 
             {% for key, value in config_block.items() %}
                 {% if not key.startswith('config_') and value not in ['', None] %}
-                    {% if value is string %}
-                        option {{ key }} '{{ value }}'
-                    {% else %}
+                    {% if value is not string and value is iterable %}
                         {% for list_value in value %}
                             list {{ key }} '{{ list_value }}'
                         {% endfor %}
+                    {% else %}
+                        option {{ key }} '{{ value }}'
                     {% endif %}
                 {% endif %}
             {% endfor %}
