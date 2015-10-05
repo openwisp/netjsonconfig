@@ -7,10 +7,6 @@ netjsonconfig
 .. image:: https://coveralls.io/repos/openwisp/netjsonconfig/badge.svg
   :target: https://coveralls.io/r/openwisp/netjsonconfig
 
-.. image:: https://landscape.io/github/openwisp/netjsonconfig/master/landscape.svg
-   :target: https://landscape.io/github/openwisp/netjsonconfig/master
-   :alt: Code Health
-
 .. image:: https://requires.io/github/openwisp/netjsonconfig/requirements.svg?branch=master
    :target: https://requires.io/github/openwisp/netjsonconfig/requirements/?branch=master
    :alt: Requirements Status
