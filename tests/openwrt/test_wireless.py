@@ -8,6 +8,8 @@ class TestWirelessRenderer(unittest.TestCase, _TabsMixin):
     """
     tests for backends.openwrt.renderers.WirelessRenderer
     """
+    maxDiff = None
+
     def test_radio(self):
         o = OpenWrt({
             "radios": [
@@ -193,7 +195,10 @@ config wifi-device 'radio0'
                             "radio": "radio0",
                             "mode": "access_point",
                             "ssid": "MyWifiAP",
-                            "hidden": True
+                            "hidden": True,
+                            "ack_distance": 300,
+                            "rts_threshold": 1300,
+                            "frag_threshold": 1500
                         }
                     ]
                 }
@@ -229,9 +234,12 @@ config wifi-device 'radio0'
 
 config wifi-iface
     option device 'radio0'
+    option distance '300'
+    option frag '1500'
     option hidden '1'
     option mode 'ap'
     option network 'wlan0'
+    option rts '1300'
     option ssid 'MyWifiAP'
 """)
         self.assertEqual(o.render(), expected)

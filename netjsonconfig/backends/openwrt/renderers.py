@@ -255,7 +255,7 @@ class WirelessRenderer(BaseRenderer):
                 # rename radio to device
                 uci_wifi['device'] = wireless['radio']
                 del uci_wifi['radio']
-                # determine mode
+                # map netjson wifi modes to uci wifi modes
                 modes = {
                     'access_point': 'ap',
                     'station': 'sta',
@@ -274,6 +274,16 @@ class WirelessRenderer(BaseRenderer):
                 if wifi_interface.get('_attached'):
                     network += wifi_interface['_attached']
                 uci_wifi['network'] = ' '.join(network).replace('.', '_')
+                # map advanced 802.11 netjson attributes to UCI
+                wifi_options = {
+                    'ack_distance': 'distance',
+                    'rts_threshold': 'rts',
+                    'frag_threshold': 'frag'
+                }
+                for netjson_key, uci_key in wifi_options.items():
+                    if wireless.get(netjson_key) is not None:
+                        uci_wifi[uci_key] = wireless[netjson_key]
+                        del uci_wifi[netjson_key]
                 # determine encryption for wifi
                 if uci_wifi.get('encryption'):
                     del uci_wifi['encryption']
