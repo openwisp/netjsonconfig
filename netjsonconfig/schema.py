@@ -56,7 +56,7 @@ schema = {
                 },
                 "revision": {
                     "id": "revision",
-                    "type": "number"
+                    "type": "integer"
                 },
                 "cpu": {
                     "id": "cpu",
@@ -105,7 +105,7 @@ schema = {
                     "properties": {
                         "total": {
                             "id": "total",
-                            "type": "number"
+                            "type": "integer"
                         }
                     }
                 },
@@ -116,7 +116,7 @@ schema = {
                     "properties": {
                         "total": {
                             "id": "total",
-                            "type": "number"
+                            "type": "integer"
                         }
                     }
                 },
@@ -127,7 +127,7 @@ schema = {
                     "properties": {
                         "frequency": {
                             "id": "frequency",
-                            "type": "number"
+                            "type": "integer"
                         }
                     }
                 },
@@ -138,7 +138,7 @@ schema = {
                     "properties": {
                         "total": {
                             "id": "total",
-                            "type": "number"
+                            "type": "integer"
                         }
                     }
                 },
@@ -149,7 +149,7 @@ schema = {
                     "properties": {
                         "total": {
                             "id": "total",
-                            "type": "number"
+                            "type": "integer"
                         }
                     }
                 }
@@ -182,15 +182,15 @@ schema = {
                     },
                     "channel": {
                         "id": "channel",
-                        "type": "number"
+                        "type": "integer"
                     },
                     "channel_width": {
                         "id": "channel_width",
-                        "type": "number"
+                        "type": "integer"
                     },
                     "tx_power": {
                         "id": "tx_power",
-                        "type": "number"
+                        "type": "integer"
                     },
                     "country": {
                         "id": "country",
@@ -241,12 +241,12 @@ schema = {
                     },
                     "mtu": {
                         "id": "mtu",
-                        "type": "number",
+                        "type": "integer",
                         "default": 1500
                     },
                     "txqueuelen": {
                         "id": "txqueuelen",
-                        "type": "number"
+                        "type": "integer"
                     },
                     "autostart": {
                         "id": "autostart",
@@ -270,7 +270,11 @@ schema = {
                                 },
                                 "mask": {
                                     "id": "mask",
-                                    "type": "number"
+                                    "type": "integer"
+                                },
+                                "gateway": {
+                                    "id": "gateway",
+                                    "type": "string"
                                 },
                                 "family": {
                                     "id": "family",
@@ -344,6 +348,23 @@ schema = {
                                     "id": "bssid",
                                     "type": "boolean",
                                     "default": False
+                                },
+                                "ack_distance": {
+                                    "id": "ack_distance",
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "rts_threshold": {
+                                    "id": "rts_threshold",
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 2346
+                                },
+                                "frag_threshold": {
+                                    "id": "frag_threshold",
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 2346
                                 },
                                 "encryption": {
                                     "id": "encryption",
