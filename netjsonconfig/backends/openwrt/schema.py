@@ -3,9 +3,9 @@ OpenWrt specific JSON-Schema definition
 """
 from .timezones import timezones
 from ...schema import schema as default_schema
-from ...utils import merge_dict
+from ...utils import merge_config
 
-schema = merge_dict(default_schema, {
+schema = merge_config(default_schema, {
     "properties": {
         "general": {
             "properties": {
