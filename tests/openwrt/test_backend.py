@@ -172,3 +172,88 @@ config wifi-iface
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
+
+    def test_templates_type_error(self):
+        config = {
+            "general": {
+                "hostname": "test_templates",
+            }
+        }
+        with self.assertRaises(TypeError):
+            o = OpenWrt(config, templates={})
+
+    def test_templates_config_error(self):
+        config = {
+            "general": {
+                "hostname": "test_templates",
+            }
+        }
+        with self.assertRaises(TypeError):
+            o = OpenWrt(config, templates=['O{]O'])
+
+    def test_templates(self):
+        loopback_template = {
+            "interfaces": [
+                {
+                    "name": "lo",
+                    "type": "loopback",
+                    "addresses": [
+                        {
+                            "address": "127.0.0.1",
+                            "mask": 8,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ]
+        }
+        radio_template = {
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ],
+                    "wireless": [
+                        {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "MyWifiAP",
+                            "hidden": True
+                        }
+                    ]
+                }
+            ],
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                }
+            ]
+        }
+        config = {
+            "general": {
+                "hostname": "test_templates",
+            }
+        }
+        o = OpenWrt(config, templates=[loopback_template, radio_template])
+        self.assertEqual(o.config['general']['hostname'], 'test_templates')
+        self.assertIn('radios', o.config)
+        self.assertEqual(len(o.config['radios']), 1)
+        self.assertEqual(o.config['radios'][0]['name'], 'radio0')
+        self.assertIn('interfaces', o.config)
+        self.assertEqual(len(o.config['interfaces']), 2)
+        self.assertEqual(o.config['interfaces'][0]['name'], 'lo')
+        self.assertEqual(o.config['interfaces'][1]['name'], 'wlan0')

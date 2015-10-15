@@ -128,6 +128,110 @@ following directory structure::
         config/
             network
 
+Templates
+---------
+
+If you have devices with very similar configurations you can store the shared
+blocks in one or more reusable templates which will be used as a base to build
+the final configuration.
+
+Let's illustrate this with a practical example, we have two devices both having
+an ``eth0`` interface in DHCP mode (our ``template``) but *Router2* also has
+an ``eth1`` interface with a statically assigned ipv4 address:
+
+.. code-block:: python
+
+    template = {
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "proto": "dhcp",
+                        "family": "ipv4"
+                    }
+                ]
+            }
+        ]
+    }
+
+    router1_config = {
+        "general": {"hostname": "Router1"}
+    }
+
+    router2_config = {
+        "general": {"hostname": "Router2"},
+        "interfaces": [
+            {
+                "name": "eth1",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "address": "192.168.1.1",
+                        "mask": 24,
+                        "proto": "static",
+                        "family": "ipv4"
+                    }
+                ]
+            }
+        ]
+    }
+
+Generating the resulting configuration for *Router1* and *Router2*
+is straightforward:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    router1 = OpenWrt(router1_config, templates=[template])
+    print(router1.render())
+
+    router2 = OpenWrt(router2_config, templates=[template])
+    print(router2.render())
+
+Rendered configuration for *Router1*::
+
+    package system
+
+    config system
+            option hostname 'Router1'
+            option timezone 'UTC'
+
+    package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            option proto 'dhcp'
+
+Rendered configuration for *Router2*::
+
+    package system
+
+    config system
+            option hostname 'Router2'
+            option timezone 'UTC'
+
+    package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            option proto 'dhcp'
+
+    config interface 'eth1'
+            option ifname 'eth1'
+            option ipaddr '192.168.1.1/24'
+            option proto 'static'
+
+Using multiple templates
+------------------------
+
+You might have noticed that the ``templates`` argument is a list; that's because
+it's possible to pass multiple templates that will be added one on top of the
+other to build the resulting configuration, allowing to reduce or even eliminate
+repetitions.
+
 Command line utility
 --------------------
 
@@ -143,7 +247,7 @@ A few common use scenarios::
 
    # see output of OpenWrt render method
    netjsonconfig --backend openwrt --method render config.json
-   
+
    # abbreviated options
    netjsonconfig -b openwrt -m render config.json
 

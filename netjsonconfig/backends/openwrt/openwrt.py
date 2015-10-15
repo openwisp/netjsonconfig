@@ -10,6 +10,7 @@ from jinja2 import Environment, PackageLoader
 
 from . import renderers
 from .schema import schema
+from ...utils import merge_config
 from ...exceptions import ValidationError
 
 
@@ -23,23 +24,18 @@ class OpenWrt(object):
         renderers.DefaultRenderer
     ]
 
-    def __init__(self, config):
+    def __init__(self, config, templates=[]):
         """
-        :param config: python dict containing a valid NetJSON DeviceConfiguration
-        :raises TypeError: raises an exception if config is not an instance of dict
+        :param config: dict containing a valid NetJSON DeviceConfiguration
+        :param templates: list containing zero or more config blocks that will be used
+                          as a base for the main config, defaults to empty list
+        :raises TypeError: raised if config is not dict or templates is not a list
         """
-        if isinstance(config, six.string_types):
-            try:
-                config = json.loads(config)
-            except ValueError:
-                pass
-        if not isinstance(config, dict):
-            raise TypeError('Config argument must be an istance '
-                            'of dict or a valid JSON string')
+        config = self._load(config)
         # allow omitting NetJSON type
         if 'type' not in config:
             config.update({'type': 'DeviceConfiguration'})
-        self.config = config
+        self.config = self._merge_config(config, templates)
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt',
                                                     'templates'),
                                trim_blocks=True)
@@ -48,6 +44,32 @@ class OpenWrt(object):
         except (AttributeError, KeyError):
             # validation will take care of errors later
             pass
+
+    def _load(self, config):
+        """ loads config from string or dict """
+        if isinstance(config, six.string_types):
+            try:
+                config = json.loads(config)
+            except ValueError:
+                pass
+        if not isinstance(config, dict):
+            raise TypeError('config block must be an istance '
+                            'of dict or a valid NetJSON string')
+        return config
+
+    def _merge_config(self, config, templates):
+        """ merges config with templates """
+        # type check
+        if not isinstance(templates, list):
+            raise TypeError('templates argument must be an instance of list')
+        # merge any present template with main configuration
+        base_config = {}
+        for template in templates:
+            template = self._load(template)
+            base_config = merge_config(base_config, template)
+        if base_config:
+            return merge_config(base_config, config)
+        return config
 
     def render(self):
         self.validate()
