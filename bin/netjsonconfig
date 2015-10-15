@@ -60,7 +60,7 @@ if not args.config.strip().startswith('{'):
     try:
         config = open(args.config, 'r').read()
     except IOError:
-        print('\n\tError: file "{0}" not found\n'.format(args.config))
+        print('netjsonconfig: cannot open "{0}": no such file or directory'.format(args.config))
         sys.exit(1)
 else:
     config = args.config.strip()
@@ -73,17 +73,18 @@ backend_class = backends[args.backend]
 try:
     instance = backend_class(config)
 except TypeError:
-    print('\n\tError: config argument contains invalid JSON\n')
+    print('netjsonconfig: config argument contains invalid JSON')
     sys.exit(2)
 
 try:
     output = getattr(instance, args.method)()
     if output:
-        print('{0}\n'.format(output))
+        print(output)
 except netjsonconfig.exceptions.ValidationError as e:
+    message = 'netjsonconfig: JSON Schema violation\n'
     if not args.verbose:
-        print('\n\tError: JSON Schema violation.\n'
-              '\tFor more information repeat the command using --verbose\n')
+        info = 'For more information repeat the command using --verbose'
     else:
-        print(e)
+        info = str(e)
+    print(message + info)
     sys.exit(3)
