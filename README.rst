@@ -240,7 +240,7 @@ used from the interactive shell or in bash scripts::
 
    netjsonconfig --help
 
-A few common use scenarios::
+Here's the common use cases explained::
 
    # generate tar.gz from a NetJSON DeviceConfiguration object
    netjsonconfig --backend openwrt config.json
@@ -250,6 +250,13 @@ A few common use scenarios::
 
    # abbreviated options
    netjsonconfig -b openwrt -m render config.json
+
+   # passing a JSON string instead of a file path
+   netjsonconfig -b openwrt -m render '{"general": { "hostname": "example" }}'
+
+Using templates::
+
+    netjsonconfig config.json -t template1.json template2.json -b openwrt -m render
 
 Running tests
 -------------

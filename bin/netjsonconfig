@@ -30,6 +30,13 @@ parser.add_argument('config',
                     type=str,
                     help='config file or string, must be valid NetJSON DeviceConfiguration')
 
+parser.add_argument('--templates', '-t',
+                    nargs='*',  # zero or more
+                    action='store',
+                    type=str,
+                    default=[],
+                    help='list of template config files or strings separated by space')
+
 parser.add_argument('--backend', '-b',
                     choices=['openwrt'],
                     action='store',
@@ -53,17 +60,23 @@ parser.add_argument('--version', '-v',
                     action='version',
                     version=netjsonconfig.get_version())
 
-args = parser.parse_args()
+def _load(config):
+    """
+    if config argument does not look like a JSON string
+    try to read the contents of a file
+    """
+    if not config.strip().startswith('{'):
+        try:
+            return open(config, 'r').read()
+        except IOError:
+            print('netjsonconfig: cannot open "{0}": file not found'.format(config))
+            sys.exit(1)
+    else:
+        return config.strip()
 
-# if config argument does not look like JSON try opening a file
-if not args.config.strip().startswith('{'):
-    try:
-        config = open(args.config, 'r').read()
-    except IOError:
-        print('netjsonconfig: cannot open "{0}": no such file or directory'.format(args.config))
-        sys.exit(1)
-else:
-    config = args.config.strip()
+args = parser.parse_args()
+config = _load(args.config)
+templates = [_load(template) for template in args.templates]
 
 backends = {
     'openwrt': netjsonconfig.OpenWrt
@@ -71,9 +84,9 @@ backends = {
 
 backend_class = backends[args.backend]
 try:
-    instance = backend_class(config)
-except TypeError:
-    print('netjsonconfig: config argument contains invalid JSON')
+    instance = backend_class(config, templates=templates)
+except TypeError as e:
+    print('netjsonconfig: invalid JSON passed in config or templates')
     sys.exit(2)
 
 try:
