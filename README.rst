@@ -21,7 +21,7 @@ netjsonconfig
 
 Converts `NetJSON <http://netjson.org>`__ DeviceConfiguration objects to real router configurations.
 
-**Currently we are working only on OpenWrt support**.
+**Currently we are working only on OpenWRT support**.
 
 **Work in progress**.
 
@@ -113,6 +113,20 @@ Will print::
         option ifname 'eth0.1'
         option proto 'static'
         option ip6addr 'fd87::1/128'
+
+The ``OpenWrt`` backend has a ``generate`` method which generates a
+compressed archive containing an `OpenWRT <http://openwrt.org>`_ configuration:
+
+.. code-block:: python
+
+    o.generate()
+
+Will generate an archive named ``openwrt-config.tar.gz`` with the
+following directory structure::
+
+    /etc/
+        config/
+            network
 
 Command line utility
 --------------------
