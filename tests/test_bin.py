@@ -13,13 +13,15 @@ class TestBin(unittest.TestCase, _TabsMixin):
             output = subprocess.check_output("netjsonconfig WRONG", shell=True)
 
     def test_invalid_netjson(self):
+        command = '''netjsonconfig '{ "interfaces":["w"] }' -m render'''
         with self.assertRaises(subprocess.CalledProcessError):
-            output = subprocess.check_output('''netjsonconfig '{ "interfaces":["w"] }' -m render''', shell=True)
+            output = subprocess.check_output(command, shell=True)
 
     def test_invalid_netjson_verbose(self):
+        command = '''netjsonconfig '{ "interfaces":["w"] }' -m render --verbose'''
         with self.assertRaises(subprocess.CalledProcessError):
-            output = subprocess.check_output('''netjsonconfig '{ "interfaces":["w"] }' -m render --verbose''', shell=True)
+            output = subprocess.check_output(command, shell=True)
 
-    def test_invalid_netjson(self):
-        output = subprocess.check_output('''netjsonconfig '{}' -m render''', shell=True)
+    def test_empty_netjson(self):
+        output = subprocess.check_output("netjsonconfig '{}' -m render", shell=True)
         self.assertEqual(output.decode(), '')

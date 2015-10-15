@@ -59,7 +59,7 @@ args = parser.parse_args()
 if not args.config.strip().startswith('{'):
     try:
         config = open(args.config, 'r').read()
-    except FileNotFoundError:
+    except IOError:
         print('\n\tError: file "{0}" not found\n'.format(args.config))
         sys.exit(1)
 else:
