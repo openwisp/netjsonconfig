@@ -272,7 +272,8 @@ schema['properties']['interfaces']['items']['properties']\
     'gre',
     'gretap',
     'grev6',
-    'grev6tap'
+    'grev6tap',
+    'none'
 ]
 
 # mark driver and protocol as required
