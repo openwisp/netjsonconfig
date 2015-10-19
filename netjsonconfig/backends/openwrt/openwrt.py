@@ -139,10 +139,10 @@ class OpenWrt(object):
         for package in packages:
             lines = package.split('\n')
             package_name = lines[0]
-            content_string = '\n'.join(lines[2:])
-            content_byte = BytesIO(content_string.encode('utf8'))
+            text_contents = '\n'.join(lines[2:])
+            byte_contents = BytesIO(text_contents.encode('utf8'))
             info = tarfile.TarInfo(name='/etc/config/{0}'.format(package_name))
-            info.size = len(content_string)
-            tar.addfile(tarinfo=info, fileobj=content_byte)
+            info.size = len(text_contents)
+            tar.addfile(tarinfo=info, fileobj=byte_contents)
         # close archive
         tar.close()
