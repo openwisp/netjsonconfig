@@ -150,6 +150,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     option proto 'static'
 
 """)
+        self.assertEqual(contents, expected)
         # wireless
         wireless = tar.getmember('/etc/config/wireless')
         contents = tar.extractfile(wireless).read().decode()
