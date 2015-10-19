@@ -258,3 +258,36 @@ config wifi-iface
         self.assertEqual(len(o.config['interfaces']), 2)
         self.assertEqual(o.config['interfaces'][0]['name'], 'lo')
         self.assertEqual(o.config['interfaces'][1]['name'], 'wlan0')
+
+    def test_file_inclusion(self):
+        o = OpenWrt({
+            "files": [
+                {
+                    "path": "/etc/crontabs/root",
+                    "contents": '* * * * * echo "test" > /etc/testfile\n'
+                                '* * * * * echo "test2" > /etc/testfile2'
+                },
+                {
+                    "path": "/etc/dummy.conf",
+                    "contents": "testing!"
+                }
+            ]
+        })
+        output = o.render()
+        self.assertNotIn('package files', output)
+        self.assertNotIn('* * * * * echo', output)
+        # generate tar.gz archive and ensure the additional files are there
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        self.assertEqual(len(tar.getmembers()), 2)
+        # first file
+        crontab = tar.getmember('/etc/crontabs/root')
+        contents = tar.extractfile(crontab).read().decode()
+        self.assertEqual(contents, o.config['files'][0]['contents'])
+        # first file
+        dummy = tar.getmember('/etc/dummy.conf')
+        contents = tar.extractfile(dummy).read().decode()
+        self.assertEqual(contents, o.config['files'][1]['contents'])
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')

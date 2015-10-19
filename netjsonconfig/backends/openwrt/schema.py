@@ -246,6 +246,33 @@ schema = merge_config(default_schema, {
                     }
                 }
             }
+        },
+        "files": {
+            "id": "files",
+            "type": "array",
+            "title": "files",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "items": {
+                "type": "object",
+                "title": "file",
+                "additionalProperties": False,
+                "required": [
+                    "path",
+                    "contents"
+                ],
+                "properties": {
+                    "path": {
+                        "id": "path",
+                        "type": "string"
+                    },
+                    "contents": {
+                        "id": "contents",
+                        "type": "string",
+                        "format": "textarea"
+                    }
+                }
+            }
         }
     }
 })

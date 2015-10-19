@@ -128,6 +128,29 @@ following directory structure::
         config/
             network
 
+Including additional files
+--------------------------
+
+*netjsonconfig* supports adding arbitrary text files to the generated configuration archive.
+
+**N.B.**: The files won't be included in the output of the ``render`` method because that would make it invalid.
+
+The following example code will generate an archive with one file in ``/etc/crontabs/root``:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    o = OpenWrt({
+        "files": [
+            {
+                "path": "/etc/crontabs/root",
+                "contents": '* * * * * echo "test" > /etc/testfile'
+            }
+        ]
+    })
+    o.generate()
+
 Templates
 ---------
 

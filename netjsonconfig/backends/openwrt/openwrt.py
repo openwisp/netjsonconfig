@@ -144,5 +144,11 @@ class OpenWrt(object):
             info = tarfile.TarInfo(name='/etc/config/{0}'.format(package_name))
             info.size = len(text_contents)
             tar.addfile(tarinfo=info, fileobj=byte_contents)
+        # insert additional files
+        for file_item in self.config.get('files', []):
+            byte_contents = BytesIO(file_item['contents'].encode('utf8'))
+            info = tarfile.TarInfo(name=file_item['path'])
+            info.size = len(file_item['contents'])
+            tar.addfile(tarinfo=info, fileobj=byte_contents)
         # close archive
         tar.close()
