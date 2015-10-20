@@ -23,8 +23,6 @@ Converts `NetJSON <http://netjson.org>`__ DeviceConfiguration objects to real ro
 
 **Currently we are working only on OpenWRT support**.
 
-**Work in progress**.
-
 Install stable version from pypi
 --------------------------------
 
