@@ -38,6 +38,21 @@ class TestDefaultRenderer(unittest.TestCase, _TabsMixin):
                         "132/0",
                         "143/0"
                     ]
+                },
+                {
+                    "config_name": "rule",
+                    "name": "Rule2",
+                    "src": "wan",
+                    "proto": "icmp",
+                    "src_ip": "192.168.1.1/24",
+                    "family": "ipv4",
+                    "target": "ACCEPT",
+                    "icmp_type": [
+                        "130/0",
+                        "131/0",
+                        "132/0",
+                        "143/0"
+                    ]
                 }
             ]
         })
@@ -53,6 +68,18 @@ config rule
     option proto 'icmp'
     option src 'wan'
     option src_ip 'fe80::/10'
+    option target 'ACCEPT'
+
+config rule
+    option family 'ipv4'
+    list icmp_type '130/0'
+    list icmp_type '131/0'
+    list icmp_type '132/0'
+    list icmp_type '143/0'
+    option name 'Rule2'
+    option proto 'icmp'
+    option src 'wan'
+    option src_ip '192.168.1.1/24'
     option target 'ACCEPT'
 
 package luci
@@ -78,4 +105,4 @@ config core 'main'
                 }
             ]
         })
-        self.assertEqual(o.render(), 'package luci\n\n')
+        self.assertEqual(o.render(), 'package luci\n')
