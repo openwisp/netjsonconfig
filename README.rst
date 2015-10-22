@@ -149,6 +149,24 @@ The following example code will generate an archive with one file in ``/etc/cron
     })
     o.generate()
 
+New lines must be escaped using ``\n``, or alternatively, the contents can be represented
+as an array of lines:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "files": [
+            {
+                "path": "/etc/crontabs/root",
+                "contents": [
+                    '* * * * * echo "test" > /etc/testfile',
+                    '* * * * * echo "test2" > /etc/testfile2'
+                ]
+            }
+        ]
+    })
+    o.generate()
+
 Templates
 ---------
 
