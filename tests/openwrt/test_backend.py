@@ -284,10 +284,34 @@ config wifi-iface
         crontab = tar.getmember('/etc/crontabs/root')
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, o.config['files'][0]['contents'])
-        # first file
+        # second file
         dummy = tar.getmember('/etc/dummy.conf')
         contents = tar.extractfile(dummy).read().decode()
         self.assertEqual(contents, o.config['files'][1]['contents'])
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')
+
+    def test_file_inclusion_list_contents(self):
+        o = OpenWrt({
+            "files": [
+                {
+                    "path": "/root/.ssh/authorized_keys",
+                    "contents": [
+                        "key1 user@machine1",
+                        "key2 user@machine2",
+                        "key3 user@machine3",
+                    ]
+                }
+            ]
+        })
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        self.assertEqual(len(tar.getmembers()), 1)
+        # check file
+        crontab = tar.getmember('/root/.ssh/authorized_keys')
+        contents = tar.extractfile(crontab).read().decode()
+        self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')

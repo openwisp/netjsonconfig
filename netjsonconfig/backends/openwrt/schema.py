@@ -268,8 +268,10 @@ schema = merge_config(default_schema, {
                     },
                     "contents": {
                         "id": "contents",
-                        "type": "string",
-                        "format": "textarea"
+                        "anyOf": [
+                            {"type": "string", "format": "textarea"},
+                            {"type": "array"}
+                        ]
                     }
                 }
             }
