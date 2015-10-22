@@ -142,7 +142,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
         self.assertEqual(len(tar.getmembers()), 2)
         # network
-        network = tar.getmember('/etc/config/network')
+        network = tar.getmember('etc/config/network')
         contents = tar.extractfile(network).read().decode()
         expected = self._tabs("""config interface 'wlan0'
     option ifname 'wlan0'
@@ -152,7 +152,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 """)
         self.assertEqual(contents, expected)
         # wireless
-        wireless = tar.getmember('/etc/config/wireless')
+        wireless = tar.getmember('etc/config/wireless')
         contents = tar.extractfile(wireless).read().decode()
         expected = self._tabs("""config wifi-device 'radio0'
     option channel '3'
@@ -281,11 +281,11 @@ config wifi-iface
         tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
         self.assertEqual(len(tar.getmembers()), 2)
         # first file
-        crontab = tar.getmember('/etc/crontabs/root')
+        crontab = tar.getmember('etc/crontabs/root')
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, o.config['files'][0]['contents'])
         # second file
-        dummy = tar.getmember('/etc/dummy.conf')
+        dummy = tar.getmember('etc/dummy.conf')
         contents = tar.extractfile(dummy).read().decode()
         self.assertEqual(contents, o.config['files'][1]['contents'])
         # close and delete tar.gz file
@@ -309,7 +309,7 @@ config wifi-iface
         tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
         self.assertEqual(len(tar.getmembers()), 1)
         # check file
-        crontab = tar.getmember('/root/.ssh/authorized_keys')
+        crontab = tar.getmember('root/.ssh/authorized_keys')
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
         # close and delete tar.gz file

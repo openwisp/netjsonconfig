@@ -141,16 +141,21 @@ class OpenWrt(object):
             package_name = lines[0]
             text_contents = '\n'.join(lines[2:])
             byte_contents = BytesIO(text_contents.encode('utf8'))
-            info = tarfile.TarInfo(name='/etc/config/{0}'.format(package_name))
+            info = tarfile.TarInfo(name='etc/config/{0}'.format(package_name))
             info.size = len(text_contents)
             tar.addfile(tarinfo=info, fileobj=byte_contents)
         # insert additional files
         for file_item in self.config.get('files', []):
             contents = file_item['contents']
+            path = file_item['path']
+            # join lines if contents is a list
             if isinstance(contents, list):
                 contents = '\n'.join(contents)
+            # remove leading slashes from path
+            if path.startswith('/'):
+                path = path[1:]
             byte_contents = BytesIO(contents.encode('utf8'))
-            info = tarfile.TarInfo(name=file_item['path'])
+            info = tarfile.TarInfo(name=path)
             info.size = len(contents)
             tar.addfile(tarinfo=info, fileobj=byte_contents)
         # close archive
