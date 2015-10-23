@@ -1,6 +1,7 @@
 import json
 import re
 import six
+import time
 import tarfile
 from io import BytesIO
 
@@ -136,6 +137,7 @@ class OpenWrt(object):
         if '' in packages:
             packages.remove('')
         # for each package create a file with its contents in /etc/config
+        timestamp = time.time()
         for package in packages:
             lines = package.split('\n')
             package_name = lines[0]
@@ -143,6 +145,8 @@ class OpenWrt(object):
             byte_contents = BytesIO(text_contents.encode('utf8'))
             info = tarfile.TarInfo(name='etc/config/{0}'.format(package_name))
             info.size = len(text_contents)
+            info.mtime = timestamp
+            info.type = tarfile.REGTYPE
             tar.addfile(tarinfo=info, fileobj=byte_contents)
         # insert additional files
         for file_item in self.config.get('files', []):
@@ -157,6 +161,8 @@ class OpenWrt(object):
             byte_contents = BytesIO(contents.encode('utf8'))
             info = tarfile.TarInfo(name=path)
             info.size = len(contents)
+            info.mtime = timestamp
+            info.type = tarfile.REGTYPE
             tar.addfile(tarinfo=info, fileobj=byte_contents)
         # close archive
         tar.close()

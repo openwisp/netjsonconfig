@@ -284,6 +284,7 @@ config wifi-iface
         crontab = tar.getmember('etc/crontabs/root')
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, o.config['files'][0]['contents'])
+        self.assertNotEqual(crontab.mtime, 0)
         # second file
         dummy = tar.getmember('etc/dummy.conf')
         contents = tar.extractfile(dummy).read().decode()
