@@ -142,12 +142,10 @@ class OpenWrt(object):
             lines = package.split('\n')
             package_name = lines[0]
             text_contents = '\n'.join(lines[2:])
-            byte_contents = BytesIO(text_contents.encode('utf8'))
-            info = tarfile.TarInfo(name='etc/config/{0}'.format(package_name))
-            info.size = len(text_contents)
-            info.mtime = timestamp
-            info.type = tarfile.REGTYPE
-            tar.addfile(tarinfo=info, fileobj=byte_contents)
+            self._add_file(tar=tar,
+                           name='etc/config/{0}'.format(package_name),
+                           contents=text_contents,
+                           timestamp=timestamp)
         # insert additional files
         for file_item in self.config.get('files', []):
             contents = file_item['contents']
@@ -158,11 +156,17 @@ class OpenWrt(object):
             # remove leading slashes from path
             if path.startswith('/'):
                 path = path[1:]
-            byte_contents = BytesIO(contents.encode('utf8'))
-            info = tarfile.TarInfo(name=path)
-            info.size = len(contents)
-            info.mtime = timestamp
-            info.type = tarfile.REGTYPE
-            tar.addfile(tarinfo=info, fileobj=byte_contents)
+            self._add_file(tar=tar,
+                           name=path,
+                           contents=contents,
+                           timestamp=timestamp)
         # close archive
         tar.close()
+
+    def _add_file(self, tar, name, contents, timestamp):
+        byte_contents = BytesIO(contents.encode('utf8'))
+        info = tarfile.TarInfo(name=name)
+        info.size = len(contents)
+        info.mtime = timestamp
+        info.type = tarfile.REGTYPE
+        tar.addfile(tarinfo=info, fileobj=byte_contents)
