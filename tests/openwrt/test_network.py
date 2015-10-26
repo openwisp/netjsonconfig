@@ -526,3 +526,20 @@ config switch_vlan
     option vlan '3'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_empty_interface(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet"
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)

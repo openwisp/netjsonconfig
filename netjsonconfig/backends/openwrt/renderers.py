@@ -17,6 +17,9 @@ class NetworkRenderer(BaseRenderer):
         converts interfaces object to UCI interface directives
         """
         interfaces = self.config.get('interfaces', [])
+        # this line ensures interfaces are not entirely
+        # ignored if they do not contain any address
+        default_addresses = [{'proto': 'none'}]
         # results container
         uci_interfaces = []
         for interface in interfaces:
@@ -30,7 +33,9 @@ class NetworkRenderer(BaseRenderer):
                 is_bridge = True
                 bridge_members = ' '.join(bridges[interface['name']])
             # address list defaults to empty list
-            for address in interface.get('addresses', []):
+            for address in interface.get('addresses', default_addresses):
+                if 'bridge_members' in interface:
+                    continue
                 # prepare new UCI interface directive
                 uci_interface = deepcopy(interface)
                 if uci_interface.get('autostart'):
