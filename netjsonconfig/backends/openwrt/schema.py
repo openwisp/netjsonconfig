@@ -17,6 +17,28 @@ schema = merge_config(default_schema, {
                 }
             }
         },
+        "interfaces": {
+            "items": {
+                "properties": {
+                    "wireless": {
+                        "items": {
+                            "properties": {
+                                "network": {
+                                    "id": "network",
+                                    "type": "array",
+                                    "uniqueItems": True,
+                                    "additionalItems": True,
+                                    "minItems": 1,
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "radios": {
             "items": {
                 "properties": {

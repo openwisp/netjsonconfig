@@ -40,11 +40,6 @@ class OpenWrt(object):
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt',
                                                     'templates'),
                                trim_blocks=True)
-        try:
-            self.__find_bridges()
-        except (AttributeError, KeyError):
-            # validation will take care of errors later
-            pass
 
     def _load(self, config):
         """ loads config from string or dict """
@@ -98,32 +93,6 @@ class OpenWrt(object):
     @classmethod
     def get_packages(cls):
         return [r.get_package() for r in cls.renderers]
-
-    def __find_bridges(self):
-        """
-        OpenWRT declare bridges in /etc/config/network
-        but wireless interfaces are attached to ethernet ones
-        with declarations that go in /etc/config/wireless
-        this method populates a few auxiliary data structures
-        that are used to generate the correct UCI bridge settings
-        """
-        wifi = {}
-        bridges = {}
-        net_bridges = {}
-        for interface in self.config.get('interfaces', []):
-            if interface.get('type') == 'wireless':
-                wifi[interface['name']] = interface
-            elif interface.get('type') == 'bridge':
-                bridges[interface['name']] = interface['bridge_members']
-        for bridge_members in bridges.values():
-            # determine bridges that will go in /etc/config/network
-            net_names = [name for name in bridge_members if name not in wifi.keys()]
-            net_bridges[net_names[0]] = net_names
-            # openwrt deals with wifi bridges differently
-            for name in bridge_members:
-                if name in wifi.keys():
-                    wifi[name]['_attached'] = net_names
-        self._net_bridges = net_bridges
 
     def generate(self, name='openwrt-config'):
         """

@@ -26,16 +26,14 @@ class NetworkRenderer(BaseRenderer):
             counter = 1
             is_bridge = False
             # ensure uci interface name is valid
-            uci_name = interface['name'].replace('.', '_')
+            uci_name = interface['name'].replace('.', '_')\
+                                        .replace('-', '_')
             # determine if must be type bridge
-            bridges = self.backend._net_bridges  # noqa
-            if interface['name'] in bridges.keys():
+            if interface.get('type') == 'bridge':
                 is_bridge = True
-                bridge_members = ' '.join(bridges[interface['name']])
+                bridge_members = ' '.join(interface['bridge_members'])
             # address list defaults to empty list
             for address in interface.get('addresses', default_addresses):
-                if 'bridge_members' in interface:
-                    continue
                 # prepare new UCI interface directive
                 uci_interface = deepcopy(interface)
                 if uci_interface.get('autostart'):
@@ -47,8 +45,6 @@ class NetworkRenderer(BaseRenderer):
                     del uci_interface['type']
                 if uci_interface.get('wireless'):
                     del uci_interface['wireless']
-                if uci_interface.get('_attached'):
-                    del uci_interface['_attached']
                 # default values
                 address_key = None
                 address_value = None
@@ -74,14 +70,25 @@ class NetworkRenderer(BaseRenderer):
                     'dns': self.__get_dns_servers(),
                     'dns_search': self.__get_dns_search()
                 })
+                # bridging
+                if is_bridge:
+                    uci_interface['ifname'] = bridge_members
+                    uci_interface['type'] = 'bridge'
+                    # ensure type "bridge" is only given to one logical interface
+                    is_bridge = False
+                # bridge has already been defined
+                # but we need to add more references to it
+                elif interface.get('type') == 'bridge':
+                    # openwrt adds "br-"" prefix to bridge interfaces
+                    # we need to take this into account when referring
+                    # to these physical names
+                    uci_interface['ifname'] = 'br-{0}'.format(interface['name'])
+                # delete bridge_members attribtue
+                if uci_interface.get('bridge_members'):
+                    del uci_interface['bridge_members']
                 # add address if any (with correct option name)
                 if address_key and address_value:
                     uci_interface[address_key] = address_value
-                if is_bridge:
-                    uci_interface['type'] = 'bridge'
-                    uci_interface['ifname'] = bridge_members
-                    # ensure type "bridge" is only given to one logical interface
-                    is_bridge = False
                 # merge additional address fields (discard default ones first)
                 address_copy = address.copy()
                 for key in ['address', 'mask', 'proto', 'family']:
@@ -270,15 +277,6 @@ class WirelessRenderer(BaseRenderer):
                     '802.11s': 'mesh'
                 }
                 uci_wifi['mode'] = modes[wireless['mode']]
-                # wifi interface will be attached
-                # to the relative section in /etc/config/network
-                # but might be also attached to other interfaces
-                # indicated in "_attached", which is populated
-                # in OpenWrt.__find_bridges method
-                network = [wifi_interface['name']]
-                if wifi_interface.get('_attached'):
-                    network += wifi_interface['_attached']
-                uci_wifi['network'] = ' '.join(network).replace('.', '_')
                 # map advanced 802.11 netjson attributes to UCI
                 wifi_options = {
                     'ack_distance': 'distance',
@@ -294,6 +292,14 @@ class WirelessRenderer(BaseRenderer):
                     del uci_wifi['encryption']
                     uci_encryption = self.__get_encryption(wireless)
                     uci_wifi.update(uci_encryption)
+                # attached networks (openwrt specific)
+                # by default the wifi interface is attached
+                # to its defining interface
+                # but this behaviour can be overridden
+                if not uci_wifi.get('network'):
+                    uci_wifi['network'] = [wifi_interface['name']]
+                uci_wifi['network'] = ' '.join(uci_wifi['network'])\
+                                         .replace('.', '_')
                 uci_wifi_ifaces.append(sorted_dict(uci_wifi))
         return uci_wifi_ifaces
 

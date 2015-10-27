@@ -539,15 +539,7 @@ config wifi-iface
             "interfaces": [
                 {
                     "name": "eth0.1",
-                    "type": "ethernet",
-                    "addresses": [
-                        {
-                            "address": "192.168.1.1",
-                            "mask": 24,
-                            "proto": "static",
-                            "family": "ipv4"
-                        }
-                    ]
+                    "type": "ethernet"
                 },
                 {
                     "name": "wlan0",
@@ -566,11 +558,19 @@ config wifi-iface
                     ]
                 },
                 {
-                    "name": "br-eth0",
+                    "name": "br-lan",
                     "type": "bridge",
                     "bridge_members": [
                         "eth0.1",
                         "wlan0"
+                    ],
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
                     ]
                 }
             ]
@@ -579,9 +579,59 @@ config wifi-iface
 
 config interface 'eth0_1'
     option ifname 'eth0.1'
+    option proto 'none'
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'dhcp'
+
+config interface 'br_lan'
+    option ifname 'eth0.1 wlan0'
     option ipaddr '192.168.1.1/24'
     option proto 'static'
     option type 'bridge'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_wifi_network(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0.1",
+                    "type": "ethernet"
+                },
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "wireless": [
+                        {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "network": ["wlan0", "eth0.1"]
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0_1'
+    option ifname 'eth0.1'
+    option proto 'none'
 
 config interface 'wlan0'
     option ifname 'wlan0'

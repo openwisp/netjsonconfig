@@ -303,30 +303,12 @@ config interface 'mobile0'
 """)
         self.assertEqual(o.render(), expected)
 
-    def test_eth_bridge(self):
+    def test_simple_bridge(self):
         o = OpenWrt({
             "interfaces": [
                 {
                     "name": "eth0",
-                    "type": "ethernet",
-                    "addresses": [
-                        {
-                            "address": "192.168.1.1",
-                            "mask": 24,
-                            "proto": "static",
-                            "family": "ipv4"
-                        },
-                        # most probably a config that wouldn't work in practice
-                        # but needed to ensure that only the first
-                        # logical interface contains bridge information
-                        {
-                            "address": "10.0.0.1",
-                            "gateway": "10.0.0.10",
-                            "mask": 24,
-                            "proto": "static",
-                            "family": "ipv4"
-                        }
-                    ]
+                    "type": "ethernet"
                 },
                 {
                     "name": "eth1",
@@ -350,20 +332,85 @@ config interface 'mobile0'
         expected = self._tabs("""package network
 
 config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'dhcp'
+
+config interface 'br_eth0'
+    option ifname 'eth0 eth1'
+    option proto 'none'
+    option type 'bridge'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_eth_bridge(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet"
+                },
+                {
+                    "name": "eth1",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ]
+                },
+                {
+                    "name": "lan",
+                    "type": "bridge",
+                    "bridge_members": [
+                        "eth0",
+                        "eth1"
+                    ],
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                        # most probably a config that wouldn't work in practice
+                        # but needed to ensure that only the first
+                        # logical interface contains bridge information
+                        {
+                            "address": "10.0.0.1",
+                            "gateway": "10.0.0.10",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'dhcp'
+
+config interface 'lan'
     option ifname 'eth0 eth1'
     option ipaddr '192.168.1.1/24'
     option proto 'static'
     option type 'bridge'
 
-config interface 'eth0_2'
+config interface 'lan_2'
     option gateway '10.0.0.10'
-    option ifname 'eth0'
+    option ifname 'br-lan'
     option ipaddr '10.0.0.1/24'
     option proto 'static'
-
-config interface 'eth1'
-    option ifname 'eth1'
-    option proto 'dhcp'
 """)
         self.assertEqual(o.render(), expected)
 
