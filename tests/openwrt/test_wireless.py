@@ -1,5 +1,6 @@
 import unittest
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 
 from .utils import _TabsMixin
 
@@ -646,3 +647,23 @@ config wifi-iface
     option ssid 'open'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_network_schema_attribute(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": [
+                        {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "network": []
+                        }
+                    ]
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
