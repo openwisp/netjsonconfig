@@ -606,13 +606,35 @@ config interface 'eth0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
+        o.config['interfaces'][0]['bridge_members'] = ['eth0', 'wlan0']
+        o.validate()
+
+    def test_ifname_length(self):
         o = OpenWrt({
             "interfaces": [
                 {
-                    "name": "lan",
-                    "type": "bridge",
-                    "bridge_members": ["eth0", "wlan0"]
+                    "name": "ifname0123456789",
+                    "type": "ethernet"
                 }
             ]
         })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['name'] = 'ifname0'
+        o.validate()
+
+    def test_ifname_pattern(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth 0",
+                    "type": "ethernet"
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['name'] = 'e-t_h@=0.1'
         o.validate()

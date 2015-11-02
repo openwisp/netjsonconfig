@@ -19,7 +19,9 @@ schema = {
             ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 15,
+                    "pattern": "^[^\s]*$"
                 },
                 "mac": {
                     "type": "string"
