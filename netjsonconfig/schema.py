@@ -138,7 +138,8 @@ schema = {
                                         ]
                                     },
                                     "ssid": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "maxLength": 32
                                     },
                                     "bssid": {
 
