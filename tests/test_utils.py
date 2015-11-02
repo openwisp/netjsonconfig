@@ -48,3 +48,64 @@ class TestUtils(unittest.TestCase):
                 "element2"
             ]
         })
+
+    def test_merge_originals_unchanged(self):
+        template = {
+            "str": "original",
+            "dict": {"a": "a"},
+            "list": ["element1"]
+        }
+        config = {
+            "str": "changed",
+            "dict": {"b": "b"},
+            "list": ["element2"]
+        }
+        result = merge_config(template, config)
+        # ensure original structures not changed
+        self.assertEqual(template, {
+            "str": "original",
+            "dict": {"a": "a"},
+            "list": ["element1"]
+        })
+        self.assertEqual(config, {
+            "str": "changed",
+            "dict": {"b": "b"},
+            "list": ["element2"]
+        })
+
+    def test_merge_list_of_dicts_unchanged(self):
+        template = {
+            "list": [
+                {"a": "original"},
+                {"b": "original"}
+            ]
+        }
+        config = {
+            "list": [
+                {"c": "original"}
+            ]
+        }
+        result = merge_config(template, config)
+        template['list'][0]['a'] = 'changed'
+        config['list'][0]['c'] = 'changed'
+        result['list'][1]['b'] = 'changed'
+        # ensure originals changed
+        # but not result of merge
+        self.assertEqual(template, {
+            "list": [
+                {"a": "changed"},
+                {"b": "original"}
+            ]
+        })
+        self.assertEqual(config, {
+            "list": [
+                {"c": "changed"}
+            ]
+        })
+        self.assertEqual(result, {
+            "list": [
+                {"a": "original"},
+                {"b": "changed"},
+                {"c": "original"}
+            ]
+        })

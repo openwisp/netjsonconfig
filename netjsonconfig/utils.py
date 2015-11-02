@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from copy import deepcopy
 
 
 def merge_config(template, config):
@@ -6,18 +7,18 @@ def merge_config(template, config):
     merge two dicts `template` and `config`
     values of `config` are merged in values present in `template`
     lists present in `config` will be added to lists in `template`
+    returns merged dict
     """
+    result = template.copy()
     for key, value in config.items():
         if isinstance(value, dict):
-            # get node or create one
-            node = template.setdefault(key, {})
-            merge_config(node, value)
-        elif isinstance(value, list) and isinstance(template.get(key), list):
-            template[key] += value
+            node = result.get(key, {})
+            result[key] = merge_config(node, value)
+        elif isinstance(value, list) and isinstance(result.get(key), list):
+            result[key] = deepcopy(result[key]) + deepcopy(value)
         else:
-            template[key] = value
-
-    return template
+            result[key] = value
+    return result
 
 
 def sorted_dict(dictionary):
