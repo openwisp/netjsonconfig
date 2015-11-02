@@ -48,7 +48,6 @@ schema = merge_config(default_schema, {
                     "items": {
                         "properties": {
                             "network": {
-                                "id": "network",
                                 "type": "array",
                                 "uniqueItems": True,
                                 "additionalItems": True,
@@ -67,7 +66,6 @@ schema = merge_config(default_schema, {
         "general": {
             "properties": {
                 "timezone": {
-                    "id": "timezone",
                     "type": "string",
                     "default": "Coordinated Universal Time",
                     "enum": list(timezones.keys())
@@ -82,7 +80,6 @@ schema = merge_config(default_schema, {
                 ],
                 "properties": {
                     "driver": {
-                        "id": "driver",
                         "type": "string",
                         "enum": [
                             "mac80211",
@@ -92,7 +89,6 @@ schema = merge_config(default_schema, {
                         ]
                     },
                     "protocol": {
-                        "id": "protocol",
                         "type": "string",
                         "enum": [
                             "802.11a",
@@ -106,27 +102,22 @@ schema = merge_config(default_schema, {
             }
         },
         "ntp": {
-            "id": "ntp",
             "type": "object",
             "title": "ntp settings",
             "additionalProperties": True,
             "properties": {
                 "enabled": {
-                    "id": "enabled",
                     "type": "boolean"
                 },
                 "enable_server": {
-                    "id": "enable_server",
                     "type": "boolean"
                 },
                 "server": {
-                    "id": "server",
                     "type": "array"
                 }
             }
         },
         "ip_rules": {
-            "id": "ip_rules",
             "type": "array",
             "title": "Ip rules",
             "uniqueItems": True,
@@ -137,44 +128,34 @@ schema = merge_config(default_schema, {
                 "additionalProperties": True,
                 "properties": {
                     "in": {
-                        "id": "in",
                         "type": "string"
                     },
                     "out": {
-                        "id": "out",
                         "type": "string"
                     },
                     "src": {
-                        "id": "src",
                         "type": "string"
                     },
                     "dest": {
-                        "id": "dest",
                         "type": "string"
                     },
                     "tos": {
-                        "id": "tos",
                         "type": "integer"
                     },
                     "mark": {
-                        "id": "mark",
                         "type": "string"
                     },
                     "invert": {
-                        "id": "invert",
                         "type": "boolean",
                         "default": False
                     },
                     "lookup": {
-                        "id": "invert",
                         "type": "string"
                     },
                     "goto": {
-                        "id": "goto",
                         "type": "integer"
                     },
                     "action": {
-                        "id": "action",
                         "type": "string",
                         "enum": [
                             "prohibit",
@@ -187,7 +168,6 @@ schema = merge_config(default_schema, {
             }
         },
         "led": {
-            "id": "led",
             "type": "array",
             "title": "LED config",
             "uniqueItems": True,
@@ -203,50 +183,39 @@ schema = merge_config(default_schema, {
                 ],
                 "properties": {
                     "name": {
-                        "id": "name",
                         "type": "string"
                     },
                     "default": {
-                        "id": "default",
                         "type": "boolean"
                     },
                     "dev": {
-                        "id": "dev",
                         "type": "string"
                     },
                     "sysfs": {
-                        "id": "sysfs",
                         "type": "string"
                     },
                     "trigger": {
-                        "id": "trigger",
                         "type": "string"
                     },
                     "delayoff": {
-                        "id": "delayoff",
                         "type": "integer"
                     },
                     "delayon": {
-                        "id": "delayon",
                         "type": "integer"
                     },
                     "interval": {
-                        "id": "interval",
                         "type": "integer"
                     },
                     "message": {
-                        "id": "message",
                         "type": "string"
                     },
                     "mode": {
-                        "id": "mode",
                         "type": "string"
                     }
                 }
             }
         },
         "switch": {
-            "id": "switch",
             "type": "array",
             "title": "VLANs",
             "uniqueItems": True,
@@ -263,19 +232,15 @@ schema = merge_config(default_schema, {
                 ],
                 "properties": {
                     "name": {
-                        "id": "name",
                         "type": "string"
                     },
                     "reset": {
-                        "id": "reset",
                         "type": "boolean"
                     },
                     "enable_vlan": {
-                        "id": "enable_vlan",
                         "type": "boolean"
                     },
                     "vlan": {
-                        "id": "vlan",
                         "type": "array",
                         "title": "VLANs",
                         "uniqueItems": True,
@@ -291,15 +256,12 @@ schema = merge_config(default_schema, {
                             ],
                             "properties": {
                                 "device": {
-                                    "id": "device",
                                     "type": "string"
                                 },
                                 "vlan": {
-                                    "id": "vlan",
                                     "type": "integer"
                                 },
                                 "ports": {
-                                    "id": "ports",
                                     "type": "string"
                                 }
                             }
@@ -309,7 +271,6 @@ schema = merge_config(default_schema, {
             }
         },
         "files": {
-            "id": "files",
             "type": "array",
             "title": "files",
             "uniqueItems": True,
@@ -324,11 +285,9 @@ schema = merge_config(default_schema, {
                 ],
                 "properties": {
                     "path": {
-                        "id": "path",
                         "type": "string"
                     },
                     "contents": {
-                        "id": "contents",
                         "anyOf": [
                             {"type": "string", "format": "textarea"},
                             {"type": "array"}

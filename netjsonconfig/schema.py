@@ -7,7 +7,6 @@ http://netjson.org/rfc.html#DeviceConfiguration-schema
 
 schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "/",
     "type": "object",
     "additionalProperties": True,
     "definitions": {
@@ -20,29 +19,23 @@ schema = {
             ],
             "properties": {
                 "name": {
-                    "id": "name",
                     "type": "string"
                 },
                 "mac": {
-                    "id": "mac",
                     "type": "string"
                 },
                 "mtu": {
-                    "id": "mtu",
                     "type": "integer",
                     "default": 1500
                 },
                 "txqueuelen": {
-                    "id": "txqueuelen",
                     "type": "integer"
                 },
                 "autostart": {
-                    "id": "autostart",
                     "type": "boolean",
                     "default": True
                 },
                 "addresses": {
-                    "id": "addresses",
                     "type": "array",
                     "title": "Addresses",
                     "uniqueItems": True,
@@ -53,19 +46,15 @@ schema = {
                         "additionalProperties": True,
                         "properties": {
                             "address": {
-                                "id": "address",
                                 "type": "string"
                             },
                             "mask": {
-                                "id": "mask",
                                 "type": "integer"
                             },
                             "gateway": {
-                                "id": "gateway",
                                 "type": "string"
                             },
                             "family": {
-                                "id": "family",
                                 "type": "string",
                                 "enum": [
                                     "ipv4",
@@ -73,7 +62,6 @@ schema = {
                                 ]
                             },
                             "proto": {
-                                "id": "proto",
                                 "type": "string",
                                 "enum": [
                                     "static",
@@ -134,11 +122,9 @@ schema = {
                                 ],
                                 "properties": {
                                     "radio": {
-                                        "id": "radio",
                                         "type": "string"
                                     },
                                     "mode": {
-                                        "id": "mode",
                                         "type": "string",
                                         "enum": [
                                             "access_point",
@@ -150,37 +136,31 @@ schema = {
                                         ]
                                     },
                                     "ssid": {
-                                        "id": "ssid",
                                         "type": "string"
                                     },
                                     "bssid": {
-                                        "id": "bssid",
+
                                         "type": "string"
                                     },
                                     "hidden": {
-                                        "id": "bssid",
                                         "type": "boolean",
                                         "default": False
                                     },
                                     "ack_distance": {
-                                        "id": "ack_distance",
                                         "type": "integer",
                                         "minimum": 1
                                     },
                                     "rts_threshold": {
-                                        "id": "rts_threshold",
                                         "type": "integer",
                                         "minimum": 0,
                                         "maximum": 2346
                                     },
                                     "frag_threshold": {
-                                        "id": "frag_threshold",
                                         "type": "integer",
                                         "minimum": 0,
                                         "maximum": 2346
                                     },
                                     "encryption": {
-                                        "id": "encryption",
                                         "type": "object",
                                         "title": "Encryption",
                                         "required": [
@@ -190,11 +170,9 @@ schema = {
                                         ],
                                         "properties": {
                                             "enabled": {
-                                                "id": "enabled",
                                                 "type": "boolean"
                                             },
                                             "protocol": {
-                                                "id": "protocol",
                                                 "type": "string",
                                                 "enum": [
                                                     "wep_open",
@@ -209,11 +187,9 @@ schema = {
                                                 ]
                                             },
                                             "ciphers": {
-                                                "id": "ciphers",
                                                 "type": "array"
                                             },
                                             "key": {
-                                                "id": "key",
                                                 "type": "string"
                                             }
                                         }
@@ -243,7 +219,6 @@ schema = {
                 {
                     "properties": {
                         "bridge_members": {
-                            "id": "bridge_members",
                             "type": "array",
                             "title": "Bridge Members",
                             "minItems": 1,
@@ -263,79 +238,63 @@ schema = {
     ],
     "properties": {
         "type": {
-            "id": "type",
             "type": "string",
             "default": "DeviceConfiguration",
             "pattern": "DeviceConfiguration"
         },
         "general": {
-            "id": "general",
             "type": "object",
             "title": "General",
             "additionalProperties": True,
             "properties": {
                 "hostname": {
-                    "id": "hostname",
                     "type": "string"
                 },
                 "maintainer": {
-                    "id": "maintainer",
                     "type": "string"
                 },
                 "description": {
-                    "id": "description",
                     "type": "string"
                 }
             }
         },
         "hardware": {
-            "id": "hardware",
             "type": "object",
             "title": "Hardware",
             "additionalProperties": True,
             "properties": {
                 "manufacturer": {
-                    "id": "manufacturer",
                     "type": "string"
                 },
                 "model": {
-                    "id": "model",
                     "type": "string"
                 },
                 "revision": {
-                    "id": "revision",
                     "type": "integer"
                 },
                 "cpu": {
-                    "id": "cpu",
                     "type": "string"
                 }
             }
         },
         "operating_system": {
-            "id": "operating_system",
             "type": "object",
             "title": "Operating System",
             "additionalProperties": True,
             "properties": {
                 "name": {
-                    "id": "name",
                     "type": "string"
                 },
                 "kernel": {
-                    "id": "kernel",
                     "type": "string"
                 },
                 "version": {
-                    "id": "version",
                     "type": "string"
                 },
                 "revision": {
-                    "id": "revision",
                     "type": "string"
                 },
                 "description": {
-                    "id": "description",
                     "type": "string"
                 }
             }
@@ -404,7 +363,6 @@ schema = {
             }
         },
         "radios": {
-            "id": "radios",
             "type": "array",
             "title": "Radios",
             "uniqueItems": True,
@@ -421,33 +379,26 @@ schema = {
                 ],
                 "properties": {
                     "name": {
-                        "id": "name",
                         "type": "string"
                     },
                     "phy": {
-                        "id": "phy",
                         "type": "string"
                     },
                     "channel": {
-                        "id": "channel",
                         "type": "integer"
                     },
                     "channel_width": {
-                        "id": "channel_width",
                         "type": "integer"
                     },
                     "tx_power": {
-                        "id": "tx_power",
                         "type": "integer"
                     },
                     "country": {
-                        "id": "country",
                         "type": "string",
                         "minLength": 2,
                         "maxLength": 2
                     },
                     "disabled": {
-                        "id": "disabled",
                         "type": "boolean",
                         "default": False
                     }
@@ -455,7 +406,6 @@ schema = {
             }
         },
         "interfaces": {
-            "id": "interfaces",
             "type": "array",
             "title": "Interfaces",
             "uniqueItems": True,
@@ -469,7 +419,6 @@ schema = {
             }
         },
         "routes": {
-            "id": "routes",
             "type": "array",
             "title": "Routes",
             "uniqueItems": True,
@@ -485,22 +434,18 @@ schema = {
                 ],
                 "properties": {
                     "device": {
-                        "id": "device",
                         "type": "string"
                     },
                     "next": {
-                        "id": "next",
                         "type": "string"
                     },
                     "destination": {
-                        "id": "destination",
                         "type": "string"
                     }
                 }
             }
         },
         "dns_servers": {
-            "id": "dns_servers",
             "title": "DNS Servers",
             "type": "array",
             "uniqueItems": True,
@@ -510,7 +455,6 @@ schema = {
             }
         },
         "dns_search": {
-            "id": "dns_search",
             "title": "DNS Search",
             "type": "array",
             "uniqueItems": True,
