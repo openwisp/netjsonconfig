@@ -6,6 +6,63 @@ from ...schema import schema as default_schema
 from ...utils import merge_config
 
 schema = merge_config(default_schema, {
+    "definitions": {
+        "interface_settings": {
+            "properties": {
+                "addresses": {
+                    "items": {
+                        "properties": {
+                            "proto": {
+                                "enum": [
+                                    'dhcpv6',
+                                    'ppp',
+                                    'pppoe',
+                                    'pppoa',
+                                    '3g',
+                                    'qmi',
+                                    'ncm',
+                                    'hnet',
+                                    'pptp',
+                                    '6in4',
+                                    'aiccu',
+                                    '6to4',
+                                    '6rd',
+                                    'dslite',
+                                    'l2tp',
+                                    'relay',
+                                    'gre',
+                                    'gretap',
+                                    'grev6',
+                                    'grev6tap',
+                                    'none'
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "wireless_interface": {
+            "properties": {
+                "wireless": {
+                    "items": {
+                        "properties": {
+                            "network": {
+                                "id": "network",
+                                "type": "array",
+                                "uniqueItems": True,
+                                "additionalItems": True,
+                                "minItems": 1,
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "properties": {
         "general": {
             "properties": {
@@ -17,30 +74,12 @@ schema = merge_config(default_schema, {
                 }
             }
         },
-        "interfaces": {
-            "items": {
-                "properties": {
-                    "wireless": {
-                        "items": {
-                            "properties": {
-                                "network": {
-                                    "id": "network",
-                                    "type": "array",
-                                    "uniqueItems": True,
-                                    "additionalItems": True,
-                                    "minItems": 1,
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "radios": {
             "items": {
+                "required": [
+                    "driver",
+                    "protocol"
+                ],
                 "properties": {
                     "driver": {
                         "id": "driver",
@@ -300,35 +339,3 @@ schema = merge_config(default_schema, {
         }
     }
 })
-
-# add interface protos
-schema['properties']['interfaces']['items']['properties']\
-      ['addresses']['items']['properties']['proto']['enum'] += [
-    'dhcpv6',
-    'ppp',
-    'pppoe',
-    'pppoa',
-    '3g',
-    'qmi',
-    'ncm',
-    'hnet',
-    'pptp',
-    '6in4',
-    'aiccu',
-    '6to4',
-    '6rd',
-    'dslite',
-    'l2tp',
-    'relay',
-    'gre',
-    'gretap',
-    'grev6',
-    'grev6tap',
-    'none'
-]
-
-# mark driver and protocol as required
-schema['properties']['radios']['items']['required'] += [
-    'driver',
-    'protocol'
-]

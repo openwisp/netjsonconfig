@@ -1,5 +1,6 @@
 import unittest
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 
 from .utils import _TabsMixin
 
@@ -259,6 +260,7 @@ config route6
             "interfaces": [
                 {
                     "name": "mobile0",
+                    "type": "wireless",
                     "addresses": [
                         {
                             "proto": "3g"
@@ -280,6 +282,7 @@ config interface 'mobile0'
             "interfaces": [
                 {
                     "name": "mobile0",
+                    "type": "wireless",
                     "mtu": 1400,
                     "enabled": False,
                     "custom_attr": "yes",
@@ -590,3 +593,26 @@ config interface 'eth0'
     option proto 'none'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_bridge_members_schema(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "lan",
+                    "type": "bridge"
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "lan",
+                    "type": "bridge",
+                    "bridge_members": ["eth0", "wlan0"]
+                }
+            ]
+        })
+        o.validate()
