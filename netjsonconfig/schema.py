@@ -299,69 +299,6 @@ schema = {
                 }
             }
         },
-        "resources": {
-            "id": "resources",
-            "type": "object",
-            "title": "Resources",
-            "additionalProperties": True,
-            "properties": {
-                "memory": {
-                    "id": "memory",
-                    "type": "object",
-                    "additionalProperties": True,
-                    "properties": {
-                        "total": {
-                            "id": "total",
-                            "type": "integer"
-                        }
-                    }
-                },
-                "swap": {
-                    "id": "swap",
-                    "type": "object",
-                    "additionalProperties": True,
-                    "properties": {
-                        "total": {
-                            "id": "total",
-                            "type": "integer"
-                        }
-                    }
-                },
-                "cpu": {
-                    "id": "cpu",
-                    "type": "object",
-                    "additionalProperties": True,
-                    "properties": {
-                        "frequency": {
-                            "id": "frequency",
-                            "type": "integer"
-                        }
-                    }
-                },
-                "flash": {
-                    "id": "flash",
-                    "type": "object",
-                    "additionalProperties": True,
-                    "properties": {
-                        "total": {
-                            "id": "total",
-                            "type": "integer"
-                        }
-                    }
-                },
-                "storage": {
-                    "id": "storage",
-                    "type": "object",
-                    "additionalProperties": True,
-                    "properties": {
-                        "total": {
-                            "id": "total",
-                            "type": "integer"
-                        }
-                    }
-                }
-            }
-        },
         "radios": {
             "type": "array",
             "title": "Radios",
