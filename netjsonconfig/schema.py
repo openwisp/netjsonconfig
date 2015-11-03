@@ -242,8 +242,7 @@ schema = {
     "properties": {
         "type": {
             "type": "string",
-            "default": "DeviceConfiguration",
-            "pattern": "DeviceConfiguration"
+            "enum": ["DeviceConfiguration"]
         },
         "general": {
             "type": "object",
