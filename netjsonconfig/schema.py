@@ -224,12 +224,9 @@ schema = {
                         "bridge_members": {
                             "type": "array",
                             "title": "Bridge Members",
-                            "minItems": 1,
-                            "items": [
-                                {
-                                    "type": "string"
-                                }
-                            ]
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }

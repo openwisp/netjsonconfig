@@ -79,8 +79,14 @@ class NetworkRenderer(BaseRenderer):
                 })
                 # bridging
                 if is_bridge:
-                    uci_interface['ifname'] = bridge_members
                     uci_interface['type'] = 'bridge'
+                    # put bridge members in ifname attribute
+                    if bridge_members:
+                        uci_interface['ifname'] = bridge_members
+                    # if no members, this is an empty bridge
+                    else:
+                        uci_interface['bridge_empty'] = True
+                        del uci_interface['ifname']
                     # ensure type "bridge" is only given to one logical interface
                     is_bridge = False
                 # bridge has already been defined
@@ -91,7 +97,7 @@ class NetworkRenderer(BaseRenderer):
                     # to these physical names
                     uci_interface['ifname'] = 'br-{0}'.format(interface['name'])
                 # delete bridge_members attribtue
-                if uci_interface.get('bridge_members'):
+                if uci_interface.get('bridge_members') is not None:
                     del uci_interface['bridge_members']
                 # add address if any (with correct option name)
                 if address_key and address_value:

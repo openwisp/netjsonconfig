@@ -418,6 +418,26 @@ config interface 'lan_2'
 """)
         self.assertEqual(o.render(), expected)
 
+    def test_empty_bridge(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "network": "lan",
+                    "name": "br-lan",
+                    "type": "bridge",
+                    "bridge_members": []
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'lan'
+    option bridge_empty '1'
+    option proto 'none'
+    option type 'bridge'
+""")
+        self.assertEqual(o.render(), expected)
+
     def test_dns(self):
         o = OpenWrt({
             "interfaces": [
@@ -604,6 +624,9 @@ config interface 'eth0'
                 }
             ]
         })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        o.config['interfaces'][0]['bridge_members'] = [3]
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
