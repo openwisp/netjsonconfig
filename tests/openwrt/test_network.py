@@ -323,7 +323,8 @@ config interface 'mobile0'
                     ]
                 },
                 {
-                    "name": "br-eth0",
+                    "network": "lan",
+                    "name": "br-lan",
                     "type": "bridge",
                     "bridge_members": [
                         "eth0",
@@ -342,7 +343,7 @@ config interface 'eth1'
     option ifname 'eth1'
     option proto 'dhcp'
 
-config interface 'br_eth0'
+config interface 'lan'
     option ifname 'eth0 eth1'
     option proto 'none'
     option type 'bridge'
@@ -638,3 +639,76 @@ config interface 'eth0'
         # ensure fix works
         o.config['interfaces'][0]['name'] = 'e-t_h@=0.1'
         o.validate()
+
+    def test_network_maxlength(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "network": "lan0123456789",
+                    "type": "ethernet"
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['network'] = 'lan'
+        o.validate()
+
+    def test_network_pattern(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "network": "lan 0",
+                    "type": "ethernet"
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        o.config['interfaces'][0]['network'] = 'lan-0'
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['network'] = 'lan'
+        o.validate()
+
+    def test_network_attribute(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "network": "lan",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                        {
+                            "address": "192.168.2.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'lan'
+    option ifname 'eth0'
+    option ipaddr '192.168.1.1/24'
+    option proto 'static'
+
+config interface 'lan_2'
+    option ifname 'eth0'
+    option ipaddr '192.168.2.1/24'
+    option proto 'static'
+""")
+        self.assertEqual(o.render(), expected)

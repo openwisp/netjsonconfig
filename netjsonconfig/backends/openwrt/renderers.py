@@ -25,9 +25,14 @@ class NetworkRenderer(BaseRenderer):
         for interface in interfaces:
             counter = 1
             is_bridge = False
-            # ensure uci interface name is valid
-            uci_name = interface['name'].replace('.', '_')\
-                                        .replace('-', '_')
+            # determine uci logical interface name
+            network = interface.get('network')
+            if network:
+                uci_name = network
+            # default to ifname
+            else:
+                uci_name = interface['name'].replace('.', '_')\
+                                            .replace('-', '_')
             # determine if must be type bridge
             if interface.get('type') == 'bridge':
                 is_bridge = True
@@ -36,6 +41,8 @@ class NetworkRenderer(BaseRenderer):
             for address in interface.get('addresses', default_addresses):
                 # prepare new UCI interface directive
                 uci_interface = deepcopy(interface)
+                if network:
+                    del uci_interface['network']
                 if uci_interface.get('autostart'):
                     uci_interface['auto'] = interface['autostart']
                     del uci_interface['autostart']
@@ -297,7 +304,9 @@ class WirelessRenderer(BaseRenderer):
                 # to its defining interface
                 # but this behaviour can be overridden
                 if not uci_wifi.get('network'):
-                    uci_wifi['network'] = [wifi_interface['name']]
+                    # get network, default to ifname
+                    network = wifi_interface.get('network', wifi_interface['name'])
+                    uci_wifi['network'] = [network]
                 uci_wifi['network'] = ' '.join(uci_wifi['network'])\
                                          .replace('.', '_')
                 uci_wifi_ifaces.append(sorted_dict(uci_wifi))

@@ -9,6 +9,11 @@ schema = merge_config(default_schema, {
     "definitions": {
         "interface_settings": {
             "properties": {
+                "network": {
+                    "type": "string",
+                    "maxLength": 9,
+                    "pattern": "^[a-zA-z0-9_]*$"
+                },
                 "addresses": {
                     "items": {
                         "properties": {

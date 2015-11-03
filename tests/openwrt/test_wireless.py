@@ -667,3 +667,36 @@ config wifi-iface
         })
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_network_attribute(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "network": "guests",
+                    "wireless": [
+                        {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'guests'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option mode 'ap'
+    option network 'guests'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
