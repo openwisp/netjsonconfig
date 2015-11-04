@@ -161,14 +161,10 @@ schema = {
                                     "type": "object",
                                     "title": "Encryption",
                                     "required": [
-                                        "enabled",
                                         "protocol",
                                         "key"
                                     ],
                                     "properties": {
-                                        "enabled": {
-                                            "type": "boolean"
-                                        },
                                         "protocol": {
                                             "type": "string",
                                             "enum": [
@@ -188,6 +184,10 @@ schema = {
                                         },
                                         "key": {
                                             "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean",
+                                            "default": False
                                         }
                                     }
                                 }

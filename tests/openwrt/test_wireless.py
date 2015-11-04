@@ -260,7 +260,6 @@ config wifi-iface
                         "mode": "access_point",
                         "ssid": "wep",
                         "encryption": {
-                            "enabled": True,
                             "protocol": "wep_open",
                             "key": "wepkey1234567"
                         }
@@ -304,7 +303,6 @@ config wifi-iface
                         "mode": "access_point",
                         "ssid": "wep",
                         "encryption": {
-                            "enabled": True,
                             "protocol": "wep_shared",
                             "key": "wepkey1234567"
                         }
@@ -348,7 +346,6 @@ config wifi-iface
                         "mode": "access_point",
                         "ssid": "wpa-personal",
                         "encryption": {
-                            "enabled": True,
                             "protocol": "wpa_personal",
                             "ciphers": [
                                 "tkip"
@@ -394,7 +391,6 @@ config wifi-iface
                         "mode": "access_point",
                         "ssid": "wpa2-personal",
                         "encryption": {
-                            "enabled": True,
                             "protocol": "wpa2_personal",
                             "ciphers": [
                                 "tkip",
@@ -441,7 +437,7 @@ config wifi-iface
                         "mode": "access_point",
                         "ssid": "MyNetwork",
                         "encryption": {
-                            "enabled": False,
+                            "disabled": True,
                             "protocol": "wpa2_personal",
                             "ciphers": [
                                 "tkip",
@@ -486,7 +482,6 @@ config wifi-iface
                         "mode": "access_point",
                         "ssid": "wpa2-personal",
                         "encryption": {
-                            "enabled": True,
                             "protocol": "wpa2_personal",
                             "ciphers": [
                                 "tkip",
@@ -653,7 +648,7 @@ config wifi-iface
 """)
         self.assertEqual(o.render(), expected)
 
-    def test_network_schema_attribute(self):
+    def test_wireless_network_schema_attribute(self):
         o = OpenWrt({
             "interfaces": [
                 {

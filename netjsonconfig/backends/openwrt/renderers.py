@@ -319,7 +319,7 @@ class WirelessRenderer(BaseRenderer):
 
     def __get_encryption(self, wireless):
         encryption = wireless.get('encryption', {})
-        enabled = encryption.get('enabled', False)
+        disabled = encryption.get('disabled', False)
         uci = {}
         encryption_map = {
             'wep_open': 'wep-open',
@@ -333,7 +333,7 @@ class WirelessRenderer(BaseRenderer):
             'wps': 'psk'
         }
         # if encryption disabled return empty dict
-        if not encryption or not enabled:
+        if not encryption or disabled:
             return uci
         # otherwise configure encryption
         protocol = encryption['protocol']
