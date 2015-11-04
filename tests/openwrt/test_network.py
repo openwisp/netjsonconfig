@@ -277,6 +277,25 @@ config interface 'mobile0'
 """)
         self.assertEqual(o.render(), expected)
 
+    def test_interface_disabled(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "disabled": True,
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option enabled '0'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)
+
     def test_interface_custom_attrs(self):
         o = OpenWrt({
             "interfaces": [
@@ -284,7 +303,6 @@ config interface 'mobile0'
                     "name": "mobile0",
                     "type": "wireless",
                     "mtu": 1400,
-                    "enabled": False,
                     "custom_attr": "yes",
                     "empty": "",
                     "addresses": [
@@ -299,7 +317,6 @@ config interface 'mobile0'
 
 config interface 'mobile0'
     option custom_attr 'yes'
-    option enabled '0'
     option ifname 'mobile0'
     option mtu '1400'
     option proto '3g'

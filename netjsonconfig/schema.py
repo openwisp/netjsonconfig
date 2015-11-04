@@ -37,6 +37,10 @@ schema = {
                     "type": "boolean",
                     "default": True
                 },
+                "disabled": {
+                    "type": "boolean",
+                    "default": False
+                },
                 "addresses": {
                     "type": "array",
                     "title": "Addresses",

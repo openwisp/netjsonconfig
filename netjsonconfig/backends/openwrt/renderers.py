@@ -46,6 +46,9 @@ class NetworkRenderer(BaseRenderer):
                 if uci_interface.get('autostart'):
                     uci_interface['auto'] = interface['autostart']
                     del uci_interface['autostart']
+                if uci_interface.get('disabled'):
+                    uci_interface['enabled'] = not interface['disabled']
+                    del uci_interface['disabled']
                 if uci_interface.get('addresses'):
                     del uci_interface['addresses']
                 if uci_interface.get('type'):
