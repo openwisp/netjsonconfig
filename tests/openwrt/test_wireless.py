@@ -191,17 +191,15 @@ config wifi-device 'radio0'
                             "family": "ipv4"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "MyWifiAP",
-                            "hidden": True,
-                            "ack_distance": 300,
-                            "rts_threshold": 1300,
-                            "frag_threshold": 1500
-                        }
-                    ]
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "hidden": True,
+                        "ack_distance": 300,
+                        "rts_threshold": 1300,
+                        "frag_threshold": 1500
+                    }
                 }
             ],
             "radios": [
@@ -238,6 +236,7 @@ config wifi-iface
     option distance '300'
     option frag '1500'
     option hidden '1'
+    option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
     option rts '1300'
@@ -256,18 +255,16 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "wep",
-                            "encryption": {
-                                "enabled": True,
-                                "protocol": "wep_open",
-                                "key": "wepkey1234567"
-                            }
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wep",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wep_open",
+                            "key": "wepkey1234567"
                         }
-                    ]
+                    }
                 }
             ]
         })
@@ -282,6 +279,7 @@ package wireless
 config wifi-iface
     option device 'radio0'
     option encryption 'wep-open'
+    option ifname 'wlan0'
     option key '1'
     option key1 's:wepkey1234567'
     option mode 'ap'
@@ -301,18 +299,16 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "wep",
-                            "encryption": {
-                                "enabled": True,
-                                "protocol": "wep_shared",
-                                "key": "wepkey1234567"
-                            }
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wep",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wep_shared",
+                            "key": "wepkey1234567"
                         }
-                    ]
+                    }
                 }
             ]
         })
@@ -327,6 +323,7 @@ package wireless
 config wifi-iface
     option device 'radio0'
     option encryption 'wep-shared'
+    option ifname 'wlan0'
     option key '1'
     option key1 'wepkey1234567'
     option mode 'ap'
@@ -346,21 +343,19 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "wpa-personal",
-                            "encryption": {
-                                "enabled": True,
-                                "protocol": "wpa_personal",
-                                "ciphers": [
-                                    "tkip"
-                                ],
-                                "key": "passphrase012345"
-                            }
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wpa-personal",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wpa_personal",
+                            "ciphers": [
+                                "tkip"
+                            ],
+                            "key": "passphrase012345"
                         }
-                    ]
+                    }
                 }
             ]
         })
@@ -375,6 +370,7 @@ package wireless
 config wifi-iface
     option device 'radio0'
     option encryption 'psk+tkip'
+    option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
     option network 'wlan0'
@@ -393,22 +389,20 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "wpa2-personal",
-                            "encryption": {
-                                "enabled": True,
-                                "protocol": "wpa2_personal",
-                                "ciphers": [
-                                    "tkip",
-                                    "ccmp"
-                                ],
-                                "key": "passphrase012345"
-                            }
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wpa2-personal",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wpa2_personal",
+                            "ciphers": [
+                                "tkip",
+                                "ccmp"
+                            ],
+                            "key": "passphrase012345"
                         }
-                    ]
+                    }
                 }
             ]
         })
@@ -423,6 +417,7 @@ package wireless
 config wifi-iface
     option device 'radio0'
     option encryption 'psk2+tkip+ccmp'
+    option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
     option network 'wlan0'
@@ -441,22 +436,20 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "MyNetwork",
-                            "encryption": {
-                                "enabled": False,
-                                "protocol": "wpa2_personal",
-                                "ciphers": [
-                                    "tkip",
-                                    "ccmp"
-                                ],
-                                "key": "passphrase012345"
-                            }
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyNetwork",
+                        "encryption": {
+                            "enabled": False,
+                            "protocol": "wpa2_personal",
+                            "ciphers": [
+                                "tkip",
+                                "ccmp"
+                            ],
+                            "key": "passphrase012345"
                         }
-                    ]
+                    }
                 }
             ]
         })
@@ -470,13 +463,14 @@ package wireless
 
 config wifi-iface
     option device 'radio0'
+    option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyNetwork'
 """)
         self.assertEqual(o.render(), expected)
 
-    def test_multiple_ssid(self):
+    def test_multiple_wifi(self):
         o = OpenWrt({
             "interfaces": [
                 {
@@ -487,27 +481,34 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "wpa2-personal",
-                            "encryption": {
-                                "enabled": True,
-                                "protocol": "wpa2_personal",
-                                "ciphers": [
-                                    "tkip",
-                                    "ccmp"
-                                ],
-                                "key": "passphrase012345"
-                            }
-                        },
-                        {
-                            "radio": "radio1",
-                            "mode": "adhoc",
-                            "ssid": "adhoc-ssid"
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wpa2-personal",
+                        "encryption": {
+                            "enabled": True,
+                            "protocol": "wpa2_personal",
+                            "ciphers": [
+                                "tkip",
+                                "ccmp"
+                            ],
+                            "key": "passphrase012345"
                         }
-                    ]
+                    }
+                },
+                {
+                    "name": "wlan1",
+                    "type": "wireless",
+                    "addresses": [
+                        {
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "wireless": {
+                        "radio": "radio1",
+                        "mode": "adhoc",
+                        "ssid": "adhoc-ssid"
+                    }
                 }
             ]
         })
@@ -517,11 +518,16 @@ config interface 'wlan0'
     option ifname 'wlan0'
     option proto 'dhcp'
 
+config interface 'wlan1'
+    option ifname 'wlan1'
+    option proto 'dhcp'
+
 package wireless
 
 config wifi-iface
     option device 'radio0'
     option encryption 'psk2+tkip+ccmp'
+    option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
     option network 'wlan0'
@@ -529,8 +535,9 @@ config wifi-iface
 
 config wifi-iface
     option device 'radio1'
+    option ifname 'wlan1'
     option mode 'adhoc'
-    option network 'wlan0'
+    option network 'wlan1'
     option ssid 'adhoc-ssid'
 """)
         self.assertEqual(o.render(), expected)
@@ -550,13 +557,11 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "open"
-                        }
-                    ]
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open"
+                    }
                 },
                 {
                     "name": "br-lan",
@@ -596,6 +601,7 @@ package wireless
 
 config wifi-iface
     option device 'radio0'
+    option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'open'
@@ -617,14 +623,12 @@ config wifi-iface
                             "proto": "dhcp"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "open",
-                            "network": ["wlan0", "eth0.1"]
-                        }
-                    ]
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "network": ["wlan0", "eth0.1"]
+                    }
                 }
             ]
         })
@@ -642,6 +646,7 @@ package wireless
 
 config wifi-iface
     option device 'radio0'
+    option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0 eth0_1'
     option ssid 'open'
@@ -654,14 +659,12 @@ config wifi-iface
                 {
                     "name": "wlan0",
                     "type": "wireless",
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "open",
-                            "network": []
-                        }
-                    ]
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "network": []
+                    }
                 }
             ]
         })
@@ -675,13 +678,11 @@ config wifi-iface
                     "name": "wlan0",
                     "type": "wireless",
                     "network": "guests",
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "open"
-                        }
-                    ]
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open"
+                    }
                 }
             ]
         })
@@ -695,6 +696,7 @@ package wireless
 
 config wifi-iface
     option device 'radio0'
+    option ifname 'wlan0'
     option mode 'ap'
     option network 'guests'
     option ssid 'open'

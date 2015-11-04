@@ -50,16 +50,14 @@ schema = merge_config(default_schema, {
         "wireless_interface": {
             "properties": {
                 "wireless": {
-                    "items": {
-                        "properties": {
-                            "network": {
-                                "type": "array",
-                                "uniqueItems": True,
-                                "additionalItems": True,
-                                "minItems": 1,
-                                "items": {
-                                    "type": "string"
-                                }
+                    "properties": {
+                        "network": {
+                            "type": "array",
+                            "uniqueItems": True,
+                            "additionalItems": True,
+                            "minItems": 1,
+                            "items": {
+                                "type": "string"
                             }
                         }
                     }

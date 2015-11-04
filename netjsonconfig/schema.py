@@ -109,92 +109,85 @@ schema = {
                 {
                     "properties": {
                         "wireless": {
-                            "type": "array",
-                            "title": "Wireless interfaces",
-                            "uniqueItems": True,
-                            "additionalItems": True,
-                            "items": {
-                                "type": "object",
-                                "title": "Wireless Interface",
-                                "additionalProperties": True,
-                                "required": [
-                                    "radio",
-                                    "mode",
-                                    "ssid"
-                                ],
-                                "properties": {
-                                    "radio": {
-                                        "type": "string"
-                                    },
-                                    "mode": {
-                                        "type": "string",
-                                        "enum": [
-                                            "access_point",
-                                            "station",
-                                            "adhoc",
-                                            "wds",
-                                            "monitor",
-                                            "802.11s"
-                                        ]
-                                    },
-                                    "ssid": {
-                                        "type": "string",
-                                        "maxLength": 32
-                                    },
-                                    "bssid": {
-
-                                        "type": "string"
-                                    },
-                                    "hidden": {
-                                        "type": "boolean",
-                                        "default": False
-                                    },
-                                    "ack_distance": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    },
-                                    "rts_threshold": {
-                                        "type": "integer",
-                                        "minimum": 0,
-                                        "maximum": 2346
-                                    },
-                                    "frag_threshold": {
-                                        "type": "integer",
-                                        "minimum": 0,
-                                        "maximum": 2346
-                                    },
-                                    "encryption": {
-                                        "type": "object",
-                                        "title": "Encryption",
-                                        "required": [
-                                            "enabled",
-                                            "protocol",
-                                            "key"
-                                        ],
-                                        "properties": {
-                                            "enabled": {
-                                                "type": "boolean"
-                                            },
-                                            "protocol": {
-                                                "type": "string",
-                                                "enum": [
-                                                    "wep_open",
-                                                    "wep_shared",
-                                                    "wpa_personal",
-                                                    "wpa2_personal",
-                                                    "wpa_personal_mixed",
-                                                    "wpa_enterprise",
-                                                    "wpa2_enterprise",
-                                                    "wpa_enterprise_mixed",
-                                                    "wps"
-                                                ]
-                                            },
-                                            "ciphers": {
-                                                "type": "array"
-                                            },
-                                            "key": {
-                                                "type": "string"
-                                            }
+                            "type": "object",
+                            "title": "Wireless Interface",
+                            "additionalProperties": True,
+                            "required": [
+                                "radio",
+                                "mode",
+                                "ssid"
+                            ],
+                            "properties": {
+                                "radio": {
+                                    "type": "string"
+                                },
+                                "mode": {
+                                    "type": "string",
+                                    "enum": [
+                                        "access_point",
+                                        "station",
+                                        "adhoc",
+                                        "wds",
+                                        "monitor",
+                                        "802.11s"
+                                    ]
+                                },
+                                "ssid": {
+                                    "type": "string",
+                                    "maxLength": 32
+                                },
+                                "bssid": {
+                                    "type": "string"
+                                },
+                                "hidden": {
+                                    "type": "boolean",
+                                    "default": False
+                                },
+                                "ack_distance": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "rts_threshold": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 2346
+                                },
+                                "frag_threshold": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 2346
+                                },
+                                "encryption": {
+                                    "type": "object",
+                                    "title": "Encryption",
+                                    "required": [
+                                        "enabled",
+                                        "protocol",
+                                        "key"
+                                    ],
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
+                                        "protocol": {
+                                            "type": "string",
+                                            "enum": [
+                                                "wep_open",
+                                                "wep_shared",
+                                                "wpa_personal",
+                                                "wpa2_personal",
+                                                "wpa_personal_mixed",
+                                                "wpa_enterprise",
+                                                "wpa2_enterprise",
+                                                "wpa_enterprise_mixed",
+                                                "wps"
+                                            ]
+                                        },
+                                        "ciphers": {
+                                            "type": "array"
+                                        },
+                                        "key": {
+                                            "type": "string"
                                         }
                                     }
                                 }

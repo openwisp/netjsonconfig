@@ -271,51 +271,50 @@ class WirelessRenderer(BaseRenderer):
         # results container
         uci_wifi_ifaces = []
         for wifi_interface in wifi_interfaces:
-            # each wireless interface
-            # can have multiple SSIDs
-            wireless_interfaces = wifi_interface['wireless']
-            for wireless in wireless_interfaces:
-                # prepare UCI wifi-iface directive
-                uci_wifi = wireless.copy()
-                # rename radio to device
-                uci_wifi['device'] = wireless['radio']
-                del uci_wifi['radio']
-                # map netjson wifi modes to uci wifi modes
-                modes = {
-                    'access_point': 'ap',
-                    'station': 'sta',
-                    'adhoc': 'adhoc',
-                    'wds': 'wds',
-                    'monitor': 'monitor',
-                    '802.11s': 'mesh'
-                }
-                uci_wifi['mode'] = modes[wireless['mode']]
-                # map advanced 802.11 netjson attributes to UCI
-                wifi_options = {
-                    'ack_distance': 'distance',
-                    'rts_threshold': 'rts',
-                    'frag_threshold': 'frag'
-                }
-                for netjson_key, uci_key in wifi_options.items():
-                    if wireless.get(netjson_key) is not None:
-                        uci_wifi[uci_key] = wireless[netjson_key]
-                        del uci_wifi[netjson_key]
-                # determine encryption for wifi
-                if uci_wifi.get('encryption'):
-                    del uci_wifi['encryption']
-                    uci_encryption = self.__get_encryption(wireless)
-                    uci_wifi.update(uci_encryption)
-                # attached networks (openwrt specific)
-                # by default the wifi interface is attached
-                # to its defining interface
-                # but this behaviour can be overridden
-                if not uci_wifi.get('network'):
-                    # get network, default to ifname
-                    network = wifi_interface.get('network', wifi_interface['name'])
-                    uci_wifi['network'] = [network]
-                uci_wifi['network'] = ' '.join(uci_wifi['network'])\
-                                         .replace('.', '_')
-                uci_wifi_ifaces.append(sorted_dict(uci_wifi))
+            wireless = wifi_interface['wireless']
+            # prepare UCI wifi-iface directive
+            uci_wifi = wireless.copy()
+            # add ifname
+            uci_wifi['ifname'] = wifi_interface['name']
+            # rename radio to device
+            uci_wifi['device'] = wireless['radio']
+            del uci_wifi['radio']
+            # map netjson wifi modes to uci wifi modes
+            modes = {
+                'access_point': 'ap',
+                'station': 'sta',
+                'adhoc': 'adhoc',
+                'wds': 'wds',
+                'monitor': 'monitor',
+                '802.11s': 'mesh'
+            }
+            uci_wifi['mode'] = modes[wireless['mode']]
+            # map advanced 802.11 netjson attributes to UCI
+            wifi_options = {
+                'ack_distance': 'distance',
+                'rts_threshold': 'rts',
+                'frag_threshold': 'frag'
+            }
+            for netjson_key, uci_key in wifi_options.items():
+                if wireless.get(netjson_key) is not None:
+                    uci_wifi[uci_key] = wireless[netjson_key]
+                    del uci_wifi[netjson_key]
+            # determine encryption for wifi
+            if uci_wifi.get('encryption'):
+                del uci_wifi['encryption']
+                uci_encryption = self.__get_encryption(wireless)
+                uci_wifi.update(uci_encryption)
+            # attached networks (openwrt specific)
+            # by default the wifi interface is attached
+            # to its defining interface
+            # but this behaviour can be overridden
+            if not uci_wifi.get('network'):
+                # get network, default to ifname
+                network = wifi_interface.get('network', wifi_interface['name'])
+                uci_wifi['network'] = [network]
+            uci_wifi['network'] = ' '.join(uci_wifi['network'])\
+                                     .replace('.', '_')
+            uci_wifi_ifaces.append(sorted_dict(uci_wifi))
         return uci_wifi_ifaces
 
     def __get_encryption(self, wireless):

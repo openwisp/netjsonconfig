@@ -116,14 +116,12 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                             "family": "ipv4"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "MyWifiAP",
-                            "hidden": True
-                        }
-                    ]
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "hidden": True
+                    }
                 }
             ],
             "radios": [
@@ -165,6 +163,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 config wifi-iface
     option device 'radio0'
     option hidden '1'
+    option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyWifiAP'
@@ -222,14 +221,12 @@ config wifi-iface
                             "family": "ipv4"
                         }
                     ],
-                    "wireless": [
-                        {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "MyWifiAP",
-                            "hidden": True
-                        }
-                    ]
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "hidden": True
+                    }
                 }
             ],
             "radios": [
