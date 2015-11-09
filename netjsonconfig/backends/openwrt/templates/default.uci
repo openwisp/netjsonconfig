@@ -2,10 +2,10 @@
     {% for package, config_blocks in custom_packages.items() %}
         package {{ package }}
 
-        {% for config_block in config_blocks %}
-            config {{ config_block.pop('config_name') }}{% if config_block.config_value %} '{{ config_block.pop('config_value') }}'{% endif %}
+        {% for config in config_blocks %}
+            config {{ config.pop('config_name') }}{% if config.config_value %} '{{ config.pop('config_value') }}'{% endif %}
 
-            {% for key, value in config_block.items() %}
+            {% for key, value in config.items() %}
                 {% if value not in ['', None] %}
                     {% if value is not string and value is iterable %}
                         {% for list_value in value %}
