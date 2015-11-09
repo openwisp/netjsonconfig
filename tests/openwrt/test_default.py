@@ -92,6 +92,9 @@ config core 'main'
     option resourcebase '/luci-static/resources'
 """)
         self.assertEqual(o.render(), expected)
+        # try a second time to ensure that the usage of dict.pop
+        # in templates does not cause any issue
+        self.assertEqual(o.render(), expected)
 
     def test_skip(self):
         o = OpenWrt({"skipme": {"enabled": True}})
