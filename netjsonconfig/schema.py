@@ -89,7 +89,8 @@ schema = {
                             "enum": [
                                 "ethernet",
                                 "virtual",
-                                "loopback"
+                                "loopback",
+                                "other"
                             ]
                         }
                     }
