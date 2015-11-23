@@ -38,11 +38,11 @@ parser.add_argument('--templates', '-t',
                     help='list of template config files or strings separated by space')
 
 parser.add_argument('--backend', '-b',
-                    choices=['openwrt'],
+                    choices=['openwrt', 'openwisp'],
                     action='store',
                     default='openwrt',
                     type=str,
-                    help='Configuration backend: openwrt')
+                    help='Configuration backend: openwrt or openwisp')
 
 parser.add_argument('--method', '-m',
                     choices=['generate', 'render'],
@@ -79,7 +79,8 @@ config = _load(args.config)
 templates = [_load(template) for template in args.templates]
 
 backends = {
-    'openwrt': netjsonconfig.OpenWrt
+    'openwrt': netjsonconfig.OpenWrt,
+    'openwisp': netjsonconfig.OpenWisp
 }
 
 backend_class = backends[args.backend]
