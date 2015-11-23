@@ -1,6 +1,7 @@
 import os
 import unittest
 import tarfile
+from copy import deepcopy
 
 from netjsonconfig import OpenWisp
 from netjsonconfig.exceptions import ValidationError
@@ -142,6 +143,19 @@ config system
         self.assertIn('ifup br-serv', contents)
         self.assertIn('$(ip address show dev br-serv | grep 192.168.1.2)', contents)
         self.assertIn('wifi up radio0', contents)
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')
+
+    def test_ensure_tun_vpn_ignored(self):
+        config = deepcopy(self.config)
+        config['openvpn'][0]['dev_type'] = 'tun'
+        o = OpenWisp(config)
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        install = tar.getmember('install.sh')
+        contents = tar.extractfile(install).read().decode()
+        self.assertNotIn('openvpn --mktun --dev 2693 --dev-type tap', contents)
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
