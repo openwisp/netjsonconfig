@@ -115,6 +115,15 @@ class OpenWrt(object):
                            name='etc/config/{0}'.format(package_name),
                            contents=text_contents,
                            timestamp=timestamp)
+        self._add_files(tar, timestamp)
+        # close archive
+        tar.close()
+
+    def _add_files(self, tar, timestamp):
+        """
+        adds files specified in self.config['files']
+        in specified tar object
+        """
         # insert additional files
         for file_item in self.config.get('files', []):
             contents = file_item['contents']
@@ -129,10 +138,11 @@ class OpenWrt(object):
                            name=path,
                            contents=contents,
                            timestamp=timestamp)
-        # close archive
-        tar.close()
 
     def _add_file(self, tar, name, contents, timestamp):
+        """
+        adds a single file in tar object
+        """
         byte_contents = BytesIO(contents.encode('utf8'))
         info = tarfile.TarInfo(name=name)
         info.size = len(contents)
