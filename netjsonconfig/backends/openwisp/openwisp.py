@@ -6,10 +6,12 @@ import tarfile
 from io import BytesIO
 
 from ..openwrt.openwrt import OpenWrt
+from .schema import schema
 
 
 class OpenWisp(OpenWrt):
     """ OpenWisp Backend """
+    schema = schema
 
     def generate(self, name='openwrt-config'):
         """

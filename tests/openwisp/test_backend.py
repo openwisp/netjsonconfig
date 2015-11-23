@@ -3,6 +3,7 @@ import unittest
 import tarfile
 
 from netjsonconfig import OpenWisp
+from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -31,3 +32,12 @@ config system
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
+
+    def test_hostname_required(self):
+        o = OpenWisp({
+            "general": {
+                "timezone": "Coordinated Universal Time"
+            }
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
