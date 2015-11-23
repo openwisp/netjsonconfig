@@ -189,3 +189,8 @@ config system
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
+
+    def test_double_generation(self):
+        o = OpenWisp(self.config)
+        o.generate()
+        o.generate()

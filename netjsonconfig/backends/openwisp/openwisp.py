@@ -22,6 +22,13 @@ class OpenWisp(OpenWrt):
         template = self.openwisp_env.get_template(template)
         return template.render(**context)
 
+    def _add_unique_file(self, item):
+        """
+        adds a file in self.config['files'] only if not present already
+        """
+        if item not in self.config['files']:
+            self.config['files'].append(item)
+
     def _add_install(self):
         """
         generates install.sh and adds it to included files
@@ -53,7 +60,7 @@ class OpenWisp(OpenWrt):
         contents = self.render_template('install.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add install.sh to list of included files
-        self.config['files'].append({
+        self._add_unique_file({
             "path": "/install.sh",
             "contents": contents
         })
@@ -76,7 +83,7 @@ class OpenWisp(OpenWrt):
         contents = self.render_template('uninstall.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add uninstall.sh to list of included files
-        self.config['files'].append({
+        self._add_unique_file({
             "path": "/uninstall.sh",
             "contents": contents
         })
@@ -95,12 +102,12 @@ class OpenWisp(OpenWrt):
         # add scripts
         for vpn in l2vpn:
             if vpn.get('up'):
-                self.config['files'].append({
+                self._add_unique_file({
                     "path": "/openvpn/{0}".format(vpn['up']),
                     "contents": self.render_template('vpn_script_up.sh')
                 })
             if vpn.get('down'):
-                self.config['files'].append({
+                self._add_unique_file({
                     "path": "/openvpn/{0}".format(vpn['down']),
                     "contents": self.render_template('vpn_script_down.sh')
                 })
