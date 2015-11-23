@@ -1,7 +1,6 @@
 import unittest
 from netjsonconfig import OpenWrt
-
-from .utils import _TabsMixin
+from netjsonconfig.utils import _TabsMixin
 
 
 class TestDefaultRenderer(unittest.TestCase, _TabsMixin):

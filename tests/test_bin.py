@@ -2,7 +2,7 @@ import json
 import unittest
 import subprocess
 
-from .openwrt.utils import _TabsMixin
+from netjsonconfig.utils import _TabsMixin
 
 
 class TestBin(unittest.TestCase, _TabsMixin):

@@ -1,8 +1,8 @@
 import unittest
+
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import ValidationError
-
-from .utils import _TabsMixin
+from netjsonconfig.utils import _TabsMixin
 
 
 class TestSystemRenderer(unittest.TestCase, _TabsMixin):
