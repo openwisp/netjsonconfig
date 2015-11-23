@@ -78,8 +78,10 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "comp_lzo": "yes",
                 "tls_client": "1",
                 "ca": "/tmp/owispmanager/openvpn/x509/ca_1_service.pem",
-                "key": "/tmp/owispmanager/openvpn/x509/l2vpn_client_1_2325_2693.pem",
-                "cert": "/tmp/owispmanager/openvpn/x509/l2vpn_client_1_2325_2693.pem",
+                "key": "/tmp/owispmanager/openvpn/x509/l2vpn_client_2693.pem",
+                "cert": "/tmp/owispmanager/openvpn/x509/l2vpn_client_2693.pem",
+                "up": "/tmp/owispmanager/openvpn/vpn_2693_script_up.sh",
+                "down": "/tmp/owispmanager/openvpn/vpn_2693_script_down.sh",
                 "cipher": "AES-128-CBC",
                 "script_security": "3",
                 "up_delay": "1",
@@ -97,7 +99,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "contents": "-----BEGIN CERTIFICATE-----\ntest\n-----END CERTIFICATE-----\n"
             },
             {
-                "path": "/openvpn/x509/l2vpn_client_1_2325_2693.pem",
+                "path": "/openvpn/x509/l2vpn_client_2693.pem",
                 "contents": "-----BEGIN CERTIFICATE-----\ntest==\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\ntest\n-----END RSA PRIVATE KEY-----\n"
             }
         ]
@@ -134,7 +136,8 @@ config system
             o.validate()
 
     def test_install_script(self):
-        o = OpenWisp(self.config)
+        config = deepcopy(self.config)
+        o = OpenWisp(config)
         o.generate()
         tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
         install = tar.getmember('install.sh')
@@ -161,12 +164,28 @@ config system
         os.remove('openwrt-config.tar.gz')
 
     def test_uninstall_script(self):
-        o = OpenWisp(self.config)
+        config = deepcopy(self.config)
+        o = OpenWisp(config)
         o.generate()
         tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
         uninstall = tar.getmember('uninstall.sh')
         contents = tar.extractfile(uninstall).read().decode()
         self.assertIn('openvpn --rmtun --dev 2693 --dev-type tap', contents)
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')
+
+    def test_up_and_down_scripts(self):
+        config = deepcopy(self.config)
+        o = OpenWisp(config)
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        up = tar.getmember('openvpn/vpn_2693_script_up.sh')
+        contents = tar.extractfile(up).read().decode()
+        self.assertIn('rm -f /tmp/will_reboot', contents)
+        down = tar.getmember('openvpn/vpn_2693_script_down.sh')
+        contents = tar.extractfile(down).read().decode()
+        self.assertIn('REBOOT_DELAY', contents)
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')

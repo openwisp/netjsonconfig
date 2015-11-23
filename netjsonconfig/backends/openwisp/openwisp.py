@@ -18,7 +18,7 @@ class OpenWisp(OpenWrt):
                                                     'templates'),
                                trim_blocks=True)
 
-    def render_template(self, template, context):
+    def render_template(self, template, context={}):
         template = self.openwisp_env.get_template(template)
         return template.render(**context)
 
@@ -81,6 +81,30 @@ class OpenWisp(OpenWrt):
             "contents": contents
         })
 
+    def _add_openvpn_scripts(self):
+        l2vpn = []
+        for vpn in self.config.get('openvpn', []):
+            if vpn.get('dev_type') != 'tap':
+                continue
+            tap = vpn.copy()
+            if vpn.get('up'):
+                tap['up'] = vpn['up'].split('/')[-1]
+            if vpn.get('down'):
+                tap['down'] = vpn['down'].split('/')[-1]
+            l2vpn.append(tap)
+        # add scripts
+        for vpn in l2vpn:
+            if vpn.get('up'):
+                self.config['files'].append({
+                    "path": "/openvpn/{0}".format(vpn['up']),
+                    "contents": self.render_template('vpn_script_up.sh')
+                })
+            if vpn.get('down'):
+                self.config['files'].append({
+                    "path": "/openvpn/{0}".format(vpn['down']),
+                    "contents": self.render_template('vpn_script_down.sh')
+                })
+
     def generate(self, name='openwrt-config'):
         """
         Generates an openwisp configuration archive
@@ -106,6 +130,8 @@ class OpenWisp(OpenWrt):
         self._add_install()
         # add uninstall.sh to included files
         self._add_uninstall()
+        # add vpn up and down scripts
+        self._add_openvpn_scripts()
         # add files resulting archive
         self._add_files(tar, timestamp)
         # close archive
