@@ -5,6 +5,8 @@ import time
 import tarfile
 from io import BytesIO
 
+from jinja2 import Environment, PackageLoader
+
 from ..openwrt.openwrt import OpenWrt
 from .schema import schema
 
@@ -12,6 +14,49 @@ from .schema import schema
 class OpenWisp(OpenWrt):
     """ OpenWisp Backend """
     schema = schema
+    openwisp_env = Environment(loader=PackageLoader('netjsonconfig.backends.openwisp',
+                                                    'templates'),
+                               trim_blocks=True)
+
+    def render_template(self, template, context):
+        template = self.openwisp_env.get_template(template)
+        return template.render(**context)
+
+    def _add_install(self):
+        """
+        generates install.sh and adds it to included files
+        """
+        config = self.config
+        # prepare tap VPN list
+        l2vpn = []
+        for vpn in self.config.get('openvpn', []):
+            if vpn.get('dev_type') != 'tap':
+                continue
+            tap = vpn.copy()
+            tap['name'] = tap['config_value']
+            l2vpn.append(tap)
+        # prepare bridge list
+        bridges = []
+        for interface in self.config.get('interfaces', []):
+            if interface['type'] != 'bridge':
+                continue
+            bridge = interface.copy()
+            if bridge.get('addresses'):
+                bridge['proto'] = interface['addresses'][0].get('proto')
+                bridge['ip'] = interface['addresses'][0].get('address')
+            bridges.append(bridge)
+        # fill context
+        context = dict(hostname=config['general']['hostname'],  # hostname is required
+                       l2vpn=l2vpn,
+                       bridges=bridges,
+                       radios=config.get('radios', []))  # radios might be empty
+        contents = self.render_template('install.sh', context)
+        self.config.setdefault('files', [])  # file list might be empty
+        # add install.sh to list of included files
+        self.config['files'].append({
+            "path": "/install.sh",
+            "contents": contents
+        })
 
     def generate(self, name='openwrt-config'):
         """
@@ -34,19 +79,9 @@ class OpenWisp(OpenWrt):
                            name='uci/{0}.conf'.format(package_name),
                            contents=text_contents,
                            timestamp=timestamp)
-        # insert additional files
-        for file_item in self.config.get('files', []):
-            contents = file_item['contents']
-            path = file_item['path']
-            # join lines if contents is a list
-            if isinstance(contents, list):
-                contents = '\n'.join(contents)
-            # remove leading slashes from path
-            if path.startswith('/'):
-                path = path[1:]
-            self._add_file(tar=tar,
-                           name=path,
-                           contents=contents,
-                           timestamp=timestamp)
+        # add install.sh to included files
+        self._add_install()
+        # add files resulting archive
+        self._add_files(tar, timestamp)
         # close archive
         tar.close()
