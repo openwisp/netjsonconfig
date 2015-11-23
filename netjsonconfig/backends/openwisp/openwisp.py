@@ -58,6 +58,29 @@ class OpenWisp(OpenWrt):
             "contents": contents
         })
 
+    def _add_uninstall(self):
+        """
+        generates uninstall.sh and adds it to included files
+        """
+        config = self.config
+        # prepare tap VPN list
+        l2vpn = []
+        for vpn in self.config.get('openvpn', []):
+            if vpn.get('dev_type') != 'tap':
+                continue
+            tap = vpn.copy()
+            tap['name'] = tap['config_value']
+            l2vpn.append(tap)
+        # fill context
+        context = dict(l2vpn=l2vpn)
+        contents = self.render_template('uninstall.sh', context)
+        self.config.setdefault('files', [])  # file list might be empty
+        # add uninstall.sh to list of included files
+        self.config['files'].append({
+            "path": "/uninstall.sh",
+            "contents": contents
+        })
+
     def generate(self, name='openwrt-config'):
         """
         Generates an openwisp configuration archive
@@ -81,6 +104,8 @@ class OpenWisp(OpenWrt):
                            timestamp=timestamp)
         # add install.sh to included files
         self._add_install()
+        # add uninstall.sh to included files
+        self._add_uninstall()
         # add files resulting archive
         self._add_files(tar, timestamp)
         # close archive

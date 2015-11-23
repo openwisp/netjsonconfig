@@ -159,3 +159,14 @@ config system
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
+
+    def test_uninstall_script(self):
+        o = OpenWisp(self.config)
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        uninstall = tar.getmember('uninstall.sh')
+        contents = tar.extractfile(uninstall).read().decode()
+        self.assertIn('openvpn --rmtun --dev 2693 --dev-type tap', contents)
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')
