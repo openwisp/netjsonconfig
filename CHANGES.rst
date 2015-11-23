@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.2 [unreleased]
+Version 0.2 [2015-11-23]
 ------------------------
 
 - `#20 <https://github.com/openwisp/netjsonconfig/issues/20>`_ added support for array of lines in files
