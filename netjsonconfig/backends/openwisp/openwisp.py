@@ -18,7 +18,7 @@ class OpenWisp(OpenWrt):
                                                     'templates'),
                                trim_blocks=True)
 
-    def render_template(self, template, context={}):
+    def _render_template(self, template, context={}):
         template = self.openwisp_env.get_template(template)
         return template.render(**context)
 
@@ -57,7 +57,7 @@ class OpenWisp(OpenWrt):
                        l2vpn=l2vpn,
                        bridges=bridges,
                        radios=config.get('radios', []))  # radios might be empty
-        contents = self.render_template('install.sh', context)
+        contents = self._render_template('install.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add install.sh to list of included files
         self._add_unique_file({
@@ -81,7 +81,7 @@ class OpenWisp(OpenWrt):
             l2vpn.append(tap)
         # fill context
         context = dict(l2vpn=l2vpn)
-        contents = self.render_template('uninstall.sh', context)
+        contents = self._render_template('uninstall.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add uninstall.sh to list of included files
         self._add_unique_file({
@@ -106,13 +106,13 @@ class OpenWisp(OpenWrt):
             if vpn.get('up'):
                 self._add_unique_file({
                     "path": "/openvpn/{0}".format(vpn['up']),
-                    "contents": self.render_template('vpn_script_up.sh'),
+                    "contents": self._render_template('vpn_script_up.sh'),
                     "mode": "755"
                 })
             if vpn.get('down'):
                 self._add_unique_file({
                     "path": "/openvpn/{0}".format(vpn['down']),
-                    "contents": self.render_template('vpn_script_down.sh'),
+                    "contents": self._render_template('vpn_script_down.sh'),
                     "mode": "755"
                 })
 
