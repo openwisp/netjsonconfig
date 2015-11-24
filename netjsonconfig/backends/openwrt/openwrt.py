@@ -137,9 +137,10 @@ class OpenWrt(object):
             self._add_file(tar=tar,
                            name=path,
                            contents=contents,
-                           timestamp=timestamp)
+                           timestamp=timestamp,
+                           mode=file_item.get('mode', '644'))
 
-    def _add_file(self, tar, name, contents, timestamp):
+    def _add_file(self, tar, name, contents, timestamp, mode='644'):
         """
         adds a single file in tar object
         """
@@ -148,4 +149,5 @@ class OpenWrt(object):
         info.size = len(contents)
         info.mtime = timestamp
         info.type = tarfile.REGTYPE
+        info.mode = int(mode, 8)  # permissions converted to decimal notation
         tar.addfile(tarinfo=info, fileobj=byte_contents)

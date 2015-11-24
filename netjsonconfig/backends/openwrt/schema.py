@@ -295,6 +295,10 @@ schema = merge_config(default_schema, {
                             {"type": "string", "format": "textarea"},
                             {"type": "array"}
                         ]
+                    },
+                    "mode": {
+                        "type": "string",
+                        "maxLength": 4
                     }
                 }
             }

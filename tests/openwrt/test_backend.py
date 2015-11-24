@@ -281,10 +281,12 @@ config wifi-iface
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, o.config['files'][0]['contents'])
         self.assertNotEqual(crontab.mtime, 0)
+        self.assertEqual(crontab.mode, 420)
         # second file
         dummy = tar.getmember('etc/dummy.conf')
         contents = tar.extractfile(dummy).read().decode()
         self.assertEqual(contents, o.config['files'][1]['contents'])
+        self.assertEqual(dummy.mode, 420)
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
@@ -309,6 +311,25 @@ config wifi-iface
         crontab = tar.getmember('root/.ssh/authorized_keys')
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')
+
+    def test_file_permissions(self):
+        o = OpenWrt({
+            "files": [
+                {
+                    "path": "/tmp/hello.sh",
+                    "contents": "echo 'hello world'",
+                    "mode": "0755"
+                }
+            ]
+        })
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        script = tar.getmember('tmp/hello.sh')
+        # check permissions
+        self.assertEqual(script.mode, 493)
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
