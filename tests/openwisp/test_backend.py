@@ -146,6 +146,8 @@ config system
         self.assertIn('ifup br-serv', contents)
         self.assertIn('$(ip address show dev br-serv | grep 192.168.1.2)', contents)
         self.assertIn('wifi up radio0', contents)
+        # esure is executable
+        self.assertEqual(install.mode, 493)
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
@@ -171,6 +173,8 @@ config system
         uninstall = tar.getmember('uninstall.sh')
         contents = tar.extractfile(uninstall).read().decode()
         self.assertIn('openvpn --rmtun --dev 2693 --dev-type tap', contents)
+        # esure is executable
+        self.assertEqual(uninstall.mode, 493)
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')
@@ -183,9 +187,11 @@ config system
         up = tar.getmember('openvpn/vpn_2693_script_up.sh')
         contents = tar.extractfile(up).read().decode()
         self.assertIn('rm -f /tmp/will_reboot', contents)
+        self.assertEqual(up.mode, 493)  # esure is executable
         down = tar.getmember('openvpn/vpn_2693_script_down.sh')
         contents = tar.extractfile(down).read().decode()
         self.assertIn('REBOOT_DELAY', contents)
+        self.assertEqual(down.mode, 493)  # esure is executable
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')

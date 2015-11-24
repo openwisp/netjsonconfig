@@ -12,7 +12,7 @@ from .schema import schema
 
 
 class OpenWisp(OpenWrt):
-    """ OpenWisp Backend """
+    """ OpenWisp 1.x Backend """
     schema = schema
     openwisp_env = Environment(loader=PackageLoader('netjsonconfig.backends.openwisp',
                                                     'templates'),
@@ -62,7 +62,8 @@ class OpenWisp(OpenWrt):
         # add install.sh to list of included files
         self._add_unique_file({
             "path": "/install.sh",
-            "contents": contents
+            "contents": contents,
+            "mode": "755"
         })
 
     def _add_uninstall(self):
@@ -85,7 +86,8 @@ class OpenWisp(OpenWrt):
         # add uninstall.sh to list of included files
         self._add_unique_file({
             "path": "/uninstall.sh",
-            "contents": contents
+            "contents": contents,
+            "mode": "755"
         })
 
     def _add_openvpn_scripts(self):
@@ -104,12 +106,14 @@ class OpenWisp(OpenWrt):
             if vpn.get('up'):
                 self._add_unique_file({
                     "path": "/openvpn/{0}".format(vpn['up']),
-                    "contents": self.render_template('vpn_script_up.sh')
+                    "contents": self.render_template('vpn_script_up.sh'),
+                    "mode": "755"
                 })
             if vpn.get('down'):
                 self._add_unique_file({
                     "path": "/openvpn/{0}".format(vpn['down']),
-                    "contents": self.render_template('vpn_script_down.sh')
+                    "contents": self.render_template('vpn_script_down.sh'),
+                    "mode": "755"
                 })
 
     def generate(self, name='openwrt-config'):
