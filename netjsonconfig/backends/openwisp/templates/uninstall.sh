@@ -5,7 +5,7 @@ PROGDIR=$(cd -P -- "$(dirname $0)" && pwd -P)
 # Undo changes
 # L2TCs
 echo "Removing l2 tc configuration"
-$PROGDIR/l2tc_script.sh stop
+$PROGDIR/tc_script.sh stop
 
 # VPNs
 echo "Stopping l2 vpn and removing their configuration"

@@ -93,6 +93,13 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "log": "/tmp/openvpn_2693.log"
             }
         ],
+        "tc_options": [
+            {
+                "name": "tap0",
+                "input_bandwidth": 2048,
+                "output_bandwidth": 1024
+            }
+        ],
         "files": [
             {
                 "path": "/openvpn/x509/ca_1_service.pem",
@@ -207,3 +214,21 @@ config system
         })
         output = o.render()
         self.assertIn("option disabled '0'", output)
+
+    def test_tc_script(self):
+        config = deepcopy(self.config)
+        o = OpenWisp(config)
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        tc = tar.getmember('tc_script.sh')
+        contents = tar.extractfile(tc).read().decode()
+        self.assertIn('tc qdisc del dev tap0 root', contents)
+        self.assertIn('tc qdisc del dev tap0 ingress', contents)
+        self.assertIn('tc qdisc add dev tap0 root handle 1: htb default 2', contents)
+        self.assertIn('tc class add dev tap0 parent 1 classid 1:1 htb rate 1024kbit burst 191k', contents)
+        self.assertIn('tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit', contents)
+        self.assertIn('tc qdisc add dev tap0 ingress', contents)
+        self.assertIn('tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police rate 2048kbit burst 383k drop flowid :1', contents)
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')

@@ -129,6 +129,22 @@ class OpenWisp(OpenWrt):
                     "mode": "755"
                 })
 
+    def _add_tc_script(self):
+        """
+        generates tc_script.sh and adds it to included files
+        """
+        # fill context
+        context = dict(tc_options=self.config.get('tc_options', []))
+        # import pdb; pdb.set_trace()
+        contents = self._render_template('tc_script.sh', context)
+        self.config.setdefault('files', [])  # file list might be empty
+        # add tc_script.sh to list of included files
+        self._add_unique_file({
+            "path": "/tc_script.sh",
+            "contents": contents,
+            "mode": "755"
+        })
+
     def generate(self, name='openwrt-config'):
         """
         Generates an openwisp configuration archive
@@ -156,6 +172,8 @@ class OpenWisp(OpenWrt):
         self._add_uninstall()
         # add vpn up and down scripts
         self._add_openvpn_scripts()
+        # add tc_script
+        self._add_tc_script()
         # add files resulting archive
         self._add_files(tar, timestamp)
         # close archive

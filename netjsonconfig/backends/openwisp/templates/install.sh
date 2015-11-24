@@ -65,6 +65,6 @@ echo "Enabling l2 vpn(s)"
 
 # L2TCs
 echo "Applying l2 tc configuration"
-$PROGDIR/l2tc_script.sh start
+$PROGDIR/tc_script.sh start
 
 echo "New configuration now active"
