@@ -200,3 +200,10 @@ config system
         o = OpenWisp(self.config)
         o.generate()
         o.generate()
+
+    def test_wireless_radio_disabled_0(self):
+        o = OpenWisp({
+            'radios': self.config['radios']
+        })
+        output = o.render()
+        self.assertIn("option disabled '0'", output)

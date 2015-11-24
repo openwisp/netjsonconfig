@@ -18,6 +18,19 @@ class OpenWisp(OpenWrt):
                                                     'templates'),
                                trim_blocks=True)
 
+    def validate(self):
+        self._sanitize_radios()
+        super(OpenWisp, self).validate()
+
+    def _sanitize_radios(self):
+        """
+        OpenWisp 1.x requires the following explicit entry
+        in the radio sections of /uci/wireless.conf:
+            option disabled '0'
+        """
+        for radio in self.config.get('radios', []):
+            radio.setdefault('disabled', False)
+
     def _render_template(self, template, context={}):
         template = self.openwisp_env.get_template(template)
         return template.render(**context)
