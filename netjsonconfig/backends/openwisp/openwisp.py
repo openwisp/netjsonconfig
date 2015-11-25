@@ -42,12 +42,12 @@ class OpenWisp(OpenWrt):
         if item not in self.config['files']:
             self.config['files'].append(item)
 
-    def _add_install(self):
+    def _get_install_context(self):
         """
-        generates install.sh and adds it to included files
+        returns the template context for install.sh and uninstall.sh
         """
         config = self.config
-        # prepare tap VPN list
+        # layer2 VPN list
         l2vpn = []
         for vpn in self.config.get('openvpn', []):
             if vpn.get('dev_type') != 'tap':
@@ -55,7 +55,7 @@ class OpenWisp(OpenWrt):
             tap = vpn.copy()
             tap['name'] = tap['config_value']
             l2vpn.append(tap)
-        # prepare bridge list
+        # bridge list
         bridges = []
         for interface in self.config.get('interfaces', []):
             if interface['type'] != 'bridge':
@@ -65,18 +65,24 @@ class OpenWisp(OpenWrt):
                 bridge['proto'] = interface['addresses'][0].get('proto')
                 bridge['ip'] = interface['addresses'][0].get('address')
             bridges.append(bridge)
+        # crontabs present?
         cron = False
         for _file in config.get('files', []):
             path = _file['path']
             if path.startswith('/crontabs') or path.startswith('crontabs'):
                 cron = True
                 break
-        # fill context
-        context = dict(hostname=config['general']['hostname'],  # hostname is required
-                       l2vpn=l2vpn,
-                       bridges=bridges,
-                       radios=config.get('radios', []), # radios might be empty
-                       cron=cron)
+        # return context
+        return dict(hostname=config['general']['hostname'],  # hostname is required
+                    l2vpn=l2vpn,
+                    bridges=bridges,
+                    radios=config.get('radios', []), # radios might be empty
+                    cron=cron)
+
+    def _add_install(self, context):
+        """
+        generates install.sh and adds it to included files
+        """
         contents = self._render_template('install.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add install.sh to list of included files
@@ -86,27 +92,10 @@ class OpenWisp(OpenWrt):
             "mode": "755"
         })
 
-    def _add_uninstall(self):
+    def _add_uninstall(self, context):
         """
         generates uninstall.sh and adds it to included files
         """
-        config = self.config
-        # prepare tap VPN list
-        l2vpn = []
-        for vpn in self.config.get('openvpn', []):
-            if vpn.get('dev_type') != 'tap':
-                continue
-            tap = vpn.copy()
-            tap['name'] = tap['config_value']
-            l2vpn.append(tap)
-        cron = False
-        for _file in config.get('files', []):
-            path = _file['path']
-            if path.startswith('/crontabs') or path.startswith('crontabs'):
-                cron = True
-                break
-        # fill context
-        context = dict(l2vpn=l2vpn, cron=cron)
         contents = self._render_template('uninstall.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add uninstall.sh to list of included files
@@ -179,10 +168,12 @@ class OpenWisp(OpenWrt):
                            name='uci/{0}.conf'.format(package_name),
                            contents=text_contents,
                            timestamp=timestamp)
+        # prepare template context for install and uninstall scripts
+        template_context = self._get_install_context()
         # add install.sh to included files
-        self._add_install()
+        self._add_install(template_context)
         # add uninstall.sh to included files
-        self._add_uninstall()
+        self._add_uninstall(template_context)
         # add vpn up and down scripts
         self._add_openvpn_scripts()
         # add tc_script
