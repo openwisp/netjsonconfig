@@ -153,6 +153,7 @@ config system
         self.assertIn('ifup br-serv', contents)
         self.assertIn('$(ip address show dev br-serv | grep 192.168.1.2)', contents)
         self.assertIn('wifi up radio0', contents)
+        self.assertNotIn('Starting Cron', contents)
         # esure is executable
         self.assertEqual(install.mode, 493)
         # close and delete tar.gz file
@@ -180,6 +181,7 @@ config system
         uninstall = tar.getmember('uninstall.sh')
         contents = tar.extractfile(uninstall).read().decode()
         self.assertIn('openvpn --rmtun --dev 2693 --dev-type tap', contents)
+        self.assertNotIn('Stopping Cron', contents)
         # esure is executable
         self.assertEqual(uninstall.mode, 493)
         # close and delete tar.gz file
@@ -229,6 +231,27 @@ config system
         self.assertIn('tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit', contents)
         self.assertIn('tc qdisc add dev tap0 ingress', contents)
         self.assertIn('tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police rate 2048kbit burst 383k drop flowid :1', contents)
+        # close and delete tar.gz file
+        tar.close()
+        os.remove('openwrt-config.tar.gz')
+
+    def test_cron(self):
+        config = deepcopy(self.config)
+        config['files'] = [
+            {
+                "path": "/crontabs/root",
+                "contents": "* * * * * echo 'test' > /tmp/test-cron"
+            }
+        ]
+        o = OpenWisp(config)
+        o.generate()
+        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        install = tar.getmember('install.sh')
+        contents = tar.extractfile(install).read().decode()
+        self.assertIn('Starting Cron', contents)
+        uninstall = tar.getmember('uninstall.sh')
+        contents = tar.extractfile(uninstall).read().decode()
+        self.assertIn('Stopping Cron', contents)
         # close and delete tar.gz file
         tar.close()
         os.remove('openwrt-config.tar.gz')

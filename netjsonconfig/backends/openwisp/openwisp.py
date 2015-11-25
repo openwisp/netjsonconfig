@@ -65,11 +65,18 @@ class OpenWisp(OpenWrt):
                 bridge['proto'] = interface['addresses'][0].get('proto')
                 bridge['ip'] = interface['addresses'][0].get('address')
             bridges.append(bridge)
+        cron = False
+        for _file in config.get('files', []):
+            path = _file['path']
+            if path.startswith('/crontabs') or path.startswith('crontabs'):
+                cron = True
+                break
         # fill context
         context = dict(hostname=config['general']['hostname'],  # hostname is required
                        l2vpn=l2vpn,
                        bridges=bridges,
-                       radios=config.get('radios', []))  # radios might be empty
+                       radios=config.get('radios', []), # radios might be empty
+                       cron=cron)
         contents = self._render_template('install.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add install.sh to list of included files
@@ -92,8 +99,14 @@ class OpenWisp(OpenWrt):
             tap = vpn.copy()
             tap['name'] = tap['config_value']
             l2vpn.append(tap)
+        cron = False
+        for _file in config.get('files', []):
+            path = _file['path']
+            if path.startswith('/crontabs') or path.startswith('crontabs'):
+                cron = True
+                break
         # fill context
-        context = dict(l2vpn=l2vpn)
+        context = dict(l2vpn=l2vpn, cron=cron)
         contents = self._render_template('uninstall.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add uninstall.sh to list of included files

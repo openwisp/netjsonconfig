@@ -67,4 +67,12 @@ echo "Enabling l2 vpn(s)"
 echo "Applying tc configuration"
 $PROGDIR/tc_script.sh start
 
+{% if cron %}
+# cron scripts
+mkdir -p $PROGDIR/crontabs
+rm $PROGDIR/crond.pid >/dev/null 2>&1
+echo "Starting Cron"
+start-stop-daemon -m -p /var/run/openwisp_crond.pid -S -b -x crond -- -f -c $PROGDIR/crontabs/ -l 5
+{% endif %}
+
 echo "New configuration now active"

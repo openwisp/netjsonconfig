@@ -24,4 +24,11 @@ echo "Restoring original wifi and network configurations"
 /etc/init.d/network restart
 wifi
 
+{% if cron %}
+echo "Stopping Cron"
+start-stop-daemon -p /var/run/openwisp_crond.pid -K
+rm -rf  $PROGDIR/crontabs/
+rm /var/run/openwisp_crond.pid
+{% endif %}
+
 echo "Configuration un-installed"
