@@ -2,9 +2,8 @@
 
 PROGDIR=$(cd -P -- "$(dirname $0)" && pwd -P)
 
-# Undo changes
-# L2TCs
-echo "Removing l2 tc configuration"
+# Disable traffic control
+echo "Removing tc configuration"
 $PROGDIR/tc_script.sh stop
 
 # VPNs

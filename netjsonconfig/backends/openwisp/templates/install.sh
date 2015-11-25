@@ -63,8 +63,8 @@ echo "Enabling l2 vpn(s)"
 /etc/init.d/openvpn start
 {% endif %}
 
-# L2TCs
-echo "Applying l2 tc configuration"
+# Traffic control
+echo "Applying tc configuration"
 $PROGDIR/tc_script.sh start
 
 echo "New configuration now active"
