@@ -21,7 +21,7 @@ netjsonconfig
 Netjsonconfig is part of the `OpenWISP project <http://openwrt.org>`_.
 
 .. image:: ./images/openwisp.org.svg
-  :target: http://openwrt.org
+  :target: http://openwisp.org
 
 **Netjsonconfig** is a python library that converts `NetJSON <http://netjson.org>`_
 *DeviceConfiguration* objects into real router configurations that can be installed
