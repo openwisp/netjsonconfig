@@ -116,7 +116,12 @@ schema = merge_config(default_schema, {
                     "type": "boolean"
                 },
                 "server": {
-                    "type": "array"
+                    "type": "array",
+                    "uniqueItems": True,
+                    "additionalItems": True,
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
