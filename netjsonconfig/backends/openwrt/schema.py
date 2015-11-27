@@ -86,6 +86,7 @@ schema = merge_config(default_schema, {
                         "type": "string",
                         "enum": [
                             "mac80211",
+                            "madwifi",
                             "ath5k",
                             "ath9k",
                             "broadcom"
