@@ -1,5 +1,5 @@
 Contributing
 ============
 
-Thanks for your interest! We love contributions, so please feel free to fix bugs, improve things, provide documentation. Just `follow the
-guidelines <https://github.com/ninuxorg/netdiff#contribute>`_ and submit a PR.
+Please read our `Contributing guidelines <http://netjsonconfig.openwisp.org/en/latest/general/contributing.html>`_
+on the documentation.
