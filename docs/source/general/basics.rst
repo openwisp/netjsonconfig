@@ -4,7 +4,7 @@ Basic concepts
 
 Before starting, let's quickly introduce the main concepts used in netjsonconfig:
 
-* **configuration**: python dictionary representing the configuration of a router
+* **configuration dictionary**: python dictionary representing the configuration of a router
 * **backend**: python class used to process the configuration and generate the final
   router configuration
 * **schema**: each backend has a `JSON-Schema <http://json-schema.org>`_ which
@@ -79,12 +79,15 @@ The previous configuration object therefore can be shortened to:
         ]
     }
 
+From now on we will use the term *configuration dictionary* to refer to
+NetJSON DeviceConfiguration objects.
+
 Backends
 --------
 
-A backend is a python class used to process the configuration and generate the final
-router configuration, each supported firmware or opearting system will have its own
-backend and third parties can write their own custom backends.
+A backend is a python class used to process the *configuration dictionary* and
+generate the final router configuration, each supported firmware or opearting system
+will have its own backend and third parties can write their own custom backends.
 
 The current implemented backends are:
 
@@ -135,12 +138,12 @@ If the passed configuration violates the schema the ``validate`` method will rai
 a ``ValidationError``.
 
 You may call the ``validate`` method in your application arbitrarily, eg: before
-trying to save the configuration into a database.
+trying to save the *configuration dictionary* into a database.
 
 Templates
 ---------
 
-If you have devices with very similar configurations you can store the shared
+If you have devices with very similar *configuration dictionaries* you can store the shared
 blocks in one or more reusable templates which will be used as a base to build
 the final configuration.
 
@@ -202,7 +205,7 @@ The two routers can be represented with the following code:
         ]
     })
 
-The two configuration objects share the same settings for the ``eth0``
+The two *configuration dictionaries* share the same settings for the ``eth0``
 interface, therefore we can make the ``eth0`` settings our template and
 refactor the previous code as follows:
 
@@ -258,5 +261,5 @@ Multiple template inheritance
 
 You might have noticed that the ``templates`` argument is a list; that's because
 it's possible to pass multiple templates that will be added one on top of the
-other to build the resulting configuration, allowing to reduce or even eliminate
-repetitions.
+other to build the resulting *configuration dictionary*, allowing to reduce or
+even eliminate repetitions.
