@@ -1,9 +1,6 @@
-import json
 import re
-import six
 import time
 import tarfile
-from io import BytesIO
 
 from jinja2 import Environment, PackageLoader
 
@@ -76,7 +73,7 @@ class OpenWisp(OpenWrt):
         return dict(hostname=config['general']['hostname'],  # hostname is required
                     l2vpn=l2vpn,
                     bridges=bridges,
-                    radios=config.get('radios', []), # radios might be empty
+                    radios=config.get('radios', []),  # radios might be empty
                     cron=cron)
 
     def _add_install(self, context):
