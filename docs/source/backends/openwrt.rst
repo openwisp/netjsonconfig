@@ -100,11 +100,28 @@ to reload the services manually or reboot the router.
 Including additional files
 --------------------------
 
-It's possible to add arbitrary plain text files to the generated configuration archive.
+It's possible to add arbitrary plain text files to the generated configuration archive through
+the ``files`` key of the *configuration dictionary*. The value of the ``files`` key must be a
+list in which each item is a dictionary representing a file, each dictionary is structured as
+follows:
+
++-------------------+----------------+----------+----------------------------------------------------------+
+| key name          | type           | required |function                                                  |
++===================+================+==========+==========================================================+
+| ``path``          | string         | yes      | path of the file in the tar.gz archive                   |
++-------------------+----------------+----------+----------------------------------------------------------+
+| ``contents``      | string or list | yes      | | *string*: plain text contents of the file              |
+|                   |                |          | | *list*: lines of strings representing lines of file    |
++-------------------+----------------+----------+----------------------------------------------------------+
+| ``mode``          | string         | no       | permissions, if omitted will default to ``0644``         |
++-------------------+----------------+----------+----------------------------------------------------------+
 
 .. warning::
     The files won't be included in the output of the ``render`` method because
     doing so would make the UCI output invalid.
+
+Plain file example
+~~~~~~~~~~~~~~~~~~
 
 The following example code will generate an archive with one file in ``/etc/crontabs/root``:
 
@@ -116,14 +133,18 @@ The following example code will generate an archive with one file in ``/etc/cron
         "files": [
             {
                 "path": "/etc/crontabs/root",
-                "contents": '* * * * * echo "test" > /etc/testfile'
+                # new lines must be escaped with ``\n``
+                "contents": '* * * * * echo "test" > /etc/testfile\n* * * * * echo "test2" > /etc/testfile2'
             }
         ]
     })
     o.generate()
 
-New lines must be escaped using ``\n``, or alternatively, the ``contents`` key can be
-a list of lines:
+List of file lines example
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you don't want to escape new lines with ``\n``, you can represent lines in the ``contents``
+key with a list:
 
 .. code-block:: python
 
@@ -134,6 +155,27 @@ a list of lines:
                 "contents": [
                     '* * * * * echo "test" > /etc/testfile',
                     '* * * * * echo "test2" > /etc/testfile2'
+                ]
+            }
+        ]
+    })
+    o.generate()
+
+Executable script file example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example will create an executable shell script:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "files": [
+            {
+                "path": "/bin/hello_world",
+                "mode": "0755",
+                "contents": [
+                    '#!/bin/sh',
+                    'echo "Hello world!"'
                 ]
             }
         ]
