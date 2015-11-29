@@ -2,6 +2,8 @@
 OpenWRT Backend
 ===============
 
+The ``OpenWrt`` backend is the base backend of the library.
+
 Render method
 -------------
 
@@ -590,8 +592,7 @@ The following *configuration dictionary*:
                 "channel": 36,
                 "channel_width": 20,
                 "tx_power": 4,
-                "country": "IT",
-                "disabled": false
+                "country": "IT"
             }
         ]
     }
@@ -705,7 +706,7 @@ The ``ip_rule`` key must contain a list of rules, each rule allows the following
 +-------------------+---------+
 
 For the function and meaning of each key consult the relevant
-`OpenWrt documentation page <https://wiki.openwrt.org/doc/uci/network#ip_rules>`_.
+`OpenWrt documentation about rule directives <https://wiki.openwrt.org/doc/uci/network#ip_rules>`_.
 
 Policy routing example
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -810,7 +811,7 @@ The elements of the ``vlan`` list must be dictionaries, all the following keys a
 +-------------------+---------+
 
 For the function and meaning of each key consult the relevant
-`OpenWrt documentation page <https://wiki.openwrt.org/doc/uci/network#switch>`_.
+`OpenWrt documentation about switch directives <https://wiki.openwrt.org/doc/uci/network#switch>`_.
 
 Switch example
 ~~~~~~~~~~~~~~
@@ -949,7 +950,7 @@ The required keys are:
 * ``trigger``
 
 For the function and meaning of each key consult the relevant
-`OpenWrt documentation page <https://wiki.openwrt.org/doc/uci/system#leds>`_.
+`OpenWrt documentation about led directives <https://wiki.openwrt.org/doc/uci/system#leds>`_.
 
 LED settings example
 ~~~~~~~~~~~~~~~~~~~~
