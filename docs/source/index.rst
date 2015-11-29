@@ -18,7 +18,7 @@ netjsonconfig
 .. image:: https://img.shields.io/pypi/dm/netjsonconfig.svg
   :target: https://pypi.python.org/pypi/netjsonconfig
 
-Netjsonconfig is part of the `OpenWISP project <http://openwrt.org>`_.
+Netjsonconfig is part of the `OpenWISP project <http://openwisp.org>`_.
 
 .. image:: ./images/openwisp.org.svg
   :target: http://openwisp.org
