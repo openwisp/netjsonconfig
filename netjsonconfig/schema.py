@@ -21,7 +21,7 @@ schema = {
                 "name": {
                     "type": "string",
                     "maxLength": 15,
-                    "pattern": "^[^\s]*$"
+                    "pattern": "^[^\\s]*$"
                 },
                 "mac": {
                     "type": "string"
