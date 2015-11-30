@@ -4,7 +4,13 @@ Change log
 Version 0.3 [unreleased]
 ------------------------
 
-WIP
+- `#18 <https://github.com/openwisp/netjsonconfig/issues/18>`_ added ``OpenWisp`` backend
+- `66ee96 <https://github.com/openwisp/netjsonconfig/commit/66ee96>`_ added file permission feature
+- `#19 <https://github.com/openwisp/netjsonconfig/issues/19>`_ added sphinx documentation
+  (published at `netjsonconfig.openwisp.org <http://netjsonconfig.openwisp.org>`_
+- `30348e <https://github.com/openwisp/netjsonconfig/commit/30348e>`_ hardened ntp server option schema for ``OpenWrt`` backend
+- `c31375 <https://github.com/openwisp/netjsonconfig/commit/c31375>`_ added madwifi to the allowed drivers in schema ``OpenWrt`` backend
+- `#30 <https://github.com/openwisp/netjsonconfig/issues/30>`_ updated schema according to latest `NetJSON <http://netjson.org>`_ spec
 
 Version 0.2 [2015-11-23]
 ------------------------
