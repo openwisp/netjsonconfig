@@ -222,6 +222,7 @@ schema = {
                         "bridge_members": {
                             "type": "array",
                             "title": "Bridge Members",
+                            "uniqueItems": True,
                             "items": {
                                 "$ref": "#/definitions/interface_settings/properties/name"
                             }

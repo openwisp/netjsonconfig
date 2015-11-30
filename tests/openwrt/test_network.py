@@ -665,6 +665,23 @@ config interface 'eth0'
         # ensure fix works
         o.config['interfaces'][0]['bridge_members'][0] = 'e-t_h@=0.1'
         o.validate()
+
+    def test_bridge_members_unique(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "lan",
+                    "type": "bridge",
+                    "bridge_members": ["eth0", "eth0"]
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['bridge_members'][0] = 'eth1'
+        o.validate()
+
     def test_ifname_length(self):
         o = OpenWrt({
             "interfaces": [
