@@ -223,7 +223,7 @@ schema = {
                             "type": "array",
                             "title": "Bridge Members",
                             "items": {
-                                "type": "string"
+                                "$ref": "#/definitions/interface_settings/properties/name"
                             }
                         }
                     }
