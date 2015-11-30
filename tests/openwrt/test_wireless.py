@@ -252,7 +252,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -295,7 +296,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -338,7 +340,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -383,7 +386,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -429,7 +433,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -474,7 +479,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -496,7 +502,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -549,7 +556,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {
@@ -615,7 +623,8 @@ config wifi-iface
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ],
                     "wireless": {

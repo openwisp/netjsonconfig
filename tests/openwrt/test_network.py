@@ -263,7 +263,8 @@ config route6
                     "type": "wireless",
                     "addresses": [
                         {
-                            "proto": "3g"
+                            "proto": "3g",
+                            "family": "ipv4"
                         }
                     ]
                 }
@@ -307,7 +308,8 @@ config interface 'eth0'
                     "empty": "",
                     "addresses": [
                         {
-                            "proto": "3g"
+                            "proto": "3g",
+                            "family": "ipv4"
                         }
                     ]
                 }
@@ -335,7 +337,8 @@ config interface 'mobile0'
                     "type": "ethernet",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ]
                 },
@@ -379,7 +382,8 @@ config interface 'lan'
                     "type": "ethernet",
                     "addresses": [
                         {
-                            "proto": "dhcp"
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ]
                 },

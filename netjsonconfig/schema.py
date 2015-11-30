@@ -50,15 +50,17 @@ schema = {
                         "type": "object",
                         "title": "Address",
                         "additionalProperties": True,
+                        "required": [
+                            "proto",
+                            "family"
+                        ],
                         "properties": {
-                            "address": {
-                                "type": "string"
-                            },
-                            "mask": {
-                                "type": "integer"
-                            },
-                            "gateway": {
-                                "type": "string"
+                            "proto": {
+                                "type": "string",
+                                "enum": [
+                                    "static",
+                                    "dhcp"
+                                ]
                             },
                             "family": {
                                 "type": "string",
@@ -67,12 +69,14 @@ schema = {
                                     "ipv6"
                                 ]
                             },
-                            "proto": {
-                                "type": "string",
-                                "enum": [
-                                    "static",
-                                    "dhcp"
-                                ]
+                            "address": {
+                                "type": "string"
+                            },
+                            "mask": {
+                                "type": "integer"
+                            },
+                            "gateway": {
+                                "type": "string"
                             }
                         }
                     }
@@ -184,11 +188,14 @@ schema = {
                                                 "wps"
                                             ]
                                         },
-                                        "ciphers": {
-                                            "type": "array"
-                                        },
                                         "key": {
                                             "type": "string"
+                                        },
+                                        "ciphers": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
                                         },
                                         "disabled": {
                                             "type": "boolean",
