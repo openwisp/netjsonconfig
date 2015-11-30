@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.3 [unreleased]
+Version 0.3 [2015-11-30]
 ------------------------
 
 - `#18 <https://github.com/openwisp/netjsonconfig/issues/18>`_ added ``OpenWisp`` backend
