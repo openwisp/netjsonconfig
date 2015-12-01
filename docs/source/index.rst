@@ -52,6 +52,7 @@ Contents:
    /general/running_tests
    /general/contributing
    /general/goals
+   /general/changelog
 
 
 Indices and tables
