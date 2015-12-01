@@ -263,3 +263,9 @@ You might have noticed that the ``templates`` argument is a list; that's because
 it's possible to pass multiple templates that will be added one on top of the
 other to build the resulting *configuration dictionary*, allowing to reduce or
 even eliminate repetitions.
+
+Project goals
+-------------
+
+If you are interested in this topic you can read more about the
+:doc:`Goals and Motivations <./goals>` of this project.

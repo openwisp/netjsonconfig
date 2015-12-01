@@ -51,6 +51,7 @@ Contents:
    /general/commandline_utility
    /general/running_tests
    /general/contributing
+   /general/goals
 
 
 Indices and tables
