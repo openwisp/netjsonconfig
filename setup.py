@@ -47,8 +47,9 @@ setup(
     author='Federico Capoano (nemesisdesign)',
     author_email='f.capoano@cineca.it',
     license='GPL3',
-    url='https://github.com/openwisp/netjsonconfig',
+    url='http://netjsonconfig.openwisp.org',
     download_url='https://github.com/openwisp/netjsonconfig/releases',
+    keywords=['openwrt', 'openwisp', 'netjson', 'networking'],
     packages=find_packages(exclude=['tests', 'tests.*', 'docs', 'docs.*']),
     zip_safe=False,
     classifiers=[
