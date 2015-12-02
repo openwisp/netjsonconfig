@@ -38,11 +38,14 @@ def get_install_requires():
         requirements.append('py2-ipaddress')
     return requirements
 
+description = 'Netjsonconfig is a python library that converts NetJSON DeviceConfiguration '\
+              'objects into real router configurations that can be installed on systems like '\
+              'OpenWRT or OpenWisp Firmware.'
 
 setup(
     name='netjsonconfig',
     version=get_version(),
-    description="Netjsonconfig is a python library that converts NetJSON DeviceConfiguration objects into real router configurations that can be installed on systems like OpenWRT or OpenWisp Firmware.",
+    description=description,
     long_description=open('README.rst').read(),
     author='Federico Capoano (nemesisdesign)',
     author_email='f.capoano@cineca.it',

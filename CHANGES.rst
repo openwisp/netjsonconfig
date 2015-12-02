@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.3.1 [unreleased]
+Version 0.3.1 [2015-12-02]
 --------------------------
 
 - `69197ed <https://github.com/openwisp/netjsonconfig/commit/69197ed>`_ added "details" attribute to ValidationError
