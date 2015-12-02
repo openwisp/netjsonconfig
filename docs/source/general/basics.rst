@@ -137,6 +137,13 @@ trying to process the configuration.
 If the passed configuration violates the schema the ``validate`` method will raise
 a ``ValidationError``.
 
+An instance of validation error has two public attributes:
+
+* ``message``: a human readable message explaining the error
+* ``details``: a reference to the instance of ``jsonschema.exceptions.ValidationError``
+  which contains more details about what has gone wrong;
+  for a complete reference see the `python-jsonschema documentation <https://python-jsonschema.readthedocs.org/en/latest/errors/#handling-validation-errors>`_
+
 You may call the ``validate`` method in your application arbitrarily, eg: before
 trying to save the *configuration dictionary* into a database.
 

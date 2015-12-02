@@ -5,4 +5,11 @@ class NetJsonConfigException(Exception):
 
 class ValidationError(NetJsonConfigException):
     """ error while validating schema """
-    pass
+
+    def __init__(self, e):
+        """
+        preserve jsonschema exception attributes
+        in self.details
+        """
+        self.message = e.message
+        self.details = e

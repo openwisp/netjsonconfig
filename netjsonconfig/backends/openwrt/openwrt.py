@@ -6,7 +6,7 @@ import tarfile
 from io import BytesIO
 
 from jsonschema import validate
-from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
+from jsonschema.exceptions import ValidationError as JsonSchemaError
 from jinja2 import Environment, PackageLoader
 
 from . import renderers
@@ -83,7 +83,7 @@ class OpenWrt(object):
     def validate(self):
         try:
             validate(self.config, self.schema)
-        except JsonSchemaValidationError as e:
+        except JsonSchemaError as e:
             raise ValidationError(e)
 
     def json(self, *args, **kwargs):

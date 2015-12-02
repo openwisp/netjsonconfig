@@ -43,8 +43,13 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         o = OpenWrt({'type': 'DeviceConfiguration'})
         o.validate()
         o.config['type'] = 'CHANGED'
-        with self.assertRaises(ValidationError):
+
+        try:
             o.validate()
+        except ValidationError as e:
+            self.assertEqual(e.details.instance, 'CHANGED')
+        else:
+            self.fail('ValidationError not raised')
 
     def test_find_bridge_skip_error(self):
         o = OpenWrt({'interfaces': ['WRONG']})
