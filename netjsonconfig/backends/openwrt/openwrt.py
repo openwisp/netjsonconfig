@@ -4,6 +4,7 @@ import six
 import time
 import tarfile
 from io import BytesIO
+from copy import deepcopy
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError as JsonSchemaError
@@ -32,7 +33,8 @@ class OpenWrt(object):
                           as a base for the main config, defaults to empty list
         :raises TypeError: raised if config is not dict or templates is not a list
         """
-        config = self._load(config)
+        # perform deepcopy to avoid modifying the original config argument
+        config = deepcopy(self._load(config))
         # allow omitting NetJSON type
         if 'type' not in config:
             config.update({'type': 'DeviceConfiguration'})

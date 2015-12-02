@@ -12,8 +12,15 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     """
     tests for backends.openwrt.OpenWrt
     """
+    def test_config_copy(self):
+        config = {'interfaces': []}
+        o = OpenWrt(config)
+        o.validate()
+        self.assertDictEqual(config, {'interfaces': []})
+
     def test_json_method(self):
         config = {
+            "type": "DeviceConfiguration",
             "interfaces": [
                 {
                     "name": "lo",
