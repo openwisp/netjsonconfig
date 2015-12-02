@@ -14,7 +14,8 @@ if sys.argv[-1] == 'setup.py':
 
 if sys.argv[-1] == 'publish':
     import os
-    os.system("python setup.py sdist bdist_wheel upload -s")
+    # bdist_wheel removed because conditional requirement of py2-ipaddress won't work!
+    os.system("python setup.py sdist upload -s")
     args = {'version': get_version()}
     print("You probably want to also tag the version now:")
     print("  git tag -a %(version)s -m 'version %(version)s'" % args)
