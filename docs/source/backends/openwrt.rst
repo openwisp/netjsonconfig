@@ -281,7 +281,7 @@ Will be rendered as follows::
 Network interfaces
 ------------------
 
-The the network interface settings reside in the ``interfaces`` key of the
+The network interface settings reside in the ``interfaces`` key of the
 *configuration dictionary*, which must contain a list of
 `NetJSON interface objects <http://netjson.org/rfc.html#interfaces1>`_
 (see the link for the detailed specification).
@@ -550,7 +550,7 @@ Will be rendered as follows::
 Radio settings
 --------------
 
-The the radio settings reside in the ``radio`` key of the *configuration dictionary*,
+The radio settings reside in the ``radio`` key of the *configuration dictionary*,
 which must contain a list of `NetJSON radio objects <http://netjson.org/rfc.html#radios1>`_
 (see the link for the detailed specification).
 
@@ -626,7 +626,7 @@ Will be rendered as follows::
 Static Routes
 -------------
 
-The the static routes settings reside in the ``routes`` key of the *configuration dictionary*,
+The static routes settings reside in the ``routes`` key of the *configuration dictionary*,
 which must contain a list of `NetJSON Static Route objects <http://netjson.org/rfc.html#routes1>`_
 (see the link for the detailed specification).
 
@@ -680,7 +680,7 @@ Will be rendered as follows::
 Policy routing
 --------------
 
-The the policy routing settings reside in the ``ip_rule`` key of the
+The policy routing settings reside in the ``ip_rule`` key of the
 *configuration dictionary*, which is a custom NetJSON extension not present in the
 original NetJSON RFC.
 
@@ -782,7 +782,7 @@ Will be rendered as follows::
 Switch settings
 ---------------
 
-The the switch settings reside in the ``switch`` key of the *configuration dictionary*,
+The switch settings reside in the ``switch`` key of the *configuration dictionary*,
 which is a custom NetJSON extension not present in the original NetJSON RFC.
 
 The ``switch`` key must contain a list of dictionaries, all the following keys are required:
@@ -867,7 +867,7 @@ Will be rendered as follows::
 NTP settings
 ------------
 
-The the Network Time Protocol settings reside in the ``ntp`` key of the
+The Network Time Protocol settings reside in the ``ntp`` key of the
 *configuration dictionary*, which is a custom NetJSON extension not present in
 the original NetJSON RFC.
 
@@ -917,7 +917,7 @@ Will be rendered as follows::
 LED settings
 ------------
 
-The the led settings reside in the ``led`` key of the *configuration dictionary*,
+The led settings reside in the ``led`` key of the *configuration dictionary*,
 which is a custom NetJSON extension not present in the original NetJSON RFC.
 
 The ``led`` key must contain a list of dictionaries, the allowed options are:
