@@ -118,6 +118,9 @@ follows:
 | ``mode``          | string         | no       | permissions, if omitted will default to ``0644``         |
 +-------------------+----------------+----------+----------------------------------------------------------+
 
+The ``files`` key of the *configuration dictionary* is a custom NetJSON extension not
+present in the original NetJSON RFC.
+
 .. warning::
     The files won't be included in the output of the ``render`` method because
     doing so would make the UCI output invalid.
@@ -232,7 +235,7 @@ Will return the following output::
 General settings
 ----------------
 
-The the general settings reside in the ``general`` key of the
+The general settings reside in the ``general`` key of the
 *configuration dictionary*, which follows the
 `NetJSON General object <http://netjson.org/rfc.html#general1>`_ definition
 (see the link for the detailed specification).
