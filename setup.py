@@ -55,6 +55,7 @@ setup(
     download_url='https://github.com/openwisp/netjsonconfig/releases',
     keywords=['openwrt', 'openwisp', 'netjson', 'networking'],
     packages=find_packages(exclude=['tests', 'tests.*', 'docs', 'docs.*']),
+    include_package_data=True,
     zip_safe=False,
     classifiers=[
         'Development Status :: 3 - Alpha',
