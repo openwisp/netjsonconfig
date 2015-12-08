@@ -283,7 +283,7 @@ config wifi-iface
         })
         output = o.render()
         self.assertNotIn('package files', output)
-        self.assertNotIn('* * * * * echo', output)
+        self.assertIn('* * * * * echo', output)
         # generate tar.gz archive and ensure the additional files are there
         o.generate()
         tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')

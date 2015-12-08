@@ -15,6 +15,9 @@ from .schema import schema
 from ...utils import merge_config
 from ...exceptions import ValidationError
 
+DEFAULT_FILE_MODE = '644'
+FILE_SECTION_DELIMITER = '# ------ files ------ #'
+
 
 class OpenWrt(object):
     """ OpenWrt Backend """
@@ -69,9 +72,17 @@ class OpenWrt(object):
             return merge_config(base_config, config)
         return config
 
-    def render(self):
+    def render(self, files=True):
+        """
+        Converts the configuration dictionary to the native configuration
+        in text format.
+
+        :param files: boolean indicating if files must be included in the output
+                      defaults to True
+        """
         self.validate()
         output = ''
+        # render config
         for renderer_class in self.renderers:
             renderer = renderer_class(self)
             additional_output = renderer.render()
@@ -80,6 +91,33 @@ class OpenWrt(object):
             if output and additional_output:
                 output += '\n'
             output += additional_output
+        if files:
+            # render files
+            files_output = self._render_files()
+            if files_output:
+                output += files_output.replace('\n\n\n', '\n\n')  # max 3 \n
+        return output
+
+    def _render_files(self):
+        """ renders files, used in main render method """
+        output = ''
+        # render files
+        files = self.config.get('files', [])
+        # add delimiter
+        if files:
+            output += '\n{0}\n\n'.format(FILE_SECTION_DELIMITER)
+        for f in files:
+            if isinstance(f['contents'], list):
+                contents = '\n'.join(f['contents'])
+            else:
+                contents = f['contents']
+            path = f['path']
+            mode = f.get('mode', DEFAULT_FILE_MODE)
+            # add file to output
+            file_output = '# path: {0}\n'\
+                          '# mode: {1}\n\n'\
+                          '{2}\n\n'.format(path, mode, contents)
+            output += file_output
         return output
 
     def validate(self):
@@ -101,7 +139,7 @@ class OpenWrt(object):
         Generates tar.gz restorable in OpenWRT with:
             sysupgrade -r <file>
         """
-        uci = self.render()
+        uci = self.render(files=False)
         tar = tarfile.open('{0}.tar.gz'.format(name), 'w:gz')
         # create a list with all the packages (and remove empty entries)
         packages = re.split('package ', uci)
@@ -140,9 +178,9 @@ class OpenWrt(object):
                            name=path,
                            contents=contents,
                            timestamp=timestamp,
-                           mode=file_item.get('mode', '644'))
+                           mode=file_item.get('mode', DEFAULT_FILE_MODE))
 
-    def _add_file(self, tar, name, contents, timestamp, mode='644'):
+    def _add_file(self, tar, name, contents, timestamp, mode=DEFAULT_FILE_MODE):
         """
         adds a single file in tar object
         """

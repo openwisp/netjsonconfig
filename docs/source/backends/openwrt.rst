@@ -122,8 +122,8 @@ The ``files`` key of the *configuration dictionary* is a custom NetJSON extensio
 present in the original NetJSON RFC.
 
 .. warning::
-    The files won't be included in the output of the ``render`` method because
-    doing so would make the UCI output invalid.
+    The files are included in the output of the ``render`` method unless you pass
+    ``files=False``, eg: ``openwrt.render(files=False)``
 
 Plain file example
 ~~~~~~~~~~~~~~~~~~
