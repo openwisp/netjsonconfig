@@ -119,6 +119,31 @@ with the ``sysupgrade`` command::
 Note that the restore command does not apply the configuration, to do this you have
 to reload the services manually or reboot the router.
 
+JSON method
+-----------
+
+.. automethod:: netjsonconfig.OpenWrt.json
+
+Code example:
+
+.. code-block:: python
+
+    >>> from netjsonconfig import OpenWrt
+    >>>
+    >>> router = OpenWrt({
+    ...     "general": {
+    ...         "hostname": "HomeRouter"
+    ...     }
+    ... })
+    >>> print(router.json(indent=4))
+    {
+        "type": "DeviceConfiguration",
+        "general": {
+            "hostname": "HomeRouter"
+        }
+    }
+
+
 Including additional files
 --------------------------
 

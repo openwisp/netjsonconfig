@@ -128,6 +128,14 @@ class OpenWrt(object):
             raise ValidationError(e)
 
     def json(self, *args, **kwargs):
+        """
+        returns a string formatted in **NetJSON**;
+        performs validation before returning output;
+
+        ``*args`` and ``*kwargs`` will be passed to ``json.dumps``;
+
+        :returns: string
+        """
         self.validate()
         return json.dumps(self.config, *args, **kwargs)
 
