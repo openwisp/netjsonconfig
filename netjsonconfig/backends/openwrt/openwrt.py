@@ -74,11 +74,11 @@ class OpenWrt(object):
 
     def render(self, files=True):
         """
-        Converts the configuration dictionary to the native configuration
-        in text format.
+        Converts the configuration dictionary into the native OpenWRT UCI format.
 
-        :param files: boolean indicating if files must be included in the output
-                      defaults to True
+        :param files: whether to include "additional files" in the output or not;
+                      defaults to ``True``
+        :returns: string with output
         """
         self.validate()
         output = ''
@@ -99,7 +99,7 @@ class OpenWrt(object):
         return output
 
     def _render_files(self):
-        """ renders files, used in main render method """
+        """ renders "additional files", used in main render method """
         output = ''
         # render files
         files = self.config.get('files', [])

@@ -7,8 +7,9 @@ The ``OpenWrt`` backend is the base backend of the library.
 Render method
 -------------
 
-The ``render`` method will convert the configuration dictionary into the
-native OpenWRT UCI format, eg:
+.. automethod:: netjsonconfig.OpenWrt.render
+
+Code example:
 
 .. code-block:: python
 
