@@ -4,10 +4,19 @@ from copy import deepcopy
 
 def merge_config(template, config):
     """
-    merge two dicts `template` and `config`
-    values of `config` are merged in values present in `template`
-    lists present in `config` will be added to lists in `template`
-    returns merged dict
+    Merges ``config`` on top of ``template``.
+
+    Conflicting keys are handled in the following way:
+
+    * simple values (eg: ``str``, ``int``, ``float``, ecc) in ``config`` will
+      overwrite the ones in ``template``
+    * values of type ``list`` in both ``config`` and ``template`` will be summed
+      in order to create a list which contains elements of both
+    * values of type ``dict`` will be merged recursively
+
+    :param template: template ``dict``
+    :param config: config ``dict``
+    :returns: merged ``dict``
     """
     result = template.copy()
     for key, value in config.items():
