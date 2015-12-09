@@ -4,6 +4,23 @@ OpenWRT Backend
 
 The ``OpenWrt`` backend is the base backend of the library.
 
+Initialization
+--------------
+
+.. automethod:: netjsonconfig.OpenWrt.__init__
+
+Initialization example:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    router = OpenWrt({
+        "general": {
+            "hostname": "HomeRouter"
+        }
+    })
+
 Render method
 -------------
 

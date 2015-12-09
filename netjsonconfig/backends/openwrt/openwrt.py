@@ -31,10 +31,11 @@ class OpenWrt(object):
 
     def __init__(self, config, templates=[]):
         """
-        :param config: dict containing a valid NetJSON DeviceConfiguration
-        :param templates: list containing zero or more config blocks that will be used
-                          as a base for the main config, defaults to empty list
-        :raises TypeError: raised if config is not dict or templates is not a list
+        :param config: ``dict`` containing valid **NetJSON DeviceConfiguration**
+        :param templates: ``list`` containing **NetJSON** dictionaries that will be
+                          used as a base for the main config, defaults to empty list
+        :raises TypeError: raised if ``config`` is not of type ``dict`` or if
+                           ``templates`` is not of type ``list``
         """
         # perform deepcopy to avoid modifying the original config argument
         config = deepcopy(self._load(config))
