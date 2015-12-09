@@ -258,10 +258,7 @@ refactor the previous code as follows:
 The function used under the hood to merge dictionaries and lists
 is ``netjsonconfig.utils.merge_config``:
 
-.. literalinclude:: /../../netjsonconfig/utils.py
-   :lines: 2-22
-   :caption: merge_config
-   :name: merge_config
+.. autofunction:: netjsonconfig.utils.merge_config
 
 Multiple template inheritance
 -----------------------------
