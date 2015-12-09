@@ -103,10 +103,10 @@ to reload the services manually or reboot the router.
 Including additional files
 --------------------------
 
-It's possible to add arbitrary plain text files to the generated configuration archive through
-the ``files`` key of the *configuration dictionary*. The value of the ``files`` key must be a
-list in which each item is a dictionary representing a file, each dictionary is structured as
-follows:
+The ``OpenWrt`` backend supports inclusion of arbitrary plain text files through
+the ``files`` key of the *configuration dictionary*. The value of the ``files``
+key must be a list in which each item is a dictionary representing a file, each
+dictionary is structured as follows:
 
 +-------------------+----------------+----------+----------------------------------------------------------+
 | key name          | type           | required |function                                                  |
