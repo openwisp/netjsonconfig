@@ -67,6 +67,8 @@ Will return the following output::
 Generate method
 ---------------
 
+.. automethod:: netjsonconfig.OpenWrt.generate
+
 The ``OpenWrt`` backend has a ``generate`` method which generates a
 tar.gz archive containing an `OpenWRT <http://openwrt.org>`_ configuration:
 

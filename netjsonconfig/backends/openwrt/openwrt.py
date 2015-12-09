@@ -137,7 +137,11 @@ class OpenWrt(object):
     def generate(self, name='openwrt-config'):
         """
         Generates tar.gz restorable in OpenWRT with:
-            sysupgrade -r <file>
+
+        ``sysupgrade -r <file>``
+
+        :param name: name of the generated tar.gz, defaults to ``openwrt-config``
+        :returns: None
         """
         uci = self.render(files=False)
         tar = tarfile.open('{0}.tar.gz'.format(name), 'w:gz')
