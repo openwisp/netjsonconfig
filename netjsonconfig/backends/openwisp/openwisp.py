@@ -1,6 +1,7 @@
 import re
 import time
 import tarfile
+from io import BytesIO
 
 from jinja2 import Environment, PackageLoader
 
@@ -144,12 +145,15 @@ class OpenWisp(OpenWrt):
             "mode": "755"
         })
 
-    def generate(self, name='openwrt-config'):
+    def generate(self):
         """
-        Generates an openwisp configuration archive
+        Generates an openwisp configuration archive.
+
+        :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
-        uci = self.render()
-        tar = tarfile.open('{0}.tar.gz'.format(name), 'w:gz')
+        uci = self.render(files=False)
+        byte_object = BytesIO()
+        tar = tarfile.open(fileobj=byte_object, mode='w:gz')
         # create a list with all the packages (and remove empty entries)
         packages = re.split('package ', uci)
         if '' in packages:
@@ -179,3 +183,5 @@ class OpenWisp(OpenWrt):
         self._add_files(tar, timestamp)
         # close archive
         tar.close()
+        byte_object.seek(0)
+        return byte_object

@@ -86,35 +86,44 @@ Generate method
 
 .. automethod:: netjsonconfig.OpenWrt.generate
 
-The ``OpenWrt`` backend has a ``generate`` method which generates a
-tar.gz archive containing an `OpenWRT <http://openwrt.org>`_ configuration:
+Example:
 
 .. code-block:: python
 
-    o.generate({
-        "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ]
-            }
-        ]
-    })
+    >>> import tarfile
+    >>> from netjsonconfig import OpenWrt
+    >>>
+    >>> o = OpenWrt({
+    ...     "interfaces": [
+    ...         {
+    ...             "name": "eth0",
+    ...             "type": "ethernet",
+    ...             "addresses": [
+    ...                 {
+    ...                     "proto": "dhcp",
+    ...                     "family": "ipv4"
+    ...                 }
+    ...             ]
+    ...         }
+    ...     ]
+    ... })
+    >>> bytes = o.generate()
+    >>> print(bytes)
+    <_io.BytesIO object at 0x7fd2287fb410>
+    >>> tar = tarfile.open(fileobj=bytes, mode='r')
+    >>> print(tar.getmembers())
+    [<TarInfo 'etc/config/network' at 0x7fd228790250>]
 
-Will generate an archive named ``openwrt-config.tar.gz`` with the
+As you can see from this example, the ``generate`` method does not write to disk,
+but returns an ``io.BytesIO`` object which contains a tar.gz file object with the
 following file structure::
 
     /etc/config/network
 
-The configuration archive can then be uploaded on the OpenWRT router and "restored"
-with the ``sysupgrade`` command::
+The configuration archive can then be written to disk, served via HTTP or uploaded
+directly on the OpenWRT router where it can be finally  "restored" with ``sysupgrade``::
 
-    sysupgrade -r openwrt-config.tar.gz
+    sysupgrade -r <archive>
 
 Note that the restore command does not apply the configuration, to do this you have
 to reload the services manually or reboot the router.

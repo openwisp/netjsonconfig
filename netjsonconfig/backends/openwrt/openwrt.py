@@ -143,17 +143,20 @@ class OpenWrt(object):
     def get_packages(cls):
         return [r.get_package() for r in cls.renderers]
 
-    def generate(self, name='openwrt-config'):
+    def generate(self):
         """
-        Generates tar.gz restorable in OpenWRT with:
+        Returns a ``BytesIO`` object representing a tar.gz archive with the
+        generated final router configuration.
 
-        ``sysupgrade -r <file>``
+        The archive can be installed in OpenWRT with the following command:
 
-        :param name: name of the generated tar.gz, defaults to ``openwrt-config``
-        :returns: None
+        ``sysupgrade -r <archive>``
+
+        :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
         uci = self.render(files=False)
-        tar = tarfile.open('{0}.tar.gz'.format(name), 'w:gz')
+        byte_object = BytesIO()
+        tar = tarfile.open(fileobj=byte_object, mode='w:gz')
         # create a list with all the packages (and remove empty entries)
         packages = re.split('package ', uci)
         if '' in packages:
@@ -169,8 +172,9 @@ class OpenWrt(object):
                            contents=text_contents,
                            timestamp=timestamp)
         self._add_files(tar, timestamp)
-        # close archive
         tar.close()
+        byte_object.seek(0)
+        return byte_object
 
     def _add_files(self, tar, timestamp):
         """

@@ -2,6 +2,7 @@ import os
 import json
 import unittest
 import tarfile
+from io import BytesIO
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import ValidationError
@@ -147,8 +148,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 }
             ]
         })
-        o.generate()
-        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        tar = tarfile.open(fileobj=o.generate(), mode='r')
         self.assertEqual(len(tar.getmembers()), 2)
         # network
         network = tar.getmember('etc/config/network')
@@ -180,9 +180,7 @@ config wifi-iface
     option ssid 'MyWifiAP'
 """)
         self.assertEqual(contents, expected)
-        # close and delete tar.gz file
         tar.close()
-        os.remove('openwrt-config.tar.gz')
 
     def test_templates_type_error(self):
         config = {
@@ -272,8 +270,10 @@ config wifi-iface
             "files": [
                 {
                     "path": "/etc/crontabs/root",
-                    "contents": '* * * * * echo "test" > /etc/testfile\n'
-                                '* * * * * echo "test2" > /etc/testfile2'
+                    "contents": [
+                        '* * * * * echo "test" > /etc/testfile',
+                        '* * * * * echo "test2" > /etc/testfile2'
+                    ]
                 },
                 {
                     "path": "/etc/dummy.conf",
@@ -284,14 +284,13 @@ config wifi-iface
         output = o.render()
         self.assertNotIn('package files', output)
         self.assertIn('* * * * * echo', output)
-        # generate tar.gz archive and ensure the additional files are there
-        o.generate()
-        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        # ensure the additional files are there present in the tar.gz archive
+        tar = tarfile.open(fileobj=o.generate(), mode='r')
         self.assertEqual(len(tar.getmembers()), 2)
         # first file
         crontab = tar.getmember('etc/crontabs/root')
         contents = tar.extractfile(crontab).read().decode()
-        self.assertEqual(contents, o.config['files'][0]['contents'])
+        self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
         self.assertNotEqual(crontab.mtime, 0)
         self.assertEqual(crontab.mode, 420)
         # second file
@@ -299,9 +298,7 @@ config wifi-iface
         contents = tar.extractfile(dummy).read().decode()
         self.assertEqual(contents, o.config['files'][1]['contents'])
         self.assertEqual(dummy.mode, 420)
-        # close and delete tar.gz file
         tar.close()
-        os.remove('openwrt-config.tar.gz')
 
     def test_file_inclusion_list_contents(self):
         o = OpenWrt({
@@ -316,16 +313,13 @@ config wifi-iface
                 }
             ]
         })
-        o.generate()
-        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        tar = tarfile.open(fileobj=o.generate(), mode='r')
         self.assertEqual(len(tar.getmembers()), 1)
         # check file
         crontab = tar.getmember('root/.ssh/authorized_keys')
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
-        # close and delete tar.gz file
         tar.close()
-        os.remove('openwrt-config.tar.gz')
 
     def test_file_permissions(self):
         o = OpenWrt({
@@ -337,11 +331,8 @@ config wifi-iface
                 }
             ]
         })
-        o.generate()
-        tar = tarfile.open('openwrt-config.tar.gz', 'r:gz')
+        tar = tarfile.open(fileobj=o.generate(), mode='r')
         script = tar.getmember('tmp/hello.sh')
         # check permissions
         self.assertEqual(script.mode, 493)
-        # close and delete tar.gz file
         tar.close()
-        os.remove('openwrt-config.tar.gz')
