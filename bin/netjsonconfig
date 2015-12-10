@@ -40,16 +40,15 @@ parser.add_argument('--templates', '-t',
 parser.add_argument('--backend', '-b',
                     choices=['openwrt', 'openwisp'],
                     action='store',
-                    default='openwrt',
                     type=str,
                     help='Configuration backend: openwrt or openwisp')
 
 parser.add_argument('--method', '-m',
                     choices=['generate', 'render'],
                     action='store',
-                    default='generate',
-                    help='Backend method to use. ("generate" creates a tar.gz, "render"'
-                         'returns the entire config as a string)')
+                    help='Backend method to use. '\
+                         '"generate" returns a tar.gz archive as output; '
+                         '"render" returns the configuration in text format')
 
 parser.add_argument('--verbose',
                     action='store_true',
