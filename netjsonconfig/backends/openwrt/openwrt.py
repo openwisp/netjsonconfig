@@ -176,6 +176,23 @@ class OpenWrt(object):
         byte_object.seek(0)
         return byte_object
 
+    def write(self, name, path='./'):
+        """
+        Like ``generate`` but writes to disk.
+
+        :param name: file name, the tar.gz extension will be added automatically
+        :param path: directory where the file will be written to, defaults to ``./``
+        :returns: closed file object
+        """
+        byte_object = self.generate()
+        file_name = '{0}.tar.gz'.format(name)
+        if not path.endswith('/'):
+            path += '/'
+        f = open('{0}{1}'.format(path, file_name), 'wb')
+        f.write(byte_object.getvalue())
+        f.close()
+        return f
+
     def _add_files(self, tar, timestamp):
         """
         adds files specified in self.config['files']

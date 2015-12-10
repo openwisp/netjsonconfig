@@ -128,6 +128,36 @@ directly on the OpenWRT router where it can be finally  "restored" with ``sysupg
 Note that the restore command does not apply the configuration, to do this you have
 to reload the services manually or reboot the router.
 
+Write method
+------------
+
+.. automethod:: netjsonconfig.OpenWrt.write
+
+Example:
+
+.. code-block:: python
+
+    >>> import tarfile
+    >>> from netjsonconfig import OpenWrt
+    >>>
+    >>> o = OpenWrt({
+    ...     "interfaces": [
+    ...         {
+    ...             "name": "eth0",
+    ...             "type": "ethernet",
+    ...             "addresses": [
+    ...                 {
+    ...                     "proto": "dhcp",
+    ...                     "family": "ipv4"
+    ...                 }
+    ...             ]
+    ...         }
+    ...     ]
+    ... })
+    >>> o.write('dhcp-router', path='/tmp/')
+
+Will write the configuration archive in ``/tmp/dhcp-router.tar.gz``.
+
 JSON method
 -----------
 

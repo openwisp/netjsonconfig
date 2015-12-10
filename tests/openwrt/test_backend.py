@@ -182,6 +182,18 @@ config wifi-iface
         self.assertEqual(contents, expected)
         tar.close()
 
+    def test_write(self):
+        o = OpenWrt({
+            "general": {
+                "hostname": "test"
+            }
+        })
+        o.write(name='test', path='/tmp')
+        tar = tarfile.open('/tmp/test.tar.gz', mode='r')
+        self.assertEqual(len(tar.getmembers()), 1)
+        tar.close()
+        os.remove('/tmp/test.tar.gz')
+
     def test_templates_type_error(self):
         config = {
             "general": {
