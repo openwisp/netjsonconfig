@@ -89,8 +89,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
         try:
             output = subprocess.check_output(command, shell=True)
         except subprocess.CalledProcessError as e:
-            self.assertIn('write() missing 1 required', e.output.decode())
-            self.assertIn('name', e.output.decode())
+            self.assertIn('write()', e.output.decode())
         else:
             self.fail('subprocess.CalledProcessError not raised')
 
