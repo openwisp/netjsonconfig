@@ -4,7 +4,13 @@ Change log
 Version 0.3.2 [unreleased]
 --------------------------
 
-WIP
+- `#31 <https://github.com/openwisp/netjsonconfig/issues/31>`_ added files in ``render`` output
+- `#32 <https://github.com/openwisp/netjsonconfig/issues/32>`_ ``generate`` now returns an in-memory file object
+- `badf292 <https://github.com/openwisp/netjsonconfig/commit/badf292>`_ updated command line utility script and examples
+- `#33 <https://github.com/openwisp/netjsonconfig/issues/33>`_ added ``write`` method
+- `5ff7360 <https://github.com/openwisp/netjsonconfig/commit/5ff7360>`_ [cli] positional ``config`` param is now ``--config`` or ``-c``
+- `28de4a5 <https://github.com/openwisp/netjsonconfig/commit/28de4a5>`_ [cli] marked required arguments: ``--config``, ``--backend`` and ``--method``
+- `f55cc4a <https://github.com/openwisp/netjsonconfig/commit/f55cc4a>`_ [cli] added ``--arg`` option to pass arguments to methods
 
 Version 0.3.1 [2015-12-02]
 --------------------------
