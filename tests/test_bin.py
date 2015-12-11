@@ -74,3 +74,37 @@ class TestBin(unittest.TestCase, _TabsMixin):
             self.assertIn('"WRONG": file not found', e.output.decode())
         else:
             self.fail('subprocess.CalledProcessError not raised')
+
+    def test_invalid_arguments(self):
+        command = "netjsonconfig -c '{}' -b openwrt -m render -a WRONG"
+        try:
+            output = subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('--arg option expects', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')
+
+    def test_arg_exception(self):
+        command = "netjsonconfig -c '{}' -b openwrt -m write"
+        try:
+            output = subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('write() missing 1 required', e.output.decode())
+            self.assertIn('name', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')
+
+    def test_valid_arg(self):
+        config = json.dumps({
+            'general': {'hostname': 'template_test'},
+            'files': [
+                {
+                    'path': '/etc/test.txt',
+                    'contents': 'test_valid_arg'
+                }
+            ]
+        })
+        command = "netjsonconfig --config '{0}' -b openwrt -m render -a files=False".format(config)
+        output = subprocess.check_output(command, shell=True).decode()
+        self.assertNotIn('test.txt', output)
+        self.assertNotIn('test_valid_arg', output)
