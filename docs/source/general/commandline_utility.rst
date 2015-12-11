@@ -9,45 +9,50 @@ languages (via system calls).
 Check out the available options yourself with::
 
     $ netjsonconfig --help
-    usage: netjsonconfig [-h] [--templates [TEMPLATES [TEMPLATES ...]]]
+    usage: netjsonconfig [-h] [--config CONFIG]
+                         [--templates [TEMPLATES [TEMPLATES ...]]]
                          [--backend {openwrt,openwisp}]
-                         [--method {generate,render}] [--verbose] [--version]
-                         config
+                         [--method {render,generate}] [--verbose] [--version]
 
-    Converts a NetJSON DeviceConfiguration objectto working router configurations.
-
-    positional arguments:
-      config                config file or string, must be valid NetJSON
-                            DeviceConfiguration
+    Converts a NetJSON DeviceConfiguration object to native router configurations.
 
     optional arguments:
       -h, --help            show this help message and exit
+
+    input:
+      --config CONFIG, -c CONFIG
+                            config file or string, must be valid NetJSON
+                            DeviceConfiguration
       --templates [TEMPLATES [TEMPLATES ...]], -t [TEMPLATES [TEMPLATES ...]]
                             list of template config files or strings separated by
                             space
+
+    output:
       --backend {openwrt,openwisp}, -b {openwrt,openwisp}
                             Configuration backend: openwrt or openwisp
-      --method {generate,render}, -m {generate,render}
-                            Backend method to use. "generate" returns a tar.gz
-                            archive as output; "render" returns the configuration
-                            in text format
+      --method {render,generate}, -m {render,generate}
+                            Backend method to use. "render" returns the
+                            configuration in text format"generate" returns a
+                            tar.gz archive as output;
+
+    debug:
       --verbose             verbose output
       --version, -v         show program's version number and exit
 
 Here's the common use cases explained::
 
    # generate tar.gz from a NetJSON DeviceConfiguration object and save it to a file
-   netjsonconfig --backend openwrt --method generate config.json > config.tar.gz
+   netjsonconfig --config config.json --backend openwrt --method generate > config.tar.gz
 
    # see output of OpenWrt render method
-   netjsonconfig --backend openwrt --method render config.json
+   netjsonconfig --config config.json --backend openwrt --method render
 
    # abbreviated options
-   netjsonconfig -b openwrt -m render config.json
+   netjsonconfig -c config.json -b openwrt -m render
 
    # passing a JSON string instead of a file path
-   netjsonconfig -b openwrt -m render '{"general": { "hostname": "example" }}'
+   netjsonconfig -c '{"general": { "hostname": "example" }}' -b openwrt -m render
 
 Using templates::
 
-    netjsonconfig config.json -t template1.json template2.json -b openwrt -m render
+    netjsonconfig -c config.json -t template1.json template2.json -b openwrt -m render

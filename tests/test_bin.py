@@ -11,20 +11,20 @@ class TestBin(unittest.TestCase, _TabsMixin):
     """
     def test_file_not_found(self):
         with self.assertRaises(subprocess.CalledProcessError):
-            output = subprocess.check_output("netjsonconfig WRONG -b openwrt -m generate", shell=True)
+            output = subprocess.check_output("netjsonconfig -c WRONG -b openwrt -m generate", shell=True)
 
     def test_invalid_netjson(self):
-        command = '''netjsonconfig '{ "interfaces":["w"] }' -b openwrt -m render'''
+        command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m render'''
         with self.assertRaises(subprocess.CalledProcessError):
             output = subprocess.check_output(command, shell=True)
 
     def test_invalid_netjson_verbose(self):
-        command = '''netjsonconfig '{ "interfaces":["w"] }' -b openwrt -m render --verbose'''
+        command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m render --verbose'''
         with self.assertRaises(subprocess.CalledProcessError):
             output = subprocess.check_output(command, shell=True)
 
     def test_empty_netjson(self):
-        output = subprocess.check_output("netjsonconfig '{}' -b openwrt -m render", shell=True)
+        output = subprocess.check_output("netjsonconfig -c '{}' -b openwrt -m render", shell=True)
         self.assertEqual(output.decode(), '')
 
     def test_templates(self):
@@ -59,7 +59,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
                 }
             ]
         })
-        command = """netjsonconfig '{0}' -b openwrt -m render --templates '{1}' '{2}'"""
+        command = """netjsonconfig --config '{0}' -b openwrt -m render --templates '{1}' '{2}'"""
         command = command.format(config, template1, template2)
         output = subprocess.check_output(command, shell=True).decode()
         self.assertIn("hostname 'template_test'", output)
@@ -67,7 +67,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
         self.assertIn("interface 'wlan0'", output)
 
     def test_invalid_template(self):
-        command = "netjsonconfig '{}' -b openwrt -t WRONG -m render"
+        command = "netjsonconfig -c '{}' -b openwrt -t WRONG -m render"
         try:
             output = subprocess.check_output(command, shell=True)
         except subprocess.CalledProcessError as e:

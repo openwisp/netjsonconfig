@@ -20,44 +20,50 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-parser = argparse.ArgumentParser(description='Converts a NetJSON DeviceConfiguration object'
-                                             'to working router configurations.',
+parser = argparse.ArgumentParser(description='Converts a NetJSON DeviceConfiguration object '
+                                             'to native router configurations.',
                                  epilog=license,
                                  prog='netjsonconfig')
 
-parser.add_argument('config',
+config = parser.add_argument_group('input')
+
+config.add_argument('--config', '-c',
                     action='store',
                     type=str,
                     help='config file or string, must be valid NetJSON DeviceConfiguration')
 
-parser.add_argument('--templates', '-t',
+config.add_argument('--templates', '-t',
                     nargs='*',  # zero or more
                     action='store',
                     type=str,
                     default=[],
                     help='list of template config files or strings separated by space')
 
-parser.add_argument('--backend', '-b',
-                    choices=['openwrt', 'openwisp'],
-                    action='store',
-                    type=str,
-                    help='Configuration backend: openwrt or openwisp')
+output = parser.add_argument_group('output')
 
-parser.add_argument('--method', '-m',
-                    choices=['generate', 'render'],
-                    action='store',
-                    help='Backend method to use. '\
-                         '"generate" returns a tar.gz archive as output; '
-                         '"render" returns the configuration in text format')
+output.add_argument('--backend', '-b',
+                 choices=['openwrt', 'openwisp'],
+                 action='store',
+                 type=str,
+                 help='Configuration backend: openwrt or openwisp')
 
-parser.add_argument('--verbose',
-                    action='store_true',
-                    default=False,
-                    help='verbose output')
+output.add_argument('--method', '-m',
+                 choices=['render', 'generate'],
+                 action='store',
+                 help='Backend method to use. '\
+                      '"render" returns the configuration in text format'\
+                      '"generate" returns a tar.gz archive as output; ')
 
-parser.add_argument('--version', '-v',
-                    action='version',
-                    version=netjsonconfig.get_version())
+debug = parser.add_argument_group('debug')
+
+debug.add_argument('--verbose',
+                   action='store_true',
+                   default=False,
+                   help='verbose output')
+
+debug.add_argument('--version', '-v',
+                   action='version',
+                   version=netjsonconfig.get_version())
 
 def _load(config):
     """
