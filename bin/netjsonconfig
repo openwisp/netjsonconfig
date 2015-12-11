@@ -5,6 +5,12 @@ import argparse
 
 import netjsonconfig
 
+description = """
+Converts a NetJSON DeviceConfiguration object to native router configurations.
+
+Exhaustive documentation is available at: http://netjsonconfig.openwisp.org/
+"""
+
 license = """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,8 +26,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-parser = argparse.ArgumentParser(description='Converts a NetJSON DeviceConfiguration object '
-                                             'to native router configurations.',
+parser = argparse.ArgumentParser(description=description,
                                  epilog=license,
                                  prog='netjsonconfig')
 
@@ -48,11 +53,12 @@ output.add_argument('--backend', '-b',
                  help='Configuration backend: openwrt or openwisp')
 
 output.add_argument('--method', '-m',
-                 choices=['render', 'generate'],
+                 choices=['render', 'generate', 'write'],
                  action='store',
                  help='Backend method to use. '\
                       '"render" returns the configuration in text format'\
-                      '"generate" returns a tar.gz archive as output; ')
+                      '"generate" returns a tar.gz archive as output; '\
+                      '"write" is like generate but writes to disk; ')
 
 debug = parser.add_argument_group('debug')
 
