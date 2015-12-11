@@ -33,6 +33,7 @@ parser = argparse.ArgumentParser(description=description,
 config = parser.add_argument_group('input')
 
 config.add_argument('--config', '-c',
+                    required=True,
                     action='store',
                     type=str,
                     help='config file or string, must be valid NetJSON DeviceConfiguration')
@@ -47,12 +48,14 @@ config.add_argument('--templates', '-t',
 output = parser.add_argument_group('output')
 
 output.add_argument('--backend', '-b',
+                 required=True,
                  choices=['openwrt', 'openwisp'],
                  action='store',
                  type=str,
                  help='Configuration backend: openwrt or openwisp')
 
 output.add_argument('--method', '-m',
+                 required=True,
                  choices=['render', 'generate', 'write'],
                  action='store',
                  help='Backend method to use. '\
