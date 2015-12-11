@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.3.2 [unreleased]
+Version 0.3.2 [2015-12-11]
 --------------------------
 
 - `#31 <https://github.com/openwisp/netjsonconfig/issues/31>`_ added files in ``render`` output
