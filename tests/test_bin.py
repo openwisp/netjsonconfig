@@ -1,6 +1,8 @@
+import os
 import json
 import unittest
 import subprocess
+import tarfile
 
 from netjsonconfig.utils import _TabsMixin
 
@@ -9,6 +11,10 @@ class TestBin(unittest.TestCase, _TabsMixin):
     """
     tests for netjsonconfig command line tool
     """
+    @classmethod
+    def tearDownClass(self):
+        os.remove('test.tar.gz')
+
     def test_file_not_found(self):
         with self.assertRaises(subprocess.CalledProcessError):
             output = subprocess.check_output("netjsonconfig -c WRONG -b openwrt -m generate", shell=True)
@@ -107,3 +113,10 @@ class TestBin(unittest.TestCase, _TabsMixin):
         output = subprocess.check_output(command, shell=True).decode()
         self.assertNotIn('test.txt', output)
         self.assertNotIn('test_valid_arg', output)
+
+    def test_generate_redirection(self):
+        command = """netjsonconfig -c '{"general": { "hostname": "example" }}' -b openwrt -m generate > test.tar.gz"""
+        subprocess.check_output(command, shell=True)
+        tar = tarfile.open('test.tar.gz', 'r')
+        self.assertEqual(len(tar.getmembers()), 1)
+        tar.close()

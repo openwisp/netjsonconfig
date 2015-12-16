@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import six
 import argparse
 
 import netjsonconfig
@@ -121,6 +122,24 @@ def recognize_method_argument(arg_string):
         return False
     return arg_string
 
+
+def print_output(output):
+    """
+    prints result to standard output
+    """
+    # if file object, get bytes
+    if hasattr(output, 'getvalue'):
+        output = output.getvalue()
+    # python2: always print
+    # python3: if string, just print
+    if isinstance(output, six.string_types):
+        print(output)
+    # python2: never enters this block
+    # python3: writes binary data to standard output
+    else:
+        sys.stdout.buffer.write(output)
+
+
 args = parser.parse_args()
 config = _load(args.config)
 templates = [_load(template) for template in args.templates]
@@ -142,7 +161,7 @@ except TypeError as e:
 try:
     output = getattr(instance, method)(**method_arguments)
     if output:
-        print(output)
+        print_output(output)
 except netjsonconfig.exceptions.ValidationError as e:
     message = 'netjsonconfig: JSON Schema violation\n'
     if not args.verbose:
