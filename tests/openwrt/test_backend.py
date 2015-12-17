@@ -3,6 +3,8 @@ import json
 import unittest
 import tarfile
 from io import BytesIO
+from time import sleep
+from hashlib import md5
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import ValidationError
@@ -303,7 +305,7 @@ config wifi-iface
         crontab = tar.getmember('etc/crontabs/root')
         contents = tar.extractfile(crontab).read().decode()
         self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
-        self.assertNotEqual(crontab.mtime, 0)
+        self.assertEqual(crontab.mtime, 0)
         self.assertEqual(crontab.mode, 420)
         # second file
         dummy = tar.getmember('etc/dummy.conf')
@@ -348,3 +350,12 @@ config wifi-iface
         # check permissions
         self.assertEqual(script.mode, 493)
         tar.close()
+
+    def test_checksum(self):
+        """ ensures checksum of same config doesn't change """
+        o = OpenWrt({"general": {"hostname": "test"}})
+        # md5 is good enough and won't slow down test execution too much
+        checksum1 = md5(o.generate().getvalue()).hexdigest()
+        sleep(1)
+        checksum2 = md5(o.generate().getvalue()).hexdigest()
+        self.assertEqual(checksum1, checksum2)

@@ -1,7 +1,7 @@
 import json
 import re
 import six
-import time
+import gzip
 import tarfile
 from io import BytesIO
 from copy import deepcopy
@@ -145,8 +145,8 @@ class OpenWrt(object):
 
     def generate(self):
         """
-        Returns a ``BytesIO`` object representing a tar.gz archive with the
-        generated final router configuration.
+        Returns a ``BytesIO`` instance representing an in-memory tar.gz archive
+        containing the native router configuration.
 
         The archive can be installed in OpenWRT with the following command:
 
@@ -155,26 +155,33 @@ class OpenWrt(object):
         :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
         uci = self.render(files=False)
-        byte_object = BytesIO()
-        tar = tarfile.open(fileobj=byte_object, mode='w:gz')
+        tar_bytes = BytesIO()
+        tar = tarfile.open(fileobj=tar_bytes, mode='w')
         # create a list with all the packages (and remove empty entries)
         packages = re.split('package ', uci)
         if '' in packages:
             packages.remove('')
         # for each package create a file with its contents in /etc/config
-        timestamp = time.time()
         for package in packages:
             lines = package.split('\n')
             package_name = lines[0]
             text_contents = '\n'.join(lines[2:])
             self._add_file(tar=tar,
                            name='etc/config/{0}'.format(package_name),
-                           contents=text_contents,
-                           timestamp=timestamp)
-        self._add_files(tar, timestamp)
+                           contents=text_contents)
+        self._add_files(tar)
         tar.close()
-        byte_object.seek(0)
-        return byte_object
+        tar_bytes.seek(0)  # set pointer to beginning of stream
+        # `mtime` parameter of gzip file must be 0, otherwise any checksum operation
+        # would return a different digest even when content is the same.
+        # to achieve this we must use the python `gzip` library because the `tarfile`
+        # library does not seem to offer the possibility to modify the gzip `mtime`.
+        gzip_bytes = BytesIO()
+        gz = gzip.GzipFile(fileobj=gzip_bytes, mode='wb', mtime=0)
+        gz.write(tar_bytes.getvalue())
+        gz.close()
+        gzip_bytes.seek(0)  # set pointer to beginning of stream
+        return gzip_bytes
 
     def write(self, name, path='./'):
         """
@@ -192,7 +199,7 @@ class OpenWrt(object):
         f.write(byte_object.getvalue())
         f.close()
 
-    def _add_files(self, tar, timestamp):
+    def _add_files(self, tar):
         """
         adds files specified in self.config['files']
         in specified tar object
@@ -210,17 +217,18 @@ class OpenWrt(object):
             self._add_file(tar=tar,
                            name=path,
                            contents=contents,
-                           timestamp=timestamp,
                            mode=file_item.get('mode', DEFAULT_FILE_MODE))
 
-    def _add_file(self, tar, name, contents, timestamp, mode=DEFAULT_FILE_MODE):
+    def _add_file(self, tar, name, contents, mode=DEFAULT_FILE_MODE):
         """
         adds a single file in tar object
         """
         byte_contents = BytesIO(contents.encode('utf8'))
         info = tarfile.TarInfo(name=name)
         info.size = len(contents)
-        info.mtime = timestamp
+        # mtime must be 0 or any checksum operation
+        # will return a different digest even when content is the same
+        info.mtime = 0
         info.type = tarfile.REGTYPE
         info.mode = int(mode, 8)  # permissions converted to decimal notation
         tar.addfile(tarinfo=info, fileobj=byte_contents)

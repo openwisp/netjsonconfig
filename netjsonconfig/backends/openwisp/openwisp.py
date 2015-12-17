@@ -1,5 +1,4 @@
 import re
-import time
 import tarfile
 from io import BytesIO
 
@@ -159,7 +158,6 @@ class OpenWisp(OpenWrt):
         if '' in packages:
             packages.remove('')
         # for each package create a file with its contents in /etc/config
-        timestamp = time.time()
         for package in packages:
             lines = package.split('\n')
             package_name = lines[0]
@@ -167,8 +165,7 @@ class OpenWisp(OpenWrt):
             text_contents = 'package {0}\n\n{1}'.format(package_name, text_contents)
             self._add_file(tar=tar,
                            name='uci/{0}.conf'.format(package_name),
-                           contents=text_contents,
-                           timestamp=timestamp)
+                           contents=text_contents)
         # prepare template context for install and uninstall scripts
         template_context = self._get_install_context()
         # add install.sh to included files
@@ -180,7 +177,7 @@ class OpenWisp(OpenWrt):
         # add tc_script
         self._add_tc_script()
         # add files resulting archive
-        self._add_files(tar, timestamp)
+        self._add_files(tar)
         # close archive
         tar.close()
         byte_object.seek(0)

@@ -107,15 +107,15 @@ Example:
     ...         }
     ...     ]
     ... })
-    >>> bytes = o.generate()
-    >>> print(bytes)
+    >>> stream = o.generate()
+    >>> print(stream)
     <_io.BytesIO object at 0x7fd2287fb410>
-    >>> tar = tarfile.open(fileobj=bytes, mode='r')
+    >>> tar = tarfile.open(fileobj=stream, mode='r:gz')
     >>> print(tar.getmembers())
     [<TarInfo 'etc/config/network' at 0x7fd228790250>]
 
 As you can see from this example, the ``generate`` method does not write to disk,
-but returns an ``io.BytesIO`` object which contains a tar.gz file object with the
+but returns an instance of ``io.BytesIO`` which contains a tar.gz file object with the
 following file structure::
 
     /etc/config/network
@@ -125,8 +125,14 @@ directly on the OpenWRT router where it can be finally  "restored" with ``sysupg
 
     sysupgrade -r <archive>
 
-Note that the restore command does not apply the configuration, to do this you have
+Note that ``sysupgrade -r`` does not apply the configuration, to do this you have
 to reload the services manually or reboot the router.
+
+.. note::
+   the ``generate`` method intentionally sets the timestamp of the tar.gz archive and its
+   members to ``0`` in order to facilitate comparing two different archives: setting the
+   timestamp would infact cause the checksum to be different each time even when contents
+   of the archive are identical.
 
 Write method
 ------------
