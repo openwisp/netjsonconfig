@@ -3,6 +3,8 @@ import unittest
 import tarfile
 from copy import deepcopy
 from io import BytesIO
+from time import sleep
+from hashlib import md5
 
 from netjsonconfig import OpenWisp
 from netjsonconfig.exceptions import ValidationError
@@ -235,3 +237,12 @@ config system
         contents = tar.extractfile(uninstall).read().decode()
         self.assertIn('Stopping Cron', contents)
         tar.close()
+
+    def test_checksum(self):
+        """ ensures checksum of same config doesn't change """
+        o = OpenWisp({"general": {"hostname": "test"}})
+        # md5 is good enough and won't slow down test execution too much
+        checksum1 = md5(o.generate().getvalue()).hexdigest()
+        sleep(1)
+        checksum2 = md5(o.generate().getvalue()).hexdigest()
+        self.assertEqual(checksum1, checksum2)
