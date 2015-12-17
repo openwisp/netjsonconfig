@@ -154,22 +154,10 @@ class OpenWrt(object):
 
         :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
-        uci = self.render(files=False)
         tar_bytes = BytesIO()
         tar = tarfile.open(fileobj=tar_bytes, mode='w')
-        # create a list with all the packages (and remove empty entries)
-        packages = re.split('package ', uci)
-        if '' in packages:
-            packages.remove('')
-        # for each package create a file with its contents in /etc/config
-        for package in packages:
-            lines = package.split('\n')
-            package_name = lines[0]
-            text_contents = '\n'.join(lines[2:])
-            self._add_file(tar=tar,
-                           name='etc/config/{0}'.format(package_name),
-                           contents=text_contents)
-        self._add_files(tar)
+        self._generate_contents(tar)
+        self._process_files(tar)
         tar.close()
         tar_bytes.seek(0)  # set pointer to beginning of stream
         # `mtime` parameter of gzip file must be 0, otherwise any checksum operation
@@ -182,6 +170,27 @@ class OpenWrt(object):
         gz.close()
         gzip_bytes.seek(0)  # set pointer to beginning of stream
         return gzip_bytes
+
+    def _generate_contents(self, tar):
+        """
+        Adds configuration files to tarfile instance.
+
+        :param tar: tarfile instance
+        :returns: None
+        """
+        uci = self.render(files=False)
+        # create a list with all the packages (and remove empty entries)
+        packages = re.split('package ', uci)
+        if '' in packages:
+            packages.remove('')
+        # for each package create a file with its contents in /etc/config
+        for package in packages:
+            lines = package.split('\n')
+            package_name = lines[0]
+            text_contents = '\n'.join(lines[2:])
+            self._add_file(tar=tar,
+                           name='etc/config/{0}'.format(package_name),
+                           contents=text_contents)
 
     def write(self, name, path='./'):
         """
@@ -199,10 +208,12 @@ class OpenWrt(object):
         f.write(byte_object.getvalue())
         f.close()
 
-    def _add_files(self, tar):
+    def _process_files(self, tar):
         """
-        adds files specified in self.config['files']
-        in specified tar object
+        Adds files specified in self.config['files'] to tarfile instance.
+
+        :param tar: tarfile instance
+        :returns: None
         """
         # insert additional files
         for file_item in self.config.get('files', []):
@@ -221,7 +232,13 @@ class OpenWrt(object):
 
     def _add_file(self, tar, name, contents, mode=DEFAULT_FILE_MODE):
         """
-        adds a single file in tar object
+        Adds a single file in tarfile instance.
+
+        :param tar: tarfile instance
+        :param name: string representing filename or path
+        :param contents: string representing file contents
+        :param mode: string representing file mode, defaults to 644
+        :returns: None
         """
         byte_contents = BytesIO(contents.encode('utf8'))
         info = tarfile.TarInfo(name=name)

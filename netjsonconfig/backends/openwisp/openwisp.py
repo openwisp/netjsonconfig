@@ -1,7 +1,4 @@
 import re
-import gzip
-import tarfile
-from io import BytesIO
 
 from jinja2 import Environment, PackageLoader
 
@@ -151,9 +148,16 @@ class OpenWisp(OpenWrt):
 
         :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
+        return super(OpenWisp, self).generate()
+
+    def _generate_contents(self, tar):
+        """
+        Adds configuration files to tarfile instance.
+
+        :param tar: tarfile instance
+        :returns: None
+        """
         uci = self.render(files=False)
-        tar_bytes = BytesIO()
-        tar = tarfile.open(fileobj=tar_bytes, mode='w')
         # create a list with all the packages (and remove empty entries)
         packages = re.split('package ', uci)
         if '' in packages:
@@ -177,14 +181,3 @@ class OpenWisp(OpenWrt):
         self._add_openvpn_scripts()
         # add tc_script
         self._add_tc_script()
-        # add files resulting archive
-        self._add_files(tar)
-        # close archive
-        tar.close()
-        tar_bytes.seek(0)
-        gzip_bytes = BytesIO()
-        gz = gzip.GzipFile(fileobj=gzip_bytes, mode='wb', mtime=0)
-        gz.write(tar_bytes.getvalue())
-        gz.close()
-        gzip_bytes.seek(0)  # set pointer to beginning of stream
-        return gzip_bytes
