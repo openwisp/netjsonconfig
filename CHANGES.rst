@@ -4,7 +4,9 @@ Change log
 Version 0.3.3 [unreleased]
 --------------------------
 
-WIP
+- `219f638 <https://github.com/openwisp/netjsonconfig/commit/219f638>`_ [cli] fixed binary standard output for ``generate`` method
+- `a0b1373 <https://github.com/openwisp/netjsonconfig/compare/219f638...a0b1373>`_ removed
+  timestamp from generated configuration archive to ensure reliable checksums
 
 Version 0.3.2 [2015-12-11]
 --------------------------
