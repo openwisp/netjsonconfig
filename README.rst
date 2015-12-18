@@ -43,5 +43,6 @@ Its main features are:
 **Currently we are working only on OpenWRT support**.
 
 `Documentation <http://netjsonconfig.openwisp.org/>`_ |
+`Change log <https://github.com/openwisp/netjsonconfig/blob/master/CHANGES.rst>`_ |
 `Issue Tracker <https://github.com/openwisp/netjsonconfig/issues>`_ |
 `License <https://github.com/openwisp/netjsonconfig/blob/master/LICENSE>`_
