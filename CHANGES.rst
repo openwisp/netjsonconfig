@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.3.3 [unreleased]
+Version 0.3.3 [2015-12-18]
 --------------------------
 
 - `219f638 <https://github.com/openwisp/netjsonconfig/commit/219f638>`_ [cli] fixed binary standard output for ``generate`` method
