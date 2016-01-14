@@ -706,3 +706,41 @@ config wifi-iface
     option ssid 'open'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_inherit_disabled_from_interface(self):
+        """
+        see issue #35
+        https://github.com/openwisp/netjsonconfig/issues/35
+        """
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "disabled": True,
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "station",
+                        "ssid": "mywifi"
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option enabled '0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option disabled '1'
+    option ifname 'wlan0'
+    option mode 'sta'
+    option network 'wlan0'
+    option ssid 'mywifi'
+""")
+        self.assertEqual(o.render(), expected)

@@ -277,6 +277,8 @@ class WirelessRenderer(BaseRenderer):
             wireless = wifi_interface['wireless']
             # prepare UCI wifi-iface directive
             uci_wifi = wireless.copy()
+            # inherit "disabled" attribute if present
+            uci_wifi['disabled'] = wifi_interface.get('disabled')
             # add ifname
             uci_wifi['ifname'] = wifi_interface['name']
             # rename radio to device
