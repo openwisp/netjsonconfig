@@ -1,6 +1,11 @@
 Change log
 ==========
 
+Version 0.3.4 [2016-01-14]
+--------------------------
+
+- `#35 <https://github.com/openwisp/netjsonconfig/issues/35>`_ wifi inherits ``disabled`` from interface
+
 Version 0.3.3 [2015-12-18]
 --------------------------
 
