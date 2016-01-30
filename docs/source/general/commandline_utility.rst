@@ -3,8 +3,8 @@ Command line utility
 ====================
 
 netjsonconfig ships a command line utility that can be
-used from the interactive shell, bash scripts or even other programming
-languages (via system calls).
+used from the interactive shell, bash scripts or other programming
+languages.
 
 Check out the available options yourself with::
 
