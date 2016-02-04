@@ -126,6 +126,61 @@ schema = merge_config(default_schema, {
                 }
             }
         },
+        "switch": {
+            "type": "array",
+            "title": "VLANs",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "title": "Switch",
+            "items": {
+                "type": "object",
+                "additionalProperties": True,
+                "required": [
+                    "name",
+                    "reset",
+                    "enable_vlan",
+                    "vlan"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "reset": {
+                        "type": "boolean"
+                    },
+                    "enable_vlan": {
+                        "type": "boolean"
+                    },
+                    "vlan": {
+                        "type": "array",
+                        "title": "VLANs",
+                        "uniqueItems": True,
+                        "additionalItems": True,
+                        "items": {
+                            "type": "object",
+                            "title": "VLAN",
+                            "additionalProperties": True,
+                            "required": [
+                                "device",
+                                "vlan",
+                                "ports"
+                            ],
+                            "properties": {
+                                "device": {
+                                    "type": "string"
+                                },
+                                "vlan": {
+                                    "type": "integer"
+                                },
+                                "ports": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "ip_rules": {
             "type": "array",
             "title": "Ip rules",
@@ -220,61 +275,6 @@ schema = merge_config(default_schema, {
                     },
                     "mode": {
                         "type": "string"
-                    }
-                }
-            }
-        },
-        "switch": {
-            "type": "array",
-            "title": "VLANs",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "title": "Programmable Switch",
-            "items": {
-                "type": "object",
-                "additionalProperties": True,
-                "required": [
-                    "name",
-                    "reset",
-                    "enable_vlan",
-                    "vlan"
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "reset": {
-                        "type": "boolean"
-                    },
-                    "enable_vlan": {
-                        "type": "boolean"
-                    },
-                    "vlan": {
-                        "type": "array",
-                        "title": "VLANs",
-                        "uniqueItems": True,
-                        "additionalItems": True,
-                        "items": {
-                            "type": "object",
-                            "title": "VLAN",
-                            "additionalProperties": True,
-                            "required": [
-                                "device",
-                                "vlan",
-                                "ports"
-                            ],
-                            "properties": {
-                                "device": {
-                                    "type": "string"
-                                },
-                                "vlan": {
-                                    "type": "integer"
-                                },
-                                "ports": {
-                                    "type": "string"
-                                }
-                            }
-                        }
                     }
                 }
             }

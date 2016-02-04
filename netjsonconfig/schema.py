@@ -263,8 +263,35 @@ schema = {
                 }
             }
         },
+        "interfaces": {
+            "type": "array",
+            "title": "Interfaces",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "items": {
+                "oneOf": [
+                    {"$ref": "#/definitions/network_interface"},
+                    {"$ref": "#/definitions/wireless_interface"},
+                    {"$ref": "#/definitions/bridge_interface"}
+                ]
             }
         },
+        "dns_servers": {
+            "title": "DNS Servers",
+            "type": "array",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "items": {
+                "type": "string"
+            }
+        },
+        "dns_search": {
+            "title": "DNS Search",
+            "type": "array",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "items": {
+                "type": "string"
             }
         },
         "radios": {
@@ -310,19 +337,6 @@ schema = {
                 }
             }
         },
-        "interfaces": {
-            "type": "array",
-            "title": "Interfaces",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "items": {
-                "oneOf": [
-                    {"$ref": "#/definitions/network_interface"},
-                    {"$ref": "#/definitions/wireless_interface"},
-                    {"$ref": "#/definitions/bridge_interface"}
-                ]
-            }
-        },
         "routes": {
             "type": "array",
             "title": "Routes",
@@ -348,24 +362,6 @@ schema = {
                         "type": "string"
                     }
                 }
-            }
-        },
-        "dns_servers": {
-            "title": "DNS Servers",
-            "type": "array",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "items": {
-                "type": "string"
-            }
-        },
-        "dns_search": {
-            "title": "DNS Search",
-            "type": "array",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "items": {
-                "type": "string"
             }
         }
     }
