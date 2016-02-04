@@ -263,45 +263,8 @@ schema = {
                 }
             }
         },
-        "hardware": {
-            "type": "object",
-            "title": "Hardware",
-            "additionalProperties": True,
-            "properties": {
-                "manufacturer": {
-                    "type": "string"
-                },
-                "model": {
-                    "type": "string"
-                },
-                "revision": {
-                    "type": "integer"
-                },
-                "cpu": {
-                    "type": "string"
-                }
             }
         },
-        "operating_system": {
-            "type": "object",
-            "title": "Operating System",
-            "additionalProperties": True,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "kernel": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                },
-                "revision": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                }
             }
         },
         "radios": {
