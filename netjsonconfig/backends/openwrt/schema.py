@@ -297,10 +297,8 @@ schema = merge_config(default_schema, {
                         "type": "string"
                     },
                     "contents": {
-                        "anyOf": [
-                            {"type": "string", "format": "textarea"},
-                            {"type": "array"}
-                        ]
+                        "type": "string",
+                        "format": "textarea"
                     },
                     "mode": {
                         "type": "string",

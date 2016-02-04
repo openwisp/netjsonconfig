@@ -284,10 +284,8 @@ config wifi-iface
             "files": [
                 {
                     "path": "/etc/crontabs/root",
-                    "contents": [
-                        '* * * * * echo "test" > /etc/testfile',
-                        '* * * * * echo "test2" > /etc/testfile2'
-                    ]
+                    "contents": '* * * * * echo "test" > /etc/testfile\n'
+                                '* * * * * echo "test2" > /etc/testfile2'
                 },
                 {
                     "path": "/etc/dummy.conf",
@@ -304,7 +302,7 @@ config wifi-iface
         # first file
         crontab = tar.getmember('etc/crontabs/root')
         contents = tar.extractfile(crontab).read().decode()
-        self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
+        self.assertEqual(contents, o.config['files'][0]['contents'])
         self.assertEqual(crontab.mtime, 0)
         self.assertEqual(crontab.mode, 420)
         # second file
@@ -312,27 +310,6 @@ config wifi-iface
         contents = tar.extractfile(dummy).read().decode()
         self.assertEqual(contents, o.config['files'][1]['contents'])
         self.assertEqual(dummy.mode, 420)
-        tar.close()
-
-    def test_file_inclusion_list_contents(self):
-        o = OpenWrt({
-            "files": [
-                {
-                    "path": "/root/.ssh/authorized_keys",
-                    "contents": [
-                        "key1 user@machine1",
-                        "key2 user@machine2",
-                        "key3 user@machine3",
-                    ]
-                }
-            ]
-        })
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        self.assertEqual(len(tar.getmembers()), 1)
-        # check file
-        crontab = tar.getmember('root/.ssh/authorized_keys')
-        contents = tar.extractfile(crontab).read().decode()
-        self.assertEqual(contents, '\n'.join(o.config['files'][0]['contents']))
         tar.close()
 
     def test_file_permissions(self):

@@ -202,8 +202,8 @@ dictionary is structured as follows:
 +===================+================+==========+==========================================================+
 | ``path``          | string         | yes      | path of the file in the tar.gz archive                   |
 +-------------------+----------------+----------+----------------------------------------------------------+
-| ``contents``      | string or list | yes      | | *string*: plain text contents of the file              |
-|                   |                |          | | *list*: lines of strings representing lines of file    |
+| ``contents``      | string         | yes      | plain text contents of the file, new lines must be       |
+|                   |                |          | encoded as `\n`                                          |
 +-------------------+----------------+----------+----------------------------------------------------------+
 | ``mode``          | string         | no       | permissions, if omitted will default to ``0644``         |
 +-------------------+----------------+----------+----------------------------------------------------------+
