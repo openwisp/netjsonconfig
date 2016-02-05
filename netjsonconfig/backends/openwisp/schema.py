@@ -24,15 +24,18 @@ schema = merge_config(openwrt_schema, {
                 ],
                 "properties": {
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 1,
                     },
                     "input_bandwidth": {
                         "title": "Input bandwidth (kbps)",
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 2,
                     },
                     "output_bandwidth": {
                         "title": "Output bandwidth (kbps)",
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 3,
                     }
                 }
             }

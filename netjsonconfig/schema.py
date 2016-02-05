@@ -21,31 +21,38 @@ schema = {
                 "name": {
                     "type": "string",
                     "maxLength": 15,
-                    "pattern": "^[^\\s]*$"
+                    "pattern": "^[^\\s]*$",
+                    "propertyOrder": 1,
                 },
                 "mac": {
-                    "type": "string"
+                    "type": "string",
+                    "propertyOrder": 2,
                 },
                 "mtu": {
                     "type": "integer",
-                    "default": 1500
+                    "default": 1500,
+                    "propertyOrder": 3,
                 },
                 "txqueuelen": {
-                    "type": "integer"
+                    "type": "integer",
+                    "propertyOrder": 4,
                 },
                 "autostart": {
                     "type": "boolean",
-                    "default": True
+                    "default": True,
+                    "propertyOrder": 5,
                 },
                 "disabled": {
                     "type": "boolean",
-                    "default": False
+                    "default": False,
+                    "propertyOrder": 6,
                 },
                 "addresses": {
                     "type": "array",
                     "title": "Addresses",
                     "uniqueItems": True,
                     "additionalItems": True,
+                    "propertyOrder": 7,
                     "items": {
                         "type": "object",
                         "title": "Address",
@@ -60,23 +67,28 @@ schema = {
                                 "enum": [
                                     "static",
                                     "dhcp"
-                                ]
+                                ],
+                                "propertyOrder": 1,
                             },
                             "family": {
                                 "type": "string",
                                 "enum": [
                                     "ipv4",
                                     "ipv6"
-                                ]
+                                ],
+                                "propertyOrder": 2,
                             },
                             "address": {
-                                "type": "string"
+                                "type": "string",
+                                "propertyOrder": 3,
                             },
                             "mask": {
-                                "type": "integer"
+                                "type": "integer",
+                                "propertyOrder": 4,
                             },
                             "gateway": {
-                                "type": "string"
+                                "type": "string",
+                                "propertyOrder": 5,
                             }
                         }
                     }
@@ -95,7 +107,8 @@ schema = {
                                 "virtual",
                                 "loopback",
                                 "other"
-                            ]
+                            ],
+                            "propertyOrder": 0,
                         }
                     }
                 },
@@ -110,7 +123,8 @@ schema = {
                         "type": {
                             "type": "string",
                             "enum": ["wireless"],
-                            "default": "wireless"
+                            "default": "wireless",
+                            "propertyOrder": 0,
                         }
                     }
                 },
@@ -121,6 +135,7 @@ schema = {
                             "type": "object",
                             "title": "Wireless Interface",
                             "additionalProperties": True,
+                            "propertyOrder": 8,
                             "required": [
                                 "radio",
                                 "mode",
@@ -128,7 +143,8 @@ schema = {
                             ],
                             "properties": {
                                 "radio": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "propertyOrder": 1,
                                 },
                                 "mode": {
                                     "type": "string",
@@ -139,32 +155,39 @@ schema = {
                                         "wds",
                                         "monitor",
                                         "802.11s"
-                                    ]
+                                    ],
+                                    "propertyOrder": 2,
                                 },
                                 "ssid": {
                                     "type": "string",
-                                    "maxLength": 32
+                                    "maxLength": 32,
+                                    "propertyOrder": 3,
                                 },
                                 "bssid": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "propertyOrder": 4,
                                 },
                                 "hidden": {
                                     "type": "boolean",
-                                    "default": False
+                                    "default": False,
+                                    "propertyOrder": 5,
                                 },
                                 "ack_distance": {
                                     "type": "integer",
-                                    "minimum": 1
+                                    "minimum": 1,
+                                    "propertyOrder": 6,
                                 },
                                 "rts_threshold": {
                                     "type": "integer",
                                     "minimum": 0,
-                                    "maximum": 2346
+                                    "maximum": 2346,
+                                    "propertyOrder": 7,
                                 },
                                 "frag_threshold": {
                                     "type": "integer",
                                     "minimum": 0,
-                                    "maximum": 2346
+                                    "maximum": 2346,
+                                    "propertyOrder": 8,
                                 },
                                 "encryption": {
                                     "type": "object",
@@ -173,6 +196,7 @@ schema = {
                                         "protocol",
                                         "key"
                                     ],
+                                    "propertyOrder": 9,
                                     "properties": {
                                         "protocol": {
                                             "type": "string",
@@ -186,20 +210,24 @@ schema = {
                                                 "wpa2_enterprise",
                                                 "wpa_enterprise_mixed",
                                                 "wps"
-                                            ]
-                                        },
-                                        "key": {
-                                            "type": "string"
-                                        },
-                                        "ciphers": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
+                                            ],
+                                            "propertyOrder": 1,
                                         },
                                         "disabled": {
                                             "type": "boolean",
-                                            "default": False
+                                            "default": False,
+                                            "propertyOrder": 2,
+                                        },
+                                        "key": {
+                                            "type": "string",
+                                            "propertyOrder": 3,
+                                        },
+                                        "ciphers": {
+                                            "type": "array",
+                                            "propertyOrder": 4,
+                                            "items": {
+                                                "type": "string"
+                                            }
                                         }
                                     }
                                 }
@@ -219,7 +247,8 @@ schema = {
                     "properties": {
                         "type": {
                             "type": "string",
-                            "enum": ["bridge"]
+                            "enum": ["bridge"],
+                            "propertyOrder": 0
                         }
                     }
                 },
@@ -230,6 +259,7 @@ schema = {
                             "type": "array",
                             "title": "Bridge Members",
                             "uniqueItems": True,
+                            "propertyOrder": 8,
                             "items": {
                                 "$ref": "#/definitions/interface_settings/properties/name"
                             }
@@ -245,21 +275,26 @@ schema = {
     "properties": {
         "type": {
             "type": "string",
-            "enum": ["DeviceConfiguration"]
+            "enum": ["DeviceConfiguration"],
+            "propertyOrder": 0,
         },
         "general": {
             "type": "object",
             "title": "General",
             "additionalProperties": True,
+            "propertyOrder": 1,
             "properties": {
                 "hostname": {
-                    "type": "string"
+                    "type": "string",
+                    "propertyOrder": 1,
                 },
                 "maintainer": {
-                    "type": "string"
+                    "type": "string",
+                    "propertyOrder": 2,
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "propertyOrder": 3,
                 }
             }
         },
@@ -268,6 +303,7 @@ schema = {
             "title": "Interfaces",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 2,
             "items": {
                 "oneOf": [
                     {"$ref": "#/definitions/network_interface"},
@@ -281,6 +317,7 @@ schema = {
             "type": "array",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 3,
             "items": {
                 "type": "string"
             }
@@ -290,6 +327,7 @@ schema = {
             "type": "array",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 4,
             "items": {
                 "type": "string"
             }
@@ -299,6 +337,7 @@ schema = {
             "title": "Radios",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 5,
             "items": {
                 "type": "object",
                 "title": "Radio",
@@ -311,28 +350,35 @@ schema = {
                 ],
                 "properties": {
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 1,
                     },
                     "phy": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 2,
                     },
                     "channel": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 3,
                     },
                     "channel_width": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 4,
                     },
                     "tx_power": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 5,
                     },
                     "country": {
                         "type": "string",
                         "minLength": 2,
-                        "maxLength": 2
+                        "maxLength": 2,
+                        "propertyOrder": 5,
                     },
                     "disabled": {
                         "type": "boolean",
-                        "default": False
+                        "default": False,
+                        "propertyOrder": 6,
                     }
                 }
             }
@@ -342,6 +388,7 @@ schema = {
             "title": "Routes",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 6,
             "items": {
                 "type": "object",
                 "title": "Route",
@@ -353,13 +400,16 @@ schema = {
                 ],
                 "properties": {
                     "device": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 1,
                     },
                     "next": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 2,
                     },
                     "destination": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 3,
                     }
                 }
             }

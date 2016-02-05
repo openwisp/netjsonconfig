@@ -71,7 +71,8 @@ schema = merge_config(default_schema, {
                 "timezone": {
                     "type": "string",
                     "default": "Coordinated Universal Time",
-                    "enum": list(timezones.keys())
+                    "enum": list(timezones.keys()),
+                    "propertyOrder": 1,
                 }
             }
         },
@@ -90,7 +91,8 @@ schema = merge_config(default_schema, {
                             "ath5k",
                             "ath9k",
                             "broadcom"
-                        ]
+                        ],
+                        "propertyOrder": 0,
                     },
                     "protocol": {
                         "type": "string",
@@ -100,7 +102,8 @@ schema = merge_config(default_schema, {
                             "802.11g",
                             "802.11n",
                             "802.11ac"
-                        ]
+                        ],
+                        "propertyOrder": 1,
                     }
                 }
             }
@@ -109,17 +112,21 @@ schema = merge_config(default_schema, {
             "type": "object",
             "title": "ntp settings",
             "additionalProperties": True,
+            "propertyOrder": 7,
             "properties": {
                 "enabled": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "propertyOrder": 1,
                 },
                 "enable_server": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "propertyOrder": 2,
                 },
                 "server": {
                     "type": "array",
                     "uniqueItems": True,
                     "additionalItems": True,
+                    "propertyOrder": 3,
                     "items": {
                         "type": "string"
                     }
@@ -132,6 +139,7 @@ schema = merge_config(default_schema, {
             "uniqueItems": True,
             "additionalItems": True,
             "title": "Switch",
+            "propertyOrder": 8,
             "items": {
                 "type": "object",
                 "additionalProperties": True,
@@ -143,19 +151,23 @@ schema = merge_config(default_schema, {
                 ],
                 "properties": {
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 1,
                     },
                     "reset": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "propertyOrder": 2,
                     },
                     "enable_vlan": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "propertyOrder": 3,
                     },
                     "vlan": {
                         "type": "array",
                         "title": "VLANs",
                         "uniqueItems": True,
                         "additionalItems": True,
+                        "propertyOrder": 4,
                         "items": {
                             "type": "object",
                             "title": "VLAN",
@@ -167,13 +179,16 @@ schema = merge_config(default_schema, {
                             ],
                             "properties": {
                                 "device": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "propertyOrder": 1,
                                 },
                                 "vlan": {
-                                    "type": "integer"
+                                    "type": "integer",
+                                    "propertyOrder": 2,
                                 },
                                 "ports": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "propertyOrder": 3,
                                 }
                             }
                         }
@@ -186,38 +201,48 @@ schema = merge_config(default_schema, {
             "title": "Ip rules",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 9,
             "items": {
                 "type": "object",
                 "title": "Ip rule",
                 "additionalProperties": True,
                 "properties": {
                     "in": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 1,
                     },
                     "out": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 2,
                     },
                     "src": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 3,
                     },
                     "dest": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 4,
                     },
                     "tos": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 5,
                     },
                     "mark": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 6,
                     },
                     "invert": {
                         "type": "boolean",
-                        "default": False
+                        "default": False,
+                        "propertyOrder": 7,
                     },
                     "lookup": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 8,
                     },
                     "goto": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 9,
                     },
                     "action": {
                         "type": "string",
@@ -226,7 +251,8 @@ schema = merge_config(default_schema, {
                             "unreachable",
                             "blackhole",
                             "throw"
-                        ]
+                        ],
+                        "propertyOrder": 10,
                     }
                 }
             }
@@ -236,6 +262,7 @@ schema = merge_config(default_schema, {
             "title": "LED config",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 10,
             "items": {
                 "type": "object",
                 "title": "LED",
@@ -247,34 +274,44 @@ schema = merge_config(default_schema, {
                 ],
                 "properties": {
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 1,
                     },
                     "default": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "propertyOrder": 2,
                     },
                     "dev": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 3,
                     },
                     "sysfs": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 4,
                     },
                     "trigger": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 5,
                     },
                     "delayoff": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 6,
                     },
                     "delayon": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 7,
                     },
                     "interval": {
-                        "type": "integer"
+                        "type": "integer",
+                        "propertyOrder": 8,
                     },
                     "message": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 9,
                     },
                     "mode": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 10,
                     }
                 }
             }
@@ -284,6 +321,7 @@ schema = merge_config(default_schema, {
             "title": "files",
             "uniqueItems": True,
             "additionalItems": True,
+            "propertyOrder": 11,
             "items": {
                 "type": "object",
                 "title": "file",
@@ -294,15 +332,18 @@ schema = merge_config(default_schema, {
                 ],
                 "properties": {
                     "path": {
-                        "type": "string"
+                        "type": "string",
+                        "propertyOrder": 1,
                     },
                     "contents": {
                         "type": "string",
-                        "format": "textarea"
+                        "format": "textarea",
+                        "propertyOrder": 2,
                     },
                     "mode": {
                         "type": "string",
-                        "maxLength": 4
+                        "maxLength": 4,
+                        "propertyOrder": 3,
                     }
                 }
             }
