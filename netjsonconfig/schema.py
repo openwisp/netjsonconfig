@@ -346,7 +346,6 @@ schema = {
                     "name",
                     "channel",
                     "channel_width",
-                    "tx_power"
                 ],
                 "properties": {
                     "name": {
