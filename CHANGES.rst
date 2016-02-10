@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.3.5 [unreleased]
+Version 0.3.5 [2016-02-10]
 --------------------------
 
 - `18ecf28 <https://github.com/openwisp/netjsonconfig/commit/18ecf28>`_:
