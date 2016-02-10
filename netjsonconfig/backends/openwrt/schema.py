@@ -5,6 +5,8 @@ from .timezones import timezones
 from ...schema import schema as default_schema
 from ...utils import merge_config
 
+DEFAULT_FILE_MODE = '0644'
+
 schema = merge_config(default_schema, {
     "definitions": {
         "interface_settings": {
@@ -343,6 +345,9 @@ schema = merge_config(default_schema, {
                     "mode": {
                         "type": "string",
                         "maxLength": 4,
+                        "minLength": 3,
+                        "pattern": "^[0-7]*$",
+                        "default": DEFAULT_FILE_MODE,
                         "propertyOrder": 3,
                     }
                 }

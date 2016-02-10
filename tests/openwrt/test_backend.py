@@ -328,6 +328,39 @@ config wifi-iface
         self.assertEqual(script.mode, 493)
         tar.close()
 
+    def test_file_schema(self):
+        c = {
+            "files": [
+                {
+                    "path": "/tmp/hello.sh",
+                    "contents": "echo 'hello world'"
+                }
+            ]
+        }
+        # valid
+        c['files'][0]['mode'] = '3555'
+        o = OpenWrt(c)
+        o.validate()
+        # valid
+        c['files'][0]['mode'] = '755'
+        o = OpenWrt(c)
+        o.validate()
+        # too long
+        c['files'][0]['mode'] = '00777'
+        o = OpenWrt(c)
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # too short
+        c['files'][0]['mode'] = '75'
+        o = OpenWrt(c)
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # invalid
+        c['files'][0]['mode'] = '0855'
+        o = OpenWrt(c)
+        with self.assertRaises(ValidationError):
+            o.validate()
+
     def test_checksum(self):
         """ ensures checksum of same config doesn't change """
         o = OpenWrt({"general": {"hostname": "test"}})

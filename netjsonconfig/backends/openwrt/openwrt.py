@@ -11,12 +11,9 @@ from jsonschema.exceptions import ValidationError as JsonSchemaError
 from jinja2 import Environment, PackageLoader
 
 from . import renderers
-from .schema import schema
+from .schema import schema, DEFAULT_FILE_MODE
 from ...utils import merge_config
 from ...exceptions import ValidationError
-
-DEFAULT_FILE_MODE = '644'
-FILE_SECTION_DELIMITER = '# ------ files ------ #'
 
 
 class OpenWrt(object):
@@ -28,6 +25,7 @@ class OpenWrt(object):
         renderers.WirelessRenderer,
         renderers.DefaultRenderer
     ]
+    FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
 
     def __init__(self, config, templates=[]):
         """
@@ -106,7 +104,7 @@ class OpenWrt(object):
         files = self.config.get('files', [])
         # add delimiter
         if files:
-            output += '\n{0}\n\n'.format(FILE_SECTION_DELIMITER)
+            output += '\n{0}\n\n'.format(self.FILE_SECTION_DELIMITER)
         for f in files:
             if isinstance(f['contents'], list):
                 contents = '\n'.join(f['contents'])
