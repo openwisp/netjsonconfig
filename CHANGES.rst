@@ -4,7 +4,20 @@ Change log
 Version 0.3.5 [unreleased]
 --------------------------
 
-WIP
+- `18ecf28 <https://github.com/openwisp/netjsonconfig/commit/18ecf28>`_:
+  removed ``hardware`` and ``operating_system`` sections
+- `75c259d <https://github.com/openwisp/netjsonconfig/commit/75c259d>`_:
+  reordered schema sections
+- `010ca98 <https://github.com/openwisp/netjsonconfig/commit/010ca98>`_:
+  file contents can now be only strings (**backward incompatible change**)
+- `e2bb3b2 <https://github.com/openwisp/netjsonconfig/commit/e2bb3b2>`_:
+  added non-standard ``propertyOrder`` attributes to schemas to facilitate UI ordering
+- `#37 <https://github.com/openwisp/netjsonconfig/issues/37>`_:
+  [schema] radio ``tx_power`` not required anymore
+- `#38 <https://github.com/openwisp/netjsonconfig/issues/38>`_:
+  [openwrt schema] hardened file mode contraints
+- `c2cc3fc <https://github.com/openwisp/netjsonconfig/commit/c2cc3fc>`_:
+  [schema] added minlength and maxlength to hostname
 
 Version 0.3.4 [2016-01-14]
 --------------------------
