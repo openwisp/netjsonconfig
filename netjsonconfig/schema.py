@@ -286,6 +286,8 @@ schema = {
             "properties": {
                 "hostname": {
                     "type": "string",
+                    "maxLength": 63,
+                    "minLength": 1,
                     "propertyOrder": 1,
                 },
                 "maintainer": {
