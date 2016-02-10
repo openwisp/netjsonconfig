@@ -273,3 +273,10 @@ Project goals
 
 If you are interested in this topic you can read more about the
 :doc:`Goals and Motivations <./goals>` of this project.
+
+License
+-------
+
+This software is licensed under the terms of the GPLv3 license,
+for more information, please see full `LICENSE
+<https://github.com/openwisp/netjsonconfig/blob/master/LICENSE>`_ file.
