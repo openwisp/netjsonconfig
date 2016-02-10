@@ -188,7 +188,6 @@ Code example:
         }
     }
 
-
 Including additional files
 --------------------------
 
@@ -229,28 +228,8 @@ The following example code will generate an archive with one file in ``/etc/cron
             {
                 "path": "/etc/crontabs/root",
                 # new lines must be escaped with ``\n``
-                "contents": '* * * * * echo "test" > /etc/testfile\n* * * * * echo "test2" > /etc/testfile2'
-            }
-        ]
-    })
-    o.generate()
-
-List of file lines example
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you don't want to escape new lines with ``\n``, you can represent lines in the ``contents``
-key with a list:
-
-.. code-block:: python
-
-    o = OpenWrt({
-        "files": [
-            {
-                "path": "/etc/crontabs/root",
-                "contents": [
-                    '* * * * * echo "test" > /etc/testfile',
-                    '* * * * * echo "test2" > /etc/testfile2'
-                ]
+                "contents": '* * * * * echo "test" > /etc/testfile\n'
+                            '* * * * * echo "test2" > /etc/testfile2'
             }
         ]
     })
@@ -268,10 +247,8 @@ The following example will create an executable shell script:
             {
                 "path": "/bin/hello_world",
                 "mode": "0755",
-                "contents": [
-                    '#!/bin/sh',
-                    'echo "Hello world!"'
-                ]
+                "contents": "#!/bin/sh\n"
+                            "echo 'Hello world'"
             }
         ]
     })
