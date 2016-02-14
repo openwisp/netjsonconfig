@@ -3,16 +3,10 @@ import sys
 
 from setuptools import find_packages, setup
 
-from version import get_version
-
-# avoid ImportError
-sys.path.insert(0, 'netjsonconfig')
-sys.path.remove('netjsonconfig')
-
+from netjsonconfig.version import get_version
 
 if sys.argv[-1] == 'setup.py':
     print("To install, run 'python setup.py install'\n")
-
 
 if sys.argv[-1] == 'publish':
     import os
