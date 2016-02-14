@@ -11,4 +11,7 @@ except ImportError:
     raise ImportError(message)
 
 if __name__ == "__main__":
-    nose.run()
+    result = nose.run()
+    if result is False:
+        import sys
+        sys.exit(1)
