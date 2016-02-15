@@ -17,8 +17,8 @@ install:
   - pip install -r requirements-test.txt
 
 before_script:
-  - ./runisort
   - ./runflake8
+  - ./runisort
 
 # command to run tests, e.g. python setup.py test
 script:
