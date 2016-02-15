@@ -106,16 +106,11 @@ class OpenWrt(object):
         if files:
             output += '\n{0}\n\n'.format(self.FILE_SECTION_DELIMITER)
         for f in files:
-            if isinstance(f['contents'], list):
-                contents = '\n'.join(f['contents'])
-            else:
-                contents = f['contents']
-            path = f['path']
             mode = f.get('mode', DEFAULT_FILE_MODE)
             # add file to output
             file_output = '# path: {0}\n'\
                           '# mode: {1}\n\n'\
-                          '{2}\n\n'.format(path, mode, contents)
+                          '{2}\n\n'.format(f['path'], mode, f['contents'])
             output += file_output
         return output
 
@@ -215,17 +210,13 @@ class OpenWrt(object):
         """
         # insert additional files
         for file_item in self.config.get('files', []):
-            contents = file_item['contents']
             path = file_item['path']
-            # join lines if contents is a list
-            if isinstance(contents, list):
-                contents = '\n'.join(contents)
             # remove leading slashes from path
             if path.startswith('/'):
                 path = path[1:]
             self._add_file(tar=tar,
                            name=path,
-                           contents=contents,
+                           contents=file_item['contents'],
                            mode=file_item.get('mode', DEFAULT_FILE_MODE))
 
     def _add_file(self, tar, name, contents, mode=DEFAULT_FILE_MODE):
