@@ -1,10 +1,10 @@
 import os
-import unittest
 import tarfile
+import unittest
 from copy import deepcopy
+from hashlib import md5
 from io import BytesIO
 from time import sleep
-from hashlib import md5
 
 from netjsonconfig import OpenWisp
 from netjsonconfig.exceptions import ValidationError

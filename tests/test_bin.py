@@ -1,8 +1,8 @@
-import os
 import json
-import unittest
+import os
 import subprocess
 import tarfile
+import unittest
 
 from netjsonconfig.utils import _TabsMixin
 

@@ -1,4 +1,5 @@
 import unittest
+
 from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
 

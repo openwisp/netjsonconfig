@@ -2,9 +2,9 @@ import json
 from copy import deepcopy
 from ipaddress import ip_interface, ip_network
 
-from .timezones import timezones
-from ..base import BaseRenderer
 from ...utils import sorted_dict
+from ..base import BaseRenderer
+from .timezones import timezones
 
 
 class NetworkRenderer(BaseRenderer):

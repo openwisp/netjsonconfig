@@ -1,10 +1,10 @@
-import os
 import json
-import unittest
+import os
 import tarfile
+import unittest
+from hashlib import md5
 from io import BytesIO
 from time import sleep
-from hashlib import md5
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import ValidationError

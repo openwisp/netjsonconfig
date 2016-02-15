@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 import sys
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
+
+from version import get_version
 
 # avoid ImportError
 sys.path.insert(0, 'netjsonconfig')
-from version import get_version
 sys.path.remove('netjsonconfig')
 
 

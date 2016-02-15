@@ -1,9 +1,9 @@
 """
 OpenWrt specific JSON-Schema definition
 """
-from .timezones import timezones
 from ...schema import schema as default_schema
 from ...utils import merge_config
+from .timezones import timezones
 
 DEFAULT_FILE_MODE = '0644'
 

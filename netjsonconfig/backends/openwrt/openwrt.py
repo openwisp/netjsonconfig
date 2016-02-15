@@ -1,19 +1,19 @@
+import gzip
 import json
 import re
-import six
-import gzip
 import tarfile
-from io import BytesIO
 from copy import deepcopy
+from io import BytesIO
 
+import six
+from jinja2 import Environment, PackageLoader
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError as JsonSchemaError
-from jinja2 import Environment, PackageLoader
 
 from . import renderers
-from .schema import schema, DEFAULT_FILE_MODE
-from ...utils import merge_config
 from ...exceptions import ValidationError
+from ...utils import merge_config
+from .schema import DEFAULT_FILE_MODE, schema
 
 
 class OpenWrt(object):
