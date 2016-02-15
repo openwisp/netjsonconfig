@@ -16,6 +16,9 @@ install:
   - python setup.py -q develop
   - pip install -r requirements-test.txt
 
+before_script:
+  - ./runisort
+
 # command to run tests, e.g. python setup.py test
 script:
   - nosetests --with-coverage --cover-package=netjsonconfig
