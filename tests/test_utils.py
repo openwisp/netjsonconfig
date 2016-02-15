@@ -60,7 +60,7 @@ class TestUtils(unittest.TestCase):
             "dict": {"b": "b"},
             "list": ["element2"]
         }
-        result = merge_config(template, config)
+        merge_config(template, config)
         # ensure original structures not changed
         self.assertEqual(template, {
             "str": "original",

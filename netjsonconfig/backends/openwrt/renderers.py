@@ -99,7 +99,7 @@ class NetworkRenderer(BaseRenderer):
                     # we need to take this into account when referring
                     # to these physical names
                     uci_interface['ifname'] = 'br-{0}'.format(interface['name'])
-                # delete bridge_members attribtue
+                # delete bridge_members attribtue if bridge is empty
                 if uci_interface.get('bridge_members') is not None:
                     del uci_interface['bridge_members']
                 # add address if any (with correct option name)

@@ -1,9 +1,7 @@
-import os
 import tarfile
 import unittest
 from copy import deepcopy
 from hashlib import md5
-from io import BytesIO
 from time import sleep
 
 from netjsonconfig import OpenWisp
@@ -106,11 +104,11 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         "files": [
             {
                 "path": "/openvpn/x509/ca_1_service.pem",
-                "contents": "-----BEGIN CERTIFICATE-----\ntest\n-----END CERTIFICATE-----\n"
+                "contents": "-----BEGIN CERTIFICATE-----\ntest\n-----END CERTIFICATE-----\n"  # noqa
             },
             {
                 "path": "/openvpn/x509/l2vpn_client_2693.pem",
-                "contents": "-----BEGIN CERTIFICATE-----\ntest==\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\ntest\n-----END RSA PRIVATE KEY-----\n"
+                "contents": "-----BEGIN CERTIFICATE-----\ntest==\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\ntest\n-----END RSA PRIVATE KEY-----\n"  # noqa
             }
         ]
     }
@@ -217,7 +215,9 @@ config system
         self.assertIn('tc class add dev tap0 parent 1 classid 1:1 htb rate 1024kbit burst 191k', contents)
         self.assertIn('tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit', contents)
         self.assertIn('tc qdisc add dev tap0 ingress', contents)
-        self.assertIn('tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police rate 2048kbit burst 383k drop flowid :1', contents)
+        l = 'tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police '\
+            'rate 2048kbit burst 383k drop flowid :1'
+        self.assertIn(l, contents)
         tar.close()
 
     def test_cron(self):

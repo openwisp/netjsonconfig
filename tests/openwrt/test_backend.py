@@ -3,7 +3,6 @@ import os
 import tarfile
 import unittest
 from hashlib import md5
-from io import BytesIO
 from time import sleep
 
 from netjsonconfig import OpenWrt
@@ -43,7 +42,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         self.assertEqual(json.loads(o.json()), config)
 
     def test_string_argument(self):
-        o = OpenWrt('{}')
+        OpenWrt('{}')
 
     def test_validate(self):
         o = OpenWrt({'type': 'WRONG'})
@@ -68,9 +67,9 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 
     def test_type_error(self):
         with self.assertRaises(TypeError):
-            o = OpenWrt([])
+            OpenWrt([])
         with self.assertRaises(TypeError):
-            o = OpenWrt('NOTJSON[]\{\}')
+            OpenWrt('NOTJSON[]\{\}')
 
     def test_system_invalid_timezone(self):
         o = OpenWrt({
@@ -203,7 +202,7 @@ config wifi-iface
             }
         }
         with self.assertRaises(TypeError):
-            o = OpenWrt(config, templates={})
+            OpenWrt(config, templates={})
 
     def test_templates_config_error(self):
         config = {
@@ -212,7 +211,7 @@ config wifi-iface
             }
         }
         with self.assertRaises(TypeError):
-            o = OpenWrt(config, templates=['O{]O'])
+            OpenWrt(config, templates=['O{]O'])
 
     def test_templates(self):
         loopback_template = {

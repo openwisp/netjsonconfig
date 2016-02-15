@@ -17,17 +17,17 @@ class TestBin(unittest.TestCase, _TabsMixin):
 
     def test_file_not_found(self):
         with self.assertRaises(subprocess.CalledProcessError):
-            output = subprocess.check_output("netjsonconfig -c WRONG -b openwrt -m generate", shell=True)
+            subprocess.check_output("netjsonconfig -c WRONG -b openwrt -m generate", shell=True)
 
     def test_invalid_netjson(self):
         command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m render'''
         with self.assertRaises(subprocess.CalledProcessError):
-            output = subprocess.check_output(command, shell=True)
+            subprocess.check_output(command, shell=True)
 
     def test_invalid_netjson_verbose(self):
         command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m render --verbose'''
         with self.assertRaises(subprocess.CalledProcessError):
-            output = subprocess.check_output(command, shell=True)
+            subprocess.check_output(command, shell=True)
 
     def test_empty_netjson(self):
         output = subprocess.check_output("netjsonconfig -c '{}' -b openwrt -m render", shell=True)
@@ -75,7 +75,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
     def test_invalid_template(self):
         command = "netjsonconfig -c '{}' -b openwrt -t WRONG -m render"
         try:
-            output = subprocess.check_output(command, shell=True)
+            subprocess.check_output(command, shell=True)
         except subprocess.CalledProcessError as e:
             self.assertIn('"WRONG": file not found', e.output.decode())
         else:
@@ -84,7 +84,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
     def test_invalid_arguments(self):
         command = "netjsonconfig -c '{}' -b openwrt -m render -a WRONG"
         try:
-            output = subprocess.check_output(command, shell=True)
+            subprocess.check_output(command, shell=True)
         except subprocess.CalledProcessError as e:
             self.assertIn('--arg option expects', e.output.decode())
         else:
@@ -93,7 +93,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
     def test_arg_exception(self):
         command = "netjsonconfig -c '{}' -b openwrt -m write"
         try:
-            output = subprocess.check_output(command, shell=True)
+            subprocess.check_output(command, shell=True)
         except subprocess.CalledProcessError as e:
             self.assertIn('write()', e.output.decode())
         else:
@@ -115,7 +115,8 @@ class TestBin(unittest.TestCase, _TabsMixin):
         self.assertNotIn('test_valid_arg', output)
 
     def test_generate_redirection(self):
-        command = """netjsonconfig -c '{"general": { "hostname": "example" }}' -b openwrt -m generate > test.tar.gz"""
+        config = """'{"general": { "hostname": "example" }}'"""
+        command = """netjsonconfig -c %s -b openwrt -m generate > test.tar.gz""" % config
         subprocess.check_output(command, shell=True)
         tar = tarfile.open('test.tar.gz', 'r')
         self.assertEqual(len(tar.getmembers()), 1)
