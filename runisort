@@ -1,2 +1,2 @@
 #!/bin/bash
-isort --check-only --recursive .
+isort --check-only --skip ./setup.py --recursive .

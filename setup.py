@@ -3,7 +3,10 @@ import sys
 
 from setuptools import find_packages, setup
 
-from netjsonconfig.version import get_version
+# avoid ImportError when dependencies are not installed yet
+sys.path.insert(0, 'netjsonconfig')
+from version import get_version
+sys.path.remove('netjsonconfig')
 
 if sys.argv[-1] == 'setup.py':
     print("To install, run 'python setup.py install'\n")
