@@ -2,3 +2,4 @@ nose
 coverage
 coveralls
 isort
+flake8

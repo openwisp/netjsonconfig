@@ -1,0 +1,8 @@
+#!/bin/bash
+
+flake8 --max-line-length=110 \
+       --max-complexity=10 \
+       --exclude=./docs/,./build/,./netjsonconfig/backends/openwrt/renderers.py
+flake8 --max-line-length=110 \
+       --max-complexity=22 \
+       ./netjsonconfig/backends/openwrt/renderers.py
