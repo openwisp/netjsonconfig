@@ -12,6 +12,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import datetime
 import os
 import shlex
 import sys
@@ -52,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'netjsonconfig'
-copyright = u'2015, Federico Capoano'
+copyright = u'{0}, OpenWISP.org'.format(datetime.date.today().year)
 author = u'Federico Capoano'
 
 # The version info for the project you're documenting, acts as replacement for
