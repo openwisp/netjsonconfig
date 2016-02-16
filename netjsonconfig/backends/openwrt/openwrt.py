@@ -26,6 +26,7 @@ class OpenWrt(object):
         renderers.DefaultRenderer
     ]
     FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
+    PACKAGE_EXP = re.compile('package ')
 
     def __init__(self, config, templates=[]):
         """
@@ -173,7 +174,7 @@ class OpenWrt(object):
         """
         uci = self.render(files=False)
         # create a list with all the packages (and remove empty entries)
-        packages = re.split('package ', uci)
+        packages = self.PACKAGE_EXP.split(uci)
         if '' in packages:
             packages.remove('')
         # for each package create a file with its contents in /etc/config
