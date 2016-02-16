@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import six
 import argparse
@@ -143,6 +144,7 @@ def print_output(output):
 args = parser.parse_args()
 config = _load(args.config)
 templates = [_load(template) for template in args.templates]
+context = dict(os.environ)
 method = args.method
 method_arguments = parse_method_arguments(args.args)
 
@@ -153,7 +155,7 @@ backends = {
 
 backend_class = backends[args.backend]
 try:
-    instance = backend_class(config, templates=templates)
+    instance = backend_class(config, templates=templates, context=context)
 except TypeError as e:
     print('netjsonconfig: invalid JSON passed in config or templates')
     sys.exit(2)

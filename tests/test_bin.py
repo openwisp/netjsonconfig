@@ -121,3 +121,10 @@ class TestBin(unittest.TestCase, _TabsMixin):
         tar = tarfile.open('test.tar.gz', 'r')
         self.assertEqual(len(tar.getmembers()), 1)
         tar.close()
+
+    def test_context(self):
+        config = json.dumps({'general': {'description': '${DESC}'}})
+        command = "export DESC=testdesc; netjsonconfig --config '{0}' -b openwrt -m render".format(config)
+        output = subprocess.check_output(command, shell=True).decode()
+        self.assertNotIn('${DESC}', output)
+        self.assertIn('testdesc', output)

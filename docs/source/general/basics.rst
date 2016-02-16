@@ -271,6 +271,8 @@ it's possible to pass multiple templates that will be added one on top of the
 other to build the resulting *configuration dictionary*, allowing to reduce or
 even eliminate repetitions.
 
+.. _configuration_variables:
+
 Context: configuration variables
 --------------------------------
 

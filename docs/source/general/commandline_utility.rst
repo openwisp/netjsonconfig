@@ -67,3 +67,17 @@ Here's the common use cases explained::
 Using templates::
 
     netjsonconfig -c config.json -t template1.json template2.json -b openwrt -m render
+
+Environment variables
+---------------------
+
+*Environment variables* are automatically passed to the ``context`` argument (if you don't
+know what this argument does please read ":ref:`configuration_variables`"), therefore
+you can reference environment variables inside *configurations* and *templates*::
+
+    export HOSTNAME=freedom
+    netjsonconfig -c '{"general": { "hostname": "${HOSTNAME}" }}' -b openwrt -m render
+
+You can also avoid using ``export`` and write everything in a one line command::
+
+    PORT=2009; netjsonconfig -c config.json -t template1.json -b openwrt -m render
