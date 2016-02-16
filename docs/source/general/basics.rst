@@ -13,6 +13,7 @@ Before starting, let's quickly introduce the main concepts used in netjsonconfig
   being processed by the backend
 * **template**: common configuration options shared among routers (eg: VPNs, SSID)
   which can be passed to backends
+* **context**: variables that can be referenced from the *configuration dictionary*
 
 Configuration format: NetJSON
 -----------------------------
@@ -218,6 +219,8 @@ refactor the previous code as follows:
 
 .. code-block:: python
 
+    from netjsonconfig import OpenWrt
+
     dhcp_template = {
         "interfaces": [
             {
@@ -267,6 +270,64 @@ You might have noticed that the ``templates`` argument is a list; that's because
 it's possible to pass multiple templates that will be added one on top of the
 other to build the resulting *configuration dictionary*, allowing to reduce or
 even eliminate repetitions.
+
+Context: configuration variables
+--------------------------------
+
+Without variables, many bits of configuration cannot be stored in templates, because some
+parameters are unique to the device, think about things like a *UUID* or a public ip address.
+
+With this feature it is possible to reference variables in the *configuration dictionary*,
+these variables will be evaluated when the configuration is rendered/generated.
+
+Here's an example from the real world:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    openwisp_config_template = {
+        "openwisp": [
+            {
+                "config_name": "controller",
+                "config_value": "http",
+                "url": "http://controller.examplewifiservice.com",
+                "interval": "60",
+                "verify_ssl": "1",
+                "uuid": "${UUID}",
+                "key": "${KEY}"
+            }
+        ]
+    }
+
+    context = {
+        'UUID': '9d9032b2-da18-4d47-a414-1f7f605479e6',
+        'KEY': 'xk7OzA1qN6h1Ggxy8UH5NI8kQnbuLxsE'
+    }
+
+    router1 = OpenWrt(config={"general": {"hostname": "Router1"}},
+                      templates=[openwisp_config_template],
+                      context=context)
+
+Let's see the result with:
+
+.. code-block:: python
+
+    >>> print(router1.render())
+    package system
+
+    config system
+    	option hostname 'Router1'
+    	option timezone 'UTC'
+
+    package openwisp
+
+    config controller 'http'
+    	option interval '60'
+    	option key 'xk7OzA1qN6h1Ggxy8UH5NI8kQnbuLxsE'
+    	option url 'http://controller.examplewifiservice.com'
+    	option uuid '9d9032b2-da18-4d47-a414-1f7f605479e6'
+    	option verify_ssl '1'
 
 Project goals
 -------------
