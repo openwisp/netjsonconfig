@@ -296,8 +296,8 @@ Here's an example from the real world:
                 "url": "http://controller.examplewifiservice.com",
                 "interval": "60",
                 "verify_ssl": "1",
-                "uuid": "${UUID}",
-                "key": "${KEY}"
+                "uuid": "{{ UUID }}",
+                "key": "{{ KEY }}"
             }
         ]
     }

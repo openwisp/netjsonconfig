@@ -76,7 +76,7 @@ know what this argument does please read ":ref:`configuration_variables`"), ther
 you can reference environment variables inside *configurations* and *templates*::
 
     export HOSTNAME=freedom
-    netjsonconfig -c '{"general": { "hostname": "${HOSTNAME}" }}' -b openwrt -m render
+    netjsonconfig -c '{"general": { "hostname": "{{ HOSTNAME }}" }}' -b openwrt -m render
 
 You can also avoid using ``export`` and write everything in a one line command::
 

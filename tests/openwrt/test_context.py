@@ -13,8 +13,8 @@ class TestContext(unittest.TestCase, _TabsMixin):
     def test_config(self):
         config = {
             "general": {
-                "hostname": "${name}",
-                "description": "${desc}"
+                "hostname": "{{ name }}",
+                "description": "{{ desc }}"
             }
         }
         context = {
@@ -27,8 +27,8 @@ class TestContext(unittest.TestCase, _TabsMixin):
         self.assertIn("option description 'test.context.desc'", output)
 
     def test_template(self):
-        config = {"general": {"hostname": "${name}"}}
-        template = {"general": {"description": "${desc}"}}
+        config = {"general": {"hostname": "{{ name }}"}}
+        template = {"general": {"description": "{{ desc }}"}}
         context = {
             "name": "test-context-name",
             "desc": "test.context.desc"
@@ -39,21 +39,21 @@ class TestContext(unittest.TestCase, _TabsMixin):
         self.assertIn("option description 'test.context.desc'", output)
 
     def test_sandbox(self):
-        danger = """${ self.__repr__.__globals__.get('sys').version }"""
+        danger = """{{ self.__repr__.__globals__.get('sys').version }}"""
         config = {"general": {"description": danger}}
         o = OpenWrt(config, context={"description": "sandbox"})
         with self.assertRaises(SecurityError):
             print(o.render())
 
     def test_security_binop(self):
-        danger = """desc: ${10**10}"""
+        danger = """desc: {{ 10**10 }}"""
         config = {"general": {"description": danger}}
         o = OpenWrt(config, context={"description": "sandbox"})
         with self.assertRaises(SecurityError):
             print(o.render())
 
     def test_security_unop(self):
-        danger = """desc: ${ -10 }"""
+        danger = """desc: {{ -10 }}"""
         config = {"general": {"description": danger}}
         o = OpenWrt(config, context={"description": "sandbox"})
         with self.assertRaises(SecurityError):
@@ -67,7 +67,7 @@ class TestContext(unittest.TestCase, _TabsMixin):
             print(o.render())
 
     def test_security_methods(self):
-        danger = """${ "{.__getitem__.__globals__[sys].version}".format(self) }"""
+        danger = """{{ "{.__getitem__.__globals__[sys].version}".format(self) }}"""
         config = {"general": {"description": danger}}
         o = OpenWrt(config, context={"description": "sandbox"})
         with self.assertRaises(SecurityError):

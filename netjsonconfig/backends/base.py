@@ -13,8 +13,6 @@ class ConfigSandbox(SandboxedEnvironment):
         self.filters = {}
         self.block_start_string = '{=##'
         self.block_end_string = '##=}'
-        self.variable_start_string = '${'
-        self.variable_end_string = '}'
 
     def call_binop(self, context, operator, left, right):
         raise SecurityError('binary operator {0} not allowed'.format(operator))
