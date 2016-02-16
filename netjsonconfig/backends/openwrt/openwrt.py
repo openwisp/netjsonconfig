@@ -7,12 +7,14 @@ from io import BytesIO
 
 import six
 from jinja2 import Environment, PackageLoader
+from jinja2.exceptions import SecurityError
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError as JsonSchemaError
 
 from . import renderers
 from ...exceptions import ValidationError
 from ...utils import merge_config
+from ..base import ConfigSandbox
 from .schema import DEFAULT_FILE_MODE, schema
 
 
@@ -28,11 +30,12 @@ class OpenWrt(object):
     FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
     PACKAGE_EXP = re.compile('package ')
 
-    def __init__(self, config, templates=[]):
+    def __init__(self, config, templates=[], context={}):
         """
         :param config: ``dict`` containing valid **NetJSON DeviceConfiguration**
         :param templates: ``list`` containing **NetJSON** dictionaries that will be
                           used as a base for the main config, defaults to empty list
+        :param context: ``dict`` containing configuration variables
         :raises TypeError: raised if ``config`` is not of type ``dict`` or if
                            ``templates`` is not of type ``list``
         """
@@ -42,9 +45,11 @@ class OpenWrt(object):
         if 'type' not in config:
             config.update({'type': 'DeviceConfiguration'})
         self.config = self._merge_config(config, templates)
+        self.context = context
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt',
                                                     'templates'),
                                trim_blocks=True)
+        self.sandbox = ConfigSandbox()
 
     def _load(self, config):
         """ loads config from string or dict """
@@ -96,10 +101,15 @@ class OpenWrt(object):
             files_output = self._render_files()
             if files_output:
                 output += files_output.replace('\n\n\n', '\n\n')  # max 3 \n
+        # configuration variables
+        if self.context:
+            output = self._render_context(output)
         return output
 
     def _render_files(self):
-        """ renders "additional files", used in main render method """
+        """
+        Renders additional files specified in ``self.config['files']``
+        """
         output = ''
         # render files
         files = self.config.get('files', [])
@@ -113,6 +123,30 @@ class OpenWrt(object):
                           '# mode: {1}\n\n'\
                           '{2}\n\n'.format(f['path'], mode, f['contents'])
             output += file_output
+        return output
+
+    def _render_context(self, input_):
+        """
+        Evaluates configuration variables passed in ``context`` arg
+
+        :param input_: string containing rendered configuration
+        :returns: string containing modified input_
+        """
+        # disable jinja blocks
+        block_start = self.sandbox.block_start_string
+        block_end = self.sandbox.block_end_string
+        if block_start in input_ or block_end in input_:
+            raise SecurityError('blocks are disabled')
+        # forbid calling methods or accessing properties
+        forbidden = ['(', '.', '[', '__']
+        var_start = re.escape(self.sandbox.variable_start_string)
+        var_end = re.escape(self.sandbox.variable_end_string)
+        exp = '{0}.*?{1}'.format(var_start, var_end)
+        exp = re.compile(exp)
+        for match in exp.findall(input_, re.DOTALL):
+            if any(char in match for char in forbidden):
+                raise SecurityError('character "{}" is forbidden'.format(forbidden))
+        output = self.sandbox.from_string(input_).render(self.context)
         return output
 
     def validate(self):
