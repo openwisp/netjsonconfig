@@ -38,6 +38,7 @@ Its main features are:
 * **Templates**: store common configurations in template files
 * **Multiple template inheritance**: reduce repetition to the minimum
 * **File inclusion**: easy inclusion of arbitrary files in configuration packages
+* **Variables**: reference variables in the configuration
 * **Command line utility**: easy to use from shell scripts or from other programming languages
 
 **Currently we are working only on OpenWRT support**.
