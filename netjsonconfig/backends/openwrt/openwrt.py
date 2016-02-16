@@ -145,7 +145,8 @@ class OpenWrt(object):
         exp = re.compile(exp)
         for match in exp.findall(input_, re.DOTALL):
             if any(char in match for char in forbidden):
-                raise SecurityError('character "{}" is forbidden'.format(forbidden))
+                raise SecurityError('"{0}" contains one or more forbidden '
+                                    'characters'.format(match))
         output = self.sandbox.from_string(input_).render(self.context)
         return output
 
