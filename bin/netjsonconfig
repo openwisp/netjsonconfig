@@ -4,7 +4,6 @@ import os
 import sys
 import six
 import argparse
-
 import netjsonconfig
 
 description = """
@@ -60,9 +59,9 @@ output.add_argument('--method', '-m',
                     required=True,
                     choices=['render', 'generate', 'write'],
                     action='store',
-                    help='Backend method to use. '\
-                         '"render" returns the configuration in text format'\
-                         '"generate" returns a tar.gz archive as output; '\
+                    help='Backend method to use. '
+                         '"render" returns the configuration in text format'
+                         '"generate" returns a tar.gz archive as output; '
                          '"write" is like generate but writes to disk; ')
 
 output.add_argument('--args', '-a',
@@ -83,6 +82,7 @@ debug.add_argument('--version', '-v',
                    action='version',
                    version=netjsonconfig.get_version())
 
+
 def _load(config):
     """
     if config argument does not look like a JSON string
@@ -92,11 +92,12 @@ def _load(config):
         try:
             return open(config, 'r').read()
         except IOError:
-            print('netjsonconfig: cannot open "{0}": '\
+            print('netjsonconfig: cannot open "{0}": '
                   'file not found'.format(config))
             sys.exit(1)
     else:
         return config.strip()
+
 
 def parse_method_arguments(arguments):
     """
@@ -112,6 +113,7 @@ def parse_method_arguments(arguments):
         key, val = method_arg.split('=')
         kwargs[key] = recognize_method_argument(val)
     return kwargs
+
 
 def recognize_method_argument(arg_string):
     """
