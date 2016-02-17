@@ -4,7 +4,15 @@ Change log
 Version 0.3.6 [unreleased]
 --------------------------
 
-WIP
+- fixed ``flake8`` and ``isort`` warnings
+- added ``flake8`` and ``isort`` checks to travis build
+- `6ec5ce8 <https://github.com/openwisp/netjsonconfig/commit/6ec5ce8>`_:
+  minor regexp optimization for generate method
+- `#39 <https://github.com/openwisp/netjsonconfig/issues/39>`_:
+  added `configuration variables <http://netjsonconfig.openwisp.org/en/latest/general/basics.html#context-configuration-variables>`_ feature
+- `a3486d2 <https://github.com/openwisp/netjsonconfig/commit/a3486d2>`_:
+  the shell utility can now use environment variables in ``config`` and ``templates``,
+  `read relevant docs <http://netjsonconfig.openwisp.org/en/latest/general/commandline_utility.html#environment-variables>`_
 
 Version 0.3.5 [2016-02-10]
 --------------------------
