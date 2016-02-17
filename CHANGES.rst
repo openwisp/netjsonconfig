@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.3.6 [unreleased]
+Version 0.3.6 [2016-02-17]
 --------------------------
 
 - fixed ``flake8`` and ``isort`` warnings
