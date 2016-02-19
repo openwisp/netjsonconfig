@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 timezones = OrderedDict((
     (
-        "Coordinated Universal Time",
+        "UTC",
         "UTC"
     ),
     (

@@ -134,7 +134,7 @@ config system
     def test_hostname_required(self):
         o = OpenWisp({
             "general": {
-                "timezone": "Coordinated Universal Time"
+                "timezone": "UTC"
             }
         })
         with self.assertRaises(ValidationError):

@@ -333,7 +333,7 @@ The following *configuration dictionary*:
     {
         "general": {
             "hostname": "routerA",
-            "timezone": "Coordinated Universal Time"
+            "timezone": "UTC"
         }
     }
 

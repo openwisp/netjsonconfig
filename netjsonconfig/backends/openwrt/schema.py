@@ -72,7 +72,7 @@ schema = merge_config(default_schema, {
             "properties": {
                 "timezone": {
                     "type": "string",
-                    "default": "Coordinated Universal Time",
+                    "default": "UTC",
                     "enum": list(timezones.keys()),
                     "propertyOrder": 1,
                 }

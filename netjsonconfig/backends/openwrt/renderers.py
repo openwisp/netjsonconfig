@@ -195,7 +195,7 @@ class SystemRenderer(BaseRenderer):
     def _get_system(self):
         general = self.config.get('general', {}).copy()
         if general:
-            timezone_human = general.get('timezone', 'Coordinated Universal Time')
+            timezone_human = general.get('timezone', 'UTC')
             timezone_value = timezones[timezone_human]
             general.update({
                 'hostname': general.get('hostname', 'OpenWRT'),
