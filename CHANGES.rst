@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.3.7 [unreleased]
+Version 0.3.7 [2016-02-19]
 --------------------------
 
 - `007da6e <https://github.com/openwisp/netjsonconfig/commit/007da6e>`_:
