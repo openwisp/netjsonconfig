@@ -7,14 +7,12 @@ from io import BytesIO
 
 import six
 from jinja2 import Environment, PackageLoader
-from jinja2.exceptions import SecurityError
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError as JsonSchemaError
 
 from . import renderers
 from ...exceptions import ValidationError
-from ...utils import merge_config
-from ..base import ConfigSandbox
+from ...utils import evaluate_vars, merge_config, var_pattern
 from .schema import DEFAULT_FILE_MODE, schema
 
 
@@ -45,11 +43,10 @@ class OpenWrt(object):
         if 'type' not in config:
             config.update({'type': 'DeviceConfiguration'})
         self.config = self._merge_config(config, templates)
-        self.context = context
+        self.config = self._evaluate_vars(self.config, context)
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt',
                                                     'templates'),
                                trim_blocks=True)
-        self.sandbox = ConfigSandbox()
 
     def _load(self, config):
         """ loads config from string or dict """
@@ -77,6 +74,18 @@ class OpenWrt(object):
             return merge_config(base_config, config)
         return config
 
+    def _evaluate_vars(self, config, context):
+        """ evaluates configuration variables """
+        # return immediately if context is empty
+        if not context:
+            return config
+        # return immediately if no variables are found
+        netjson = self.json(validate=False)
+        if var_pattern.search(netjson) is None:
+            return config
+        # only if variables are found perform evaluation
+        return evaluate_vars(config, context)
+
     def render(self, files=True):
         """
         Converts the configuration dictionary into the native OpenWRT UCI format.
@@ -101,9 +110,6 @@ class OpenWrt(object):
             files_output = self._render_files()
             if files_output:
                 output += files_output.replace('\n\n\n', '\n\n')  # max 3 \n
-        # configuration variables
-        if self.context:
-            output = self._render_context(output)
         return output
 
     def _render_files(self):
@@ -125,38 +131,13 @@ class OpenWrt(object):
             output += file_output
         return output
 
-    def _render_context(self, input_):
-        """
-        Evaluates configuration variables passed in ``context`` arg
-
-        :param input_: string containing rendered configuration
-        :returns: string containing modified input_
-        """
-        # disable jinja blocks
-        block_start = self.sandbox.block_start_string
-        block_end = self.sandbox.block_end_string
-        if block_start in input_ or block_end in input_:
-            raise SecurityError('blocks are disabled')
-        # forbid calling methods or accessing properties
-        forbidden = ['(', '.', '[', '__']
-        var_start = re.escape(self.sandbox.variable_start_string)
-        var_end = re.escape(self.sandbox.variable_end_string)
-        exp = '{0}.*?{1}'.format(var_start, var_end)
-        exp = re.compile(exp)
-        for match in exp.findall(input_, re.DOTALL):
-            if any(char in match for char in forbidden):
-                raise SecurityError('"{0}" contains one or more forbidden '
-                                    'characters'.format(match))
-        output = self.sandbox.from_string(input_).render(self.context)
-        return output
-
     def validate(self):
         try:
             validate(self.config, self.schema)
         except JsonSchemaError as e:
             raise ValidationError(e)
 
-    def json(self, *args, **kwargs):
+    def json(self, validate=True, *args, **kwargs):
         """
         returns a string formatted in **NetJSON**;
         performs validation before returning output;
@@ -165,7 +146,8 @@ class OpenWrt(object):
 
         :returns: string
         """
-        self.validate()
+        if validate:
+            self.validate()
         return json.dumps(self.config, *args, **kwargs)
 
     @classmethod

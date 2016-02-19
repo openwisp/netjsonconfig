@@ -1,26 +1,3 @@
-from jinja2.exceptions import SecurityError
-from jinja2.sandbox import SandboxedEnvironment
-
-
-class ConfigSandbox(SandboxedEnvironment):
-    intercepted_binops = frozenset(SandboxedEnvironment.default_binop_table.keys())
-    intercepted_unops = frozenset(SandboxedEnvironment.default_unop_table.keys())
-
-    def __init__(self, *args, **kwargs):
-        super(ConfigSandbox, self).__init__(*args, **kwargs)
-        self.globals = {}
-        self.tests = {}
-        self.filters = {}
-        self.block_start_string = '{=##'
-        self.block_end_string = '##=}'
-
-    def call_binop(self, context, operator, left, right):
-        raise SecurityError('binary operator {0} not allowed'.format(operator))
-
-    def call_unop(self, context, operator, left):
-        raise SecurityError('unary operator {0} not allowed'.format(operator))
-
-
 class BaseRenderer(object):
     """
     Renderers are used to generate specific configuration blocks.
