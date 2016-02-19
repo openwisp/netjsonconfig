@@ -4,7 +4,14 @@ Change log
 Version 0.3.7 [unreleased]
 --------------------------
 
-WIP
+- `007da6e <https://github.com/openwisp/netjsonconfig/commit/007da6e>`_:
+  renamed "Coordinated Universal Time" to "UTC"
+- `2c1e72e <https://github.com/openwisp/netjsonconfig/commit/2c1e72e>`_:
+  fixed 'tx_power' ``KeyError``, introduced in `71b083e <https://github.com/openwisp/netjsonconfig/commit/71b083e>`_
+- `aa8b485 <https://github.com/openwisp/netjsonconfig/commit/aa8b485>`_:
+  added ``utils.evaluate_vars`` function
+- `7323491 <https://github.com/openwisp/netjsonconfig/commit/7323491>`_:
+  simplified implementation of *configuration variables*
 
 Version 0.3.6 [2016-02-17]
 --------------------------
