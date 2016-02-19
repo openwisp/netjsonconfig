@@ -224,8 +224,9 @@ class WirelessRenderer(BaseRenderer):
         for radio in radios:
             uci_radio = radio.copy()
             # rename tx_power to txpower
-            uci_radio['txpower'] = radio['tx_power']
-            del uci_radio['tx_power']
+            if 'tx_power' in radio:
+                uci_radio['txpower'] = radio['tx_power']
+                del uci_radio['tx_power']
             # rename driver to type
             uci_radio['type'] = radio['driver']
             del uci_radio['driver']

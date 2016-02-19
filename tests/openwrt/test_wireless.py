@@ -21,7 +21,6 @@ class TestWirelessRenderer(unittest.TestCase, _TabsMixin):
                     "protocol": "802.11n",
                     "channel": 140,
                     "channel_width": 20,
-                    "tx_power": 9,
                     "country": "en"
                 },
                 {
@@ -45,7 +44,6 @@ config wifi-device 'radio0'
     option htmode 'HT20'
     option hwmode '11a'
     option phy 'phy0'
-    option txpower '9'
     option type 'mac80211'
 
 config wifi-device 'radio1'
