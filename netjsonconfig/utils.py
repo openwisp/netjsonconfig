@@ -1,5 +1,8 @@
+import re
 from collections import OrderedDict
 from copy import deepcopy
+
+import six
 
 
 def merge_config(template, config):
@@ -32,6 +35,32 @@ def merge_config(template, config):
 
 def sorted_dict(dictionary):
     return OrderedDict(sorted(dictionary.items()))
+
+
+var_pattern = re.compile(r'\{\{\s(\w*)\s\}\}')
+
+
+def evaluate_vars(data, context={}):
+    """
+    Evaluates variables in ``data``
+
+    :param data: data structure containing variables, may be
+                 ``str``, ``dict`` or ``list``
+    :param context: ``dict`` containing variables
+    :returns: modified data structure
+    """
+    if isinstance(data, (dict, list)):
+        if isinstance(data, dict):
+            loop_items = data.items()
+        elif isinstance(data, list):
+            loop_items = enumerate(data)
+        for key, value in loop_items:
+            data[key] = evaluate_vars(value, context)
+    elif isinstance(data, six.string_types):
+        for var in var_pattern.findall(data):
+            if var in context:
+                data = data.replace('{{ %s }}' % var, context[var])
+    return data
 
 
 class _TabsMixin(object):  # pragma: nocover

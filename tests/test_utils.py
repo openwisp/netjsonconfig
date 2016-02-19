@@ -1,6 +1,6 @@
 import unittest
 
-from netjsonconfig.utils import merge_config
+from netjsonconfig.utils import evaluate_vars, merge_config
 
 
 class TestUtils(unittest.TestCase):
@@ -109,3 +109,27 @@ class TestUtils(unittest.TestCase):
                 {"c": "original"}
             ]
         })
+
+    def test_evaluate_vars(self):
+        self.assertEqual(evaluate_vars('{{ tz }}', {'tz': 'UTC'}), 'UTC')
+        self.assertEqual(evaluate_vars('tz: {{ tz }}', {'tz': 'UTC'}), 'tz: UTC')
+
+    def test_evaluate_vars_missing(self):
+        self.assertEqual(evaluate_vars('{{ tz }}'), '{{ tz }}')
+        self.assertEqual(evaluate_vars('tz: {{ tz }}'), 'tz: {{ tz }}')
+
+    def test_evaluate_vars_dict(self):
+        val = evaluate_vars({'timezone': '{{ tz }}'}, {'tz': 'UTC'})
+        self.assertEqual(val, {'timezone': 'UTC'})
+
+    def test_evaluate_vars_nested_dict(self):
+        val = evaluate_vars({'general': {'timezone': '{{ tz }}'}}, {'tz': 'UTC'})
+        self.assertEqual(val, {'general': {'timezone': 'UTC'}})
+
+    def test_evaluate_vars_list(self):
+        val = evaluate_vars(['{{ a }}', '{{ b }}'], {'a': '1', 'b': '2'})
+        self.assertEqual(val, ['1', '2'])
+
+    def test_evaluate_vars_list_in_dict(self):
+        val = evaluate_vars({'l': ['{{ a }}', '{{ b }}']}, {'a': '1', 'b': '2'})
+        self.assertEqual(val, {'l': ['1', '2']})
