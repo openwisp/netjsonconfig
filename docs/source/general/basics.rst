@@ -282,7 +282,8 @@ parameters are unique to the device, think about things like a *UUID* or a publi
 With this feature it is possible to reference variables in the *configuration dictionary*,
 these variables will be evaluated when the configuration is rendered/generated.
 
-Here's an example from the real world:
+Here's an example from the real world, pay attention to the two variables,
+``{{ UUID }}`` and ``{{ KEY }}``:
 
 .. code-block:: python
 
@@ -330,6 +331,14 @@ Let's see the result with:
     	option url 'http://controller.examplewifiservice.com'
     	option uuid '9d9032b2-da18-4d47-a414-1f7f605479e6'
     	option verify_ssl '1'
+
+.. warning::
+    **When using variables, keep in mind the following rules**:
+
+     * variables must be written in the form of ``{{ var_name }}``, including
+       spaces around ``var_name``;
+     * variable names can contain only alphanumeric characters, dashes and underscores;
+     * unrecognized variables will be ignored;
 
 Project goals
 -------------
