@@ -39,9 +39,6 @@ class OpenWrt(object):
         """
         # perform deepcopy to avoid modifying the original config argument
         config = deepcopy(self._load(config))
-        # allow omitting NetJSON type
-        if 'type' not in config:
-            config.update({'type': 'DeviceConfiguration'})
         self.config = self._merge_config(config, templates)
         self.config = self._evaluate_vars(self.config, context)
         self.env = Environment(loader=PackageLoader('netjsonconfig.backends.openwrt',
@@ -139,7 +136,7 @@ class OpenWrt(object):
 
     def json(self, validate=True, *args, **kwargs):
         """
-        returns a string formatted in **NetJSON**;
+        returns a string formatted as **NetJSON DeviceConfiguration**;
         performs validation before returning output;
 
         ``*args`` and ``*kwargs`` will be passed to ``json.dumps``;
@@ -148,7 +145,10 @@ class OpenWrt(object):
         """
         if validate:
             self.validate()
-        return json.dumps(self.config, *args, **kwargs)
+        # automatically adds NetJSON type
+        config = deepcopy(self.config)
+        config.update({'type': 'DeviceConfiguration'})
+        return json.dumps(config, *args, **kwargs)
 
     @classmethod
     def get_packages(cls):

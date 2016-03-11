@@ -1,8 +1,6 @@
 """
-NetJSON DeviceConfiguration JSON-Schema definition
-this should be up to date with the official spec:
-
-http://netjson.org/rfc.html#DeviceConfiguration-schema
+NetJSON DeviceConfiguration JSON-Schema implementation
+http://netjson.org/rfc.html
 """
 
 schema = {
@@ -269,15 +267,7 @@ schema = {
             ]
         }
     },
-    "required": [
-        "type"
-    ],
     "properties": {
-        "type": {
-            "type": "string",
-            "enum": ["DeviceConfiguration"],
-            "propertyOrder": 0,
-        },
         "general": {
             "type": "object",
             "title": "General",

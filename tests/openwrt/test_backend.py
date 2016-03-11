@@ -45,14 +45,14 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         OpenWrt('{}')
 
     def test_validate(self):
-        o = OpenWrt({'type': 'WRONG'})
+        o = OpenWrt({'interfaces': 'WRONG'})
         with self.assertRaises(ValidationError):
             o.validate()
 
-        o = OpenWrt({'type': 'DeviceConfiguration'})
+        o = OpenWrt({'interfaces': []})
         o.validate()
-        o.config['type'] = 'CHANGED'
 
+        o.config['interfaces'] = 'CHANGED'
         try:
             o.validate()
         except ValidationError as e:

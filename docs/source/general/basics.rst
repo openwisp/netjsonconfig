@@ -53,8 +53,7 @@ The previous example describes a device named ``RouterA`` which has a single
 network interface named ``eth0`` with a statically assigned ip address ``192.168.1.1/24``
 (CIDR notation).
 
-Because netjsonconfig deals only with ``DeviceConfiguration`` objects, the ``type``
-attribute can be omitted, the library will add the correct type automatically.
+Because netjsonconfig deals only with ``DeviceConfiguration`` objects, the ``type`` attribute can be omitted.
 
 The previous configuration object therefore can be shortened to:
 
@@ -81,7 +80,7 @@ The previous configuration object therefore can be shortened to:
     }
 
 From now on we will use the term *configuration dictionary* to refer to
-NetJSON DeviceConfiguration objects.
+*NetJSON DeviceConfiguration* objects.
 
 Backends
 --------
