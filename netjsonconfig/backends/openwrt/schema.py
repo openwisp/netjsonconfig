@@ -337,19 +337,19 @@ schema = merge_config(default_schema, {
                         "type": "string",
                         "propertyOrder": 1,
                     },
-                    "contents": {
-                        "type": "string",
-                        "format": "textarea",
-                        "propertyOrder": 2,
-                    },
                     "mode": {
                         "type": "string",
                         "maxLength": 4,
                         "minLength": 3,
                         "pattern": "^[0-7]*$",
                         "default": DEFAULT_FILE_MODE,
+                        "propertyOrder": 2,
+                    },
+                    "contents": {
+                        "type": "string",
+                        "format": "textarea",
                         "propertyOrder": 3,
-                    }
+                    },
                 }
             }
         }
