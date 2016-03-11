@@ -333,7 +333,8 @@ The following *configuration dictionary*:
     {
         "general": {
             "hostname": "routerA",
-            "timezone": "UTC"
+            "timezone": "UTC",
+            "ula_prefix": "fd8e:f40a:6701::/48"
         }
     }
 
@@ -344,6 +345,11 @@ Will be rendered as follows::
     config system
             option hostname 'routerA'
             option timezone 'UTC'
+
+    package network
+
+    config globals 'globals'
+            option ula_prefix 'fd8e:f40a:6701::/48'
 
 Network interfaces
 ------------------

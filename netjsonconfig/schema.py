@@ -280,13 +280,17 @@ schema = {
                     "minLength": 1,
                     "propertyOrder": 1,
                 },
-                "maintainer": {
+                "ula_prefix": {
                     "type": "string",
                     "propertyOrder": 2,
                 },
-                "description": {
+                "maintainer": {
                     "type": "string",
                     "propertyOrder": 3,
+                },
+                "description": {
+                    "type": "string",
+                    "propertyOrder": 4,
                 }
             }
         },

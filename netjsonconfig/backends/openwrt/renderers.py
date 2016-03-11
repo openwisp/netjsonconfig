@@ -186,6 +186,12 @@ class NetworkRenderer(BaseRenderer):
             uci_switches.append(uci_switch)
         return uci_switches
 
+    def _get_globals(self):
+        ula_prefix = self.config.get('general', {}).get('ula_prefix', None)
+        if ula_prefix:
+            return {'ula_prefix': ula_prefix}
+        return {}
+
 
 class SystemRenderer(BaseRenderer):
     """
@@ -194,6 +200,9 @@ class SystemRenderer(BaseRenderer):
     """
     def _get_system(self):
         general = self.config.get('general', {}).copy()
+        # ula_prefix is not related to system
+        if 'ula_prefix' in general:
+            del general['ula_prefix']
         if general:
             timezone_human = general.get('timezone', 'UTC')
             timezone_value = timezones[timezone_human]
