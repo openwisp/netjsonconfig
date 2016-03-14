@@ -283,11 +283,13 @@ config wifi-iface
             "files": [
                 {
                     "path": "/etc/crontabs/root",
+                    "mode": "0644",
                     "contents": '* * * * * echo "test" > /etc/testfile\n'
                                 '* * * * * echo "test2" > /etc/testfile2'
                 },
                 {
                     "path": "/etc/dummy.conf",
+                    "mode": "0644",
                     "contents": "testing!"
                 }
             ]
@@ -316,8 +318,8 @@ config wifi-iface
             "files": [
                 {
                     "path": "/tmp/hello.sh",
+                    "mode": "0755",
                     "contents": "echo 'hello world'",
-                    "mode": "0755"
                 }
             ]
         })
@@ -332,6 +334,7 @@ config wifi-iface
             "files": [
                 {
                     "path": "/tmp/hello.sh",
+                    "mode": "0644",
                     "contents": "echo 'hello world'"
                 }
             ]

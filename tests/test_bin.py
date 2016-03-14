@@ -105,6 +105,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
             'files': [
                 {
                     'path': '/etc/test.txt',
+                    'mode': '0644',
                     'contents': 'test_valid_arg'
                 }
             ]

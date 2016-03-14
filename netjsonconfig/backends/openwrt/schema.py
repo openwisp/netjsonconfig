@@ -330,6 +330,7 @@ schema = merge_config(default_schema, {
                 "additionalProperties": False,
                 "required": [
                     "path",
+                    "mode",
                     "contents"
                 ],
                 "properties": {
