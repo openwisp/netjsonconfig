@@ -257,6 +257,8 @@ schema = {
                             "uniqueItems": True,
                             "propertyOrder": 8,
                             "items": {
+                                "title": "bridged interface",
+                                "type": "string",
                                 "$ref": "#/definitions/interface_settings/properties/name"
                             }
                         }
