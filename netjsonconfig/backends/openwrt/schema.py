@@ -118,10 +118,12 @@ schema = merge_config(default_schema, {
             "properties": {
                 "enabled": {
                     "type": "boolean",
+                    "default": True,
                     "propertyOrder": 1,
                 },
                 "enable_server": {
                     "type": "boolean",
+                    "default": False,
                     "propertyOrder": 2,
                 },
                 "server": {
@@ -131,7 +133,13 @@ schema = merge_config(default_schema, {
                     "propertyOrder": 3,
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "default": [
+                        "0.openwrt.pool.ntp.org",
+                        "1.openwrt.pool.ntp.org",
+                        "2.openwrt.pool.ntp.org",
+                        "3.openwrt.pool.ntp.org",
+                    ]
                 }
             }
         },
