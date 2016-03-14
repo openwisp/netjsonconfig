@@ -30,7 +30,9 @@ schema = {
                 },
                 "mtu": {
                     "type": "integer",
+                    "title": "MTU",
                     "default": 1500,
+                    "minimum": 68,
                     "propertyOrder": 3,
                 },
                 "autostart": {
