@@ -38,11 +38,13 @@ schema = {
                 "autostart": {
                     "type": "boolean",
                     "default": True,
+                    "format": "checkbox",
                     "propertyOrder": 5,
                 },
                 "disabled": {
                     "type": "boolean",
                     "default": False,
+                    "format": "checkbox",
                     "propertyOrder": 6,
                 },
                 "addresses": {
@@ -167,6 +169,7 @@ schema = {
                                 },
                                 "hidden": {
                                     "type": "boolean",
+
                                     "default": False,
                                     "propertyOrder": 5,
                                 },
@@ -214,6 +217,7 @@ schema = {
                                         "disabled": {
                                             "type": "boolean",
                                             "default": False,
+                                            "format": "checkbox",
                                             "propertyOrder": 2,
                                         },
                                         "key": {
@@ -359,6 +363,7 @@ schema = {
                     "disabled": {
                         "type": "boolean",
                         "default": False,
+                        "format": "checkbox",
                         "propertyOrder": 6,
                     }
                 }

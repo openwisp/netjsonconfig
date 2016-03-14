@@ -170,6 +170,7 @@ schema = merge_config(default_schema, {
                     "invert": {
                         "type": "boolean",
                         "default": False,
+                        "format": "checkbox",
                         "propertyOrder": 10,
                     }
                 }
@@ -184,12 +185,14 @@ schema = merge_config(default_schema, {
                 "enabled": {
                     "type": "boolean",
                     "default": True,
+                    "format": "checkbox",
                     "propertyOrder": 1,
                 },
                 "enable_server": {
                     "type": "boolean",
                     "title": "enable server",
                     "default": False,
+                    "format": "checkbox",
                     "propertyOrder": 2,
                 },
                 "server": {
@@ -235,12 +238,14 @@ schema = merge_config(default_schema, {
                     "reset": {
                         "type": "boolean",
                         "default": True,
+                        "format": "checkbox",
                         "propertyOrder": 2,
                     },
                     "enable_vlan": {
                         "type": "boolean",
                         "title": "enable vlan",
                         "default": True,
+                        "format": "checkbox",
                         "propertyOrder": 3,
                     },
                     "vlan": {
@@ -299,6 +304,7 @@ schema = merge_config(default_schema, {
                     },
                     "default": {
                         "type": "boolean",
+                        "format": "checkbox",
                         "propertyOrder": 2,
                     },
                     "dev": {
