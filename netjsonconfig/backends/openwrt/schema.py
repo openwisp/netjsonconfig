@@ -158,10 +158,13 @@ schema = merge_config(default_schema, {
                     },
                     "reset": {
                         "type": "boolean",
+                        "default": True,
                         "propertyOrder": 2,
                     },
                     "enable_vlan": {
                         "type": "boolean",
+                        "title": "enable vlan",
+                        "default": True,
                         "propertyOrder": 3,
                     },
                     "vlan": {
