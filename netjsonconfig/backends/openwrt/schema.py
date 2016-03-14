@@ -14,7 +14,8 @@ schema = merge_config(default_schema, {
                 "network": {
                     "type": "string",
                     "maxLength": 9,
-                    "pattern": "^[a-zA-z0-9_]*$"
+                    "pattern": "^[a-zA-z0-9_]*$",
+                    "propertyOrder": 7
                 },
                 "addresses": {
                     "items": {
@@ -55,12 +56,15 @@ schema = merge_config(default_schema, {
                     "properties": {
                         "network": {
                             "type": "array",
+                            "title": "Attached Networks",
                             "uniqueItems": True,
                             "additionalItems": True,
                             "minItems": 1,
                             "items": {
-                                "type": "string"
-                            }
+                                "type": "string",
+                                "title": "network"
+                            },
+                            "propertyOrder": 10
                         }
                     }
                 }
@@ -110,11 +114,72 @@ schema = merge_config(default_schema, {
                 }
             }
         },
+        "ip_rules": {
+            "type": "array",
+            "title": "Policy routing",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "propertyOrder": 7,
+            "items": {
+                "type": "object",
+                "title": "IP rule",
+                "additionalProperties": True,
+                "properties": {
+                    "in": {
+                        "type": "string",
+                        "propertyOrder": 1,
+                    },
+                    "out": {
+                        "type": "string",
+                        "propertyOrder": 2,
+                    },
+                    "src": {
+                        "type": "string",
+                        "propertyOrder": 3,
+                    },
+                    "dest": {
+                        "type": "string",
+                        "propertyOrder": 4,
+                    },
+                    "tos": {
+                        "type": "integer",
+                        "propertyOrder": 5,
+                    },
+                    "mark": {
+                        "type": "string",
+                        "propertyOrder": 6,
+                    },
+                    "invert": {
+                        "type": "boolean",
+                        "default": False,
+                        "propertyOrder": 7,
+                    },
+                    "lookup": {
+                        "type": "string",
+                        "propertyOrder": 8,
+                    },
+                    "goto": {
+                        "type": "integer",
+                        "propertyOrder": 9,
+                    },
+                    "action": {
+                        "type": "string",
+                        "enum": [
+                            "prohibit",
+                            "unreachable",
+                            "blackhole",
+                            "throw"
+                        ],
+                        "propertyOrder": 10,
+                    }
+                }
+            }
+        },
         "ntp": {
             "type": "object",
-            "title": "ntp settings",
+            "title": "NTP Settings",
             "additionalProperties": True,
-            "propertyOrder": 7,
+            "propertyOrder": 8,
             "properties": {
                 "enabled": {
                     "type": "boolean",
@@ -123,15 +188,18 @@ schema = merge_config(default_schema, {
                 },
                 "enable_server": {
                     "type": "boolean",
+                    "title": "enable server",
                     "default": False,
                     "propertyOrder": 2,
                 },
                 "server": {
+                    "title": "NTP Servers",
                     "type": "array",
                     "uniqueItems": True,
                     "additionalItems": True,
                     "propertyOrder": 3,
                     "items": {
+                        "title": "NTP server",
                         "type": "string"
                     },
                     "default": [
@@ -145,12 +213,12 @@ schema = merge_config(default_schema, {
         },
         "switch": {
             "type": "array",
-            "title": "VLANs",
             "uniqueItems": True,
             "additionalItems": True,
-            "title": "Switch",
-            "propertyOrder": 8,
+            "title": "Programmable Switch",
+            "propertyOrder": 9,
             "items": {
+                "title": "Switch",
                 "type": "object",
                 "additionalProperties": True,
                 "required": [
@@ -209,70 +277,9 @@ schema = merge_config(default_schema, {
                 }
             }
         },
-        "ip_rules": {
-            "type": "array",
-            "title": "Ip rules",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "propertyOrder": 9,
-            "items": {
-                "type": "object",
-                "title": "Ip rule",
-                "additionalProperties": True,
-                "properties": {
-                    "in": {
-                        "type": "string",
-                        "propertyOrder": 1,
-                    },
-                    "out": {
-                        "type": "string",
-                        "propertyOrder": 2,
-                    },
-                    "src": {
-                        "type": "string",
-                        "propertyOrder": 3,
-                    },
-                    "dest": {
-                        "type": "string",
-                        "propertyOrder": 4,
-                    },
-                    "tos": {
-                        "type": "integer",
-                        "propertyOrder": 5,
-                    },
-                    "mark": {
-                        "type": "string",
-                        "propertyOrder": 6,
-                    },
-                    "invert": {
-                        "type": "boolean",
-                        "default": False,
-                        "propertyOrder": 7,
-                    },
-                    "lookup": {
-                        "type": "string",
-                        "propertyOrder": 8,
-                    },
-                    "goto": {
-                        "type": "integer",
-                        "propertyOrder": 9,
-                    },
-                    "action": {
-                        "type": "string",
-                        "enum": [
-                            "prohibit",
-                            "unreachable",
-                            "blackhole",
-                            "throw"
-                        ],
-                        "propertyOrder": 10,
-                    }
-                }
-            }
-        },
         "led": {
             "type": "array",
-            "title": "LED config",
+            "title": "LEDs",
             "uniqueItems": True,
             "additionalItems": True,
             "propertyOrder": 10,
@@ -331,13 +338,13 @@ schema = merge_config(default_schema, {
         },
         "files": {
             "type": "array",
-            "title": "files",
+            "title": "Files",
             "uniqueItems": True,
             "additionalItems": True,
             "propertyOrder": 11,
             "items": {
                 "type": "object",
-                "title": "file",
+                "title": "File",
                 "additionalProperties": False,
                 "required": [
                     "path",

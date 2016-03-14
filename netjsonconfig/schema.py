@@ -1,5 +1,5 @@
 """
-NetJSON DeviceConfiguration JSON-Schema implementation
+JSON-Schema implementation of NetJSON DeviceConfiguration
 http://netjson.org/rfc.html
 """
 
@@ -10,6 +10,7 @@ schema = {
     "definitions": {
         "interface_settings": {
             "type": "object",
+            "title": "Interface settings",
             "additionalProperties": True,
             "required": [
                 "name",
@@ -24,6 +25,7 @@ schema = {
                 },
                 "mac": {
                     "type": "string",
+                    "title": "mac address",
                     "propertyOrder": 2,
                 },
                 "mtu": {
@@ -50,7 +52,7 @@ schema = {
                     "title": "Addresses",
                     "uniqueItems": True,
                     "additionalItems": True,
-                    "propertyOrder": 7,
+                    "propertyOrder": 20,
                     "items": {
                         "type": "object",
                         "title": "Address",
@@ -194,7 +196,7 @@ schema = {
                                         "protocol",
                                         "key"
                                     ],
-                                    "propertyOrder": 9,
+                                    "propertyOrder": 20,
                                     "properties": {
                                         "protocol": {
                                             "type": "string",
@@ -282,6 +284,7 @@ schema = {
                 },
                 "ula_prefix": {
                     "type": "string",
+                    "title": "ULA prefix",
                     "propertyOrder": 2,
                 },
                 "maintainer": {
@@ -301,6 +304,7 @@ schema = {
             "additionalItems": True,
             "propertyOrder": 2,
             "items": {
+                "title": "Interface",
                 "oneOf": [
                     {"$ref": "#/definitions/network_interface"},
                     {"$ref": "#/definitions/wireless_interface"},
@@ -308,32 +312,12 @@ schema = {
                 ]
             }
         },
-        "dns_servers": {
-            "title": "DNS Servers",
-            "type": "array",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "propertyOrder": 3,
-            "items": {
-                "type": "string"
-            }
-        },
-        "dns_search": {
-            "title": "DNS Search",
-            "type": "array",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "propertyOrder": 4,
-            "items": {
-                "type": "string"
-            }
-        },
         "radios": {
             "type": "array",
             "title": "Radios",
             "uniqueItems": True,
             "additionalItems": True,
-            "propertyOrder": 5,
+            "propertyOrder": 3,
             "items": {
                 "type": "object",
                 "title": "Radio",
@@ -358,10 +342,12 @@ schema = {
                     },
                     "channel_width": {
                         "type": "integer",
+                        "title": "channel width",
                         "propertyOrder": 4,
                     },
                     "tx_power": {
                         "type": "integer",
+                        "title": "tx power",
                         "propertyOrder": 5,
                     },
                     "country": {
@@ -376,6 +362,28 @@ schema = {
                         "propertyOrder": 6,
                     }
                 }
+            }
+        },
+        "dns_servers": {
+            "title": "DNS Configuration",
+            "type": "array",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "propertyOrder": 4,
+            "items": {
+                "title": "DNS Server",
+                "type": "string"
+            }
+        },
+        "dns_search": {
+            "title": "DNS Search List",
+            "type": "array",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "propertyOrder": 5,
+            "items": {
+                "title": "Domain",
+                "type": "string"
             }
         },
         "routes": {
