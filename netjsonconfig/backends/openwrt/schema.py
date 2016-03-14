@@ -14,7 +14,7 @@ schema = merge_config(default_schema, {
                 "network": {
                     "type": "string",
                     "maxLength": 9,
-                    "pattern": "^[a-zA-z0-9_]*$",
+                    "pattern": "^[a-zA-z0-9_\\.\\-]*$",
                     "propertyOrder": 7
                 },
                 "addresses": {

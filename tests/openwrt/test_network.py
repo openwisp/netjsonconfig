@@ -732,7 +732,7 @@ config interface 'eth0'
         })
         with self.assertRaises(ValidationError):
             o.validate()
-        o.config['interfaces'][0]['network'] = 'lan-0'
+        o.config['interfaces'][0]['network'] = 'lan/0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
@@ -774,6 +774,42 @@ config interface 'lan_2'
     option ifname 'eth0'
     option ipaddr '192.168.2.1/24'
     option proto 'static'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_network_dot_conversion(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0.1",
+                    "type": "ethernet",
+                    "network": "lan.1",
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'lan_1'
+    option ifname 'eth0.1'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_network_dash_conversion(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth-0",
+                    "type": "ethernet",
+                    "network": "lan-0",
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'lan_0'
+    option ifname 'eth-0'
+    option proto 'none'
 """)
         self.assertEqual(o.render(), expected)
 

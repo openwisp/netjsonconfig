@@ -27,12 +27,9 @@ class NetworkRenderer(BaseRenderer):
             is_bridge = False
             # determine uci logical interface name
             network = interface.get('network')
-            if network:
-                uci_name = network
-            # default to ifname
-            else:
-                uci_name = interface['name'].replace('.', '_')\
-                                            .replace('-', '_')
+            uci_name = interface['name'] if not network else network
+            # convert dot and dashes to underscore
+            uci_name = uci_name.replace('.', '_').replace('-', '_')
             # determine if must be type bridge
             if interface.get('type') == 'bridge':
                 is_bridge = True
