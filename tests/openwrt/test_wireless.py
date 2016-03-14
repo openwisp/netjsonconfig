@@ -655,7 +655,7 @@ config wifi-iface
 """)
         self.assertEqual(o.render(), expected)
 
-    def test_wireless_network_schema_attribute(self):
+    def test_wireless_empty_network_attr(self):
         o = OpenWrt({
             "interfaces": [
                 {
@@ -670,8 +670,48 @@ config wifi-iface
                 }
             ]
         })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_wireless_network_attr_validation(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "network": "lan 0"
+                    }
+                }
+            ]
+        })
+        # pattern does not validate
         with self.assertRaises(ValidationError):
             o.validate()
+        # maxLength does not validate
+        o.config['interfaces'][0]['wireless']['network'] = ['lan0123456789']
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['wireless']['network'] = ['lan']
+        o.validate()
 
     def test_network_attribute(self):
         o = OpenWrt({
@@ -701,6 +741,70 @@ config wifi-iface
     option ifname 'wlan0'
     option mode 'ap'
     option network 'guests'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_network_dot_conversion(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "network": ["eth0.1"],
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'eth0_1'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_network_dash_conversion(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "network": ["eth0-1"],
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'eth0_1'
     option ssid 'open'
 """)
         self.assertEqual(o.render(), expected)

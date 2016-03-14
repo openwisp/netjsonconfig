@@ -59,10 +59,10 @@ schema = merge_config(default_schema, {
                             "title": "Attached Networks",
                             "uniqueItems": True,
                             "additionalItems": True,
-                            "minItems": 1,
                             "items": {
+                                "title": "network",
                                 "type": "string",
-                                "title": "network"
+                                "$ref": "#/definitions/interface_settings/properties/network"
                             },
                             "propertyOrder": 10
                         }

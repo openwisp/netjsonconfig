@@ -325,7 +325,8 @@ class WirelessRenderer(BaseRenderer):
                 network = wifi_interface.get('network', wifi_interface['name'])
                 uci_wifi['network'] = [network]
             uci_wifi['network'] = ' '.join(uci_wifi['network'])\
-                                     .replace('.', '_')
+                                     .replace('.', '_')\
+                                     .replace('-', '_')
             uci_wifi_ifaces.append(sorted_dict(uci_wifi))
         return uci_wifi_ifaces
 

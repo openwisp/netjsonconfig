@@ -133,7 +133,7 @@ schema = {
                     "properties": {
                         "wireless": {
                             "type": "object",
-                            "title": "Wireless Interface",
+                            "title": "Wireless Settings",
                             "additionalProperties": True,
                             "propertyOrder": 8,
                             "required": [
