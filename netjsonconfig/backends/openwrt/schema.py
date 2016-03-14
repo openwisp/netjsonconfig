@@ -149,18 +149,9 @@ schema = merge_config(default_schema, {
                         "type": "string",
                         "propertyOrder": 6,
                     },
-                    "invert": {
-                        "type": "boolean",
-                        "default": False,
-                        "propertyOrder": 7,
-                    },
                     "lookup": {
                         "type": "string",
-                        "propertyOrder": 8,
-                    },
-                    "goto": {
-                        "type": "integer",
-                        "propertyOrder": 9,
+                        "propertyOrder": 7,
                     },
                     "action": {
                         "type": "string",
@@ -170,6 +161,15 @@ schema = merge_config(default_schema, {
                             "blackhole",
                             "throw"
                         ],
+                        "propertyOrder": 8,
+                    },
+                    "goto": {
+                        "type": "integer",
+                        "propertyOrder": 9,
+                    },
+                    "invert": {
+                        "type": "boolean",
+                        "default": False,
                         "propertyOrder": 10,
                     }
                 }
