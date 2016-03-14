@@ -334,13 +334,7 @@ config interface 'mobile0'
                 },
                 {
                     "name": "eth1",
-                    "type": "ethernet",
-                    "addresses": [
-                        {
-                            "proto": "dhcp",
-                            "family": "ipv4"
-                        }
-                    ]
+                    "type": "ethernet"
                 },
                 {
                     "network": "lan",
@@ -361,7 +355,7 @@ config interface 'eth0'
 
 config interface 'eth1'
     option ifname 'eth1'
-    option proto 'dhcp'
+    option proto 'none'
 
 config interface 'lan'
     option ifname 'eth0 eth1'
@@ -380,12 +374,6 @@ config interface 'lan'
                 {
                     "name": "eth1",
                     "type": "ethernet",
-                    "addresses": [
-                        {
-                            "proto": "dhcp",
-                            "family": "ipv4"
-                        }
-                    ]
                 },
                 {
                     "name": "lan",
@@ -423,7 +411,7 @@ config interface 'eth0'
 
 config interface 'eth1'
     option ifname 'eth1'
-    option proto 'dhcp'
+    option proto 'none'
 
 config interface 'lan'
     option ifname 'eth0 eth1'
@@ -458,6 +446,56 @@ config interface 'lan'
     option type 'bridge'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_bridge_members_schema(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "lan",
+                    "type": "bridge"
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        o.config['interfaces'][0]['bridge_members'] = [3]
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['bridge_members'] = ['eth0', 'wlan0']
+        o.validate()
+
+    def test_bridge_members_pattern(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "lan",
+                    "type": "bridge",
+                    "bridge_members": ["eth 0"]
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['bridge_members'][0] = 'e-t_h@=0.1'
+        o.validate()
+
+    def test_bridge_members_unique(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "lan",
+                    "type": "bridge",
+                    "bridge_members": ["eth0", "eth0"]
+                }
+            ]
+        })
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # ensure fix works
+        o.config['interfaces'][0]['bridge_members'][0] = 'eth1'
+        o.validate()
 
     def test_dns(self):
         o = OpenWrt({
@@ -635,56 +673,6 @@ config interface 'eth0'
     option proto 'none'
 """)
         self.assertEqual(o.render(), expected)
-
-    def test_bridge_members_schema(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "lan",
-                    "type": "bridge"
-                }
-            ]
-        })
-        with self.assertRaises(ValidationError):
-            o.validate()
-        o.config['interfaces'][0]['bridge_members'] = [3]
-        with self.assertRaises(ValidationError):
-            o.validate()
-        # ensure fix works
-        o.config['interfaces'][0]['bridge_members'] = ['eth0', 'wlan0']
-        o.validate()
-
-    def test_bridge_members_pattern(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "lan",
-                    "type": "bridge",
-                    "bridge_members": ["eth 0"]
-                }
-            ]
-        })
-        with self.assertRaises(ValidationError):
-            o.validate()
-        # ensure fix works
-        o.config['interfaces'][0]['bridge_members'][0] = 'e-t_h@=0.1'
-        o.validate()
-
-    def test_bridge_members_unique(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "lan",
-                    "type": "bridge",
-                    "bridge_members": ["eth0", "eth0"]
-                }
-            ]
-        })
-        with self.assertRaises(ValidationError):
-            o.validate()
-        # ensure fix works
-        o.config['interfaces'][0]['bridge_members'][0] = 'eth1'
-        o.validate()
 
     def test_ifname_length(self):
         o = OpenWrt({
