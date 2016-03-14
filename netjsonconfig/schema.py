@@ -33,10 +33,6 @@ schema = {
                     "default": 1500,
                     "propertyOrder": 3,
                 },
-                "txqueuelen": {
-                    "type": "integer",
-                    "propertyOrder": 4,
-                },
                 "autostart": {
                     "type": "boolean",
                     "default": True,
