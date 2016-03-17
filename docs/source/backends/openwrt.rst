@@ -227,6 +227,7 @@ The following example code will generate an archive with one file in ``/etc/cron
         "files": [
             {
                 "path": "/etc/crontabs/root",
+                "mode": "0644",
                 # new lines must be escaped with ``\n``
                 "contents": '* * * * * echo "test" > /etc/testfile\n'
                             '* * * * * echo "test2" > /etc/testfile2'

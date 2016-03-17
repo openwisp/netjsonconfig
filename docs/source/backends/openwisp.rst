@@ -246,14 +246,17 @@ The following example shows a full working *configuration dictionary* for the
         "files": [
             {
                 "path": "/openvpn/x509/ca.pem",
+                "mode": "0644",
                 "contents": "-----BEGIN CERTIFICATE-----\nstripped_down\n-----END CERTIFICATE-----\n"
             },
             {
                 "path": "/openvpn/x509/l2vpn_client_1_2325_2693.pem",
+                "mode": "0644",
                 "contents": "-----BEGIN CERTIFICATE-----\nstripped_down\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nstripped_down\n-----END RSA PRIVATE KEY-----\n"
             },
             {
                 "path": "/crontabs/root",
+                "mode": "0644",
                 "contents": "* * * * * echo 'test' > /tmp/test-cron"
             }
         ]
