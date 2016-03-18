@@ -336,6 +336,7 @@ schema = {
                     "name": {
                         "type": "string",
                         "propertyOrder": 1,
+                        "minLength": 3
                     },
                     "phy": {
                         "type": "string",
