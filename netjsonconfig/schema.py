@@ -21,7 +21,7 @@ schema = {
                     "type": "string",
                     "maxLength": 15,
                     "pattern": "^[^\\s]*$",
-                    "propertyOrder": 1,
+                    "propertyOrder": 0,
                 },
                 "mac": {
                     "type": "string",
@@ -108,7 +108,7 @@ schema = {
                                 "loopback",
                                 "other"
                             ],
-                            "propertyOrder": 0,
+                            "propertyOrder": 1,
                         }
                     }
                 },
@@ -124,7 +124,7 @@ schema = {
                             "type": "string",
                             "enum": ["wireless"],
                             "default": "wireless",
-                            "propertyOrder": 0,
+                            "propertyOrder": 1,
                         }
                     }
                 },
@@ -250,7 +250,7 @@ schema = {
                         "type": {
                             "type": "string",
                             "enum": ["bridge"],
-                            "propertyOrder": 0
+                            "propertyOrder": 1
                         }
                     }
                 },
