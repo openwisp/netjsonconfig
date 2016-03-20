@@ -345,6 +345,11 @@ Project goals
 If you are interested in this topic you can read more about the
 :doc:`Goals and Motivations <./goals>` of this project.
 
+Support
+-------
+
+Send questions to the `OpenWISP Mailing List <https://groups.google.com/d/forum/openwisp>`_.
+
 License
 -------
 
