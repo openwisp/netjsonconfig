@@ -499,20 +499,31 @@ schema = {
                 "required": [
                     "device",
                     "destination",
-                    "next"
+                    "next",
+                    "cost"
                 ],
                 "properties": {
                     "device": {
                         "type": "string",
                         "propertyOrder": 1,
                     },
-                    "next": {
+                    "destination": {
                         "type": "string",
                         "propertyOrder": 2,
                     },
-                    "destination": {
+                    "next": {
+                        "title": "next hop",
                         "type": "string",
-                        "propertyOrder": 3,
+                        "propertyOrder": 2,
+                    },
+                    "cost": {
+                        "type": "integer",
+                        "propertyOrder": 4,
+                        "default": 0,
+                    },
+                    "source": {
+                        "type": "string",
+                        "propertyOrder": 5,
                     }
                 }
             }

@@ -125,8 +125,7 @@ class NetworkRenderer(BaseRenderer):
             del uci_route['device']
             del uci_route['next']
             del uci_route['destination']
-            if uci_route.get('cost'):
-                del uci_route['cost']
+            del uci_route['cost']
             network = ip_interface(route['destination'])
             version = 'route' if network.version == 4 else 'route6'
             target = network.ip if network.version == 4 else network.network
@@ -136,7 +135,7 @@ class NetworkRenderer(BaseRenderer):
                 'interface': route['device'],
                 'target': str(target),
                 'gateway': route['next'],
-                'metric': route.get('cost'),
+                'metric': route['cost'],
                 'source': route.get('source')
             })
             if network.version == 4:

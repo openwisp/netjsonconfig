@@ -704,6 +704,26 @@ The static routes settings reside in the ``routes`` key of the *configuration di
 which must contain a list of `NetJSON Static Route objects <http://netjson.org/rfc.html#routes1>`_
 (see the link for the detailed specification).
 
+Static route object extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the default *NetJSON Route object options*, the ``OpenWrt`` backend
+also allows to define the following optional settings:
+
++--------------+---------+-------------+---------------------------------------------------+
+| key name     | type    | default     | description                                       |
++==============+=========+=============+===================================================+
+| ``type``     | string  | ``unicast`` | unicast, local, broadcast, multicast, unreachable |
+|              |         |             | prohibit, blackhole, anycast                      |
++--------------+---------+-------------+---------------------------------------------------+
+| ``mtu``      | string  | ````        | MTU for route, only numbers are allowed           |
++--------------+---------+-------------+---------------------------------------------------+
+| ``table``    | string  | ``False``   | Routing table id, only numbers are allowed        |
++--------------+---------+-------------+---------------------------------------------------+
+| ``onlink``   | boolean |  ````       | When enabled, gateway is on link even if the      |
+|              |         |             | gateway does not match any interface prefix       |
++--------------+---------+-------------+---------------------------------------------------+
+
 Static route example
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -719,14 +739,15 @@ The following *configuration dictionary*:
                 "next": "192.168.2.2",
                 "cost": 2,
                 "source": "192.168.1.10",
-                "table": 2,
+                "table": "2",
                 "onlink": True,
-                "mtu": 1450
+                "mtu": "1450"
             },
             {
                 "device": "eth1",
                 "destination": "fd89::1/128",
-                "next": "fd88::1"
+                "next": "fd88::1",
+                "cost": 0,
             }
         ]
     }
@@ -749,6 +770,7 @@ Will be rendered as follows::
     config route6
             option gateway 'fd88::1'
             option interface 'eth1'
+            option metric '0'
             option target 'fd89::1/128'
 
 Policy routing

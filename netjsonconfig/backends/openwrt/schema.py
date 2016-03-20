@@ -125,6 +125,44 @@ schema = merge_config(default_schema, {
                 }
             }
         },
+        "routes": {
+            "items": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "unicast",
+                            "local",
+                            "broadcast",
+                            "multicast",
+                            "unreachable",
+                            "prohibit",
+                            "blackhole",
+                            "anycast"
+                        ],
+                        "default": "unicast",
+                        "propertyOrder": 0,
+                    },
+                    "mtu": {
+                        "type": "string",
+                        "title": "MTU",
+                        "propertyOrder": 6,
+                        "pattern": "^[0-9]*$",
+                    },
+                    "table": {
+                        "type": "string",
+                        "propertyOrder": 7,
+                        "pattern": "^[0-9]*$",
+                    },
+                    "onlink": {
+                        "type": "boolean",
+                        "default": False,
+                        "format": "checkbox",
+                        "propertyOrder": 8,
+                    }
+                }
+            }
+        },
         "ip_rules": {
             "type": "array",
             "title": "Policy routing",

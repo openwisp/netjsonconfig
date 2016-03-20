@@ -163,7 +163,8 @@ config interface 'eth0_2'
                 {
                     "device": "eth1",
                     "destination": "192.168.3.1/24",
-                    "next": "192.168.2.1"
+                    "next": "192.168.2.1",
+                    "cost": 0
                 },
                 {
                     "device": "eth1",
@@ -171,9 +172,10 @@ config interface 'eth0_2'
                     "next": "192.168.2.2",
                     "cost": 2,
                     "source": "192.168.1.10",
-                    "table": 2,
+                    "table": "2",
                     "onlink": True,
-                    "mtu": 1450
+                    "mtu": "1450",
+                    "type": "unicast"
                 }
             ]
         })
@@ -187,6 +189,7 @@ config interface 'eth1'
 config route 'route1'
     option gateway '192.168.2.1'
     option interface 'eth1'
+    option metric '0'
     option netmask '255.255.255.0'
     option target '192.168.3.1'
 
@@ -200,6 +203,7 @@ config route 'route2'
     option source '192.168.1.10'
     option table '2'
     option target '192.168.4.1'
+    option type 'unicast'
 """)
         self.assertEqual(o.render(), expected)
 
@@ -223,7 +227,8 @@ config route 'route2'
                 {
                     "device": "eth1",
                     "destination": "fd89::1/128",
-                    "next": "fd88::1"
+                    "next": "fd88::1",
+                    "cost": 0
                 },
                 {
                     "device": "eth1",
@@ -244,6 +249,7 @@ config interface 'eth1'
 config route6
     option gateway 'fd88::1'
     option interface 'eth1'
+    option metric '0'
     option target 'fd89::1/128'
 
 config route6
