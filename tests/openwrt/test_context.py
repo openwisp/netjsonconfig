@@ -48,3 +48,13 @@ class TestContext(unittest.TestCase, _TabsMixin):
         line = "option timezone '{Europe/Amsterdam}'".format(**timezones)
         output = o.render()
         self.assertIn(line, output)
+
+    def test_no_variables_found(self):
+        config = {
+            "general": {
+                "hostname": "host",
+            }
+        }
+        o = OpenWrt(config, context={"a": "b"})
+        output = o.render()
+        self.assertIn("option hostname 'host'", output)
