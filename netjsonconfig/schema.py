@@ -170,7 +170,6 @@ schema = {
                                 },
                                 "hidden": {
                                     "type": "boolean",
-
                                     "default": False,
                                     "propertyOrder": 5,
                                 },
@@ -203,6 +202,7 @@ schema = {
                                         "protocol": {
                                             "type": "string",
                                             "enum": [
+                                                "none",
                                                 "wep_open",
                                                 "wep_shared",
                                                 "wpa_personal",

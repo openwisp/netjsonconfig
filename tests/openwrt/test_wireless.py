@@ -846,3 +846,40 @@ config wifi-iface
     option ssid 'mywifi'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_no_encryption(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "encryption": {
+                            "protocol": "none",
+                            "disabled": False,
+                            "key": ""
+                        }
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option encryption 'none'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
