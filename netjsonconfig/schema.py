@@ -8,6 +8,125 @@ schema = {
     "type": "object",
     "additionalProperties": True,
     "definitions": {
+        "base_address": {
+            "type": "object",
+            "additionalProperties": True,
+            "required": [
+                "proto",
+                "family",
+            ],
+            "properties": {
+                "proto": {
+                    "title": "protocol",
+                    "type": "string",
+                    "propertyOrder": 1,
+                },
+                "family": {
+                    "type": "string",
+                    "propertyOrder": 2,
+                }
+            }
+        },
+        "static_address": {
+            "type": "object",
+            "required": [
+                "address",
+                "mask"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "propertyOrder": 3,
+                },
+                "mask": {
+                    "type": "integer",
+                    "propertyOrder": 4,
+                },
+                "gateway": {
+                    "type": "string",
+                    "propertyOrder": 5,
+                }
+            }
+        },
+        "ipv4_address": {
+            "type": "object",
+            "title": "ipv4",
+            "allOf": [
+                {"$ref": "#/definitions/base_address"},
+                {"$ref": "#/definitions/static_address"},
+                {
+                    "type": "object",
+                    "properties": {
+                        "proto": {"enum": ["static"]},
+                        "family": {"enum": ["ipv4"]},
+                        "address": {
+                            "minLength": 8,
+                            "maxLength": 16,
+                            "format": "ipv4",
+                        },
+                        "mask": {
+                            "minimum": 8,
+                            "maxmium": 32,
+                            "default": 24,
+                        },
+                        "gateway": {
+                            "minLength": 8,
+                            "maxLength": 16,
+                            "format": "ipv4",
+                        }
+                    }
+                }
+            ]
+        },
+        "ipv6_address": {
+            "type": "object",
+            "title": "ipv6",
+            "allOf": [
+                {"$ref": "#/definitions/base_address"},
+                {"$ref": "#/definitions/static_address"},
+                {
+                    "type": "object",
+                    "required": [
+                        "address",
+                        "mask"
+                    ],
+                    "properties": {
+                        "proto": {"enum": ["static"]},
+                        "family": {"enum": ["ipv6"]},
+                        "address": {
+                            "minLength": 3,
+                            "maxLength": 45,
+                            "format": "ipv6",
+                            "propertyOrder": 3,
+                        },
+                        "mask": {
+                            "minimum": 4,
+                            "maxmium": 128,
+                            "default": 64,
+                        },
+                        "gateway": {
+                            "minLength": 3,
+                            "maxLength": 45,
+                            "format": "ipv6",
+                        }
+                    }
+                }
+            ]
+        },
+        "dhcp_address": {
+            "type": "object",
+            "title": "DHCP",
+            "allOf": [
+                {"$ref": "#/definitions/base_address"},
+                {
+                    "type": "object",
+                    "properties": {
+                        "proto": {"enum": ["dhcp"]},
+                        "family": {"enum": ["ipv4", "ipv6"]}
+                    }
+                }
+            ]
+        },
         "interface_settings": {
             "type": "object",
             "title": "Interface settings",
@@ -55,43 +174,12 @@ schema = {
                     "additionalItems": True,
                     "propertyOrder": 20,
                     "items": {
-                        "type": "object",
                         "title": "Address",
-                        "additionalProperties": True,
-                        "required": [
-                            "proto",
-                            "family"
-                        ],
-                        "properties": {
-                            "proto": {
-                                "type": "string",
-                                "enum": [
-                                    "static",
-                                    "dhcp"
-                                ],
-                                "propertyOrder": 1,
-                            },
-                            "family": {
-                                "type": "string",
-                                "enum": [
-                                    "ipv4",
-                                    "ipv6"
-                                ],
-                                "propertyOrder": 2,
-                            },
-                            "address": {
-                                "type": "string",
-                                "propertyOrder": 3,
-                            },
-                            "mask": {
-                                "type": "integer",
-                                "propertyOrder": 4,
-                            },
-                            "gateway": {
-                                "type": "string",
-                                "propertyOrder": 5,
-                            }
-                        }
+                        "oneOf": [
+                            {"$ref": "#/definitions/dhcp_address"},
+                            {"$ref": "#/definitions/ipv4_address"},
+                            {"$ref": "#/definitions/ipv6_address"},
+                        ]
                     }
                 }
             }
