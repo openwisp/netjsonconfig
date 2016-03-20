@@ -229,7 +229,12 @@ schema = {
                                             "type": "array",
                                             "propertyOrder": 4,
                                             "items": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "enum": [
+                                                    "tkip",
+                                                    "ccmp",
+                                                    "aes",
+                                                ]
                                             }
                                         }
                                     }
