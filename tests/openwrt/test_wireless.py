@@ -920,3 +920,43 @@ config wifi-iface
     option wds '1'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_wifi_options_zero(self):
+        """
+        ensure ack_distance, rts_threshold and frag_threshold
+        are ignored if left empty
+        """
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "wmm": True,
+                        "ack_distance": 0,
+                        "rts_threshold": 0,
+                        "frag_threshold": 0
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'MyWifiAP'
+    option wmm '1'
+""")
+        self.assertEqual(o.render(), expected)

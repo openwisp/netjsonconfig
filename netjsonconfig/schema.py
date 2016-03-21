@@ -288,7 +288,7 @@ schema = {
                 "ack_distance": {
                     "type": "integer",
                     "title": "ACK distance",
-                    "minimum": 1,
+                    "minimum": 0,
                     "propertyOrder": 10,
                 },
                 "rts_threshold": {
