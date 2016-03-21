@@ -259,6 +259,7 @@ schema = {
                                 "hidden": {
                                     "type": "boolean",
                                     "default": False,
+                                    "format": "checkbox",
                                     "propertyOrder": 5,
                                 },
                                 "ack_distance": {
