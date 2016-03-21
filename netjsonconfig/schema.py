@@ -146,6 +146,8 @@ schema = {
                 "mac": {
                     "type": "string",
                     "title": "mac address",
+                    "minLength": 17,
+                    "maxLength": 17,
                     "propertyOrder": 2,
                 },
                 "mtu": {
