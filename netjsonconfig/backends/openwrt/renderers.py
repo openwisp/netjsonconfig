@@ -295,7 +295,6 @@ class WirelessRenderer(BaseRenderer):
                 'access_point': 'ap',
                 'station': 'sta',
                 'adhoc': 'adhoc',
-                'wds': 'wds',
                 'monitor': 'monitor',
                 '802.11s': 'mesh'
             }
