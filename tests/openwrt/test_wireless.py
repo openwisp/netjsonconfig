@@ -507,7 +507,8 @@ config wifi-iface
                     "wireless": {
                         "radio": "radio1",
                         "mode": "adhoc",
-                        "ssid": "adhoc-ssid"
+                        "ssid": "adhoc-ssid",
+                        "bssid": "00:11:22:33:44:55"
                     }
                 }
             ]
@@ -534,6 +535,7 @@ config wifi-iface
     option ssid 'wpa2-personal'
 
 config wifi-iface
+    option bssid '00:11:22:33:44:55'
     option device 'radio1'
     option ifname 'wlan1'
     option mode 'adhoc'
@@ -823,7 +825,8 @@ config wifi-iface
                     "wireless": {
                         "radio": "radio0",
                         "mode": "station",
-                        "ssid": "mywifi"
+                        "ssid": "mywifi",
+                        "bssid": "00:11:22:33:44:55"
                     }
                 }
             ]
@@ -838,6 +841,7 @@ config interface 'wlan0'
 package wireless
 
 config wifi-iface
+    option bssid '00:11:22:33:44:55'
     option device 'radio0'
     option disabled '1'
     option ifname 'wlan0'

@@ -214,130 +214,19 @@ schema = {
                             "enum": ["wireless"],
                             "default": "wireless",
                             "propertyOrder": 1,
+                        },
+                        "wireless": {
+                            "type": "object",
+                            "propertyOrder": 10,
+                            "oneOf": [
+                                {"$ref": "#/definitions/ap_wireless_settings"},
+                                {"$ref": "#/definitions/sta_wireless_settings"},
+                                {"$ref": "#/definitions/adhoc_wireless_settings"},
+                                {"$ref": "#/definitions/monitor_wireless_settings"},
                         }
                     }
                 },
                 {"$ref": "#/definitions/interface_settings"},
-                {
-                    "properties": {
-                        "wireless": {
-                            "type": "object",
-                            "title": "Wireless Settings",
-                            "additionalProperties": True,
-                            "propertyOrder": 8,
-                            "required": [
-                                "radio",
-                                "mode",
-                                "ssid"
-                            ],
-                            "properties": {
-                                "radio": {
-                                    "type": "string",
-                                    "propertyOrder": 1,
-                                },
-                                "mode": {
-                                    "type": "string",
-                                    "enum": [
-                                        "access_point",
-                                        "station",
-                                        "adhoc",
-                                        "monitor",
-                                        "802.11s"
-                                    ],
-                                    "propertyOrder": 2,
-                                },
-                                "wds": {
-                                    "title": "WDS",
-                                    "type": "boolean",
-                                    "default": False,
-                                    "format": "checkbox",
-                                    "propertyOrder": 3,
-                                },
-                                "ssid": {
-                                    "type": "string",
-                                    "maxLength": 32,
-                                    "propertyOrder": 4,
-                                },
-                                "bssid": {
-                                    "type": "string",
-                                    "propertyOrder": 5,
-                                },
-                                "hidden": {
-                                    "type": "boolean",
-                                    "default": False,
-                                    "format": "checkbox",
-                                    "propertyOrder": 6,
-                                },
-                                "ack_distance": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "propertyOrder": 7,
-                                },
-                                "rts_threshold": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 2346,
-                                    "propertyOrder": 8,
-                                },
-                                "frag_threshold": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 2346,
-                                    "propertyOrder": 9,
-                                },
-                                "encryption": {
-                                    "type": "object",
-                                    "title": "Encryption",
-                                    "required": [
-                                        "protocol",
-                                        "key"
-                                    ],
-                                    "propertyOrder": 20,
-                                    "properties": {
-                                        "protocol": {
-                                            "type": "string",
-                                            "enum": [
-                                                "none",
-                                                "wep_open",
-                                                "wep_shared",
-                                                "wpa_personal",
-                                                "wpa2_personal",
-                                                "wpa_personal_mixed",
-                                                "wpa_enterprise",
-                                                "wpa2_enterprise",
-                                                "wpa_enterprise_mixed",
-                                                "wps"
-                                            ],
-                                            "propertyOrder": 1,
-                                        },
-                                        "disabled": {
-                                            "type": "boolean",
-                                            "default": False,
-                                            "format": "checkbox",
-                                            "propertyOrder": 2,
-                                        },
-                                        "key": {
-                                            "type": "string",
-                                            "propertyOrder": 3,
-                                        },
-                                        "ciphers": {
-                                            "type": "array",
-                                            "propertyOrder": 4,
-                                            "items": {
-                                                "type": "string",
-                                                "enum": [
-                                                    "tkip",
-                                                    "ccmp",
-                                                    "aes",
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             ]
         },
         "bridge_interface": {
@@ -371,6 +260,185 @@ schema = {
                         }
                     }
                 }
+            ]
+        },
+        "base_wireless_settings": {
+            "type": "object",
+            "title": "Wireless Settings",
+            "additionalProperties": True,
+            "propertyOrder": 8,
+            "required": [
+                "radio",
+                "mode",
+            ],
+            "properties": {
+                "radio": {
+                    "type": "string",
+                    "minLength": 2,
+                    "propertyOrder": 1,
+                },
+                "mode": {
+                    "type": "string",
+                    "propertyOrder": 2,
+                },
+                "ack_distance": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "propertyOrder": 7,
+                },
+                "rts_threshold": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2346,
+                    "propertyOrder": 8,
+                },
+                "frag_threshold": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2346,
+                    "propertyOrder": 9,
+                }
+            }
+        },
+        "ssid_wireless_property": {
+            "type": "object",
+            "required": ["ssid"],
+            "properties": {
+                "ssid": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "propertyOrder": 4,
+                }
+            }
+        },
+        "hidden_wireless_property": {
+            "type": "object",
+            "properties": {
+                "hidden": {
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 5,
+                }
+            }
+        },
+        "bssid_wireless_property": {
+            "type": "object",
+            "required": ["bssid"],
+            "properties": {
+                "bssid": {
+                    "type": "string",
+                    "propertyOrder": 6,
+                },
+            }
+        },
+        "wds_wireless_property": {
+            "type": "object",
+            "properties": {
+                "wds": {
+                    "title": "WDS",
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 3,
+                }
+            }
+        },
+        "encryption_wireless_property": {
+            "type": "object",
+            "properties": {
+                "encryption": {
+                    "type": "object",
+                    "title": "Encryption",
+                    "required": [
+                        "protocol",
+                        "key"
+                    ],
+                    "propertyOrder": 20,
+                    "properties": {
+                        "protocol": {
+                            "type": "string",
+                            "enum": [
+                                "none",
+                                "wep_open",
+                                "wep_shared",
+                                "wpa_personal",
+                                "wpa2_personal",
+                                "wpa_personal_mixed",
+                                "wpa_enterprise",
+                                "wpa2_enterprise",
+                                "wpa_enterprise_mixed",
+                                "wps"
+                            ],
+                            "propertyOrder": 1,
+                        },
+                        "disabled": {
+                            "type": "boolean",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 2,
+                        },
+                        "key": {
+                            "type": "string",
+                            "propertyOrder": 3,
+                        },
+                        "ciphers": {
+                            "type": "array",
+                            "propertyOrder": 4,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "tkip",
+                                    "ccmp",
+                                    "aes",
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "ap_wireless_settings": {
+            "type": "object",
+            "title": "Access Point",
+            "allOf": [
+                {"properties": {"mode": {"enum": ["access_point"]}}},
+                {"$ref": "#/definitions/base_wireless_settings"},
+                {"$ref": "#/definitions/ssid_wireless_property"},
+                {"$ref": "#/definitions/hidden_wireless_property"},
+                {"$ref": "#/definitions/wds_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property"},
+            ]
+        },
+        "sta_wireless_settings": {
+            "type": "object",
+            "title": "Station",
+            "allOf": [
+                {"properties": {"mode": {"enum": ["station"]}}},
+                {"$ref": "#/definitions/base_wireless_settings"},
+                {"$ref": "#/definitions/ssid_wireless_property"},
+                {"$ref": "#/definitions/bssid_wireless_property"},
+                {"$ref": "#/definitions/wds_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property"},
+            ]
+        },
+        "adhoc_wireless_settings": {
+            "type": "object",
+            "title": "Adhoc",
+            "allOf": [
+                {"properties": {"mode": {"enum": ["adhoc"]}}},
+                {"$ref": "#/definitions/base_wireless_settings"},
+                {"$ref": "#/definitions/ssid_wireless_property"},
+                {"$ref": "#/definitions/bssid_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property"},
+            ]
+        },
+        "monitor_wireless_settings": {
+            "type": "object",
+            "title": "Monitor",
+            "allOf": [
+                {"properties": {"mode": {"enum": ["monitor"]}}},
+                {"$ref": "#/definitions/base_wireless_settings"},
             ]
         }
     },
