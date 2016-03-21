@@ -75,7 +75,7 @@ schema = merge_config(default_schema, {
                                 "type": "string",
                                 "$ref": "#/definitions/interface_settings/properties/network"
                             },
-                            "propertyOrder": 10
+                            "propertyOrder": 19
                         }
                     }
                 }

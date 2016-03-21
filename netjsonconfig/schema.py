@@ -276,31 +276,34 @@ schema = {
                 "mode",
             ],
             "properties": {
+                "mode": {
+                    "type": "string",
+                    "propertyOrder": 1,
+                },
                 "radio": {
                     "type": "string",
                     "minLength": 2,
-                    "propertyOrder": 1,
-                },
-                "mode": {
-                    "type": "string",
                     "propertyOrder": 2,
                 },
                 "ack_distance": {
                     "type": "integer",
+                    "title": "ACK distance",
                     "minimum": 1,
-                    "propertyOrder": 7,
+                    "propertyOrder": 10,
                 },
                 "rts_threshold": {
                     "type": "integer",
+                    "title": "RTS threshold",
                     "minimum": 0,
                     "maximum": 2346,
-                    "propertyOrder": 8,
+                    "propertyOrder": 11,
                 },
                 "frag_threshold": {
                     "type": "integer",
+                    "title": "fragmentation threshold",
                     "minimum": 0,
                     "maximum": 2346,
-                    "propertyOrder": 9,
+                    "propertyOrder": 12,
                 }
             }
         },
@@ -310,8 +313,9 @@ schema = {
             "properties": {
                 "ssid": {
                     "type": "string",
+                    "title": "SSID",
                     "maxLength": 32,
-                    "propertyOrder": 4,
+                    "propertyOrder": 3,
                 }
             }
         },
@@ -320,9 +324,10 @@ schema = {
             "properties": {
                 "hidden": {
                     "type": "boolean",
+                    "title": "hide SSID",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 5,
+                    "propertyOrder": 4,
                 }
             }
         },
@@ -332,9 +337,10 @@ schema = {
             "properties": {
                 "bssid": {
                     "type": "string",
-                    "propertyOrder": 6,
+                    "title": "BSSID",
                     "minLength": 17,
                     "maxLength": 17,
+                    "propertyOrder": 4,
                 },
             }
         },
@@ -346,7 +352,7 @@ schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 3,
+                    "propertyOrder": 5,
                 }
             }
         },
@@ -356,7 +362,7 @@ schema = {
             "properties": {
                 "mesh_id": {
                     "type": "string",
-                    "title": "mesh id",
+                    "title": "mesh ID",
                     "pattern": "^[^\\s]*$",
                     "propertyOrder": 3,
                 },
