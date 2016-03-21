@@ -333,6 +333,8 @@ schema = {
                 "bssid": {
                     "type": "string",
                     "propertyOrder": 6,
+                    "minLength": 17,
+                    "maxLength": 17,
                 },
             }
         },
