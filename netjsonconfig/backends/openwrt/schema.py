@@ -80,7 +80,22 @@ schema = merge_config(default_schema, {
                     }
                 }
             }
-        }
+        },
+        "wmm_wireless_property": {
+            "type": "object",
+            "properties": {
+                "wmm": {
+                    "type": "boolean",
+                    "title": "WMM (802.11e)",
+                    "default": True,
+                    "format": "checkbox",
+                    "propertyOrder": 8,
+                }
+            }
+        },
+        "ap_wireless_settings": {
+            "allOf": [{"$ref": "#/definitions/wmm_wireless_property"}]
+        },
     },
     "properties": {
         "general": {
