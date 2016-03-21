@@ -223,6 +223,8 @@ schema = {
                                 {"$ref": "#/definitions/sta_wireless_settings"},
                                 {"$ref": "#/definitions/adhoc_wireless_settings"},
                                 {"$ref": "#/definitions/monitor_wireless_settings"},
+                                {"$ref": "#/definitions/mesh_wireless_settings"},
+                            ]
                         }
                     }
                 },
@@ -344,6 +346,18 @@ schema = {
                 }
             }
         },
+        "mesh_id_wireless_property": {
+            "type": "object",
+            "required": ["mesh_id"],
+            "properties": {
+                "mesh_id": {
+                    "type": "string",
+                    "title": "mesh id",
+                    "pattern": "^[^\\s]*$",
+                    "propertyOrder": 3,
+                },
+            }
+        },
         "encryption_wireless_property": {
             "type": "object",
             "properties": {
@@ -439,6 +453,16 @@ schema = {
             "allOf": [
                 {"properties": {"mode": {"enum": ["monitor"]}}},
                 {"$ref": "#/definitions/base_wireless_settings"},
+            ]
+        },
+        "mesh_wireless_settings": {
+            "type": "object",
+            "title": "802.11s (mesh)",
+            "allOf": [
+                {"properties": {"mode": {"enum": ["802.11s"]}}},
+                {"$ref": "#/definitions/base_wireless_settings"},
+                {"$ref": "#/definitions/mesh_id_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property"},
             ]
         }
     },
