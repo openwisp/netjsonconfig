@@ -666,6 +666,71 @@ Will be rendered as::
             option mode 'ap'
             option network 'wlan0'
             option ssid 'MyWifiAP'
+
+Wireless mesh (802.11s) example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Setting up 802.11s interfaces is fairly simple, in the following example we
+bridge the ``lan`` interface with ``mesh0``, the latter being an 802.11s
+wireless interface.
+
+.. note::
+   in 802.11s mesh mode the ``ssid`` property is not required,
+   while ``mesh_id`` is required.
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "mesh0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "802.11s",
+                    "mesh_id": "ninux",
+                    "network": ["lan"]
+                }
+            },
+            {
+                "name": "lan",
+                "type": "bridge",
+                "bridge_members": ["mesh0"],
+                "addresses": [
+                    {
+                        "address": "192.168.0.1",
+                        "mask": 24,
+                        "proto": "static",
+                        "family": "ipv4"
+                    }
+                ]
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config interface 'mesh0'
+            option ifname 'mesh0'
+            option proto 'none'
+
+    config interface 'lan'
+            option ifname 'mesh0'
+            option ipaddr '192.168.0.1/24'
+            option proto 'static'
+            option type 'bridge'
+
+    package wireless
+
+    config wifi-iface
+            option device 'radio0'
+            option ifname 'mesh0'
+            option mesh_id 'ninux'
+            option mode 'mesh'
+            option network 'lan'
+
 Radio settings
 --------------
 
