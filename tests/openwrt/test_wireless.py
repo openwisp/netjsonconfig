@@ -999,3 +999,83 @@ config wifi-iface
     option ssid 'MyWifiAP'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_wds_bridge(self):
+        o = OpenWrt({
+            "interfaces": [
+                # client
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "mode": "station",
+                        "radio": "radio0",
+                        "network": ["wds_bridge"],
+                        "ssid": "FreeRomaWifi",
+                        "bssid": "C0:4A:00:2D:05:FD",
+                        "wds": True
+                    }
+                },
+                # repeater access point
+                {
+                    "name": "wlan1",
+                    "type": "wireless",
+                    "wireless": {
+                        "mode": "access_point",
+                        "radio": "radio1",
+                        "network": ["wds_bridge"],
+                        "ssid": "FreeRomaWifi"
+                    }
+                },
+                # WDS bridge
+                {
+                    "name": "br-wds",
+                    "network": "wds_bridge",
+                    "type": "bridge",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4"
+                        }
+                    ],
+                    "bridge_members": [
+                        "wlan0",
+                        "wlan1",
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+config interface 'wlan1'
+    option ifname 'wlan1'
+    option proto 'none'
+
+config interface 'wds_bridge'
+    option ifname 'wlan0 wlan1'
+    option proto 'dhcp'
+    option type 'bridge'
+
+package wireless
+
+config wifi-iface
+    option bssid 'C0:4A:00:2D:05:FD'
+    option device 'radio0'
+    option ifname 'wlan0'
+    option mode 'sta'
+    option network 'wds_bridge'
+    option ssid 'FreeRomaWifi'
+    option wds '1'
+
+config wifi-iface
+    option device 'radio1'
+    option ifname 'wlan1'
+    option mode 'ap'
+    option network 'wds_bridge'
+    option ssid 'FreeRomaWifi'
+""")
+        self.assertEqual(o.render(), expected)
