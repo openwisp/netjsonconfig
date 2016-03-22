@@ -715,7 +715,7 @@ config interface 'eth0'
             "interfaces": [
                 {
                     "name": "eth0",
-                    "network": "lan0123456789",
+                    "network": "lan0123456789012345",
                     "type": "ethernet"
                 }
             ]

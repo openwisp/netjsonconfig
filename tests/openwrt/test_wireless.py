@@ -708,7 +708,7 @@ config wifi-iface
         with self.assertRaises(ValidationError):
             o.validate()
         # maxLength does not validate
-        o.config['interfaces'][0]['wireless']['network'] = ['lan0123456789']
+        o.config['interfaces'][0]['wireless']['network'] = ['lan0123456789012345']
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
