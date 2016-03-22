@@ -621,6 +621,51 @@ Will be rendered as follows::
             option network 'lan'
             option ssid 'wifi service'
 
+Wireless access point with macfilter ACL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the following example we ban two mac addresses from connecting to a wireless access point:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "MyWifiAP",
+                    "macfilter": "deny",
+                    "maclist": [
+                        "E8:94:F6:33:8C:1D",
+                        "42:6c:8f:95:0f:00"
+                    ]
+                }
+            }
+        ]
+    }
+
+Will be rendered as::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface
+            option device 'radio0'
+            option ifname 'wlan0'
+            option macfilter 'deny'
+            list maclist 'E8:94:F6:33:8C:1D'
+            list maclist '42:6c:8f:95:0f:00'
+            option mode 'ap'
+            option network 'wlan0'
+            option ssid 'MyWifiAP'
 Radio settings
 --------------
 
