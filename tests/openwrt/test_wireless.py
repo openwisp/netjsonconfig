@@ -1079,3 +1079,54 @@ config wifi-iface
     option ssid 'FreeRomaWifi'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_mesh_80211s(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "mesh0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "802.11s",
+                        "mesh_id": "ninux",
+                        "network": ["lan"]
+                    }
+                },
+                {
+                    "name": "lan",
+                    "type": "bridge",
+                    "bridge_members": ["mesh0"],
+                    "addresses": [
+                        {
+                            "address": "192.168.0.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'mesh0'
+    option ifname 'mesh0'
+    option proto 'none'
+
+config interface 'lan'
+    option ifname 'mesh0'
+    option ipaddr '192.168.0.1/24'
+    option proto 'static'
+    option type 'bridge'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option ifname 'mesh0'
+    option mesh_id 'ninux'
+    option mode 'mesh'
+    option network 'lan'
+""")
+        self.assertEqual(o.render(), expected)
