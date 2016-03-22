@@ -829,3 +829,22 @@ config globals 'globals'
     option ula_prefix 'fd8e:f40a:6701::/48'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_empty_dns(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet"
+                }
+            ],
+            "dns_servers": [],
+            "dns_search": []
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)

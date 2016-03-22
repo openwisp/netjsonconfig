@@ -165,14 +165,12 @@ class NetworkRenderer(BaseRenderer):
     def __get_dns_servers(self):
         dns = self.config.get('dns_servers', None)
         if dns:
-            dns = ' '.join(dns)
-        return dns
+            return ' '.join(dns)
 
     def __get_dns_search(self):
-        dns = self.config.get('dns_search', None)
-        if dns:
-            dns = ' '.join(dns)
-        return dns
+        dns_search = self.config.get('dns_search', None)
+        if dns_search:
+            return ' '.join(dns_search)
 
     def _get_switches(self):
         uci_switches = []
