@@ -960,3 +960,42 @@ config wifi-iface
     option wmm '1'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_wifi_macfilter(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "macfilter": "deny",
+                        "maclist": [
+                            "E8:94:F6:33:8C:1D",
+                            "42:6c:8f:95:0f:00"
+                        ]
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option ifname 'wlan0'
+    option macfilter 'deny'
+    list maclist 'E8:94:F6:33:8C:1D'
+    list maclist '42:6c:8f:95:0f:00'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'MyWifiAP'
+""")
+        self.assertEqual(o.render(), expected)
