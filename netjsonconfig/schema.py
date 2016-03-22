@@ -28,7 +28,6 @@ schema = {
             }
         },
         "static_address": {
-            "type": "object",
             "required": [
                 "address",
                 "mask"
@@ -49,7 +48,6 @@ schema = {
             }
         },
         "ipv4_address": {
-            "type": "object",
             "title": "ipv4",
             "allOf": [
                 {"$ref": "#/definitions/base_address"},
@@ -79,7 +77,6 @@ schema = {
             ]
         },
         "ipv6_address": {
-            "type": "object",
             "title": "ipv6",
             "allOf": [
                 {"$ref": "#/definitions/base_address"},
@@ -114,7 +111,6 @@ schema = {
             ]
         },
         "dhcp_address": {
-            "type": "object",
             "title": "DHCP",
             "allOf": [
                 {"$ref": "#/definitions/base_address"},
@@ -308,7 +304,6 @@ schema = {
             }
         },
         "ssid_wireless_property": {
-            "type": "object",
             "required": ["ssid"],
             "properties": {
                 "ssid": {
@@ -320,7 +315,6 @@ schema = {
             }
         },
         "hidden_wireless_property": {
-            "type": "object",
             "properties": {
                 "hidden": {
                     "type": "boolean",
@@ -332,7 +326,6 @@ schema = {
             }
         },
         "bssid_wireless_property": {
-            "type": "object",
             "required": ["bssid"],
             "properties": {
                 "bssid": {
@@ -345,7 +338,6 @@ schema = {
             }
         },
         "wds_wireless_property": {
-            "type": "object",
             "properties": {
                 "wds": {
                     "title": "WDS",
@@ -357,7 +349,6 @@ schema = {
             }
         },
         "mesh_id_wireless_property": {
-            "type": "object",
             "required": ["mesh_id"],
             "properties": {
                 "mesh_id": {
@@ -369,7 +360,6 @@ schema = {
             }
         },
         "encryption_wireless_property": {
-            "type": "object",
             "properties": {
                 "encryption": {
                     "type": "object",
@@ -423,7 +413,6 @@ schema = {
             }
         },
         "ap_wireless_settings": {
-            "type": "object",
             "title": "Access Point",
             "allOf": [
                 {"properties": {"mode": {"enum": ["access_point"]}}},
@@ -435,7 +424,6 @@ schema = {
             ]
         },
         "sta_wireless_settings": {
-            "type": "object",
             "title": "Station",
             "allOf": [
                 {"properties": {"mode": {"enum": ["station"]}}},
@@ -447,7 +435,6 @@ schema = {
             ]
         },
         "adhoc_wireless_settings": {
-            "type": "object",
             "title": "Adhoc",
             "allOf": [
                 {"properties": {"mode": {"enum": ["adhoc"]}}},
@@ -458,7 +445,6 @@ schema = {
             ]
         },
         "monitor_wireless_settings": {
-            "type": "object",
             "title": "Monitor",
             "allOf": [
                 {"properties": {"mode": {"enum": ["monitor"]}}},
@@ -466,7 +452,6 @@ schema = {
             ]
         },
         "mesh_wireless_settings": {
-            "type": "object",
             "title": "802.11s (mesh)",
             "allOf": [
                 {"properties": {"mode": {"enum": ["802.11s"]}}},

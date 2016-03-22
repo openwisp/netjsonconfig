@@ -82,7 +82,6 @@ schema = merge_config(default_schema, {
             }
         },
         "wmm_wireless_property": {
-            "type": "object",
             "properties": {
                 "wmm": {
                     "type": "boolean",
