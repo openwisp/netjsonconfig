@@ -4,7 +4,31 @@ Change log
 Version 0.4.0 [unreleased]
 --------------------------
 
-WIP
+- `#40 <https://github.com/openwisp/netjsonconfig/issues/40>`_: [openwrt] added support for ULA prefix
+- `#44 <https://github.com/openwisp/netjsonconfig/issues/44>`_: [schema] added ``none`` to encryption choices
+- `#45 <https://github.com/openwisp/netjsonconfig/issues/45>`_: [schema] improved address definition
+- `#43 <https://github.com/openwisp/netjsonconfig/issues/43>`_: [openwrt] improved static routes
+- `#41 <https://github.com/openwisp/netjsonconfig/issues/41>`_: [schema] added ``wds`` property & removed ``wds`` mode
+- `#36 <https://github.com/openwisp/netjsonconfig/issues/36>`_: [schema] added specific settings for 802.11s (mesh) mode
+- `3f6d2c6 <https://github.com/openwisp/netjsonconfig/commit/3f6d2c6>`_: [schema] removed NetJSON ``type`` from schema
+- `04c6058 <https://github.com/openwisp/netjsonconfig/commit/04c6058>`_: [openwrt] made file ``mode`` property required (**backward incompatible change**)
+- `00e784e <https://github.com/openwisp/netjsonconfig/commit/00e784e>`_: [openwrt] added default switch settings
+- `dd708cb <https://github.com/openwisp/netjsonconfig/commit/dd708cb>`_: [openwrt] added NTP default settings
+- `f4148e4 <https://github.com/openwisp/netjsonconfig/commit/f4148e4>`_: [schema] removed ``txqueuelen`` from interface definition
+- `574a48d <https://github.com/openwisp/netjsonconfig/commit/574a48d>`_: [schema] added ``title`` and ``type`` to ``bridge_members``
+- `c6276f2 <https://github.com/openwisp/netjsonconfig/commit/c6276f2>`_: [schema] MTU title and minimum value
+- `d8ab0e0 <https://github.com/openwisp/netjsonconfig/commit/d8ab0e0>`_: [schema] added ``minLength`` to interface name
+- `67a0916 <https://github.com/openwisp/netjsonconfig/commit/67a0916>`_: [schema] added ``minLength`` to radio name
+- `258892e <https://github.com/openwisp/netjsonconfig/commit/258892e>`_: [schema] added possible ``ciphers``
+- `2751fe3 <https://github.com/openwisp/netjsonconfig/commit/2751fe3>`_: [schema] improved definition of wireless interface fields
+- `478ef16 <https://github.com/openwisp/netjsonconfig/commit/478ef16>`_: [openwrt] added ``wmm`` property for wireless access points
+- `b9a14f3 <https://github.com/openwisp/netjsonconfig/commit/b9a14f3>`_: [schema] added ``minLength`` and ``maxLength`` to interface ``mac`` property
+- `526c2d1 <https://github.com/openwisp/netjsonconfig/commit/526c2d1>`_: [schema] added ``minLength`` and maxLength to wireless ``bssid`` property
+- `c8c95d6 <https://github.com/openwisp/netjsonconfig/commit/c8c95d6>`_: [schema] improved ordering and titles of wireless properties
+- `a226e90 <https://github.com/openwisp/netjsonconfig/commit/a226e90>`_: [openwrt] ignore advanced wifi options if zero
+- `e008ef6 <https://github.com/openwisp/netjsonconfig/commit/e008ef6>`_: [openwrt] added ``macfilter`` to wireless access points
+- `c70ab76 <https://github.com/openwisp/netjsonconfig/commit/c70ab76>`_: [openwrt] fixed empty dns and dns-search bug
+- `778615a <https://github.com/openwisp/netjsonconfig/commit/778615a>`_: [openwrt] increased network ``maxLength``
 
 Version 0.3.7 [2016-02-19]
 --------------------------
