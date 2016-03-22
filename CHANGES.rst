@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.4.0 [unreleased]
+Version 0.4.0 [2016-03-22]
 --------------------------
 
 - `#40 <https://github.com/openwisp/netjsonconfig/issues/40>`_: [openwrt] added support for ULA prefix
