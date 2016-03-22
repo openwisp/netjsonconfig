@@ -731,6 +731,48 @@ Will be rendered as follows::
             option mode 'mesh'
             option network 'lan'
 
+Wireless mesh (adhoc) example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In wireless adhoc mode, the ``bssid`` property is required.
+
+The following example:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "ssid": "freifunk",
+                    "mode": "adhoc",
+                    "bssid": "02:b8:c0:00:00:00"
+                }
+            }
+        ]
+    }
+
+Will result in::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface
+            option bssid '02:b8:c0:00:00:00'
+            option device 'radio0'
+            option ifname 'wlan0'
+            option mode 'adhoc'
+            option network 'wlan0'
+            option ssid 'freifunk'
+
 Radio settings
 --------------
 
