@@ -58,8 +58,8 @@ schema = {
                         "proto": {"enum": ["static"]},
                         "family": {"enum": ["ipv4"]},
                         "address": {
-                            "minLength": 8,
-                            "maxLength": 16,
+                            "minLength": 7,
+                            "maxLength": 15,
                             "format": "ipv4",
                         },
                         "mask": {
