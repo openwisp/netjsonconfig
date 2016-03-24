@@ -1130,3 +1130,35 @@ config wifi-iface
     option network 'lan'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_bssid_format(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio1",
+                        "mode": "adhoc",
+                        "ssid": "adhoc-ssid",
+                        "bssid": "00:11:22:33:44:55"
+                    }
+                }
+            ]
+        })
+        o.validate()
+        # too short
+        o.config['interfaces'][0]['wireless']['bssid'] = '00:11:22:33:44'
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # valid
+        o.config['interfaces'][0]['wireless']['bssid'] = '00-11-22-33-44-55'
+        o.validate()
+        # should not be valid
+        o.config['interfaces'][0]['wireless']['bssid'] = '00:11:22:33:44:ZY'
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # empty is not valid
+        o.config['interfaces'][0]['wireless']['bssid'] = ''
+        with self.assertRaises(ValidationError):
+            o.validate()

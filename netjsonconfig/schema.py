@@ -331,6 +331,7 @@ schema = {
                 "bssid": {
                     "type": "string",
                     "title": "BSSID",
+                    "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
                     "minLength": 17,
                     "maxLength": 17,
                     "propertyOrder": 4,
