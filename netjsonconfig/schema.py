@@ -139,17 +139,17 @@ schema = {
                     "pattern": "^[^\\s]*$",
                     "propertyOrder": 0,
                 },
-                "mac": {
-                    "type": "string",
-                    "title": "override mac-address",
-                    "pattern": "^(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|)$",  # can be empty
-                    "propertyOrder": 2,
-                },
                 "mtu": {
                     "type": "integer",
                     "title": "MTU",
                     "default": 1500,
                     "minimum": 68,
+                    "propertyOrder": 2,
+                },
+                "mac": {
+                    "type": "string",
+                    "title": "MAC address (override)",
+                    "pattern": "^(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|)$",  # can be empty
                     "propertyOrder": 3,
                 },
                 "autostart": {
