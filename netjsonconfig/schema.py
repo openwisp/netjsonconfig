@@ -141,9 +141,8 @@ schema = {
                 },
                 "mac": {
                     "type": "string",
-                    "title": "mac address",
-                    "minLength": 17,
-                    "maxLength": 17,
+                    "title": "override mac-address",
+                    "pattern": "^(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|)$",  # can be empty
                     "propertyOrder": 2,
                 },
                 "mtu": {

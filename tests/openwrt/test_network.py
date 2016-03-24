@@ -848,3 +848,29 @@ config interface 'eth0'
     option proto 'none'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_mac_address_format(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "mac": "00:11:22:33:44:55"
+                }
+            ]
+        })
+        o.validate()
+        # too short
+        o.config['interfaces'][0]['mac'] = '00:11:22:33:44'
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # valid
+        o.config['interfaces'][0]['mac'] = '00-11-22-33-44-55'
+        o.validate()
+        # should not be valid
+        o.config['interfaces'][0]['mac'] = '00:11:22:33:44:ZY'
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # empty is valid (will be ignored)
+        o.config['interfaces'][0]['mac'] = ''
+        o.validate()
