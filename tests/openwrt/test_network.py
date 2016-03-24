@@ -874,3 +874,30 @@ config interface 'eth0'
         # empty is valid (will be ignored)
         o.config['interfaces'][0]['mac'] = ''
         o.validate()
+
+    def test_default_addresses(self):
+        """
+        the following configuration dictionary caused empty output up to 0.4.0
+        """
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "type": "bridge",
+                    "network": "lan",
+                    "addresses": [],
+                    "name": "br-lan",
+                    "bridge_members": [
+                        "eth0",
+                        "eth1"
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'lan'
+    option ifname 'eth0 eth1'
+    option proto 'none'
+    option type 'bridge'
+""")
+        self.assertEqual(o.render(), expected)

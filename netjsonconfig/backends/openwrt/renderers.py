@@ -19,7 +19,7 @@ class NetworkRenderer(BaseRenderer):
         interfaces = self.config.get('interfaces', [])
         # this line ensures interfaces are not entirely
         # ignored if they do not contain any address
-        default_addresses = [{'proto': 'none'}]
+        default_address = [{'proto': 'none'}]
         # results container
         uci_interfaces = []
         for interface in interfaces:
@@ -34,8 +34,12 @@ class NetworkRenderer(BaseRenderer):
             if interface.get('type') == 'bridge':
                 is_bridge = True
                 bridge_members = ' '.join(interface['bridge_members'])
+            # ensure address list is not never empty, even when 'addresses' is []
+            address_list = interface.get('addresses')
+            if not address_list:
+                address_list = default_address
             # address list defaults to empty list
-            for address in interface.get('addresses', default_addresses):
+            for address in address_list:
                 # prepare new UCI interface directive
                 uci_interface = deepcopy(interface)
                 if network:
@@ -46,11 +50,11 @@ class NetworkRenderer(BaseRenderer):
                 if uci_interface.get('disabled'):
                     uci_interface['enabled'] = not interface['disabled']
                     del uci_interface['disabled']
-                if uci_interface.get('addresses'):
+                if 'addresses' in uci_interface:
                     del uci_interface['addresses']
-                if uci_interface.get('type'):
+                if 'type' in uci_interface:
                     del uci_interface['type']
-                if uci_interface.get('wireless'):
+                if 'wireless' in uci_interface:
                     del uci_interface['wireless']
                 # default values
                 address_key = None
