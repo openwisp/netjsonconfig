@@ -150,6 +150,7 @@ schema = {
                     "type": "string",
                     "title": "MAC address (override)",
                     "pattern": "^(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|)$",  # can be empty
+                    "maxLength": 17,
                     "propertyOrder": 3,
                 },
                 "autostart": {
