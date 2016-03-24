@@ -134,8 +134,8 @@ schema = {
             "properties": {
                 "name": {
                     "type": "string",
+                    "minLength": 2,
                     "maxLength": 15,
-                    "minLenght": 2,
                     "pattern": "^[^\\s]*$",
                     "propertyOrder": 0,
                 },
