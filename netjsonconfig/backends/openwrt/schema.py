@@ -112,8 +112,9 @@ schema = merge_config(default_schema, {
                     "items": {
                         "type": "string",
                         "title": "MAC address",
-                        "maxLength": 17,
+                        "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
                         "minLength": 17,
+                        "maxLength": 17,
                     }
                 }
             }

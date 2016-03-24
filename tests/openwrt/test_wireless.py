@@ -1000,6 +1000,41 @@ config wifi-iface
 """)
         self.assertEqual(o.render(), expected)
 
+    def test_maclist_format(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "macfilter": "deny",
+                        "maclist": [
+                            "E8:94:F6:33:8C:1D",
+                        ]
+                    }
+                }
+            ]
+        })
+        o.validate()
+        # too short
+        o.config['interfaces'][0]['wireless']['maclist'][0] = '00:11:22:33:44'
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # valid
+        o.config['interfaces'][0]['wireless']['maclist'][0] = '00-11-22-33-44-55'
+        o.validate()
+        # should not be valid
+        o.config['interfaces'][0]['wireless']['maclist'][0] = '00:11:22:33:44:ZY'
+        with self.assertRaises(ValidationError):
+            o.validate()
+        # empty is not valid
+        o.config['interfaces'][0]['wireless']['maclist'][0] = ''
+        with self.assertRaises(ValidationError):
+            o.validate()
+
     def test_wds_bridge(self):
         o = OpenWrt({
             "interfaces": [
