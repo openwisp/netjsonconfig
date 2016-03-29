@@ -101,7 +101,6 @@ Example initialization of ``OpenWrt`` backend:
     from netjsonconfig import OpenWrt
 
     ipv6_router = OpenWrt({
-        "type": "DeviceConfiguration",
         "interfaces": [
             {
                 "name": "eth0.1",
