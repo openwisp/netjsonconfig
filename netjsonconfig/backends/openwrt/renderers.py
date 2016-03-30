@@ -256,11 +256,14 @@ class WirelessRenderer(BaseRenderer):
         possible return values are: 11a, 11b, 11g
         """
         protocol = radio['protocol']
-        if protocol not in ['802.11n', '802.11ac']:
-            return protocol.replace('802.', '')
-        elif protocol == '802.11n' and radio['channel'] <= 13:
+        if protocol in ['802.11a', '802.11b', '802.11g']:
+            # return 11a, 11b or 11g
+            return protocol[4:]
+        # determine hwmode depending on channel used
+        if radio['channel'] <= 13:
             return '11g'
-        return '11a'
+        else:
+            return '11a'
 
     def __get_htmode(self, radio):
         """
