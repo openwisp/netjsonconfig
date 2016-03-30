@@ -243,8 +243,6 @@ class WirelessRenderer(BaseRenderer):
             # determine channel width
             if radio['driver'] == 'mac80211':
                 uci_radio['htmode'] = self.__get_htmode(radio)
-            elif radio['driver'] in ['ath9k', 'ath5k']:
-                uci_radio['chanbw'] = radio['channel_width']
             del uci_radio['channel_width']
             # ensure country is uppercase
             if uci_radio.get('country'):

@@ -101,48 +101,6 @@ config wifi-device 'radio1'
 """)
         self.assertEqual(o.render(), expected)
 
-    def test_radio_2ghz_athk(self):
-        o = OpenWrt({
-            "radios": [
-                {
-                    "name": "radio0",
-                    "phy": "phy0",
-                    "driver": "ath5k",
-                    "protocol": "802.11b",
-                    "channel": 3,
-                    "channel_width": 5,
-                    "tx_power": 3
-                },
-                {
-                    "name": "radio1",
-                    "phy": "phy1",
-                    "driver": "ath9k",
-                    "protocol": "802.11a",
-                    "channel": 140,
-                    "channel_width": 10,
-                    "tx_power": 4
-                }
-            ]
-        })
-        expected = self._tabs("""package wireless
-
-config wifi-device 'radio0'
-    option chanbw '5'
-    option channel '3'
-    option hwmode '11b'
-    option phy 'phy0'
-    option txpower '3'
-    option type 'ath5k'
-
-config wifi-device 'radio1'
-    option chanbw '10'
-    option channel '140'
-    option hwmode '11a'
-    option phy 'phy1'
-    option txpower '4'
-    option type 'ath9k'
-""")
-        self.assertEqual(o.render(), expected)
 
     def test_radio_ac_and_custom_attrs(self):
         o = OpenWrt({
