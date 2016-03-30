@@ -3,6 +3,8 @@ JSON-Schema implementation of NetJSON DeviceConfiguration
 http://netjson.org/rfc.html
 """
 
+from .channels import channels_2and5, channels_2ghz, channels_5ghz
+
 schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
@@ -460,7 +462,123 @@ schema = {
                 {"$ref": "#/definitions/mesh_id_wireless_property"},
                 {"$ref": "#/definitions/encryption_wireless_property"},
             ]
-        }
+        },
+        "base_radio_settings": {
+            "type": "object",
+            "additionalProperties": True,
+            "required": [
+                "protocol",
+                "name",
+                "channel",
+                "channel_width",
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "propertyOrder": 1,
+                    "minLength": 3
+                },
+                "protocol": {
+                    "type": "string",
+                    "propertyOrder": 2,
+                },
+                "phy": {
+                    "type": "string",
+                    "propertyOrder": 3,
+                },
+                "channel": {
+                    "type": "integer",
+                    "propertyOrder": 4,
+                },
+                "channel_width": {
+                    "type": "integer",
+                    "title": "channel width (mhz)",
+                    "propertyOrder": 5,
+                },
+                "tx_power": {
+                    "type": "integer",
+                    "title": "transmit power (dbm)",
+                    "propertyOrder": 6,
+                },
+                "country": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "propertyOrder": 7,
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 8,
+                }
+            }
+        },
+        "radio_2ghz_channels": {
+            "properties": {
+                "channel": {
+                    "enum": channels_2ghz
+                }
+            }
+        },
+        "radio_5ghz_channels": {
+            "properties": {
+                "channel": {
+                    "enum": channels_5ghz,
+                }
+            }
+        },
+        "radio_2and5_channels": {
+            "properties": {
+                "channel": {
+                    "enum": channels_2and5,
+                }
+            }
+        },
+        "radio_legacy_channel_width": {
+            "properties": {"channel_width": {"enum": [20]}}
+        },
+        "radio_n_channel_width": {
+            "properties": {"channel_width": {"enum": [20, 40]}}
+        },
+        "radio_ac_channel_width": {
+            "properties": {"channel_width": {"enum": [20, 40, 80, 160]}}
+        },
+        "radio_80211bg_settings": {
+            "title": "802.11b/g (2.4 GHz legacy)",
+            "allOf": [
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"properties": {"protocol": {"enum": ["802.11b", "802.11g"]}}},
+                {"$ref": "#/definitions/radio_2ghz_channels"},
+                {"$ref": "#/definitions/radio_legacy_channel_width"}
+            ]
+        },
+        "radio_80211a_settings": {
+            "title": "802.11a (5 GHz legacy)",
+            "allOf": [
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"properties": {"protocol": {"enum": ["802.11a"]}}},
+                {"$ref": "#/definitions/radio_5ghz_channels"},
+                {"$ref": "#/definitions/radio_legacy_channel_width"}
+            ]
+        },
+        "radio_80211n_settings": {
+            "title": "802.11n (2.4 GHz and 5 GHz N)",
+            "allOf": [
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"properties": {"protocol": {"enum": ["802.11n"]}}},
+                {"$ref": "#/definitions/radio_2and5_channels"},
+                {"$ref": "#/definitions/radio_n_channel_width"}
+            ]
+        },
+        "radio_80211ac_settings": {
+            "title": "802.11ac (2.4 GHz and 5 GHz AC)",
+            "allOf": [
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"properties": {"protocol": {"enum": ["802.11ac"]}}},
+                {"$ref": "#/definitions/radio_2and5_channels"},
+                {"$ref": "#/definitions/radio_ac_channel_width"}
+            ]
+        },
     },
     "properties": {
         "general": {
@@ -512,51 +630,13 @@ schema = {
             "additionalItems": True,
             "propertyOrder": 3,
             "items": {
-                "type": "object",
                 "title": "Radio",
-                "additionalProperties": True,
-                "required": [
-                    "name",
-                    "channel",
-                    "channel_width",
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "propertyOrder": 1,
-                        "minLength": 3
-                    },
-                    "phy": {
-                        "type": "string",
-                        "propertyOrder": 2,
-                    },
-                    "channel": {
-                        "type": "integer",
-                        "propertyOrder": 3,
-                    },
-                    "channel_width": {
-                        "type": "integer",
-                        "title": "channel width",
-                        "propertyOrder": 4,
-                    },
-                    "tx_power": {
-                        "type": "integer",
-                        "title": "tx power",
-                        "propertyOrder": 5,
-                    },
-                    "country": {
-                        "type": "string",
-                        "minLength": 2,
-                        "maxLength": 2,
-                        "propertyOrder": 5,
-                    },
-                    "disabled": {
-                        "type": "boolean",
-                        "default": False,
-                        "format": "checkbox",
-                        "propertyOrder": 6,
-                    }
-                }
+                "oneOf": [
+                    {"$ref": "#/definitions/radio_80211n_settings"},
+                    {"$ref": "#/definitions/radio_80211ac_settings"},
+                    {"$ref": "#/definitions/radio_80211bg_settings"},
+                    {"$ref": "#/definitions/radio_80211a_settings"},
+                ]
             }
         },
         "dns_servers": {

@@ -125,6 +125,22 @@ schema = merge_config(default_schema, {
                 {"$ref": "#/definitions/macfilter_wireless"},
             ]
         },
+        "base_radio_settings": {
+            "required": ["driver"],
+            "properties": {
+                "driver": {
+                    "type": "string",
+                    "enum": [
+                        "mac80211",
+                        "madwifi",
+                        "ath5k",
+                        "ath9k",
+                        "broadcom"
+                    ],
+                    "propertyOrder": 2,
+                }
+            }
+        }
     },
     "properties": {
         "general": {
@@ -134,38 +150,6 @@ schema = merge_config(default_schema, {
                     "default": "UTC",
                     "enum": list(timezones.keys()),
                     "propertyOrder": 1,
-                }
-            }
-        },
-        "radios": {
-            "items": {
-                "required": [
-                    "driver",
-                    "protocol"
-                ],
-                "properties": {
-                    "driver": {
-                        "type": "string",
-                        "enum": [
-                            "mac80211",
-                            "madwifi",
-                            "ath5k",
-                            "ath9k",
-                            "broadcom"
-                        ],
-                        "propertyOrder": 0,
-                    },
-                    "protocol": {
-                        "type": "string",
-                        "enum": [
-                            "802.11a",
-                            "802.11b",
-                            "802.11g",
-                            "802.11n",
-                            "802.11ac"
-                        ],
-                        "propertyOrder": 1,
-                    }
                 }
             }
         },

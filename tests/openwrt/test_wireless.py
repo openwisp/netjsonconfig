@@ -28,7 +28,7 @@ class TestWirelessRenderer(unittest.TestCase, _TabsMixin):
                     "phy": "phy1",
                     "driver": "mac80211",
                     "protocol": "802.11n",
-                    "channel": 149,
+                    "channel": 136,
                     "channel_width": 40,
                     "tx_power": 18,
                     "country": "en",
@@ -47,7 +47,7 @@ config wifi-device 'radio0'
     option type 'mac80211'
 
 config wifi-device 'radio1'
-    option channel '149'
+    option channel '136'
     option country 'EN'
     option disabled '1'
     option htmode 'HT40'
@@ -100,7 +100,6 @@ config wifi-device 'radio1'
     option type 'mac80211'
 """)
         self.assertEqual(o.render(), expected)
-
 
     def test_radio_ac_and_custom_attrs(self):
         o = OpenWrt({
