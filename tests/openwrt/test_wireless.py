@@ -1154,3 +1154,29 @@ config wifi-iface
         o.config['interfaces'][0]['wireless']['bssid'] = ''
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_radio_mac80211b(self):
+        o = OpenWrt({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11b",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                }
+            ]
+        })
+        expected = self._tabs("""package wireless
+
+config wifi-device 'radio0'
+    option channel '3'
+    option htmode 'NONE'
+    option hwmode '11b'
+    option phy 'phy0'
+    option txpower '3'
+    option type 'mac80211'
+""")
+        self.assertEqual(o.render(), expected)
