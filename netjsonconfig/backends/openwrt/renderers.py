@@ -240,6 +240,9 @@ class WirelessRenderer(BaseRenderer):
             # determine hwmode option
             uci_radio['hwmode'] = self.__get_hwmode(radio)
             del uci_radio['protocol']
+            # check if using channel 0, that means "auto"
+            if uci_radio['channel'] is 0:
+                uci_radio['channel'] = 'auto'
             # determine channel width
             if radio['driver'] == 'mac80211':
                 uci_radio['htmode'] = self.__get_htmode(radio)
@@ -260,7 +263,10 @@ class WirelessRenderer(BaseRenderer):
             # return 11a, 11b or 11g
             return protocol[4:]
         # determine hwmode depending on channel used
-        if radio['channel'] <= 13:
+        if radio['channel'] is 0:
+            # using "auto", the wifi driver will use its default
+            return None
+        elif radio['channel'] <= 13:
             return '11g'
         else:
             return '11a'

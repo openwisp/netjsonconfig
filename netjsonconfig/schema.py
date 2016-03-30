@@ -516,7 +516,8 @@ schema = {
         "radio_2ghz_channels": {
             "properties": {
                 "channel": {
-                    "enum": channels_2ghz
+                    "enum": channels_2ghz,
+                    "options": {"enum_titles": ['auto']}
                 }
             }
         },
@@ -524,6 +525,7 @@ schema = {
             "properties": {
                 "channel": {
                     "enum": channels_5ghz,
+                    "options": {"enum_titles": ['auto']}
                 }
             }
         },
@@ -531,6 +533,7 @@ schema = {
             "properties": {
                 "channel": {
                     "enum": channels_2and5,
+                    "options": {"enum_titles": ['auto']}
                 }
             }
         },
