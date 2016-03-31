@@ -188,269 +188,6 @@ Code example:
         }
     }
 
-Including additional files
---------------------------
-
-The ``OpenWrt`` backend supports inclusion of arbitrary plain text files through
-the ``files`` key of the *configuration dictionary*. The value of the ``files``
-key must be a list in which each item is a dictionary representing a file, each
-dictionary is structured as follows:
-
-+-------------------+----------------+----------+----------------------------------------------------------+
-| key name          | type           | required |function                                                  |
-+===================+================+==========+==========================================================+
-| ``path``          | string         | yes      | path of the file in the tar.gz archive                   |
-+-------------------+----------------+----------+----------------------------------------------------------+
-| ``contents``      | string         | yes      | plain text contents of the file, new lines must be       |
-|                   |                |          | encoded as `\n`                                          |
-+-------------------+----------------+----------+----------------------------------------------------------+
-| ``mode``          | string         | no       | permissions, if omitted will default to ``0644``         |
-+-------------------+----------------+----------+----------------------------------------------------------+
-
-The ``files`` key of the *configuration dictionary* is a custom NetJSON extension not
-present in the original NetJSON RFC.
-
-.. warning::
-    The files are included in the output of the ``render`` method unless you pass
-    ``files=False``, eg: ``openwrt.render(files=False)``
-
-Plain file example
-~~~~~~~~~~~~~~~~~~
-
-The following example code will generate an archive with one file in ``/etc/crontabs/root``:
-
-.. code-block:: python
-
-    from netjsonconfig import OpenWrt
-
-    o = OpenWrt({
-        "files": [
-            {
-                "path": "/etc/crontabs/root",
-                "mode": "0644",
-                # new lines must be escaped with ``\n``
-                "contents": '* * * * * echo "test" > /etc/testfile\n'
-                            '* * * * * echo "test2" > /etc/testfile2'
-            }
-        ]
-    })
-    o.generate()
-
-Executable script file example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following example will create an executable shell script:
-
-.. code-block:: python
-
-    o = OpenWrt({
-        "files": [
-            {
-                "path": "/bin/hello_world",
-                "mode": "0755",
-                "contents": "#!/bin/sh\n"
-                            "echo 'Hello world'"
-            }
-        ]
-    })
-    o.generate()
-
-Including custom configuration options
---------------------------------------
-
-It is very easy to add configuration options that are not explicitly
-defined in the schema of the ``OpenWrt`` backend.
-
-For example, in some cases you may need to define a "ppp" interface:
-
-.. code-block:: python
-
-    from netjsonconfig import OpenWrt
-
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "ppp0",
-                "type": "other",
-                "proto": "ppp",
-                "device": "/dev/usb/modem1",
-                "username": "user1",
-                "password": "pwd0123",
-                "keepalive": 3,
-                "ipv6": True
-            }
-        ]
-    })
-    print(o.render())
-
-Will return the following output::
-
-    package network
-
-    config interface 'ppp0'
-            option device '/dev/usb/modem1'
-            option ifname 'ppp0'
-            option ipv6 '1'
-            option keepalive '3'
-            option password 'pwd0123'
-            option proto 'ppp'
-            option username 'user1'
-
-Including custom lists
-----------------------
-
-Under specific circumstances, OpenWRT allows adding configuration options in the form of lists.
-Many of these UCI options are not defined in the *JSON-Schema* of the ``OpenWrt`` backend,
-but the schema allows adding custom properties.
-
-The ``OpenWrt`` backend recognizes list options for the following sections:
-
- * interface settings
- * ip address settings
- * wireless settings
- * radio settings
-
-Interface list setting example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following example shows how to set a list of ``ip6class`` options:
-
-.. code-block:: python
-
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet",
-                "ip6class": ["wan6", "backbone"]
-            }
-        ]
-    })
-    print(o.render())
-
-UCI Output::
-
-    package network
-
-    config interface 'eth0'
-            option ifname 'eth0'
-            list ip6class 'wan6'
-            list ip6class 'backbone'
-            option proto 'none'
-
-Address list setting example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following example shows how to set a list of dhcp ``reqopts`` settings:
-
-.. code-block:: python
-
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4",
-                        "reqopts": ["43", "54"]
-                    }
-                ]
-            }
-        ]
-    })
-    print(o.render())
-
-UCI Output::
-
-    package network
-
-    config interface 'eth0'
-            option ifname 'eth0'
-            option proto 'dhcp'
-            list reqopts '43'
-            list reqopts '54'
-
-Radio list setting example
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following example shows how to set a list of advanced capabilities supported
-by the radio using ``ht_capab``:
-
-.. code-block:: python
-
-    o = OpenWrt({
-        "radios": [
-            {
-                "name": "radio0",
-                "phy": "phy0",
-                "driver": "mac80211",
-                "protocol": "802.11n",
-                "channel": 1,
-                "channel_width": 20,
-                "ht_capab": ["SMPS-STATIC", "SHORT-GI-20"]
-            }
-        ]
-    })
-    print(o.render())
-
-UCI output::
-
-    package wireless
-
-    config wifi-device 'radio0'
-            option channel '1'
-            list ht_capab 'SMPS-STATIC'
-            list ht_capab 'SHORT-GI-20'
-            option htmode 'HT20'
-            option hwmode '11g'
-            option phy 'phy0'
-            option type 'mac80211'
-
-Wireless list setting example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following example shows how to set the supported basic rates of a
-wireless interface using ``basic_rate``:
-
-.. code-block:: python
-
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "wlan0",
-                "type": "wireless",
-                "wireless": {
-                    "radio": "radio0",
-                    "mode": "access_point",
-                    "ssid": "open",
-                    "basic_rate": ["6000", "9000"]
-                }
-            }
-        ]
-    })
-    print(o.render())
-
-UCI output::
-
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
-    package wireless
-
-    config wifi-iface
-            list basic_rate '6000'
-            list basic_rate '9000'
-            option device 'radio0'
-            option ifname 'wlan0'
-            option mode 'ap'
-            option network 'wlan0'
-            option ssid 'open'
-
 General settings
 ----------------
 
@@ -1495,6 +1232,270 @@ Will be rendered as follows::
             option name 'WLAN2G'
             option sysfs 'tp-link:blue:wlan2g'
             option trigger 'phy0tpt'
+
+Including custom options
+------------------------
+
+It is very easy to add configuration options that are not explicitly
+defined in the schema of the ``OpenWrt`` backend.
+
+For example, in some cases you may need to define a "ppp" interface,
+which can use quite a few properties that are not defined in the schema:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    o = OpenWrt({
+        "interfaces": [
+            {
+                "name": "ppp0",
+                "type": "other",
+                "proto": "ppp",
+                "device": "/dev/usb/modem1",
+                "username": "user1",
+                "password": "pwd0123",
+                "keepalive": 3,
+                "ipv6": True
+            }
+        ]
+    })
+    print(o.render())
+
+UCI output::
+
+    package network
+
+    config interface 'ppp0'
+            option device '/dev/usb/modem1'
+            option ifname 'ppp0'
+            option ipv6 '1'
+            option keepalive '3'
+            option password 'pwd0123'
+            option proto 'ppp'
+            option username 'user1'
+
+Including custom lists
+----------------------
+
+Under specific circumstances, OpenWRT allows adding configuration options in the form of lists.
+Many of these UCI options are not defined in the *JSON-Schema* of the ``OpenWrt`` backend,
+but the schema allows adding custom properties.
+
+The ``OpenWrt`` backend recognizes list options for the following sections:
+
+ * interface settings
+ * ip address settings
+ * wireless settings
+ * radio settings
+
+Interface list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set a list of ``ip6class`` options:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "ip6class": ["wan6", "backbone"]
+            }
+        ]
+    })
+    print(o.render())
+
+UCI Output::
+
+    package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            list ip6class 'wan6'
+            list ip6class 'backbone'
+            option proto 'none'
+
+Address list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set a list of dhcp ``reqopts`` settings:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "proto": "dhcp",
+                        "family": "ipv4",
+                        "reqopts": ["43", "54"]
+                    }
+                ]
+            }
+        ]
+    })
+    print(o.render())
+
+UCI Output::
+
+    package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            option proto 'dhcp'
+            list reqopts '43'
+            list reqopts '54'
+
+Radio list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set a list of advanced capabilities supported
+by the radio using ``ht_capab``:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11n",
+                "channel": 1,
+                "channel_width": 20,
+                "ht_capab": ["SMPS-STATIC", "SHORT-GI-20"]
+            }
+        ]
+    })
+    print(o.render())
+
+UCI output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel '1'
+            list ht_capab 'SMPS-STATIC'
+            list ht_capab 'SHORT-GI-20'
+            option htmode 'HT20'
+            option hwmode '11g'
+            option phy 'phy0'
+            option type 'mac80211'
+
+Wireless list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set the supported basic rates of a
+wireless interface using ``basic_rate``:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "open",
+                    "basic_rate": ["6000", "9000"]
+                }
+            }
+        ]
+    })
+    print(o.render())
+
+UCI output::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface
+            list basic_rate '6000'
+            list basic_rate '9000'
+            option device 'radio0'
+            option ifname 'wlan0'
+            option mode 'ap'
+            option network 'wlan0'
+            option ssid 'open'
+
+Including additional files
+--------------------------
+
+The ``OpenWrt`` backend supports inclusion of arbitrary plain text files through
+the ``files`` key of the *configuration dictionary*. The value of the ``files``
+key must be a list in which each item is a dictionary representing a file, each
+dictionary is structured as follows:
+
++-------------------+----------------+----------+----------------------------------------------------------+
+| key name          | type           | required |function                                                  |
++===================+================+==========+==========================================================+
+| ``path``          | string         | yes      | path of the file in the tar.gz archive                   |
++-------------------+----------------+----------+----------------------------------------------------------+
+| ``contents``      | string         | yes      | plain text contents of the file, new lines must be       |
+|                   |                |          | encoded as `\n`                                          |
++-------------------+----------------+----------+----------------------------------------------------------+
+| ``mode``          | string         | no       | permissions, if omitted will default to ``0644``         |
++-------------------+----------------+----------+----------------------------------------------------------+
+
+The ``files`` key of the *configuration dictionary* is a custom NetJSON extension not
+present in the original NetJSON RFC.
+
+.. warning::
+    The files are included in the output of the ``render`` method unless you pass
+    ``files=False``, eg: ``openwrt.render(files=False)``
+
+Plain file example
+~~~~~~~~~~~~~~~~~~
+
+The following example code will generate an archive with one file in ``/etc/crontabs/root``:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    o = OpenWrt({
+        "files": [
+            {
+                "path": "/etc/crontabs/root",
+                "mode": "0644",
+                # new lines must be escaped with ``\n``
+                "contents": '* * * * * echo "test" > /etc/testfile\n'
+                            '* * * * * echo "test2" > /etc/testfile2'
+            }
+        ]
+    })
+    o.generate()
+
+Executable script file example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example will create an executable shell script:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "files": [
+            {
+                "path": "/bin/hello_world",
+                "mode": "0755",
+                "contents": "#!/bin/sh\n"
+                            "echo 'Hello world'"
+            }
+        ]
+    })
+    o.generate()
 
 All the other settings
 ----------------------
