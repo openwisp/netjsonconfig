@@ -825,6 +825,60 @@ Will be rendered as follows::
             option txpower '4'
             option type 'mac80211'
 
+Automatic channel selection example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you need to use the "automatic channel selection" of OpenWRT, you must set
+the channel to ``0`` and, unless you are using neither **802.11n** nor **802.11ac**,
+you must set the ``hwmode`` property to tell OpenWRT which band to use
+(11g for 2.4 Ghz, 11a for 5 GHz).
+
+The following example sets "automatic channel selection" for two radios, the first radio uses
+**802.11n** in the 2 GHz band, while the second uses **802.11ac** in the 5 GHz band.
+
+.. code-block:: python
+
+    {
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11n",
+                "channel": 0,  # 0 stands for auto
+                "hwmode": "11g",  # must set this explicitly, 11g means 2.4 GHz band
+                "channel_width": 20
+            },
+            {
+                "name": "radio1",
+                "phy": "phy1",
+                "driver": "mac80211",
+                "protocol": "802.11ac",
+                "channel": 0,  # 0 stands for auto
+                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band
+                "channel_width": 80
+            }
+        ]
+    }
+
+UCI output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel 'auto'
+            option htmode 'HT20'
+            option hwmode '11g'
+            option phy 'phy0'
+            option type 'mac80211'
+
+    config wifi-device 'radio1'
+            option channel 'auto'
+            option htmode 'VHT80'
+            option hwmode '11a'
+            option phy 'phy1'
+            option type 'mac80211'
+
 Static Routes
 -------------
 
