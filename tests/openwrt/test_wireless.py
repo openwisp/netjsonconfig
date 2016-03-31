@@ -1328,3 +1328,64 @@ config wifi-device 'radio0'
     option type 'mac80211'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_radio_list_option(self):
+        o = OpenWrt({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 1,
+                    "channel_width": 20,
+                    "ht_capab": ["SMPS-STATIC", "SHORT-GI-20"]
+                }
+            ]
+        })
+        expected = self._tabs("""package wireless
+
+config wifi-device 'radio0'
+    option channel '1'
+    list ht_capab 'SMPS-STATIC'
+    list ht_capab 'SHORT-GI-20'
+    option htmode 'HT20'
+    option hwmode '11g'
+    option phy 'phy0'
+    option type 'mac80211'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_wifi_iface_list_option(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "basic_rate": ["6000", "9000"]
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    list basic_rate '6000'
+    list basic_rate '9000'
+    option device 'radio0'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)

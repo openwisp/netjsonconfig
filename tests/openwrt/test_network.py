@@ -901,3 +901,50 @@ config interface 'lan'
     option type 'bridge'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_interface_list_option(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "ip6class": ["wan6", "backbone"]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    list ip6class 'wan6'
+    list ip6class 'backbone'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_address_list_option(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4",
+                            "reqopts": ["43", "54"]
+                        }
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'dhcp'
+    list reqopts '43'
+    list reqopts '54'
+""")
+        self.assertEqual(o.render(), expected)
+

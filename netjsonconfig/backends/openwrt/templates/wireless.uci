@@ -5,7 +5,13 @@
         config wifi-device '{{ radio.name }}'
         {% for key, value in radio.items() %}
             {% if key != 'name' and value not in ['', None] %}
-                option {{ key }} '{{ value }}'
+                {% if value is not string and value is iterable %}
+                    {% for list_value in value %}
+                        list {{ key }} '{{ list_value }}'
+                    {% endfor %}
+                {% else %}
+                    option {{ key }} '{{ value }}'
+                {% endif %}
             {% endif %}
         {% endfor %}
 

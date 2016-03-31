@@ -14,7 +14,13 @@
         config interface '{{ interface.name }}'
             {% for key, value in interface.items() %}
                 {% if key != 'name' and value not in ['', None] %}
-                    option {{ key }} '{{ value }}'
+                    {% if value is not string and value is iterable %}
+                        {% for list_value in value %}
+                            list {{ key }} '{{ list_value }}'
+                        {% endfor %}
+                    {% else %}
+                        option {{ key }} '{{ value }}'
+                    {% endif %}
                 {% endif %}
             {% endfor %}
 

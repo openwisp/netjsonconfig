@@ -293,10 +293,163 @@ Will return the following output::
             option fancy '1'
             option proto 'none'
 
+Including custom lists
+----------------------
+
+Under specific circumstances, OpenWRT allows adding configuration options in the form of lists.
+Many of these UCI options are not defined in the *JSON-Schema* of the ``OpenWrt`` backend,
+but the schema allows adding custom properties.
+
+The ``OpenWrt`` backend recognizes list options for the following sections:
+
+ * interface settings
+ * ip address settings
+ * wireless settings
+ * radio settings
+
+Interface list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set a list of ``ip6class`` options:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "ip6class": ["wan6", "backbone"]
+            }
+        ]
+    })
+    print(o.render())
+
+UCI Output::
+
+    package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            list ip6class 'wan6'
+            list ip6class 'backbone'
+            option proto 'none'
+
+Address list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set a list of dhcp ``reqopts`` settings:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "proto": "dhcp",
+                        "family": "ipv4",
+                        "reqopts": ["43", "54"]
+                    }
+                ]
+            }
+        ]
+    })
+    print(o.render())
+
+UCI Output::
+
+    package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            option proto 'dhcp'
+            list reqopts '43'
+            list reqopts '54'
+
+Radio list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set a list of advanced capabilities supported
+by the radio using ``ht_capab``:
 .. note::
    The hypotetical ``custom`` and ``fancy`` options would not be recognized by OpenWRT
    and they would be therefore ignored by the UCI parser.
 
+.. code-block:: python
+
+    o = OpenWrt({
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11n",
+                "channel": 1,
+                "channel_width": 20,
+                "ht_capab": ["SMPS-STATIC", "SHORT-GI-20"]
+            }
+        ]
+    })
+    print(o.render())
+
+UCI output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel '1'
+            list ht_capab 'SMPS-STATIC'
+            list ht_capab 'SHORT-GI-20'
+            option htmode 'HT20'
+            option hwmode '11g'
+            option phy 'phy0'
+            option type 'mac80211'
+
+Wireless list setting example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows how to set the supported basic rates of a
+wireless interface using ``basic_rate``:
+
+.. code-block:: python
+
+    o = OpenWrt({
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "open",
+                    "basic_rate": ["6000", "9000"]
+                }
+            }
+        ]
+    })
+    print(o.render())
+
+UCI output::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface
+            list basic_rate '6000'
+            list basic_rate '9000'
+            option device 'radio0'
+            option ifname 'wlan0'
+            option mode 'ap'
+            option network 'wlan0'
+            option ssid 'open'
    We are using them here just to demonstrate how to add complex configuration options that
    are not defined in the NetJSON spec or in the schema of the ``OpenWrt`` backend.
 
