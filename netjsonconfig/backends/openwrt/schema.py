@@ -140,7 +140,43 @@ schema = merge_config(default_schema, {
                     "propertyOrder": 2,
                 }
             }
-        }
+        },
+        "radio_hwmode_11g": {
+            "properties": {
+                "hwmode": {
+                    "type": "string",
+                    "title": "hardware mode",
+                    "readOnly": True,
+                    "propertyOrder": 8,
+                    "default": "11g",
+                    "enum": ["11g"],
+                }
+            }
+        },
+        "radio_hwmode_11a": {
+            "properties": {
+                "hwmode": {
+                    "type": "string",
+                    "title": "hardware mode",
+                    "readOnly": True,
+                    "propertyOrder": 8,
+                    "default": "11a",
+                    "enum": ["11a"],
+                }
+            }
+        },
+        "radio_80211gn_settings": {
+            "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
+        },
+        "radio_80211an_settings": {
+            "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+        },
+        "radio_80211ac_2ghz_settings": {
+            "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
+        },
+        "radio_80211ac_5ghz_settings": {
+            "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+        },
     },
     "properties": {
         "general": {

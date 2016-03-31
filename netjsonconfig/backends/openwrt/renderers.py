@@ -264,8 +264,9 @@ class WirelessRenderer(BaseRenderer):
             return protocol[4:]
         # determine hwmode depending on channel used
         if radio['channel'] is 0:
-            # using "auto", the wifi driver will use its default
-            return None
+            # when using automatic channel selection, we need an
+            # additional parameter to determine the frequency band
+            return radio.get('hwmode')
         elif radio['channel'] <= 13:
             return '11g'
         else:

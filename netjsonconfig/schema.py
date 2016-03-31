@@ -509,7 +509,7 @@ schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 8,
+                    "propertyOrder": 9,
                 }
             }
         },
@@ -564,22 +564,40 @@ schema = {
                 {"$ref": "#/definitions/radio_legacy_channel_width"}
             ]
         },
-        "radio_80211n_settings": {
-            "title": "802.11n (2.4 GHz and 5 GHz N)",
+        "radio_80211gn_settings": {
+            "title": "802.11n (2.4 GHz N)",
+            "allOf": [
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"$ref": "#/definitions/radio_2ghz_channels"},
+                {"$ref": "#/definitions/radio_n_channel_width"},
+                {"properties": {"protocol": {"enum": ["802.11n"]}}},
+            ]
+        },
+        "radio_80211an_settings": {
+            "title": "802.11n (5 GHz N)",
             "allOf": [
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"properties": {"protocol": {"enum": ["802.11n"]}}},
-                {"$ref": "#/definitions/radio_2and5_channels"},
-                {"$ref": "#/definitions/radio_n_channel_width"}
+                {"$ref": "#/definitions/radio_5ghz_channels"},
+                {"$ref": "#/definitions/radio_n_channel_width"},
             ]
         },
-        "radio_80211ac_settings": {
-            "title": "802.11ac (2.4 GHz and 5 GHz AC)",
+        "radio_80211ac_2ghz_settings": {
+            "title": "802.11ac (2.4 GHz AC)",
             "allOf": [
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"properties": {"protocol": {"enum": ["802.11ac"]}}},
-                {"$ref": "#/definitions/radio_2and5_channels"},
-                {"$ref": "#/definitions/radio_ac_channel_width"}
+                {"$ref": "#/definitions/radio_2ghz_channels"},
+                {"$ref": "#/definitions/radio_ac_channel_width"},
+            ]
+        },
+        "radio_80211ac_5ghz_settings": {
+            "title": "802.11ac (5 GHz AC)",
+            "allOf": [
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"properties": {"protocol": {"enum": ["802.11ac"]}}},
+                {"$ref": "#/definitions/radio_5ghz_channels"},
+                {"$ref": "#/definitions/radio_ac_channel_width"},
             ]
         },
     },
@@ -635,8 +653,10 @@ schema = {
             "items": {
                 "title": "Radio",
                 "oneOf": [
-                    {"$ref": "#/definitions/radio_80211n_settings"},
-                    {"$ref": "#/definitions/radio_80211ac_settings"},
+                    {"$ref": "#/definitions/radio_80211gn_settings"},
+                    {"$ref": "#/definitions/radio_80211an_settings"},
+                    {"$ref": "#/definitions/radio_80211ac_2ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
                     {"$ref": "#/definitions/radio_80211bg_settings"},
                     {"$ref": "#/definitions/radio_80211a_settings"},
                 ]
