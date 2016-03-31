@@ -261,26 +261,31 @@ config route6
 """)
         self.assertEqual(o.render(), expected)
 
-    def test_additional_proto(self):
+    def test_custom_proto(self):
         o = OpenWrt({
             "interfaces": [
                 {
-                    "name": "mobile0",
-                    "type": "wireless",
-                    "addresses": [
-                        {
-                            "proto": "3g",
-                            "family": "ipv4"
-                        }
-                    ]
+                    "name": "ppp0",
+                    "type": "other",
+                    "proto": "ppp",
+                    "device": "/dev/usb/modem1",
+                    "username": "user1",
+                    "password": "pwd0123",
+                    "keepalive": 3,
+                    "ipv6": True
                 }
             ]
         })
         expected = self._tabs("""package network
 
-config interface 'mobile0'
-    option ifname 'mobile0'
-    option proto '3g'
+config interface 'ppp0'
+    option device '/dev/usb/modem1'
+    option ifname 'ppp0'
+    option ipv6 '1'
+    option keepalive '3'
+    option password 'pwd0123'
+    option proto 'ppp'
+    option username 'user1'
 """)
         self.assertEqual(o.render(), expected)
 
@@ -312,12 +317,7 @@ config interface 'eth0'
                     "mtu": 1400,
                     "custom_attr": "yes",
                     "empty": "",
-                    "addresses": [
-                        {
-                            "proto": "3g",
-                            "family": "ipv4"
-                        }
-                    ]
+                    "proto": "3g",
                 }
             ]
         })

@@ -59,8 +59,7 @@ class NetworkRenderer(BaseRenderer):
                 # default values
                 address_key = None
                 address_value = None
-                # proto defaults to static
-                proto = address.get('proto', 'static')
+                proto = self.__get_proto(uci_interface, address)
                 # add suffix if there is more than one config block
                 if counter > 1:
                     name = '{name}_{counter}'.format(name=uci_name, counter=counter)
@@ -117,6 +116,16 @@ class NetworkRenderer(BaseRenderer):
                 counter += 1
         return uci_interfaces
 
+    def __get_proto(self, interface, address):
+        """
+        determines interface "proto" option
+        """
+        if 'proto' not in interface:
+            # proto defaults to static
+            return address.get('proto', 'static')
+        else:
+            # allow override
+            return interface['proto']
     def _get_routes(self):
         routes = self.config.get('routes', [])
         # results container

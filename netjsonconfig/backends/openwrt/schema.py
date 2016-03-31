@@ -9,43 +9,6 @@ DEFAULT_FILE_MODE = '0644'
 
 schema = merge_config(default_schema, {
     "definitions": {
-        "other_address": {
-            "type": "object",
-            "title": "other",
-            "allOf": [
-                {"$ref": "#/definitions/base_address"},
-                {
-                    "type": "object",
-                    "properties": {
-                        "family": {"enum": ["ipv4", "ipv6"]},
-                        "proto": {
-                            "enum": [
-                                'ppp',
-                                'pppoe',
-                                'pppoa',
-                                '3g',
-                                'qmi',
-                                'ncm',
-                                'hnet',
-                                'pptp',
-                                '6in4',
-                                'aiccu',
-                                '6to4',
-                                '6rd',
-                                'dslite',
-                                'l2tp',
-                                'relay',
-                                'gre',
-                                'gretap',
-                                'grev6',
-                                'grev6tap',
-                                'none'
-                            ]
-                        }
-                    }
-                }
-            ]
-        },
         "interface_settings": {
             "properties": {
                 "network": {
@@ -53,11 +16,6 @@ schema = merge_config(default_schema, {
                     "maxLength": 15,
                     "pattern": "^[a-zA-z0-9_\\.\\-]*$",
                     "propertyOrder": 7
-                },
-                "addresses": {
-                    "items": {
-                        "oneOf": [{"$ref": "#/definitions/other_address"}]
-                    }
                 }
             }
         },
