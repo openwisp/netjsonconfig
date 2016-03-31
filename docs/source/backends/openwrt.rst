@@ -255,17 +255,13 @@ The following example will create an executable shell script:
     })
     o.generate()
 
-Including arbitrary options
----------------------------
+Including custom configuration options
+--------------------------------------
 
-It is very easy to add arbitrary UCI options in the resulting configuration **as long as
-the configuration dictionary does not violate the schema**.
+It is very easy to add configuration options that are not explicitly
+defined in the schema of the ``OpenWrt`` backend.
 
-.. note::
-   This feature is a deliberate design choice aimed at providing maximum flexibility.
-   We want to avoid unnecessary limitations.
-
-In the following example we will add two arbitrary options: ``custom`` and ``fancy``.
+For example, in some cases you may need to define a "ppp" interface:
 
 .. code-block:: python
 
@@ -274,10 +270,14 @@ In the following example we will add two arbitrary options: ``custom`` and ``fan
     o = OpenWrt({
         "interfaces": [
             {
-                "name": "eth0",
-                "type": "ethernet",
-                "custom": "custom_value",
-                "fancy": True
+                "name": "ppp0",
+                "type": "other",
+                "proto": "ppp",
+                "device": "/dev/usb/modem1",
+                "username": "user1",
+                "password": "pwd0123",
+                "keepalive": 3,
+                "ipv6": True
             }
         ]
     })
@@ -287,11 +287,14 @@ Will return the following output::
 
     package network
 
-    config interface 'eth0'
-            option ifname 'eth0'
-            option custom 'custom_value'
-            option fancy '1'
-            option proto 'none'
+    config interface 'ppp0'
+            option device '/dev/usb/modem1'
+            option ifname 'ppp0'
+            option ipv6 '1'
+            option keepalive '3'
+            option password 'pwd0123'
+            option proto 'ppp'
+            option username 'user1'
 
 Including custom lists
 ----------------------
@@ -374,9 +377,6 @@ Radio list setting example
 
 The following example shows how to set a list of advanced capabilities supported
 by the radio using ``ht_capab``:
-.. note::
-   The hypotetical ``custom`` and ``fancy`` options would not be recognized by OpenWRT
-   and they would be therefore ignored by the UCI parser.
 
 .. code-block:: python
 
@@ -450,8 +450,6 @@ UCI output::
             option mode 'ap'
             option network 'wlan0'
             option ssid 'open'
-   We are using them here just to demonstrate how to add complex configuration options that
-   are not defined in the NetJSON spec or in the schema of the ``OpenWrt`` backend.
 
 General settings
 ----------------
