@@ -948,3 +948,44 @@ config interface 'eth0'
 """)
         self.assertEqual(o.render(), expected)
 
+    def test_dns_override(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "dns": ["8.8.8.8", "8.8.4.4"]
+                }
+            ],
+            "dns_servers": ["192.168.3.1", "192.168.3.2"]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    list dns '8.8.8.8'
+    list dns '8.8.4.4'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_dns_search_override(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "dns_search": ["openwisp.org", "netjson.org"]
+                }
+            ],
+            "dns_search": ["domain.com"]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    list dns_search 'openwisp.org'
+    list dns_search 'netjson.org'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)

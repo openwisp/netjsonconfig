@@ -77,8 +77,8 @@ class NetworkRenderer(BaseRenderer):
                     'name': name,
                     'ifname': interface['name'],
                     'proto': proto,
-                    'dns': self.__get_dns_servers(),
-                    'dns_search': self.__get_dns_search()
+                    'dns': self.__get_dns_servers(uci_interface),
+                    'dns_search': self.__get_dns_search(uci_interface)
                 })
                 # bridging
                 if is_bridge:
@@ -126,6 +126,7 @@ class NetworkRenderer(BaseRenderer):
         else:
             # allow override
             return interface['proto']
+
     def _get_routes(self):
         routes = self.config.get('routes', [])
         # results container
@@ -175,12 +176,20 @@ class NetworkRenderer(BaseRenderer):
             uci_rules.append(sorted_dict(uci_rule))
         return uci_rules
 
-    def __get_dns_servers(self):
+    def __get_dns_servers(self, uci):
+        # allow override
+        if 'dns' in uci:
+            return uci['dns']
+        # general setting
         dns = self.config.get('dns_servers', None)
         if dns:
             return ' '.join(dns)
 
-    def __get_dns_search(self):
+    def __get_dns_search(self, uci):
+        # allow override
+        if 'dns_search' in uci:
+            return uci['dns_search']
+        # general setting
         dns_search = self.config.get('dns_search', None)
         if dns_search:
             return ' '.join(dns_search)
