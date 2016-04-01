@@ -1014,3 +1014,28 @@ config interface 'br_lan'
         o.config['interfaces'][0]['stp'] = 'wrong'
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_igmp(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "br-lan",
+                    "type": "bridge",
+                    "igmp_snooping": True,
+                    "bridge_members": ["eth0", "eth1"]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'br_lan'
+    option ifname 'eth0 eth1'
+    option igmp_snooping '1'
+    option proto 'none'
+    option type 'bridge'
+""")
+        self.assertEqual(o.render(), expected)
+        # try entering an invalid value
+        o.config['interfaces'][0]['igmp_snooping'] = 'wrong'
+        with self.assertRaises(ValidationError):
+            o.validate()

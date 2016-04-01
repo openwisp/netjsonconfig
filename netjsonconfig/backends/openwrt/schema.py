@@ -83,6 +83,21 @@ schema = merge_config(default_schema, {
                 {"$ref": "#/definitions/macfilter_wireless"},
             ]
         },
+        "bridge_interface": {
+            "allOf": [
+                {
+                    "properties": {
+                        "igmp_snooping": {
+                            "type": "boolean",
+                            "title": "IGMP snooping",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 4,
+                        }
+                    }
+                }
+            ]
+        },
         "base_radio_settings": {
             "required": ["driver"],
             "properties": {
