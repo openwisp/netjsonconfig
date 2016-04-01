@@ -989,3 +989,28 @@ config interface 'eth0'
     option proto 'none'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_spanning_tree(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "br-lan",
+                    "type": "bridge",
+                    "stp": True,
+                    "bridge_members": ["eth0", "eth1"]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'br_lan'
+    option ifname 'eth0 eth1'
+    option proto 'none'
+    option stp '1'
+    option type 'bridge'
+""")
+        self.assertEqual(o.render(), expected)
+        # try entering an invalid value
+        o.config['interfaces'][0]['stp'] = 'wrong'
+        with self.assertRaises(ValidationError):
+            o.validate()
