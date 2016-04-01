@@ -1039,3 +1039,23 @@ config interface 'br_lan'
         o.config['interfaces'][0]['igmp_snooping'] = 'wrong'
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_autostart(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "autostart": False
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option auto '0'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)
+

@@ -44,7 +44,7 @@ class NetworkRenderer(BaseRenderer):
                 uci_interface = deepcopy(interface)
                 if network:
                     del uci_interface['network']
-                if uci_interface.get('autostart'):
+                if 'autostart' in uci_interface:
                     uci_interface['auto'] = interface['autostart']
                     del uci_interface['autostart']
                 if uci_interface.get('disabled'):
