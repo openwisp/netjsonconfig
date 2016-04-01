@@ -391,6 +391,20 @@ schema = {
                                 "wps"
                             ],
                             "propertyOrder": 1,
+                            "options": {
+                                "enum_titles": [
+                                    "No encryption",
+                                    "WEP Open System",
+                                    "WEP Shared Key",
+                                    "WPA Personal",
+                                    "WPA2 Personal",
+                                    "WPA Mixed Mode",
+                                    "WPA Enterprise",
+                                    "WPA2 Enterprise",
+                                    "WPA Enterprise Mixed Mode",
+                                    "WPS (Wireless Protected Setup)"
+                                ]
+                            }
                         },
                         "disabled": {
                             "type": "boolean",
