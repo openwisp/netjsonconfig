@@ -298,6 +298,9 @@ class WirelessRenderer(BaseRenderer):
         """
         only for mac80211 driver
         """
+        # allow overriding htmode
+        if 'htmode' in radio:
+            return radio['htmode']
         if radio['protocol'] == '802.11n':
             return 'HT{0}'.format(radio['channel_width'])
         elif radio['protocol'] == '802.11ac':

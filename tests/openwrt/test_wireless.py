@@ -1443,3 +1443,28 @@ config wifi-iface
     option ssid 'open'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_htmode_override(self):
+        o = OpenWrt({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 140,
+                    "channel_width": 40,
+                    "htmode": "HT40+"
+                },
+            ]
+        })
+        expected = self._tabs("""package wireless
+
+config wifi-device 'radio0'
+    option channel '140'
+    option htmode 'HT40+'
+    option hwmode '11a'
+    option phy 'phy0'
+    option type 'mac80211'
+""")
+        self.assertEqual(o.render(), expected)
