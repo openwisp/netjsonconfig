@@ -39,60 +39,49 @@ schema = merge_config(default_schema, {
                 }
             }
         },
-        "wmm_wireless_property": {
-            "properties": {
-                "wmm": {
-                    "type": "boolean",
-                    "title": "WMM (802.11e)",
-                    "default": True,
-                    "format": "checkbox",
-                    "propertyOrder": 8,
-                }
-            }
-        },
-        "macfilter_wireless": {
-            "properties": {
-                "macfilter": {
-                    "type": "string",
-                    "title": "MAC Filter",
-                    "enum": [
-                        "disable",
-                        "allow",
-                        "deny",
-                    ],
-                    "default": "disable",
-                    "propertyOrder": 15,
-                },
-                "maclist": {
-                    "type": "array",
-                    "title": "MAC List",
-                    "propertyOrder": 16,
-                    "items": {
-                        "type": "string",
-                        "title": "MAC address",
-                        "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
-                        "minLength": 17,
-                        "maxLength": 17,
-                    }
-                }
-            }
-        },
-        "isolate_property": {
-            "properties": {
-                "isolate": {
-                    "type": "boolean",
-                    "title": "isolate clients",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 9,
-                }
-            }
-        },
         "ap_wireless_settings": {
             "allOf": [
-                {"$ref": "#/definitions/wmm_wireless_property"},
-                {"$ref": "#/definitions/macfilter_wireless"},
-                {"$ref": "#/definitions/isolate_property"},
+                {
+                    "properties": {
+                        "wmm": {
+                            "type": "boolean",
+                            "title": "WMM (802.11e)",
+                            "default": True,
+                            "format": "checkbox",
+                            "propertyOrder": 8,
+                        },
+                        "isolate": {
+                            "type": "boolean",
+                            "title": "isolate clients",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 9,
+                        },
+                        "macfilter": {
+                            "type": "string",
+                            "title": "MAC Filter",
+                            "enum": [
+                                "disable",
+                                "allow",
+                                "deny",
+                            ],
+                            "default": "disable",
+                            "propertyOrder": 15,
+                        },
+                        "maclist": {
+                            "type": "array",
+                            "title": "MAC List",
+                            "propertyOrder": 16,
+                            "items": {
+                                "type": "string",
+                                "title": "MAC address",
+                                "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
+                                "minLength": 17,
+                                "maxLength": 17,
+                            }
+                        }
+                    }
+                }
             ]
         },
         "bridge_interface": {
