@@ -21,6 +21,13 @@ Initialization example:
         }
     })
 
+If you are unsure about the meaning of the initalization parameters,
+read about the following basic concepts:
+
+    * :ref:`configuration_dictionary`
+    * :ref:`template`
+    * :ref:`context`
+
 Render method
 -------------
 
