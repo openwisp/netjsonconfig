@@ -558,18 +558,22 @@ Will be rendered as::
 Wireless mesh (802.11s) example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Setting up 802.11s interfaces is fairly simple, in the following example we
-bridge the ``lan`` interface with ``mesh0``, the latter being an 802.11s
+Setting up **802.11s** interfaces is fairly simple, in the following example we
+bridge ``eth0`` with ``mesh0``, the latter being a layer2 802.11s
 wireless interface.
 
 .. note::
    in 802.11s mesh mode the ``ssid`` property is not required,
-   while ``mesh_id`` is required.
+   while ``mesh_id`` is mandatory.
 
 .. code-block:: python
 
     {
         "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet"
+            },
             {
                 "name": "mesh0",
                 "type": "wireless",
@@ -583,7 +587,7 @@ wireless interface.
             {
                 "name": "lan",
                 "type": "bridge",
-                "bridge_members": ["mesh0"],
+                "bridge_members": ["eth0", "mesh0"],
                 "addresses": [
                     {
                         "address": "192.168.0.1",
@@ -596,16 +600,20 @@ wireless interface.
         ]
     }
 
-Will be rendered as follows::
+UCI output::
 
     package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            option proto 'none'
 
     config interface 'mesh0'
             option ifname 'mesh0'
             option proto 'none'
 
     config interface 'lan'
-            option ifname 'mesh0'
+            option ifname 'eth0 mesh0'
             option ipaddr '192.168.0.1/24'
             option proto 'static'
             option type 'bridge'
