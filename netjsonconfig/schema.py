@@ -243,6 +243,13 @@ schema = {
                             "type": "string",
                             "enum": ["bridge"],
                             "propertyOrder": 1
+                        },
+                        "stp": {
+                            "type": "boolean",
+                            "title": "STP enabled",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 4,
                         }
                     }
                 },
