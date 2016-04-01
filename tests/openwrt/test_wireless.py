@@ -1389,3 +1389,24 @@ config wifi-iface
     option ssid 'open'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_isolate(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "isolate": True
+                    }
+                }
+            ]
+        })
+        self.assertIn("option isolate '1'", o.render())
+        # try entering an invalid value
+        o.config['interfaces'][0]['wireless']['isolate'] = 'wrong'
+        with self.assertRaises(ValidationError):
+            o.validate()

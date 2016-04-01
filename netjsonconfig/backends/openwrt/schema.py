@@ -77,10 +77,22 @@ schema = merge_config(default_schema, {
                 }
             }
         },
+        "isolate_property": {
+            "properties": {
+                "isolate": {
+                    "type": "boolean",
+                    "title": "isolate clients",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 9,
+                }
+            }
+        },
         "ap_wireless_settings": {
             "allOf": [
                 {"$ref": "#/definitions/wmm_wireless_property"},
                 {"$ref": "#/definitions/macfilter_wireless"},
+                {"$ref": "#/definitions/isolate_property"},
             ]
         },
         "bridge_interface": {
