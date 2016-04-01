@@ -4,21 +4,25 @@ Basic concepts
 
 Before starting, let's quickly introduce the main concepts used in netjsonconfig:
 
-* **configuration dictionary**: python dictionary representing the configuration of a router
-* **backend**: python class used to process the configuration and generate the final
+* :ref:`configuration_dictionary`: python dictionary representing the configuration of a router
+* :ref:`backend`: python class used to process the configuration and generate the final
   router configuration
-* **schema**: each backend has a `JSON-Schema <http://json-schema.org>`_ which
+* :ref:`schema`: each backend has a `JSON-Schema <http://json-schema.org>`_ which
   defines the useful configuration options that the backend is able to process
-* **validation**: the configuration is validated against its JSON-Schema before
+* :ref:`validation`: the configuration is validated against its JSON-Schema before
   being processed by the backend
-* **template**: common configuration options shared among routers (eg: VPNs, SSID)
+* :ref:`template`: common configuration options shared among routers (eg: VPNs, SSID)
   which can be passed to backends
-* **context**: variables that can be referenced from the *configuration dictionary*
+* :ref:`multiple_templates`: possibility inherit common configuration options from more than
+  one template
+* :ref:`context`: variables that can be referenced from the *configuration dictionary*
 
-Configuration format: NetJSON
------------------------------
+.. _configuration_dictionary:
 
-Netjsonconfig is an implementation of the `NetJSON <http://netjson.org>`_ format,
+Configuration dictionary
+------------------------
+
+*netjsonconfig* is an implementation of the `NetJSON <http://netjson.org>`_ format,
 more specifically the ``DeviceConfiguration`` object, therefore to understand the
 configuration format that the library uses to generate the final router configurations
 it is essential to read at least the relevant `DeviceConfiguration section in the
@@ -82,8 +86,10 @@ The previous configuration object therefore can be shortened to:
 From now on we will use the term *configuration dictionary* to refer to
 *NetJSON DeviceConfiguration* objects.
 
-Backends
---------
+.. _backend:
+
+Backend
+-------
 
 A backend is a python class used to process the *configuration dictionary* and
 generate the final router configuration, each supported firmware or opearting system
@@ -117,6 +123,8 @@ Example initialization of ``OpenWrt`` backend:
         ]
     })
 
+.. _schema:
+
 Schema
 ------
 
@@ -126,6 +134,8 @@ from the same parent schema, defined in ``netjsonconfig.backends.schema``
 
 Since different backends may support different features each backend may extend its
 schema by adding custom definitions.
+
+.. _validation:
 
 Validation
 ----------
@@ -146,8 +156,10 @@ An instance of validation error has two public attributes:
 You may call the ``validate`` method in your application arbitrarily, eg: before
 trying to save the *configuration dictionary* into a database.
 
-Templates
----------
+.. _template:
+
+Template
+--------
 
 If you have devices with very similar *configuration dictionaries* you can store the shared
 blocks in one or more reusable templates which will be used as a base to build
@@ -261,6 +273,8 @@ is ``netjsonconfig.utils.merge_config``:
 
 .. autofunction:: netjsonconfig.utils.merge_config
 
+.. _multiple_templates:
+
 Multiple template inheritance
 -----------------------------
 
@@ -269,10 +283,10 @@ it's possible to pass multiple templates that will be added one on top of the
 other to build the resulting *configuration dictionary*, allowing to reduce or
 even eliminate repetitions.
 
-.. _configuration_variables:
+.. _context:
 
-Context: configuration variables
---------------------------------
+Context (configuration variables)
+---------------------------------
 
 Without variables, many bits of configuration cannot be stored in templates, because some
 parameters are unique to the device, think about things like a *UUID* or a public ip address.
@@ -318,17 +332,17 @@ Let's see the result with:
     package system
 
     config system
-    	option hostname 'Router1'
-    	option timezone 'UTC'
+            option hostname 'Router1'
+            option timezone 'UTC'
 
     package openwisp
 
     config controller 'http'
-    	option interval '60'
-    	option key 'xk7OzA1qN6h1Ggxy8UH5NI8kQnbuLxsE'
-    	option url 'http://controller.examplewifiservice.com'
-    	option uuid '9d9032b2-da18-4d47-a414-1f7f605479e6'
-    	option verify_ssl '1'
+            option interval '60'
+            option key 'xk7OzA1qN6h1Ggxy8UH5NI8kQnbuLxsE'
+            option url 'http://controller.examplewifiservice.com'
+            option uuid '9d9032b2-da18-4d47-a414-1f7f605479e6'
+            option verify_ssl '1'
 
 .. warning::
     **When using variables, keep in mind the following rules**:
