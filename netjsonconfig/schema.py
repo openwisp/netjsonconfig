@@ -250,12 +250,7 @@ schema = {
                             "default": False,
                             "format": "checkbox",
                             "propertyOrder": 4,
-                        }
-                    }
-                },
-                {"$ref": "#/definitions/interface_settings"},
-                {
-                    "properties": {
+                        },
                         "bridge_members": {
                             "type": "array",
                             "title": "Bridge Members",
@@ -268,7 +263,8 @@ schema = {
                             }
                         }
                     }
-                }
+                },
+                {"$ref": "#/definitions/interface_settings"},
             ]
         },
         "base_wireless_settings": {
@@ -556,8 +552,8 @@ schema = {
         "radio_80211bg_settings": {
             "title": "802.11b/g (2.4 GHz legacy)",
             "allOf": [
-                {"$ref": "#/definitions/base_radio_settings"},
                 {"properties": {"protocol": {"enum": ["802.11b", "802.11g"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_2ghz_channels"},
                 {"$ref": "#/definitions/radio_legacy_channel_width"}
             ]
@@ -565,8 +561,8 @@ schema = {
         "radio_80211a_settings": {
             "title": "802.11a (5 GHz legacy)",
             "allOf": [
-                {"$ref": "#/definitions/base_radio_settings"},
                 {"properties": {"protocol": {"enum": ["802.11a"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_legacy_channel_width"}
             ]
@@ -574,17 +570,17 @@ schema = {
         "radio_80211gn_settings": {
             "title": "802.11n (2.4 GHz N)",
             "allOf": [
+                {"properties": {"protocol": {"enum": ["802.11n"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_2ghz_channels"},
                 {"$ref": "#/definitions/radio_n_channel_width"},
-                {"properties": {"protocol": {"enum": ["802.11n"]}}},
             ]
         },
         "radio_80211an_settings": {
             "title": "802.11n (5 GHz N)",
             "allOf": [
-                {"$ref": "#/definitions/base_radio_settings"},
                 {"properties": {"protocol": {"enum": ["802.11n"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_n_channel_width"},
             ]
@@ -592,8 +588,8 @@ schema = {
         "radio_80211ac_2ghz_settings": {
             "title": "802.11ac (2.4 GHz AC)",
             "allOf": [
-                {"$ref": "#/definitions/base_radio_settings"},
                 {"properties": {"protocol": {"enum": ["802.11ac"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_2ghz_channels"},
                 {"$ref": "#/definitions/radio_ac_channel_width"},
             ]
@@ -601,8 +597,8 @@ schema = {
         "radio_80211ac_5ghz_settings": {
             "title": "802.11ac (5 GHz AC)",
             "allOf": [
-                {"$ref": "#/definitions/base_radio_settings"},
                 {"properties": {"protocol": {"enum": ["802.11ac"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_ac_channel_width"},
             ]
