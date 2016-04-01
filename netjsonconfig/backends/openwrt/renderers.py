@@ -44,6 +44,10 @@ class NetworkRenderer(BaseRenderer):
                 uci_interface = deepcopy(interface)
                 if network:
                     del uci_interface['network']
+                if 'mac' in uci_interface:
+                    if interface.get('type') != 'wireless':
+                        uci_interface['macaddr'] = interface['mac']
+                    del uci_interface['mac']
                 if 'autostart' in uci_interface:
                     uci_interface['auto'] = interface['autostart']
                     del uci_interface['autostart']
@@ -318,6 +322,9 @@ class WirelessRenderer(BaseRenderer):
             # rename radio to device
             uci_wifi['device'] = wireless['radio']
             del uci_wifi['radio']
+            # mac address override
+            if 'mac' in wifi_interface:
+                uci_wifi['macaddr'] = wifi_interface['mac']
             # map netjson wifi modes to uci wifi modes
             modes = {
                 'access_point': 'ap',

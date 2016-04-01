@@ -1059,3 +1059,21 @@ config interface 'eth0'
 """)
         self.assertEqual(o.render(), expected)
 
+    def test_macaddr_override(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "mac": "E8:94:F6:33:8C:00"
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option macaddr 'E8:94:F6:33:8C:00'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)

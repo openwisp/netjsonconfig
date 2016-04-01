@@ -1410,3 +1410,36 @@ config wifi-iface
         o.config['interfaces'][0]['wireless']['isolate'] = 'wrong'
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_macaddr_override(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "mac": "E8:94:F6:33:8C:00",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open"
+                    }
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface
+    option device 'radio0'
+    option ifname 'wlan0'
+    option macaddr 'E8:94:F6:33:8C:00'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'open'
+""")
+        self.assertEqual(o.render(), expected)
