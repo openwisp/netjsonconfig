@@ -12,7 +12,7 @@ class TestSystemRenderer(unittest.TestCase, _TabsMixin):
     def test_system(self):
         o = OpenWrt({
             "general": {
-                "hostname": "test_system",
+                "hostname": "test-system",
                 "timezone": "Europe/Rome",
                 "custom_setting": True,
                 "empty_setting1": None,
@@ -23,7 +23,7 @@ class TestSystemRenderer(unittest.TestCase, _TabsMixin):
 
 config system
     option custom_setting '1'
-    option hostname 'test_system'
+    option hostname 'test-system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
 """)
         self.assertEqual(o.render(), expected)

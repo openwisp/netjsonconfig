@@ -35,7 +35,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
 
     def test_templates(self):
         config = json.dumps({
-            'general': {'hostname': 'template_test'}
+            'general': {'hostname': 'template-test'}
         })
         template1 = json.dumps({
             'interfaces': [
@@ -68,7 +68,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
         command = """netjsonconfig --config '{0}' -b openwrt -m render --templates '{1}' '{2}'"""
         command = command.format(config, template1, template2)
         output = subprocess.check_output(command, shell=True).decode()
-        self.assertIn("hostname 'template_test'", output)
+        self.assertIn("hostname 'template-test'", output)
         self.assertIn("interface 'eth0'", output)
         self.assertIn("interface 'wlan0'", output)
 
@@ -101,7 +101,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
 
     def test_valid_arg(self):
         config = json.dumps({
-            'general': {'hostname': 'template_test'},
+            'general': {'hostname': 'template-test'},
             'files': [
                 {
                     'path': '/etc/test.txt',

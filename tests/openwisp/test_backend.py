@@ -15,7 +15,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     """
     config = {
         "general": {
-            "hostname": "openwisp_test"
+            "hostname": "openwisp-test"
         },
         "interfaces": [
             {
@@ -118,7 +118,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     def test_uci(self):
         o = OpenWisp({
             "general": {
-                "hostname": "openwisp_test"
+                "hostname": "openwisp-test"
             }
         })
         tar = tarfile.open(fileobj=o.generate(), mode='r')
@@ -127,7 +127,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         expected = self._tabs("""package system
 
 config system
-    option hostname 'openwisp_test'
+    option hostname 'openwisp-test'
     option timezone 'UTC'
 """)
         self.assertEqual(contents, expected)
