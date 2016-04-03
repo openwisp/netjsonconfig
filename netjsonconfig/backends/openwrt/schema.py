@@ -290,7 +290,8 @@ schema = merge_config(default_schema, {
                     "propertyOrder": 3,
                     "items": {
                         "title": "NTP server",
-                        "type": "string"
+                        "type": "string",
+                        "format": "hostname"
                     },
                     "default": [
                         "0.openwrt.pool.ntp.org",

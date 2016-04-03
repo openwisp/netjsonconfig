@@ -37,3 +37,39 @@ class TestFormats(unittest.TestCase, _TabsMixin):
         o.config['interfaces'][0]['addresses'][0]['address'] = '127_0_0_1'
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_interface_ipv6(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "family": "ipv6",
+                            "proto": "static",
+                            "address": "fe80::ba27:ebff:fe1c:5477",
+                            "mask": 64
+                        }
+                    ]
+                }
+            ]
+        })
+        o.validate()
+        # invalid ipv6
+        o.config['interfaces'][0]['addresses'][0]['address'] = 'fe80::ba27.ebff_fe1c:5477'
+        with self.assertRaises(ValidationError):
+            o.validate()
+
+    def test_ntp_servers_hostname(self):
+        o = OpenWrt({
+            "ntp": {
+                "enabled": True,
+                "server": ["0.openwrt.pool.ntp.org"]
+            }
+        })
+        o.validate()
+        # invalid hostname
+        o.config['ntp']['server'][0] = 'totally/wrong'
+        with self.assertRaises(ValidationError):
+            o.validate()
