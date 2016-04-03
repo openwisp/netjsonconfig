@@ -629,6 +629,7 @@ schema = {
                     "type": "string",
                     "maxLength": 63,
                     "minLength": 1,
+                    "format": "hostname",
                     "propertyOrder": 1,
                 },
                 "ula_prefix": {

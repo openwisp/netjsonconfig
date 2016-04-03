@@ -7,7 +7,7 @@ from io import BytesIO
 
 import six
 from jinja2 import Environment, PackageLoader
-from jsonschema import validate
+from jsonschema import FormatChecker, validate
 from jsonschema.exceptions import ValidationError as JsonSchemaError
 
 from . import renderers
@@ -130,7 +130,7 @@ class OpenWrt(object):
 
     def validate(self):
         try:
-            validate(self.config, self.schema)
+            validate(self.config, self.schema, format_checker=FormatChecker())
         except JsonSchemaError as e:
             raise ValidationError(e)
 
