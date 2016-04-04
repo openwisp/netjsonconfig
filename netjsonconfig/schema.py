@@ -70,9 +70,7 @@ schema = {
                             "default": 24,
                         },
                         "gateway": {
-                            "minLength": 8,
                             "maxLength": 16,
-                            "format": "ipv4",
                         }
                     }
                 }
@@ -104,9 +102,7 @@ schema = {
                             "default": 64,
                         },
                         "gateway": {
-                            "minLength": 3,
                             "maxLength": 45,
-                            "format": "ipv6",
                         }
                     }
                 }
