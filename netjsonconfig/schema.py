@@ -699,7 +699,8 @@ schema = {
             "propertyOrder": 5,
             "items": {
                 "title": "Domain",
-                "type": "string"
+                "type": "string",
+                "format": "hostname"
             }
         },
         "routes": {

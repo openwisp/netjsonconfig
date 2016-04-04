@@ -73,3 +73,13 @@ class TestFormats(unittest.TestCase, _TabsMixin):
         o.config['ntp']['server'][0] = 'totally/wrong'
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_dns_search_hostname(self):
+        o = OpenWrt({
+            "dns_search": ['openwisp.org', 'test.netjson.org']
+        })
+        o.validate()
+        # invalid hostname
+        o.config['dns_search'].append('very/wrong')
+        with self.assertRaises(ValidationError):
+            o.validate()
