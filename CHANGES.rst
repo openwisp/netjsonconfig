@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.4.1 [unreleased]
+Version 0.4.1 [2016-04-04]
 --------------------------
 
 - `b903c6f <https://github.com/openwisp/netjsonconfig/commit/b903c6f>`_: [schema] corrected wrong ipv4 minLength and maxLength
