@@ -353,7 +353,8 @@ DNS servers can be set using ``dns_servers``, while search domains can be set us
 ``dns_search``.
 
 If specified, these values will be automatically added in every
-interface which doesn't have DHCP enabled, eg:
+interface, unless an interface has DHCP enabled, in which case
+the UCI output won't contain the ``dns`` option, eg:
 
 .. code-block:: python
 
@@ -374,7 +375,7 @@ interface which doesn't have DHCP enabled, eg:
                 ]
             },
             # the following interface has DHCP enabled
-            # and it won't contain dns settings
+            # and it won't contain the dns setting
             {
                 "name": "eth1",
                 "type": "ethernet",
@@ -400,6 +401,7 @@ Will return the following UCI output::
             option proto 'static'
 
     config interface 'eth1'
+            option dns_search 'openwisp.org netjson.org'
             option ifname 'eth1'
             option proto 'dhcp'
 

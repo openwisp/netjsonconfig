@@ -553,6 +553,7 @@ config interface 'eth0'
         expected = self._tabs("""package network
 
 config interface 'eth0'
+    option dns_search 'netjson.org openwisp.org'
     option ifname 'eth0'
     option proto 'dhcp'
 """)
@@ -578,6 +579,7 @@ config interface 'eth0'
         expected = self._tabs("""package network
 
 config interface 'eth0'
+    option dns_search 'netjson.org openwisp.org'
     option ifname 'eth0'
     option proto 'dhcpv6'
 """)
