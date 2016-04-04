@@ -81,8 +81,8 @@ class NetworkRenderer(BaseRenderer):
                     'name': name,
                     'ifname': interface['name'],
                     'proto': proto,
-                    'dns': self.__get_dns_servers(uci_interface),
-                    'dns_search': self.__get_dns_search(uci_interface)
+                    'dns': self.__get_dns_servers(uci_interface, address),
+                    'dns_search': self.__get_dns_search(uci_interface, address)
                 })
                 # bridging
                 if is_bridge:
@@ -180,19 +180,25 @@ class NetworkRenderer(BaseRenderer):
             uci_rules.append(sorted_dict(uci_rule))
         return uci_rules
 
-    def __get_dns_servers(self, uci):
+    def __get_dns_servers(self, uci, address):
         # allow override
         if 'dns' in uci:
             return uci['dns']
+        # ignore if using DHCP
+        if address['proto'] == 'dhcp':
+            return None
         # general setting
         dns = self.config.get('dns_servers', None)
         if dns:
             return ' '.join(dns)
 
-    def __get_dns_search(self, uci):
+    def __get_dns_search(self, uci, address):
         # allow override
         if 'dns_search' in uci:
             return uci['dns_search']
+        # ignore if using DHCP
+        if address['proto'] == 'dhcp':
+            return None
         # general setting
         dns_search = self.config.get('dns_search', None)
         if dns_search:

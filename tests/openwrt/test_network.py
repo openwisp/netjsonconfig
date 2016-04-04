@@ -519,14 +519,8 @@ config interface 'lan'
                     ]
                 }
             ],
-            "dns_servers": [
-                "10.11.12.13",
-                "8.8.8.8"
-            ],
-            "dns_search": [
-                "netjson.org",
-                "openwisp.org",
-            ]
+            "dns_servers": ["10.11.12.13", "8.8.8.8"],
+            "dns_search": ["netjson.org", "openwisp.org"],
         })
         expected = self._tabs("""package network
 
@@ -536,6 +530,56 @@ config interface 'eth0'
     option ifname 'eth0'
     option ipaddr '192.168.1.1/24'
     option proto 'static'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_dns_dhcpv4_ignored(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ],
+            "dns_servers": ["10.11.12.13", "8.8.8.8"],
+            "dns_search": ["netjson.org", "openwisp.org"],
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'dhcp'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_dns_dhcpv6_ignored(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv6"
+                        }
+                    ]
+                }
+            ],
+            "dns_servers": ["10.11.12.13", "8.8.8.8"],
+            "dns_search": ["netjson.org", "openwisp.org"],
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'dhcpv6'
 """)
         self.assertEqual(o.render(), expected)
 
