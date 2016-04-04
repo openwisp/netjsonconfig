@@ -563,6 +563,10 @@ Will be rendered as follows::
 Wireless access point with macfilter ACL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The ``OpenWrt`` renderer supports a custom NetJSON extension for wireless access point
+interfaces: ``macfilter`` (read more about ``macfilter`` and ``maclist`` on the
+`OpenWRT documentation for Wireless configuration <https://wiki.openwrt.org/doc/uci/wireless#common_options>`_).
+
 In the following example we ban two mac addresses from connecting to a wireless access point:
 
 .. code-block:: python
@@ -586,7 +590,7 @@ In the following example we ban two mac addresses from connecting to a wireless 
         ]
     }
 
-Will be rendered as::
+UCI output::
 
     package network
 
