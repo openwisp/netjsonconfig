@@ -346,6 +346,63 @@ Will be rendered as follows::
             option ip6addr 'fdb4:5f35:e8fd::1/48'
             option proto 'static'
 
+DNS servers and search domains
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+DNS servers can be set using ``dns_servers``, while search domains can be set using
+``dns_search``.
+
+If specified, these values will be automatically added in every
+interface which doesn't have DHCP enabled, eg:
+
+.. code-block:: python
+
+    {
+        "dns_servers": ["10.11.12.13", "8.8.8.8"],
+        "dns_search": ["openwisp.org", "netjson.org"],
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "address": "192.168.1.1",
+                        "mask": 24,
+                        "proto": "static",
+                        "family": "ipv4"
+                    }
+                ]
+            },
+            # the following interface has DHCP enabled
+            # and it won't contain dns settings
+            {
+                "name": "eth1",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "proto": "dhcp",
+                        "family": "ipv4"
+                    }
+                ]
+            }
+        ]
+    }
+
+Will return the following UCI output::
+
+    package network
+
+    config interface 'eth0'
+            option dns '10.11.12.13 8.8.8.8'
+            option dns_search 'openwisp.org netjson.org'
+            option ifname 'eth0'
+            option ipaddr '192.168.1.1/24'
+            option proto 'static'
+
+    config interface 'eth1'
+            option ifname 'eth1'
+            option proto 'dhcp'
+
 DHCP ipv6 ethernet interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
