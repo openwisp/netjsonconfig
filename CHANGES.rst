@@ -4,7 +4,31 @@ Change log
 Version 0.4.1 [unreleased]
 --------------------------
 
-WIP
+- `b903c6f <https://github.com/openwisp/netjsonconfig/commit/b903c6f>`_: [schema] corrected wrong ipv4 minLength and maxLength
+- `de98ae6 <https://github.com/openwisp/netjsonconfig/commit/de98ae6>`_: [schema] fixed interface minLength attribute
+- `4679282 <https://github.com/openwisp/netjsonconfig/commit/4679282>`_: [schema] added regexp pattern for interface mac address (can be empty)
+- `067b471 <https://github.com/openwisp/netjsonconfig/commit/067b471>`_: [schema] switched order between MTU and MAC address properties
+- `26b62dd <https://github.com/openwisp/netjsonconfig/commit/26b62dd>`_: [schema] added pattern for wireless BSSID attribute
+- `11da509 <https://github.com/openwisp/netjsonconfig/commit/11da509>`_: [openwrt] added regexp pattern to ``maclist`` elements
+- `b061ee4 <https://github.com/openwisp/netjsonconfig/commit/b061ee4>`_: [openwrt] fixed empty output bug if addresses is empty list
+- `7f74209 <https://github.com/openwisp/netjsonconfig/commit/7f74209>`_: [openwrt] removed support for ``chanbw`` for types ``ath5k`` and ``ath9k`` (**backward incompatible change**)
+- `#46 <https://github.com/openwisp/netjsonconfig/issues/46>`_: [schema] introduced different profiles for radio settings
+- `6ab9d5b <https://github.com/openwisp/netjsonconfig/compare/e8895c...6ab9d5b>`_ [openwrt] added support for "Automatic Channel Selection"
+- `#48 <https://github.com/openwisp/netjsonconfig/issues/48>`_: [openwrt] improved support for config lists
+- `9f93776 <https://github.com/openwisp/netjsonconfig/commit/9f93776>`_: [openwrt] simplified definition of custom interface "proto" options
+- `a5f63f0 <https://github.com/openwisp/netjsonconfig/commit/a5f63f0>`_: [openwrt] allow to override general dns and dns_search settings
+- `1b58f97 <https://github.com/openwisp/netjsonconfig/commit/1b58f97>`_: [schema] added ``stp`` (spanning tree protocol) property on bridge interfaces
+- `bfbf23d <https://github.com/openwisp/netjsonconfig/commit/bfbf23d>`_: [openwrt] added ``igmp_snooping`` property on bridge interfaces
+- `269c7bf <https://github.com/openwisp/netjsonconfig/commit/269c7bf>`_: [openwrt] added ``isolate`` property on wireless access points
+- `2cbc242 <https://github.com/openwisp/netjsonconfig/commit/2cbc242>`_: [openwrt] fixed ``autostart`` when ``False``
+- `85bd7dc <https://github.com/openwisp/netjsonconfig/commit/85bd7dc>`_: [openwrt] fixed mac address override on interfaces
+- `45159e8 <https://github.com/openwisp/netjsonconfig/commit/45159e8>`_: [openwrt] allow overriding ``htmode`` option
+- `b218f7d <https://github.com/openwisp/netjsonconfig/commit/b218f7d>`_: [schema] added ``enum_titles`` in ``encryption`` protocols
+- `ef8c296 <https://github.com/openwisp/netjsonconfig/commit/ef8c296>`_: [schema] validate general hostname format
+- `2f23cfd <https://github.com/openwisp/netjsonconfig/commit/2f23cfd>`_: [schema] validate interface ipv4 address format
+- `612959e <https://github.com/openwisp/netjsonconfig/commit/612959e>`_: [openwrt] validate ntp server hostname format
+- `f1116f0 <https://github.com/openwisp/netjsonconfig/commit/f1116f0>`_: [schema] validate ``dns_search`` hostname format #42
+- `372d634 <https://github.com/openwisp/netjsonconfig/compare/3b0c356...372d634>`_ [openwrt] do not set dns to dhcp interfaces
 
 Version 0.4.0 [2016-03-22]
 --------------------------
