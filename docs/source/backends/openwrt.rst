@@ -302,6 +302,50 @@ Will be rendered as follows::
             option ipaddr '127.0.0.1/8'
             option proto 'static'
 
+Dualstack (IPv4 & IPv6)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "family": "ipv4",
+                        "proto": "static",
+                        "address": "10.27.251.1",
+                        "mask": 24
+                    },
+                    {
+                        "family": "ipv6",
+                        "proto": "static",
+                        "address": "fdb4:5f35:e8fd::1",
+                        "mask": 48
+                    }
+                ]
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config interface 'eth0'
+            option ifname 'eth0'
+            option ipaddr '10.27.251.1/24'
+            option proto 'static'
+
+    config interface 'eth0_2'
+            option ifname 'eth0'
+            option ip6addr 'fdb4:5f35:e8fd::1/48'
+            option proto 'static'
+
 DHCP ipv6 ethernet interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
