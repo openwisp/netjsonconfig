@@ -431,7 +431,9 @@ schema = {
         "ap_wireless_settings": {
             "title": "Access Point",
             "allOf": [
-                {"properties": {"mode": {"enum": ["access_point"]}}},
+                {"properties": {
+                    "mode": {"enum": ["access_point"],
+                             "options": {"enum_titles": ["access point"]}}}},
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/ssid_wireless_property"},
                 {"$ref": "#/definitions/hidden_wireless_property"},
@@ -470,7 +472,9 @@ schema = {
         "mesh_wireless_settings": {
             "title": "802.11s (mesh)",
             "allOf": [
-                {"properties": {"mode": {"enum": ["802.11s"]}}},
+                {"properties": {
+                    "mode": {"enum": ["802.11s"],
+                             "options": {"enum_titles": ["802.11s (mesh)"]}}}},
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/mesh_id_wireless_property"},
                 {"$ref": "#/definitions/encryption_wireless_property"},
