@@ -5,7 +5,7 @@ from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestWirelessRenderer(unittest.TestCase, _TabsMixin):
+class TestWireless(unittest.TestCase, _TabsMixin):
     """
     tests for backends.openwrt.renderers.WirelessRenderer (wireless ifaces)
     """

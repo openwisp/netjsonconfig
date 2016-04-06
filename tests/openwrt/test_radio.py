@@ -4,7 +4,7 @@ from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestWirelessRenderer(unittest.TestCase, _TabsMixin):
+class TestRadio(unittest.TestCase, _TabsMixin):
     """
     tests for backends.openwrt.renderers.WirelessRenderer (radio devices)
     """
