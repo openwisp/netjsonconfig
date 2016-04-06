@@ -74,15 +74,7 @@ config wifi-iface
                     "wireless": {
                         "radio": "radio0",
                         "mode": "access_point",
-                        "ssid": "wpa2-personal",
-                        "encryption": {
-                            "protocol": "wpa2_personal",
-                            "ciphers": [
-                                "tkip",
-                                "ccmp"
-                            ],
-                            "key": "passphrase012345"
-                        }
+                        "ssid": "ap-ssid"
                     }
                 },
                 {
@@ -117,12 +109,10 @@ package wireless
 
 config wifi-iface
     option device 'radio0'
-    option encryption 'psk2+tkip+ccmp'
     option ifname 'wlan0'
-    option key 'passphrase012345'
     option mode 'ap'
     option network 'wlan0'
-    option ssid 'wpa2-personal'
+    option ssid 'ap-ssid'
 
 config wifi-iface
     option bssid '00:11:22:33:44:55'

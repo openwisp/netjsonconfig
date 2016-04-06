@@ -375,7 +375,6 @@ class WirelessRenderer(BaseRenderer):
     def __get_encryption(self, wireless):
         encryption = wireless.get('encryption', {})
         disabled = encryption.get('disabled', False)
-        uci = {}
         encryption_map = {
             'wep_open': 'wep-open',
             'wep_shared': 'wep-shared',
@@ -388,9 +387,13 @@ class WirelessRenderer(BaseRenderer):
             'wps': 'psk'
         }
         # if encryption disabled return empty dict
-        if not encryption or disabled:
-            return uci
+        if not encryption or disabled or encryption['protocol'] == 'none':
+            return {}
         # otherwise configure encryption
+        uci = encryption.copy()
+        for option in ['protocol', 'key', 'cipher', 'disabled']:
+            if option in uci:
+                del uci[option]
         protocol = encryption['protocol']
         # default to protocol raw value in order
         # to allow customization by child classes
@@ -401,11 +404,12 @@ class WirelessRenderer(BaseRenderer):
             # tell hostapd/wpa_supplicant key is not hex format
             if protocol == 'wep_open':
                 uci['key1'] = 's:{0}'.format(uci['key1'])
-        else:
+        elif 'key' in encryption:
             uci['key'] = encryption['key']
         # add ciphers
-        if encryption.get('ciphers'):
-            uci['encryption'] += '+{0}'.format('+'.join(encryption['ciphers']))
+        cipher = encryption.get('cipher')
+        if cipher and protocol.startswith('wpa') and cipher != 'auto':
+            uci['encryption'] += '+{0}'.format(cipher)
         return uci
 
 

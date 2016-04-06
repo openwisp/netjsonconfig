@@ -361,84 +361,320 @@ schema = {
                 },
             }
         },
-        "encryption_wireless_property": {
+        "encryption_wireless_property_ap": {
             "properties": {
                 "encryption": {
                     "type": "object",
                     "title": "Encryption",
-                    "required": [
-                        "protocol",
-                        "key"
-                    ],
+                    "required": ["protocol"],
                     "propertyOrder": 20,
+                    "oneOf": [
+                        {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa_personal"},
+                        {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
+                        {"$ref": "#/definitions/encryption_wps"},
+                        {"$ref": "#/definitions/encryption_wep"},
+                    ]
+                }
+            }
+        },
+        "encryption_wireless_property_sta": {
+            "properties": {
+                "encryption": {
+                    "type": "object",
+                    "title": "Encryption",
+                    "required": ["protocol"],
+                    "propertyOrder": 20,
+                    "oneOf": [
+                        {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa_personal"},
+                        {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
+                        {"$ref": "#/definitions/encryption_wep"},
+                    ]
+                }
+            }
+        },
+        "encryption_wireless_property_mesh": {
+            "properties": {
+                "encryption": {
+                    "type": "object",
+                    "title": "Encryption",
+                    "required": ["protocol"],
+                    "propertyOrder": 20,
+                    "oneOf": [
+                        {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa_personal"},
+                        {"$ref": "#/definitions/encryption_wep"},
+                    ]
+                }
+            }
+        },
+        "encryption_none": {
+            "title": "No encryption",
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "enum": ["none"],
+                    "options": {"enum_titles": ["No encryption"]}
+                }
+            }
+        },
+        "encryption_base_settings": {
+            "required": ["key"],
+            "additionalProperties": True,
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "propertyOrder": 1,
+                },
+                "key": {
+                    "type": "string",
+                    "propertyOrder": 2,
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 20,
+                },
+            }
+        },
+        "encryption_cipher_property": {
+            "properties": {
+                "cipher": {
+                    "type": "string",
+                    "enum": [
+                        "auto",
+                        "ccmp",
+                        "tkip",
+                        "tkip+ccmp"
+                    ],
+                    "options": {
+                        "enum_titles": [
+                            "auto",
+                            "Force CCMP (AES)",
+                            "Force TKIP",
+                            "FORCE TKIP and CCMP (AES)"
+                        ]
+                    },
+                    "propertyOrder": 3
+                }
+            }
+        },
+        "encryption_wpa_personal": {
+            "title": "WPA2/WPA Personal",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {
                     "properties": {
                         "protocol": {
-                            "type": "string",
                             "enum": [
-                                "none",
-                                "wep_open",
-                                "wep_shared",
-                                "wpa_personal",
                                 "wpa2_personal",
                                 "wpa_personal_mixed",
-                                "wpa_enterprise",
-                                "wpa2_enterprise",
-                                "wpa_enterprise_mixed",
-                                "wps"
+                                "wpa_personal",
                             ],
-                            "propertyOrder": 1,
                             "options": {
                                 "enum_titles": [
-                                    "No encryption",
-                                    "WEP Open System",
-                                    "WEP Shared Key",
-                                    "WPA Personal",
                                     "WPA2 Personal",
-                                    "WPA Mixed Mode",
-                                    "WPA Enterprise",
-                                    "WPA2 Enterprise",
-                                    "WPA Enterprise Mixed Mode",
-                                    "WPS (Wireless Protected Setup)"
+                                    "WPA Personal Mixed Mode",
+                                    "WPA Personal",
                                 ]
                             }
-                        },
-                        "disabled": {
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 2,
                         },
                         "key": {
-                            "type": "string",
-                            "propertyOrder": 3,
-                        },
-                        "ciphers": {
-                            "type": "array",
-                            "propertyOrder": 4,
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "tkip",
-                                    "ccmp",
-                                    "aes",
-                                ]
-                            }
+                            "minLength": 8
                         }
                     }
+                }
+            ]
+        },
+        "encryption_wpa_enterprise_base_settings": {
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "enum": [
+                        "wpa2_enterprise",
+                        "wpa_enterprise_mixed",
+                        "wpa_enterprise",
+                    ],
+                    "options": {
+                        "enum_titles": [
+                            "WPA2 Enterprise",
+                            "WPA Enterprise Mixed Mode",
+                            "WPA Enterprise",
+                        ]
+                    },
+                    "propertyOrder": 1
+                }
+            }
+        },
+        "encryption_wpa_enterprise_ap": {
+            "title": "WPA2/WPA Enterprise (access point)",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
+                {
+                    "required": ["server"],
+                    "properties": {
+                        "server": {
+                            "type": "string",
+                            "minLength": 3,
+                            "title": "radius server",
+                            "propertyOrder": 4,
+                        },
+                        "key": {
+                            "title": "shared secret",
+                            "minLength": 4,
+                            "propertyOrder": 5,
+                        },
+                        "port": {
+                            "type": "integer",
+                            "title": "radius port",
+                            "default": 1812,
+                            "propertyOrder": 6,
+                        },
+                        "acct_server": {
+                            "type": "string",
+                            "title": "accounting server",
+                            "propertyOrder": 7,
+                        },
+                        "acct_server_port": {
+                            "type": "integer",
+                            "title": "accounting port",
+                            "default": 1813,
+                            "propertyOrder": 8,
+                        },
+                    }
+                }
+            ]
+        },
+        "encryption_wpa_enterprise_sta": {
+            "title": "WPA2/WPA Enterprise (client)",
+            "additionalProperties": True,
+            "allOf": [
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
+                {
+                    "properties": {
+                        "eap_type": {
+                            "title": "EAP protocol",
+                            "type": "string",
+                            "enum": ["tls", "ttls"],
+                            "options": {"enum_titles": ["EAP-TLS", "EAP-PEAP"]},
+                            "propertyOrder": 4,
+                        },
+                        "identity": {
+                            "type": "string",
+                            "propertyOrder": 5,
+                        },
+                        "password": {
+                            "type": "string",
+                            "propertyOrder": 6,
+                        },
+                        "ca_cert": {
+                            "type": "string",
+                            "title": "CA certificate (path)",
+                            "propertyOrder": 7,
+                        },
+                        "client_cert": {
+                            "type": "string",
+                            "title": "client certificate (path)",
+                            "propertyOrder": 8,
+                        },
+                        "priv_key": {
+                            "type": "string",
+                            "title": "private key (path)",
+                            "propertyOrder": 9,
+                        },
+                        "priv_key_pwd": {
+                            "type": "string",
+                            "title": "private key password",
+                            "propertyOrder": 10,
+                        }
+                    }
+                }
+            ]
+        },
+        "encryption_wep": {
+            "title": "WEP (Open System/Shared Key)",
+            "description": "WEP encryption is insecure and its use is discouraged.",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "enum": [
+                                "wep_open",
+                                "wep_shared"
+                            ],
+                            "options": {
+                                "enum_titles": [
+                                    "WEP Open System",
+                                    "WEP Shared Key"
+                                ]
+                            }
+                        },
+                        "key": {
+                            "minLength": 5,
+                            "maxLength": 26
+                        }
+                    }
+                }
+            ]
+        },
+        "encryption_wps": {
+            "title": "WPS (Wireless Protected Setup)",
+            "additionalProperties": True,
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "enum": ["wps"],
+                    "options": {"enum_titles": ["WPS"]},
+                    "propertyOrder": 1,
+                },
+                "wps_pushbutton": {
+                    "type": "boolean",
+                    "title": "push button mode",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 2,
+                },
+                "wps_label": {
+                    "type": "boolean",
+                    "title": "label mode",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 3,
+                },
+                "wps_pin": {
+                    "type": "string",
+                    "title": "PIN",
+                    "propertyOrder": 4,
                 }
             }
         },
         "ap_wireless_settings": {
             "title": "Access Point",
             "allOf": [
-                {"properties": {
-                    "mode": {"enum": ["access_point"],
-                             "options": {"enum_titles": ["access point"]}}}},
+                {
+                    "properties": {
+                        "mode": {
+                            "enum": ["access_point"],
+                            "options": {"enum_titles": ["access point"]}
+                        }
+                    }
+                },
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/ssid_wireless_property"},
                 {"$ref": "#/definitions/hidden_wireless_property"},
                 {"$ref": "#/definitions/wds_wireless_property"},
-                {"$ref": "#/definitions/encryption_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property_ap"},
             ]
         },
         "sta_wireless_settings": {
@@ -449,7 +685,7 @@ schema = {
                 {"$ref": "#/definitions/ssid_wireless_property"},
                 {"$ref": "#/definitions/bssid_wireless_property"},
                 {"$ref": "#/definitions/wds_wireless_property"},
-                {"$ref": "#/definitions/encryption_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property_sta"},
             ]
         },
         "adhoc_wireless_settings": {
@@ -459,7 +695,7 @@ schema = {
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/ssid_wireless_property"},
                 {"$ref": "#/definitions/bssid_wireless_property"},
-                {"$ref": "#/definitions/encryption_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property_mesh"},
             ]
         },
         "monitor_wireless_settings": {
@@ -472,12 +708,17 @@ schema = {
         "mesh_wireless_settings": {
             "title": "802.11s (mesh)",
             "allOf": [
-                {"properties": {
-                    "mode": {"enum": ["802.11s"],
-                             "options": {"enum_titles": ["802.11s (mesh)"]}}}},
+                {
+                    "properties": {
+                        "mode": {
+                            "enum": ["802.11s"],
+                            "options": {"enum_titles": ["802.11s (mesh)"]}
+                        }
+                    }
+                },
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/mesh_id_wireless_property"},
-                {"$ref": "#/definitions/encryption_wireless_property"},
+                {"$ref": "#/definitions/encryption_wireless_property_mesh"},
             ]
         },
         "base_radio_settings": {
