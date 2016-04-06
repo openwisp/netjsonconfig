@@ -458,6 +458,8 @@ The following *configuration dictionary*:
             {
                 "name": "lan_bridge",  # will be named "br-lan_bridge" by OpenWRT
                 "type": "bridge",
+                "stp": True,  # enable spanning tree protocol
+                "igmp_snooping": True,  # enable imgp snooping
                 "bridge_members": [
                     "eth0.1",
                     "eth0.2"
@@ -488,9 +490,11 @@ Will be rendered as follows::
 
     config interface 'lan_bridge'
             option ifname 'eth0.1 eth0.2'
+            option igmp_snooping '1'
             option ipaddr '172.17.0.2/24'
             option proto 'static'
             option type 'bridge'
+            option stp '1'
 
 Wireless interface
 ~~~~~~~~~~~~~~~~~~
