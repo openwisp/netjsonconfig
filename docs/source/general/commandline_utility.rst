@@ -72,7 +72,7 @@ Environment variables
 ---------------------
 
 *Environment variables* are automatically passed to the ``context`` argument (if you don't
-know what this argument does please read ":ref:`configuration_variables`"), therefore
+know what this argument does please read ":ref:`context`"), therefore
 you can reference environment variables inside *configurations* and *templates*::
 
     export HOSTNAME=freedom
