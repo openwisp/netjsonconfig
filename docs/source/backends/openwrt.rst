@@ -496,10 +496,20 @@ Will be rendered as follows::
             option type 'bridge'
             option stp '1'
 
-Wireless interface
-~~~~~~~~~~~~~~~~~~
+Wireless settings
+-----------------
 
-The following *configuration dictionary*:
+Interfaces of type ``wireless`` may contain a lot of different combination
+of settings to configure wireless connectivity: from simple access points,
+to 802.1x authentication, 802.11s mesh networks, adhoc mesh networks, WDS repeaters and much more.
+
+In this section some examples of the most common use cases are shown.
+
+Wireless access point
+~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary* represent one of the most
+common wireless access point configuration:
 
 .. code-block:: python
 
@@ -511,22 +521,15 @@ The following *configuration dictionary*:
                 "wireless": {
                     "radio": "radio0",
                     "mode": "access_point",
-                    "ssid": "wpa2-personal",
-                    "encryption": {
-                        "enabled": True,
-                        "protocol": "wpa2_personal",
-                        "ciphers": [
-                            "tkip",
-                            "ccmp"
-                        ],
-                        "key": "passphrase012345"
-                    }
+                    "ssid": "myWiFi",
+                    "wmm": True,  # 802.11e
+                    "isolate": True  # client isolation
                 }
             }
         ]
     }
 
-Will be rendered as follows::
+UCI output::
 
     package network
 
@@ -538,12 +541,12 @@ Will be rendered as follows::
 
     config wifi-iface
             option device 'radio0'
-            option encryption 'psk2+tkip+ccmp'
             option ifname 'wlan0'
-            option key 'passphrase012345'
+            option isolate '1'
             option mode 'ap'
             option network 'wlan0'
-            option ssid 'wpa2-personal'
+            option ssid 'myWiFi'
+            option wmm '1'
 
 .. note::
    the ``network`` option of the ``wifi-iface`` directive is filled in automatically
@@ -874,6 +877,161 @@ Will result in::
             option mode 'ap'
             option network 'wds_bridge'
             option ssid 'FreeRomaWifi'
+
+WPA2 Personal (Pre-Shared Key)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows a typical wireless access
+point using *WPA2 Personal (Pre-Shared Key)* encryption:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "wpa2-personal",
+                    "encryption": {
+                        "protocol": "wpa2_personal",
+                        # possible cipher values are:
+                        #   "auto", "tkip", "ccmp", and "tkip+ccmp"
+                        "cipher": "tkip+ccmp",
+                        "key": "passphrase012345"
+                    }
+                }
+            }
+        ]
+    }
+
+UCI output::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface
+            option device 'radio0'
+            option encryption 'psk2+tkip+ccmp'
+            option ifname 'wlan0'
+            option key 'passphrase012345'
+            option mode 'ap'
+            option network 'wlan0'
+            option ssid 'wpa2-personal'
+
+WPA2 Enterprise (802.1x) ap
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows a typical wireless access
+point using *WPA2 Enterprise (802.1x)* security on **OpenWRT**,
+you can use this type of configuration for networks like
+`eduroam <https://www.eduroam.org/>`_:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "eduroam",
+                    "encryption": {
+                        "protocol": "wpa2_enterprise",
+                        "cipher": "auto",
+                        "key": "radius_secret",
+                        "server": "192.168.0.1",
+                        "port": 1812,
+                        "acct_server": "192.168.0.2",
+                        "acct_port": 1813,
+                    }
+                }
+            }
+        ]
+    }
+
+UCI Output::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface
+            option acct_port '1813'
+            option acct_server '192.168.0.2'
+            option device 'radio0'
+            option encryption 'wpa2'
+            option ifname 'wlan0'
+            option key 'radius_secret'
+            option mode 'ap'
+            option network 'wlan0'
+            option port '1812'
+            option server '192.168.0.1'
+            option ssid 'eduroam'
+
+WPA2 Enterprise (802.1x) client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*WPA2 Enterprise (802.1x)* client example:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "station",
+                    "ssid": "enterprise-client",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "wpa2_enterprise",
+                        "cipher": "auto",
+                        "eap_type": "tls",
+                        "identity": "test-identity",
+                        "password": "test-password",
+                    }
+                }
+            }
+        ]
+    }
+
+UCI Output::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface
+            option bssid '00:26:b9:20:5f:09'
+            option device 'radio0'
+            option eap_type 'tls'
+            option encryption 'wpa2'
+            option identity 'test-identity'
+            option ifname 'wlan0'
+            option mode 'sta'
+            option network 'wlan0'
+            option password 'test-password'
+            option ssid 'enterprise-client'
 
 Radio settings
 --------------
