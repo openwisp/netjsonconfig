@@ -1163,6 +1163,37 @@ UCI output::
             option phy 'phy1'
             option type 'mac80211'
 
+802.11ac example
+~~~~~~~~~~~~~~~~
+
+In the following example we show how to configure an *802.11ac* capable radio:
+
+.. code-block:: python
+
+    {
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11ac",
+                "channel": 13,
+                "channel_width": 80
+            }
+        ]
+    }
+
+UCI output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel '13'
+            option htmode 'VHT80'
+            option hwmode '11g'
+            option phy 'phy0'
+            option type 'mac80211'
+
 Static Routes
 -------------
 
