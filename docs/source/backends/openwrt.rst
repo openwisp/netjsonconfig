@@ -1341,10 +1341,10 @@ Will be rendered as follows::
             option in 'vpn'
             option src 'fdca:1235::/64'
 
-Switch settings
----------------
+Programmable switch settings
+----------------------------
 
-The switch settings reside in the ``switch`` key of the *configuration dictionary*,
+The programmable switch settings reside in the ``switch`` key of the *configuration dictionary*,
 which is a custom NetJSON extension not present in the original NetJSON RFC.
 
 The ``switch`` key must contain a list of dictionaries, all the following keys are required:
