@@ -255,19 +255,25 @@ The network interface settings reside in the ``interfaces`` key of the
 `NetJSON interface objects <http://netjson.org/rfc.html#interfaces1>`_
 (see the link for the detailed specification).
 
+There are 3 main type of interfaces:
+
+* **network interfaces**: may be of type ``ethernet``, ``virtual``, ``loopback`` or ``other``
+* **wireless interfaces**: must be of type ``wireless``
+* **bridge interfaces**: must be of type ``bridge``
+
 Interface object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In addition to the default *NetJSON Interface object options*, the ``OpenWrt`` backend
-also supports the following custom options:
+also supports the following custom options for every type of interface:
 
-* each interface item can specify a ``network`` option which allows to manually set the
-  logical interface name
-* the ``proto`` key of each item in the ``addresses`` list allows all the UCI proto
-  options officially supported by OpenWRT, eg: dhcpv6, ppp, 3g, gre and others
-* the ``wireless`` dictionary (valid only for wireless interfaces) can also specify a
-  ``network`` key which allows to list on or more networks to which the wireless interface
-  will be attached to (see the :ref:`relevant example <wireless_network_option>`)
++--------------+---------+-----------------------------------------------+
+| key name     | type    | allowed values                                |
++==============+=========+===============================================+
+| ``network``  | string  | logical interface name (UCI specific)         |
++--------------+---------+-----------------------------------------------+
+
+In the following sections some examples of the most common use cases are shown.
 
 Loopback interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -436,8 +442,24 @@ Will be rendered as follows::
             option ifname 'eth0'
             option proto 'dchpv6'
 
-Bridge interface
-~~~~~~~~~~~~~~~~
+Bridge settings
+---------------
+
+Interfaces of type ``bridge`` can contain a few options that are specific for network bridges:
+
+* ``bridge_members``: interfaces that are members of the bridge
+* ``stp``: spanning tree protocol
+
+The ``OpenWrt`` backend NetJSON extensions for bridge interfaces:
+
++-------------------+---------+-------------+-------------------------------------------------------------+
+| key name          | type    | default     | allowed values                                              |
++===================+=========+=============+=============================================================+
+| ``igmp_snooping`` | boolean | ``True``    | sets the ``multicast_snooping`` kernel setting for a bridge |
++-------------------+---------+-------------+-------------------------------------------------------------+
+
+Bridge interface example
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following *configuration dictionary*:
 
@@ -503,7 +525,73 @@ Interfaces of type ``wireless`` may contain a lot of different combination
 of settings to configure wireless connectivity: from simple access points,
 to 802.1x authentication, 802.11s mesh networks, adhoc mesh networks, WDS repeaters and much more.
 
-In this section some examples of the most common use cases are shown.
+The ``OpenWrt`` backend NetJSON extensions for wireless interfaces:
+
++---------------+---------+-------------+------------------------------------------------------+
+| key name      | type    | default     | allowed values                                       |
++===============+=========+=============+======================================================+
+| ``network``   | array   | ``[]``      | array of strings representing attached networks      |
++---------------+---------+-------------+------------------------------------------------------+
+
+Some extensions are applicable only when ``mode`` is ``access_point``:
+
++---------------+---------+-------------+------------------------------------------------------+
+| key name      | type    | default     | allowed values                                       |
++===============+=========+=============+======================================================+
+| ``wmm``       | boolean | ``True``    | enables WMM (802.11e) support                        |
++---------------+---------+-------------+------------------------------------------------------+
+| ``isolate``   | boolean | ``False``   | isolate wireless clients from one another            |
++---------------+---------+-------------+------------------------------------------------------+
+| ``macfilter`` | string  | ``disable`` | ACL policy, accepts: "disable", "allow" and "deny"   |
++---------------+---------+-------------+------------------------------------------------------+
+| ``maclist``   | array   | ``[]``      | mac addresses filtered according to macfilter policy |
++---------------+---------+-------------+------------------------------------------------------+
+
+These extensions must be used the ``wireless`` object of a wireless interface eg:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "myWiFi",
+                    # OpenWrt backend NetJSON extensions
+                    "wmm": True,
+                    "isolate": True
+                }
+            }
+        ]
+    }
+
+The same applies for custom configuration options not included in the ``OpenWrt`` backend schema:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "myWiFi",
+                    # custom configuration options not defined
+                    # in the OpenWrt backend schema
+                    "beacon_int": 200,
+                    "noscan": True,
+                    "custom1": "made-up-for-example-purposes",
+                }
+            }
+        ]
+    }
+
+In the following sections some examples of the most common use cases are shown.
 
 Wireless access point
 ~~~~~~~~~~~~~~~~~~~~~
