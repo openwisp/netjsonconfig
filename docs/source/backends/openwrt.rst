@@ -1182,11 +1182,11 @@ also allows to define the following optional settings:
 | ``type``     | string  | ``unicast`` | unicast, local, broadcast, multicast, unreachable |
 |              |         |             | prohibit, blackhole, anycast                      |
 +--------------+---------+-------------+---------------------------------------------------+
-| ``mtu``      | string  | ````        | MTU for route, only numbers are allowed           |
+| ``mtu``      | string  | ``None``    | MTU for route, only numbers are allowed           |
 +--------------+---------+-------------+---------------------------------------------------+
-| ``table``    | string  | ``False``   | Routing table id, only numbers are allowed        |
+| ``table``    | string  | ``None``    | Routing table id, only numbers are allowed        |
 +--------------+---------+-------------+---------------------------------------------------+
-| ``onlink``   | boolean |  ````       | When enabled, gateway is on link even if the      |
+| ``onlink``   | boolean |  ``False``  | When enabled, gateway is on link even if the      |
 |              |         |             | gateway does not match any interface prefix       |
 +--------------+---------+-------------+---------------------------------------------------+
 
