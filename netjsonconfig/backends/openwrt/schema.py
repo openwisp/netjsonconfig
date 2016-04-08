@@ -13,6 +13,8 @@ schema = merge_config(default_schema, {
             "properties": {
                 "network": {
                     "type": "string",
+                    "description": "logical interface name in UCI (OpenWRT configuration format), "
+                                   "will be automatically generated if left blank",
                     "maxLength": 15,
                     "pattern": "^[a-zA-z0-9_\\.\\-]*$",
                     "propertyOrder": 7
@@ -26,6 +28,8 @@ schema = merge_config(default_schema, {
                         "network": {
                             "type": "array",
                             "title": "Attached Networks",
+                            "description": "override OpenWRT \"network\" config option of of wifi-iface "
+                                           "directive; will be automatically determined if left blank",
                             "uniqueItems": True,
                             "additionalItems": True,
                             "items": {
@@ -46,6 +50,8 @@ schema = merge_config(default_schema, {
                         "wmm": {
                             "type": "boolean",
                             "title": "WMM (802.11e)",
+                            "description": "enables WMM (802.11e) support; "
+                                           "required for 802.11n support",
                             "default": True,
                             "format": "checkbox",
                             "propertyOrder": 8,
@@ -53,6 +59,7 @@ schema = merge_config(default_schema, {
                         "isolate": {
                             "type": "boolean",
                             "title": "isolate clients",
+                            "description": "isolate wireless clients from one another",
                             "default": False,
                             "format": "checkbox",
                             "propertyOrder": 9,
@@ -60,6 +67,9 @@ schema = merge_config(default_schema, {
                         "macfilter": {
                             "type": "string",
                             "title": "MAC Filter",
+                            "description": "specifies the mac filter policy, \"disable\" to disable "
+                                           "the filter, \"allow\" to treat it as whitelist or "
+                                           "\"deny\" to treat it as blacklist",
                             "enum": [
                                 "disable",
                                 "allow",
@@ -71,6 +81,8 @@ schema = merge_config(default_schema, {
                         "maclist": {
                             "type": "array",
                             "title": "MAC List",
+                            "description": "mac addresses that will be filtered according to the policy "
+                                           "specified in the \"macfilter\" option",
                             "propertyOrder": 16,
                             "items": {
                                 "type": "string",
@@ -91,6 +103,7 @@ schema = merge_config(default_schema, {
                         "igmp_snooping": {
                             "type": "boolean",
                             "title": "IGMP snooping",
+                            "description": "sets the \"multicast_snooping\" kernel setting for a bridge",
                             "default": True,
                             "format": "checkbox",
                             "propertyOrder": 4,
@@ -214,30 +227,40 @@ schema = merge_config(default_schema, {
                 "properties": {
                     "in": {
                         "type": "string",
+                        "title": "incoming interface",
                         "propertyOrder": 1,
                     },
                     "out": {
                         "type": "string",
+                        "title": "outgoing interface",
                         "propertyOrder": 2,
                     },
                     "src": {
                         "type": "string",
+                        "title": "source subnet",
+                        "description": "(CIDR notation)",
                         "propertyOrder": 3,
                     },
                     "dest": {
                         "type": "string",
+                        "title": "destination subnet",
+                        "description": "(CIDR notation)",
                         "propertyOrder": 4,
                     },
                     "tos": {
                         "type": "integer",
+                        "title": "TOS",
+                        "description": "TOS value to match in IP headers",
                         "propertyOrder": 5,
                     },
                     "mark": {
                         "type": "string",
+                        "description": "TOS value to match in IP headers",
                         "propertyOrder": 6,
                     },
                     "lookup": {
                         "type": "string",
+                        "description": "routing table ID or symbolic link alias",
                         "propertyOrder": 7,
                     },
                     "action": {
@@ -271,19 +294,21 @@ schema = merge_config(default_schema, {
             "properties": {
                 "enabled": {
                     "type": "boolean",
+                    "title": "enable NTP client",
                     "default": True,
                     "format": "checkbox",
                     "propertyOrder": 1,
                 },
                 "enable_server": {
                     "type": "boolean",
-                    "title": "enable server",
+                    "title": "enable NTP server",
                     "default": False,
                     "format": "checkbox",
                     "propertyOrder": 2,
                 },
                 "server": {
                     "title": "NTP Servers",
+                    "description": "NTP server candidates",
                     "type": "array",
                     "uniqueItems": True,
                     "additionalItems": True,
@@ -448,10 +473,12 @@ schema = merge_config(default_schema, {
                 "properties": {
                     "path": {
                         "type": "string",
+                        "description": "filesystem path",
                         "propertyOrder": 1,
                     },
                     "mode": {
                         "type": "string",
+                        "description": "filesystem permissions",
                         "maxLength": 4,
                         "minLength": 3,
                         "pattern": "^[0-7]*$",
@@ -460,6 +487,7 @@ schema = merge_config(default_schema, {
                     },
                     "contents": {
                         "type": "string",
+                        "description": "content (plain-text only)",
                         "format": "textarea",
                         "propertyOrder": 3,
                     },

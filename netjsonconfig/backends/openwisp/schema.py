@@ -13,7 +13,7 @@ schema = merge_config(openwrt_schema, {
         # added mainly for backward compatibility with OpenWISP Manager
         "tc_options": {
             "type": "array",
-            "title": "Traffic Control Options",
+            "title": "Traffic Control",
             "additionalItems": True,
             "items": {
                 "type": "object",
@@ -25,15 +25,16 @@ schema = merge_config(openwrt_schema, {
                 "properties": {
                     "name": {
                         "type": "string",
+                        "description": "interface name",
                         "propertyOrder": 1,
                     },
                     "input_bandwidth": {
-                        "title": "Input bandwidth (kbps)",
+                        "title": "input bandwidth (kbps)",
                         "type": "integer",
                         "propertyOrder": 2,
                     },
                     "output_bandwidth": {
-                        "title": "Output bandwidth (kbps)",
+                        "title": "output bandwidth (kbps)",
                         "type": "integer",
                         "propertyOrder": 3,
                     }

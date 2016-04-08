@@ -60,6 +60,7 @@ schema = {
                         "proto": {"enum": ["static"]},
                         "family": {"enum": ["ipv4"]},
                         "address": {
+                            "title": "ipv4 address",
                             "minLength": 7,
                             "maxLength": 15,
                             "format": "ipv4",
@@ -70,6 +71,8 @@ schema = {
                             "default": 24,
                         },
                         "gateway": {
+                            "title": "ipv4 gateway",
+                            "description": "optional ipv4 gateway",
                             "maxLength": 16,
                         }
                     }
@@ -91,6 +94,7 @@ schema = {
                         "proto": {"enum": ["static"]},
                         "family": {"enum": ["ipv6"]},
                         "address": {
+                            "title": "ipv6 address",
                             "minLength": 3,
                             "maxLength": 45,
                             "format": "ipv6",
@@ -102,6 +106,8 @@ schema = {
                             "default": 64,
                         },
                         "gateway": {
+                            "title": "ipv6 gateway",
+                            "description": "optional ipv6 gateway",
                             "maxLength": 45,
                         }
                     }
@@ -146,19 +152,23 @@ schema = {
                 },
                 "mac": {
                     "type": "string",
-                    "title": "MAC address (override)",
+                    "title": "MAC address",
+                    "description": "if specified overrides default macaddress for this interface",
                     "pattern": "^(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|)$",  # can be empty
                     "maxLength": 17,
                     "propertyOrder": 3,
                 },
                 "autostart": {
                     "type": "boolean",
+                    "title": "auto start",
+                    "description": "bring up interface on boot",
                     "default": True,
                     "format": "checkbox",
                     "propertyOrder": 5,
                 },
                 "disabled": {
                     "type": "boolean",
+                    "description": "disable this interface without deleting its configuration",
                     "default": False,
                     "format": "checkbox",
                     "propertyOrder": 6,
@@ -243,6 +253,7 @@ schema = {
                         "stp": {
                             "type": "boolean",
                             "title": "STP enabled",
+                            "description": "enables the spanning tree protocol",
                             "default": False,
                             "format": "checkbox",
                             "propertyOrder": 4,
@@ -279,18 +290,23 @@ schema = {
                 },
                 "radio": {
                     "type": "string",
+                    "description": "reference to one of the elements defined in the \"radios\" section",
                     "minLength": 2,
                     "propertyOrder": 2,
                 },
                 "ack_distance": {
                     "type": "integer",
                     "title": "ACK distance",
+                    "description": "distance to farthest network member in meters, "
+                                   "if set to 0 this setting will be ignored",
                     "minimum": 0,
                     "propertyOrder": 10,
                 },
                 "rts_threshold": {
                     "type": "integer",
                     "title": "RTS threshold",
+                    "description": "override RTS/CTS threshold, "
+                                   "if set to 0 this setting won't be overridden",
                     "minimum": 0,
                     "maximum": 2346,
                     "propertyOrder": 11,
@@ -298,6 +314,8 @@ schema = {
                 "frag_threshold": {
                     "type": "integer",
                     "title": "fragmentation threshold",
+                    "description": "override default fragmentation threshold, "
+                                   "if set to 0 this setting won't be overridden",
                     "minimum": 0,
                     "maximum": 2346,
                     "propertyOrder": 12,
@@ -343,6 +361,7 @@ schema = {
             "properties": {
                 "wds": {
                     "title": "WDS",
+                    "description": "enable wireless distribution system",
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
@@ -356,6 +375,8 @@ schema = {
                 "mesh_id": {
                     "type": "string",
                     "title": "mesh ID",
+                    "description": "802.11 mesh ID: if set, the wireless interface "
+                                   "will join this mesh network",
                     "pattern": "^[^\\s]*$",
                     "propertyOrder": 3,
                 },
@@ -876,6 +897,7 @@ schema = {
                 "ula_prefix": {
                     "type": "string",
                     "title": "ULA prefix",
+                    "description": "IPv6 Unique Local Address prefix",
                     "propertyOrder": 2,
                 },
                 "maintainer": {
@@ -884,6 +906,7 @@ schema = {
                 },
                 "description": {
                     "type": "string",
+                    "description": "description and notes",
                     "propertyOrder": 4,
                 }
             }
@@ -933,7 +956,7 @@ schema = {
             }
         },
         "dns_search": {
-            "title": "DNS Search List",
+            "title": "DNS Search Domains",
             "type": "array",
             "uniqueItems": True,
             "additionalItems": True,
@@ -946,7 +969,7 @@ schema = {
         },
         "routes": {
             "type": "array",
-            "title": "Routes",
+            "title": "Static routes",
             "uniqueItems": True,
             "additionalItems": True,
             "propertyOrder": 6,
@@ -963,6 +986,7 @@ schema = {
                 "properties": {
                     "device": {
                         "type": "string",
+                        "description": "interface name of the to which the static route should apply",
                         "propertyOrder": 1,
                     },
                     "destination": {
@@ -981,6 +1005,8 @@ schema = {
                     },
                     "source": {
                         "type": "string",
+                        "description": "the preferred source address when sending to destinations "
+                                       "covered by the target (optional)",
                         "propertyOrder": 5,
                     }
                 }
