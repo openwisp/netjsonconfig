@@ -91,7 +91,7 @@ schema = merge_config(default_schema, {
                         "igmp_snooping": {
                             "type": "boolean",
                             "title": "IGMP snooping",
-                            "default": False,
+                            "default": True,
                             "format": "checkbox",
                             "propertyOrder": 4,
                         }
