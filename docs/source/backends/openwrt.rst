@@ -530,7 +530,8 @@ The ``OpenWrt`` backend NetJSON extensions for wireless interfaces:
 +---------------+---------+-------------+------------------------------------------------------+
 | key name      | type    | default     | allowed values                                       |
 +===============+=========+=============+======================================================+
-| ``network``   | array   | ``[]``      | array of strings representing attached networks      |
+| ``network``   | array   | ``[]``      | attached networks; if left blank will be             |
+|               |         |             | automatically determined                             |
 +---------------+---------+-------------+------------------------------------------------------+
 
 Some extensions are applicable only when ``mode`` is ``access_point``:
@@ -1200,13 +1201,13 @@ Will be rendered as follows::
 Automatic channel selection example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you need to use the "automatic channel selection" of OpenWRT, you must set
+If you need to use the "automatic channel selection" feature of OpenWRT, you must set
 the channel to ``0`` and, unless you are using neither **802.11n** nor **802.11ac**,
 you must set the ``hwmode`` property to tell OpenWRT which band to use
 (11g for 2.4 Ghz, 11a for 5 GHz).
 
 The following example sets "automatic channel selection" for two radios, the first radio uses
-**802.11n** in the 2 GHz band, while the second uses **802.11ac** in the 5 GHz band.
+**802.11n** in the 2.4 GHz band, while the second uses **802.11ac** in the 5 GHz band.
 
 .. code-block:: python
 
@@ -1265,8 +1266,8 @@ In the following example we show how to configure an *802.11ac* capable radio:
                 "phy": "phy0",
                 "driver": "mac80211",
                 "protocol": "802.11ac",
-                "channel": 13,
-                "channel_width": 80
+                "channel": 36,
+                "channel_width": 80,
             }
         ]
     }
@@ -1276,9 +1277,9 @@ UCI output::
     package wireless
 
     config wifi-device 'radio0'
-            option channel '13'
+            option channel '36'
             option htmode 'VHT80'
-            option hwmode '11g'
+            option hwmode '11a'
             option phy 'phy0'
             option type 'mac80211'
 
@@ -1898,12 +1899,12 @@ dictionary is structured as follows:
 +-------------------+----------------+----------+----------------------------------------------------------+
 | key name          | type           | required |function                                                  |
 +===================+================+==========+==========================================================+
-| ``path``          | string         | yes      | path of the file in the tar.gz archive                   |
+| ``path``          | string         | yes      | filesystem path, will be encoded in the tar.gz archive   |
 +-------------------+----------------+----------+----------------------------------------------------------+
 | ``contents``      | string         | yes      | plain text contents of the file, new lines must be       |
-|                   |                |          | encoded as `\n`                                          |
+|                   |                |          | encoded as ``\n``                                        |
 +-------------------+----------------+----------+----------------------------------------------------------+
-| ``mode``          | string         | no       | permissions, if omitted will default to ``0644``         |
+| ``mode``          | string         | yes      | filesystem permissions, defaults to ``0644``             |
 +-------------------+----------------+----------+----------------------------------------------------------+
 
 The ``files`` key of the *configuration dictionary* is a custom NetJSON extension not
