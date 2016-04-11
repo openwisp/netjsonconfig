@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.4.2 [unreleased]
+Version 0.4.2 [2016-04-11]
 --------------------------
 
 - `92f9a43 <https://github.com/openwisp/netjsonconfig/commit/92f9a43>`_: [schema] added human readable values for mode ``access_point`` and ``802.11s``
