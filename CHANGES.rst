@@ -4,7 +4,10 @@ Change log
 Version 0.4.2 [unreleased]
 --------------------------
 
-WIP
+- `92f9a43 <https://github.com/openwisp/netjsonconfig/commit/92f9a43>`_: [schema] added human readable values for mode ``access_point`` and ``802.11s``
+- `#47 <https://github.com/openwisp/netjsonconfig/issues/47>`_: [openwrt] improved encryption support
+- `1a4c493 <https://github.com/openwisp/netjsonconfig/commit/1a4c493>`_: [openwrt] ``igmp_snooping`` now correctlt defaults to ``True``
+- `#49 <https://github.com/openwisp/netjsonconfig/issues/49>`_: [schema] added descriptions and titles
 
 Version 0.4.1 [2016-04-04]
 --------------------------
