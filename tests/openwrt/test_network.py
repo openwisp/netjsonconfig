@@ -585,6 +585,25 @@ config interface 'eth0'
 """)
         self.assertEqual(o.render(), expected)
 
+    def test_dhcp_ignored_proto_none(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                }
+            ],
+            "dns_servers": ["10.11.12.13", "8.8.8.8"],
+            "dns_search": ["netjson.org", "openwisp.org"],
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)
+
     def test_rules(self):
         o = OpenWrt({
             "ip_rules": [

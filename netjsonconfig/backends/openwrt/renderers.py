@@ -184,8 +184,8 @@ class NetworkRenderer(BaseRenderer):
         # allow override
         if 'dns' in uci:
             return uci['dns']
-        # ignore if using DHCP
-        if address['proto'] == 'dhcp':
+        # ignore if using DHCP or if "proto" is none
+        if address['proto'] in ['dhcp', 'none']:
             return None
         # general setting
         dns = self.config.get('dns_servers', None)
@@ -196,6 +196,9 @@ class NetworkRenderer(BaseRenderer):
         # allow override
         if 'dns_search' in uci:
             return uci['dns_search']
+        # ignore if "proto" is none
+        if address['proto'] == 'none':
+            return None
         # general setting
         dns_search = self.config.get('dns_search', None)
         if dns_search:
