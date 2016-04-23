@@ -1,10 +1,10 @@
 Change log
 ==========
 
-Version 0.4.3 [unreleased]
+Version 0.4.3 [2016-04-23]
 --------------------------
 
-WIP
+- `c588e5d <https://github.com/openwisp/netjsonconfig/commit/c588e5d>`_: [openwrt] avoid adding ``dns`` and ``dns_search`` if ``proto`` is ``none``
 
 Version 0.4.2 [2016-04-11]
 --------------------------
