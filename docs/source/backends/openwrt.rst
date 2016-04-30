@@ -371,42 +371,42 @@ dynamic ip address configuration won't get the ``dns`` option in the UCI output,
 
 .. code-block:: python
 
-{
-    "dns_servers": ["10.11.12.13", "8.8.8.8"],
-    "dns_search": ["openwisp.org", "netjson.org"],
-    "interfaces": [
-        {
-            "name": "eth0",
-            "type": "ethernet",
-            "addresses": [
-                {
-                    "address": "192.168.1.1",
-                    "mask": 24,
-                    "proto": "static",
-                    "family": "ipv4"
-                }
-            ]
-        },
-        # the following interface has DHCP enabled
-        # and it won't contain the dns setting
-        {
-            "name": "eth1",
-            "type": "ethernet",
-            "addresses": [
-                {
-                    "proto": "dhcp",
-                    "family": "ipv4"
-                }
-            ]
-        },
-        # the following VLAN interface won't get
-        # the dns nor the dns_search settings
-        {
-            "name": "eth1.31",
-            "type": "ethernet"
-        }
-    ]
-}
+    {
+        "dns_servers": ["10.11.12.13", "8.8.8.8"],
+        "dns_search": ["openwisp.org", "netjson.org"],
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "address": "192.168.1.1",
+                        "mask": 24,
+                        "proto": "static",
+                        "family": "ipv4"
+                    }
+                ]
+            },
+            # the following interface has DHCP enabled
+            # and it won't contain the dns setting
+            {
+                "name": "eth1",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "proto": "dhcp",
+                        "family": "ipv4"
+                    }
+                ]
+            },
+            # the following VLAN interface won't get
+            # the dns nor the dns_search settings
+            {
+                "name": "eth1.31",
+                "type": "ethernet"
+            }
+        ]
+    }
 
 Will return the following UCI output::
 

@@ -20,11 +20,11 @@ in a few ways.
 
 1. the generated tar.gz archive is not designed to be installed with ``sysupgrade -r``
 2. the ``generate`` method will automatically add a few additional executable scripts:
-  * ``install.sh`` to install the configuration
-  * ``uninstall.sh`` to uninstall the configuration
-  * ``tc_script.sh`` to start/stop traffic control settings
-  * one "up" script for each tap VPN configured
-  * one "down" script for each tap VPN configured
+ * ``install.sh`` to install the configuration
+ * ``uninstall.sh`` to uninstall the configuration
+ * ``tc_script.sh`` to start/stop traffic control settings
+ * one "up" script for each tap VPN configured
+ * one "down" script for each tap VPN configured
 3. the openvpn certificates are expected to be located the following path: ``/openvpn/x509/``
 4. the crontabs are expected in to be located at the following path: ``/crontabs/``
 
