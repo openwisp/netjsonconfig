@@ -2,9 +2,9 @@
     package wireless
 
     {% for radio in radios %}
-        config wifi-device '{{ radio.name }}'
+        config wifi-device '{{ radio.pop('name') }}'
         {% for key, value in radio.items() %}
-            {% if key != 'name' and value not in ['', None] %}
+            {% if value not in ['', None] %}
                 {% if value is not string and value is iterable %}
                     {% for list_value in value %}
                         list {{ key }} '{{ list_value }}'

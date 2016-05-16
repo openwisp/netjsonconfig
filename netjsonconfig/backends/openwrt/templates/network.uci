@@ -26,10 +26,9 @@
 
     {% endfor %}
     {% for route in routes %}
-        config {{ route.version }}{% if route.version == 'route' %} '{{ route.name }}'{% endif %}
-
+        config {{ route.pop('version') }} '{{ route.pop('name') }}'
             {% for key, value in route.items() %}
-                {% if key not in ['name', 'version'] and value not in ['', None] %}
+                {% if value not in ['', None] %}
                     option {{ key }} '{{ value }}'
                 {% endif %}
             {% endfor %}
