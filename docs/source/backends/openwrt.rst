@@ -11,6 +11,13 @@ OpenWRT Backend
 
 The ``OpenWrt`` backend is the base backend of the library.
 
+.. note::
+    This backend purposely generates only named UCI blocks.
+
+    UCI stands for `Unified Configuration Interface <https://wiki.openwrt.org/doc/uci>`_
+    and it is the default configuration system installed on `OpenWRT <http://openwrt.org>`_
+    and its fork `LEDE <https://www.lede-project.org/>`_.
+
 Initialization
 --------------
 
@@ -245,7 +252,7 @@ Will be rendered as follows::
 
     package system
 
-    config system
+    config system 'system'
             option hostname 'routerA'
             option timezone 'UTC'
 
@@ -645,7 +652,7 @@ UCI output::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option device 'radio0'
             option ifname 'wlan0'
             option isolate '1'
@@ -725,7 +732,7 @@ Will be rendered as follows::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option device 'radio0'
             option ifname 'wlan0'
             option mode 'ap'
@@ -772,7 +779,7 @@ UCI output::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option device 'radio0'
             option ifname 'wlan0'
             option macfilter 'deny'
@@ -847,7 +854,7 @@ UCI output::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_mesh0'
             option device 'radio0'
             option ifname 'mesh0'
             option mesh_id 'ninux'
@@ -888,7 +895,7 @@ Will result in::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option bssid '02:b8:c0:00:00:00'
             option device 'radio0'
             option ifname 'wlan0'
@@ -968,7 +975,7 @@ Will result in::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option bssid 'C0:4A:00:2D:05:FD'
             option device 'radio0'
             option ifname 'wlan0'
@@ -977,7 +984,7 @@ Will result in::
             option ssid 'FreeRomaWifi'
             option wds '1'
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan1'
             option device 'radio1'
             option ifname 'wlan1'
             option mode 'ap'
@@ -1023,7 +1030,7 @@ UCI output::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option device 'radio0'
             option encryption 'psk2+tkip+ccmp'
             option ifname 'wlan0'
@@ -1075,7 +1082,7 @@ UCI Output::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option acct_port '1813'
             option acct_server '192.168.0.2'
             option device 'radio0'
@@ -1127,7 +1134,7 @@ UCI Output::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             option bssid '00:26:b9:20:5f:09'
             option device 'radio0'
             option eap_type 'tls'
@@ -1370,7 +1377,7 @@ Will be rendered as follows::
             option table '2'
             option target '192.168.4.1'
 
-    config route6
+    config route6 'route2'
             option gateway 'fd88::1'
             option interface 'eth1'
             option metric '0'
@@ -1452,7 +1459,7 @@ Will be rendered as follows::
 
     package network
 
-    config rule
+    config rule 'rule1'
             option action 'blackhole'
             option dest '192.168.2.0/24'
             option in 'eth0'
@@ -1463,17 +1470,17 @@ Will be rendered as follows::
             option src '192.168.1.0/24'
             option tos '2'
 
-    config rule
+    config rule 'rule2'
             option dest '192.168.3.0/24'
             option goto '0'
             option src '192.168.1.0/24'
 
-    config rule6
+    config rule6 'rule3'
             option action 'prohibit'
             option dest 'fdca:1234::/64'
             option in 'vpn'
 
-    config rule6
+    config rule6 'rule4'
             option action 'prohibit'
             option in 'vpn'
             option src 'fdca:1235::/64'
@@ -1548,17 +1555,17 @@ Will be rendered as follows::
 
     package network
 
-    config switch
+    config switch 'switch0'
             option enable_vlan '1'
             option name 'switch0'
             option reset '1'
 
-    config switch_vlan
+    config switch_vlan 'switch0_vlan1'
             option device 'switch0'
             option ports '0t 2 3 4 5'
             option vlan '1'
 
-    config switch_vlan
+    config switch_vlan 'switch0_vlan2'
             option device 'switch0'
             option ports '0t 1'
             option vlan '2'
@@ -1896,7 +1903,7 @@ UCI output::
 
     package wireless
 
-    config wifi-iface
+    config wifi-iface 'wifi_wlan0'
             list basic_rate '6000'
             list basic_rate '9000'
             option device 'radio0'
@@ -2014,7 +2021,7 @@ Will be rendered as follows::
 
     package dropbear
 
-    config dropbear
+    config dropbear 'dropbear_dropbear1'
             option PasswordAuth 'on'
             option Port '22'
             option RootPasswordAuth 'on'
