@@ -2021,7 +2021,7 @@ Will be rendered as follows::
 
     package dropbear
 
-    config dropbear 'dropbear_dropbear1'
+    config dropbear 'dropbear_1'
             option PasswordAuth 'on'
             option Port '22'
             option RootPasswordAuth 'on'
