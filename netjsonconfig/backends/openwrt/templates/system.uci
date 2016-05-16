@@ -2,7 +2,7 @@
     package system
 
     {% if system %}
-        config system
+        config system 'system'
         {% for key, value in system.items() %}
             {% if value not in ['', None] %}
                 option {{ key }} '{{ value }}'

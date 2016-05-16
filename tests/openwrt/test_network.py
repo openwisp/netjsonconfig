@@ -246,13 +246,13 @@ config interface 'eth1'
     option ip6addr 'fd87::1/128'
     option proto 'static'
 
-config route6
+config route6 'route1'
     option gateway 'fd88::1'
     option interface 'eth1'
     option metric '0'
     option target 'fd89::1/128'
 
-config route6
+config route6 'route2'
     option gateway 'fd88::2'
     option interface 'eth1'
     option metric '3'
@@ -637,7 +637,7 @@ config interface 'eth0'
         })
         expected = self._tabs("""package network
 
-config rule
+config rule 'rule1'
     option action 'blackhole'
     option dest '192.168.2.0/24'
     option in 'eth0'
@@ -648,17 +648,17 @@ config rule
     option src '192.168.1.0/24'
     option tos '2'
 
-config rule
+config rule 'rule2'
     option dest '192.168.3.0/24'
     option goto '0'
     option src '192.168.1.0/24'
 
-config rule6
+config rule6 'rule3'
     option action 'prohibit'
     option dest 'fdca:1234::/64'
     option in 'vpn'
 
-config rule6
+config rule6 'rule4'
     option action 'prohibit'
     option in 'vpn'
     option src 'fdca:1235::/64'
@@ -701,27 +701,27 @@ config rule6
         })
         expected = self._tabs("""package network
 
-config switch
+config switch 'switch0'
     option enable_vlan '1'
     option name 'switch0'
     option reset '1'
 
-config switch_vlan
+config switch_vlan 'switch0_vlan1'
     option device 'switch0'
     option ports '0t 2 3 4 5'
     option vlan '1'
 
-config switch_vlan
+config switch_vlan 'switch0_vlan2'
     option device 'switch0'
     option ports '0t 1'
     option vlan '2'
 
-config switch
+config switch 'switch1'
     option enable_vlan '1'
     option name 'switch1'
     option reset '1'
 
-config switch_vlan
+config switch_vlan 'switch1_vlan1'
     option device 'switch1'
     option ports '0t 6 7'
     option vlan '3'

@@ -37,7 +37,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'psk2+tkip+ccmp'
     option ifname 'wlan0'
@@ -75,7 +75,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'psk-mixed+ccmp'
     option ifname 'wlan0'
@@ -113,7 +113,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'psk'
     option ifname 'wlan0'
@@ -157,7 +157,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option acct_port '1813'
     option acct_server '192.168.0.2'
     option device 'radio0'
@@ -202,7 +202,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'wpa-mixed'
     option ifname 'wlan0'
@@ -242,7 +242,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'wpa+ccmp'
     option ifname 'wlan0'
@@ -284,7 +284,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option bssid '00:26:b9:20:5f:09'
     option device 'radio0'
     option eap_type 'tls'
@@ -324,7 +324,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'wep-open'
     option ifname 'wlan0'
@@ -362,7 +362,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'wep-shared'
     option ifname 'wlan0'
@@ -402,7 +402,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -434,7 +434,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -470,7 +470,7 @@ config interface 'mesh0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_mesh0'
     option device 'radio0'
     option encryption 'psk2+tkip+ccmp'
     option ifname 'mesh0'
@@ -509,7 +509,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option bssid '00:26:b9:20:5f:09'
     option device 'radio0'
     option encryption 'psk2'
@@ -549,7 +549,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'psk'
     option ifname 'wlan0'

@@ -21,7 +21,7 @@ class TestSystemRenderer(unittest.TestCase, _TabsMixin):
         })
         expected = self._tabs("""package system
 
-config system
+config system 'system'
     option custom_setting '1'
     option hostname 'test-system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'

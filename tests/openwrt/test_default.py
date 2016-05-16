@@ -58,7 +58,7 @@ class TestDefaultRenderer(unittest.TestCase, _TabsMixin):
         })
         expected = self._tabs("""package firewall
 
-config rule
+config rule 'firewall_rule1'
     option family 'ipv6'
     list icmp_type '130/0'
     list icmp_type '131/0'
@@ -70,7 +70,7 @@ config rule
     option src_ip 'fe80::/10'
     option target 'ACCEPT'
 
-config rule
+config rule 'firewall_rule2'
     option family 'ipv4'
     list icmp_type '130/0'
     list icmp_type '131/0'

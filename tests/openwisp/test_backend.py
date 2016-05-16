@@ -126,7 +126,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         contents = tar.extractfile(system).read().decode()
         expected = self._tabs("""package system
 
-config system
+config system 'system'
     option hostname 'openwisp-test'
     option timezone 'UTC'
 """)

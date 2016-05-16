@@ -35,7 +35,7 @@
 
     {% endfor %}
     {% for rule in ip_rules %}
-        config {{ rule.pop('block_name') }}
+        config {{ rule.pop('block_name') }} 'rule{{ loop.index }}'
             {% for key, value in rule.items() %}
                 {% if value not in ['', None] %}
                     option {{ key }} '{{ value }}'
@@ -44,7 +44,7 @@
 
     {% endfor %}
     {% for switch in switches %}
-        config switch
+        config switch '{{ switch.name }}'
             {% for key, value in switch.items() %}
                 {% if key != 'vlan' and value not in ['', None] %}
                     option {{ key }} '{{ value }}'
@@ -52,7 +52,7 @@
             {% endfor %}
 
             {% for vlan in switch.vlan %}
-                config switch_vlan
+                config switch_vlan '{{ switch.name }}_vlan{{ loop.index }}'
                     {% for key, value in vlan.items() %}
                         {% if value not in ['', None] %}
                             option {{ key }} '{{ value }}'

@@ -3,10 +3,9 @@
         package {{ package }}
 
         {% for config in config_blocks %}
-            config {{ config.pop('config_name') }}{% if config.config_value %} '{{ config.pop('config_value') }}'{% endif %}
-
+            config {{ config.config_name }} '{% if config.config_value %}{{ config.config_value }}{% else %}{{ package }}_{{ config.config_name }}{{ loop.index }}{% endif %}'
             {% for key, value in config.items() %}
-                {% if value not in ['', None] %}
+                {% if value not in ['', None] and not key.startswith('config_') %}
                     {% if value is not string and value is iterable %}
                         {% for list_value in value %}
                             list {{ key }} '{{ list_value }}'

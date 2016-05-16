@@ -7,6 +7,10 @@ from ..base import BaseRenderer
 from .timezones import timezones
 
 
+def logical_name(name):
+    return name.replace('.', '_').replace('-', '_')
+
+
 class NetworkRenderer(BaseRenderer):
     """
     Renders content importable with:
@@ -29,7 +33,7 @@ class NetworkRenderer(BaseRenderer):
             network = interface.get('network')
             uci_name = interface['name'] if not network else network
             # convert dot and dashes to underscore
-            uci_name = uci_name.replace('.', '_').replace('-', '_')
+            uci_name = logical_name(uci_name)
             # determine if must be type bridge
             if interface.get('type') == 'bridge':
                 is_bridge = True
@@ -328,6 +332,8 @@ class WirelessRenderer(BaseRenderer):
             uci_wifi['disabled'] = wifi_interface.get('disabled')
             # add ifname
             uci_wifi['ifname'] = wifi_interface['name']
+            # uci identifier
+            uci_wifi['id'] = 'wifi_{0}'.format(logical_name(wifi_interface['name']))
             # rename radio to device
             uci_wifi['device'] = wireless['radio']
             del uci_wifi['radio']

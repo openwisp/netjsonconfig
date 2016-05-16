@@ -46,7 +46,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option distance '300'
     option frag '1500'
@@ -107,14 +107,14 @@ config interface 'wlan1'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'ap-ssid'
 
-config wifi-iface
+config wifi-iface 'wifi_wlan1'
     option bssid '00:11:22:33:44:55'
     option device 'radio1'
     option ifname 'wlan1'
@@ -182,7 +182,7 @@ config interface 'br_lan'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -228,7 +228,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -260,7 +260,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -318,7 +318,7 @@ config interface 'guests'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -350,7 +350,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -382,7 +382,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -420,7 +420,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option bssid '00:11:22:33:44:55'
     option device 'radio0'
     option disabled '1'
@@ -454,7 +454,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -494,7 +494,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
@@ -531,7 +531,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option macfilter 'deny'
@@ -640,7 +640,7 @@ config interface 'wds_bridge'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option bssid 'C0:4A:00:2D:05:FD'
     option device 'radio0'
     option ifname 'wlan0'
@@ -649,7 +649,7 @@ config wifi-iface
     option ssid 'FreeRomaWifi'
     option wds '1'
 
-config wifi-iface
+config wifi-iface 'wifi_wlan1'
     option device 'radio1'
     option ifname 'wlan1'
     option mode 'ap'
@@ -700,7 +700,7 @@ config interface 'lan'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_mesh0'
     option device 'radio0'
     option ifname 'mesh0'
     option mesh_id 'ninux'
@@ -764,7 +764,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     list basic_rate '6000'
     list basic_rate '9000'
     option device 'radio0'
@@ -819,7 +819,7 @@ config interface 'wlan0'
 
 package wireless
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option macaddr 'E8:94:F6:33:8C:00'

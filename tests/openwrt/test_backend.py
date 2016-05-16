@@ -172,7 +172,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     option txpower '3'
     option type 'mac80211'
 
-config wifi-iface
+config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option hidden '1'
     option ifname 'wlan0'
