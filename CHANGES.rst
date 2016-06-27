@@ -1,10 +1,10 @@
 Change log
 ==========
 
-Version 0.4.4 [unreleased]
+Version 0.4.4 [2016-06-27]
 --------------------------
 
-WIP
+- `#50 <https://github.com/openwisp/netjsonconfig/issues/50>`_: [openwrt] add logical name to all generated configuration items
 
 Version 0.4.3 [2016-04-23]
 --------------------------
