@@ -356,7 +356,7 @@ Let's see the result with:
 
      * variables must be written in the form of ``{{ var_name }}``, including
        spaces around ``var_name``;
-     * variable names can contain only alphanumeric characters, dashes and underscores;
+     * variable names can contain only alphanumeric characters and underscores;
      * unrecognized variables will be ignored;
 
 Project goals
