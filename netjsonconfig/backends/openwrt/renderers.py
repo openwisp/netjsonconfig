@@ -11,7 +11,31 @@ def logical_name(name):
     return name.replace('.', '_').replace('-', '_')
 
 
-class NetworkRenderer(BaseRenderer):
+class BaseOpenWrtRenderer(BaseRenderer):
+    """
+    Base OpenWrt Renderer
+    """
+    def cleanup(self, output):
+        """
+        OpenWRT specific output cleanup
+        """
+        # correct indentation
+        output = output.replace('    ', '')\
+                       .replace('\noption', '\n\toption')\
+                       .replace('\nlist', '\n\tlist')
+        # convert True to 1 and False to 0
+        output = output.replace('True', '1')\
+                       .replace('False', '0')
+        # max 2 consecutive \n delimiters
+        output = output.replace('\n\n\n', '\n\n')
+        # if output is present
+        # ensure it always ends with 1 new line
+        if output.endswith('\n\n'):
+            return output[0:-1]
+        return output
+
+
+class NetworkRenderer(BaseOpenWrtRenderer):
     """
     Renders content importable with:
         uci import network
@@ -223,7 +247,7 @@ class NetworkRenderer(BaseRenderer):
         return {}
 
 
-class SystemRenderer(BaseRenderer):
+class SystemRenderer(BaseOpenWrtRenderer):
     """
     Renders content importable with:
         uci import system
@@ -252,7 +276,7 @@ class SystemRenderer(BaseRenderer):
         return uci_leds
 
 
-class WirelessRenderer(BaseRenderer):
+class WirelessRenderer(BaseOpenWrtRenderer):
     """
     Renders content importable with:
         uci import wireless
@@ -422,7 +446,7 @@ class WirelessRenderer(BaseRenderer):
         return uci
 
 
-class DefaultRenderer(BaseRenderer):
+class DefaultRenderer(BaseOpenWrtRenderer):
     """
     Default OpenWrt Renderer
     Allows great flexibility in defining UCI configuration in JSON format
@@ -430,7 +454,7 @@ class DefaultRenderer(BaseRenderer):
     def _get_custom_packages(self):
         # determine config keys to ignore
         ignore_list = list(self.backend.schema['properties'].keys())
-        ignore_list += self.backend.get_packages()
+        ignore_list += self.backend.get_renderers()
         # determine custom packages
         custom_packages = {}
         for key, value in self.config.items():

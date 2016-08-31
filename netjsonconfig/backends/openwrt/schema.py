@@ -2,10 +2,9 @@
 OpenWrt specific JSON-Schema definition
 """
 from ...schema import schema as default_schema
+from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
 from .timezones import timezones
-
-DEFAULT_FILE_MODE = '0644'
 
 schema = merge_config(default_schema, {
     "definitions": {
@@ -452,45 +451,6 @@ schema = merge_config(default_schema, {
                         "type": "string",
                         "propertyOrder": 10,
                     }
-                }
-            }
-        },
-        "files": {
-            "type": "array",
-            "title": "Files",
-            "uniqueItems": True,
-            "additionalItems": True,
-            "propertyOrder": 11,
-            "items": {
-                "type": "object",
-                "title": "File",
-                "additionalProperties": False,
-                "required": [
-                    "path",
-                    "mode",
-                    "contents"
-                ],
-                "properties": {
-                    "path": {
-                        "type": "string",
-                        "description": "filesystem path",
-                        "propertyOrder": 1,
-                    },
-                    "mode": {
-                        "type": "string",
-                        "description": "filesystem permissions",
-                        "maxLength": 4,
-                        "minLength": 3,
-                        "pattern": "^[0-7]*$",
-                        "default": DEFAULT_FILE_MODE,
-                        "propertyOrder": 2,
-                    },
-                    "contents": {
-                        "type": "string",
-                        "description": "content (plain-text only)",
-                        "format": "textarea",
-                        "propertyOrder": 3,
-                    },
                 }
             }
         }

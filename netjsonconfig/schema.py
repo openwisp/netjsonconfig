@@ -6,6 +6,8 @@ http://netjson.org/rfc.html
 from .channels import channels_2and5, channels_2ghz, channels_5ghz
 from .countries import countries
 
+DEFAULT_FILE_MODE = '0644'
+
 schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
@@ -1013,6 +1015,45 @@ schema = {
                                        "covered by the target (optional)",
                         "propertyOrder": 5,
                     }
+                }
+            }
+        },
+        "files": {
+            "type": "array",
+            "title": "Files",
+            "uniqueItems": True,
+            "additionalItems": True,
+            "propertyOrder": 11,
+            "items": {
+                "type": "object",
+                "title": "File",
+                "additionalProperties": False,
+                "required": [
+                    "path",
+                    "mode",
+                    "contents"
+                ],
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "filesystem path",
+                        "propertyOrder": 1,
+                    },
+                    "mode": {
+                        "type": "string",
+                        "description": "filesystem permissions",
+                        "maxLength": 4,
+                        "minLength": 3,
+                        "pattern": "^[0-7]*$",
+                        "default": DEFAULT_FILE_MODE,
+                        "propertyOrder": 2,
+                    },
+                    "contents": {
+                        "type": "string",
+                        "description": "content (plain-text only)",
+                        "format": "textarea",
+                        "propertyOrder": 3,
+                    },
                 }
             }
         }
