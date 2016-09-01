@@ -4,6 +4,7 @@ from ipaddress import ip_interface, ip_network
 
 from ...utils import sorted_dict
 from ..base import BaseRenderer
+from ..openvpn.renderers import OpenVpnRenderer as BaseOpenVpnRenderer
 from .timezones import timezones
 
 
@@ -478,3 +479,10 @@ class DefaultRenderer(BaseOpenWrtRenderer):
                 custom_packages[key] = block_list
         # sort custom packages
         return sorted_dict(custom_packages)
+
+
+class OpenVpnRenderer(BaseOpenWrtRenderer, BaseOpenVpnRenderer):
+    """
+    Produces an OpenVPN configuration in UCI format for OpenWRT
+    """
+    pass

@@ -4,6 +4,7 @@ OpenWrt specific JSON-Schema definition
 from ...schema import schema as default_schema
 from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
+from ..openvpn.schema import schema as openvpn_schema
 from .timezones import timezones
 
 schema = merge_config(default_schema, {
@@ -451,6 +452,27 @@ schema = merge_config(default_schema, {
                         "type": "string",
                         "propertyOrder": 10,
                     }
+                }
+            }
+        }
+    }
+})
+
+# add OpenVPN schema
+schema = merge_config(schema, openvpn_schema)
+# OpenVPN customizations for OpenWRT
+schema = merge_config(schema, {
+    "definitions": {
+        "tunnel": {
+            "required": ["enabled"],
+            "properties": {
+                "enabled": {
+                    "title": "enabled",
+                    "description": "uncheck this to disable this VPN without deleting its configuration",
+                    "type": "boolean",
+                    "default": True,
+                    "format": "checkbox",
+                    "propertyOrder": 1
                 }
             }
         }

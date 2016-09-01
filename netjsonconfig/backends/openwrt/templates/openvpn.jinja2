@@ -1,0 +1,17 @@
+{% if not is_empty %}
+    package openvpn
+
+    {% for vpn in openvpn %}
+        config openvpn '{{ vpn.pop('name').replace('-', '_') }}'
+            {% for key, value in vpn.items() %}
+                {% if value is not string and value is iterable %}
+                    {% for element in value %}
+                        list {{ key.replace('-', '_') }} '{{ element }}'
+                    {% endfor %}
+                {% elif value not in ['', None] %}
+                    option {{ key.replace('-', '_') }} '{{ value }}'
+                {% endif %}
+            {% endfor %}
+
+    {% endfor %}
+{% endif %}

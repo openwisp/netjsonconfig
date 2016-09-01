@@ -13,7 +13,8 @@ class OpenWrt(BaseBackend):
         renderers.SystemRenderer,
         renderers.NetworkRenderer,
         renderers.WirelessRenderer,
-        renderers.DefaultRenderer
+        renderers.DefaultRenderer,
+        renderers.OpenVpnRenderer
     ]
     PACKAGE_EXP = re.compile('package ')
 
