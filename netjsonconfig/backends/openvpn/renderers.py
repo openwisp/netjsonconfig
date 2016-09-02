@@ -9,7 +9,12 @@ class OpenVpnRenderer(BaseRenderer):
     Produces an OpenVPN configuration string
     """
     def cleanup(self, output):
-        return output.replace('    ', '')
+        # remove indentations
+        output = output.replace('    ', '')
+        # remove last newline
+        if output.endswith('\n\n'):
+            output = output[0:-1]
+        return output
 
     def _get_openvpn(self):
         openvpn = []

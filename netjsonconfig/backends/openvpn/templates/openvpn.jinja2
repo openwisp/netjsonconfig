@@ -1,5 +1,5 @@
 {% for vpn in openvpn %}
-# config: {{ vpn.pop('name') }};
+# openvpn config: {{ vpn.pop('name') }}
 
     {% for key, value in vpn.items() %}
         {% set key = key.replace('_', '-') %}
@@ -13,4 +13,5 @@
             {% endfor %}
         {% endif %}
     {% endfor %}
+
 {% endfor %}

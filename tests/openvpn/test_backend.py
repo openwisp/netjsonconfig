@@ -1,3 +1,4 @@
+import tarfile
 import unittest
 
 from netjsonconfig import OpenVpn
@@ -59,7 +60,7 @@ class TestBackend(unittest.TestCase):
                 "verb": 3
             }]
         })
-        expected = """# config: test-server;
+        expected = """# openvpn config: test-server
 
 auth SHA1
 ca ca.pem
@@ -152,7 +153,7 @@ verb 3
                 }
             ]
         })
-        expected = """# config: test-client;
+        expected = """# openvpn config: test-client
 
 auth SHA256
 ca ca.pem
@@ -208,7 +209,7 @@ verb 1
                 "tls_server": True
             }]
         })
-        expected = """# config: test-no-status;
+        expected = """# openvpn config: test-no-status
 
 ca ca.pem
 cert cert.pem
@@ -242,7 +243,7 @@ tls-server
                 "z_true_val": True,
             }]
         })
-        expected = """# config: test-properties;
+        expected = """# openvpn config: test-properties
 
 ca ca.pem
 cert cert.pem
@@ -260,3 +261,122 @@ z-string string
 z-true-val
 """
         self.assertEqual(c.render(), expected)
+
+    def test_double(self):
+        o = OpenVpn({
+            "openvpn": [
+                {
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "key": "key.pem",
+                    "mode": "server",
+                    "name": "test-1",
+                    "proto": "udp",
+                    "tls_server": True
+                },
+                {
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "key": "key.pem",
+                    "mode": "server",
+                    "name": "test-2",
+                    "port": 1195,
+                    "proto": "udp",
+                    "tls_server": True
+                }
+            ]
+        })
+        expected = """# openvpn config: test-1
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+tls-server
+
+# openvpn config: test-2
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+port 1195
+proto udp
+tls-server
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_generate(self):
+        o = OpenVpn({
+            "openvpn": [
+                {
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "key": "key.pem",
+                    "mode": "server",
+                    "name": "test-1",
+                    "proto": "udp",
+                    "tls_server": True
+                },
+                {
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "key": "key.pem",
+                    "mode": "server",
+                    "name": "test-2",
+                    "port": 1195,
+                    "proto": "udp",
+                    "tls_server": True
+                }
+            ]
+        })
+        tar = tarfile.open(fileobj=o.generate(), mode='r')
+        self.assertEqual(len(tar.getmembers()), 2)
+        # network
+        vpn1 = tar.getmember('test-1.conf')
+        contents = tar.extractfile(vpn1).read().decode()
+        expected = """ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+tls-server
+"""
+        self.assertEqual(contents, expected)
+        # vpn 2
+        vpn2 = tar.getmember('test-2.conf')
+        contents = tar.extractfile(vpn2).read().decode()
+        expected = """ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+port 1195
+proto udp
+tls-server
+"""
+        self.assertEqual(contents, expected)
