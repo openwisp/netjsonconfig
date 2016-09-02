@@ -9,8 +9,7 @@ from .schema import schema
 class OpenWisp(OpenWrt):
     """ OpenWisp 1.x Backend """
     schema = schema
-    openwisp_env = Environment(loader=PackageLoader('netjsonconfig.backends.openwisp',
-                                                    'templates'),
+    openwisp_env = Environment(loader=PackageLoader('netjsonconfig.backends.openwisp', 'templates'),
                                trim_blocks=True)
 
     def validate(self):
@@ -48,7 +47,6 @@ class OpenWisp(OpenWrt):
             if vpn.get('dev_type') != 'tap':
                 continue
             tap = vpn.copy()
-            tap['name'] = tap['config_value']
             l2vpn.append(tap)
         # bridge list
         bridges = []
