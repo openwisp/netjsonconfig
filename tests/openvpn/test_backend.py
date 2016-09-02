@@ -46,7 +46,7 @@ class TestBackend(unittest.TestCase):
                 "persist_tun": True,
                 "port": 1194,
                 "proto": "udp",
-                "script_security_level": 0,
+                "script_security": 0,
                 "secret": "",
                 "status": "/var/log/openvpn.status 10",
                 "status_version": 1,
@@ -85,7 +85,7 @@ persist-key
 persist-tun
 port 1194
 proto udp
-script-security-level 0
+script-security 0
 status /var/log/openvpn.status 10
 status-version 1
 tls-server
@@ -139,7 +139,7 @@ verb 3
                         }
                     ],
                     "resolv_retry": True,
-                    "script_security_level": 1,
+                    "script_security": 1,
                     "secret": "",
                     "status": "/var/log/openvpn.status 30",
                     "status_version": 1,
@@ -179,7 +179,7 @@ proto tcp-client
 remote vpn1.test.com 1194
 remote vpn2.test.com 1195
 resolv-retry
-script-security-level 1
+script-security 1
 status /var/log/openvpn.status 30
 status-version 1
 tls-client

@@ -243,8 +243,8 @@ schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 29,
                 },
-                "script_security_level": {
-                    "title": "script security level",
+                "script_security": {
+                    "title": "script security",
                     "type": "integer",
                     "enum": [0, 1, 2, 3],
                     "default": 1,

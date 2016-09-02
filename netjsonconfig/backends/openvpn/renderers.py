@@ -15,7 +15,7 @@ class OpenVpnRenderer(BaseRenderer):
         openvpn = []
         for vpn in self.config.get('openvpn', []):
             config = deepcopy(vpn)
-            skip_keys = ['script_security_level', 'remote']
+            skip_keys = ['script_security', 'remote']
             delete_keys = []
             for key, value in config.items():
                 if key in skip_keys:

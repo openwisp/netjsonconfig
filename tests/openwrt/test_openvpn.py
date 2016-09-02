@@ -48,7 +48,7 @@ class TestOpenVpnRenderer(_TabsMixin, unittest.TestCase):
                 "persist_tun": True,
                 "port": 1194,
                 "proto": "udp",
-                "script_security_level": 0,
+                "script_security": 0,
                 "secret": "",
                 "status": "/var/log/openvpn.status 10",
                 "status_version": 1,
@@ -89,7 +89,7 @@ config openvpn 'test_server'
     option persist_tun '1'
     option port '1194'
     option proto 'udp'
-    option script_security_level '0'
+    option script_security '0'
     option status '/var/log/openvpn.status 10'
     option status_version '1'
     option tls_server '1'
@@ -144,7 +144,7 @@ config openvpn 'test_server'
                         }
                     ],
                     "resolv_retry": True,
-                    "script_security_level": 1,
+                    "script_security": 1,
                     "secret": "",
                     "status": "/var/log/openvpn.status 30",
                     "status_version": 1,
@@ -186,7 +186,7 @@ config openvpn 'test_client'
     list remote 'vpn1.test.com 1194'
     list remote 'vpn2.test.com 1195'
     option resolv_retry '1'
-    option script_security_level '1'
+    option script_security '1'
     option status '/var/log/openvpn.status 30'
     option status_version '1'
     option tls_client '1'
