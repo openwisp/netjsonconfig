@@ -2,6 +2,7 @@
 # config: {{ vpn.pop('name') }};
 
     {% for key, value in vpn.items() %}
+        {% set key = key.replace('_', '-') %}
         {% if value is sameas True %}
             {{ key }}
         {% elif value is string or value is number %}

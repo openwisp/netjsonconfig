@@ -15,7 +15,7 @@ class OpenVpnRenderer(BaseRenderer):
         openvpn = []
         for vpn in self.config.get('openvpn', []):
             config = deepcopy(vpn)
-            skip_keys = ['script-security-level', 'remote']
+            skip_keys = ['script_security_level', 'remote']
             delete_keys = []
             for key, value in config.items():
                 if key in skip_keys:
@@ -32,7 +32,7 @@ class OpenVpnRenderer(BaseRenderer):
                 remote = ['{host} {port}'.format(**r) for r in config['remote']]
                 config['remote'] = remote
             # do not display status-version if status directive not present
-            if 'status' not in config and 'status-version' in config:
-                del config['status-version']
+            if 'status' not in config and 'status_version' in config:
+                del config['status_version']
             openvpn.append(sorted_dict(config))
         return openvpn

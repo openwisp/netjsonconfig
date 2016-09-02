@@ -44,7 +44,7 @@ schema = {
                     "minimum": 1,
                     "propertyOrder": 3,
                 },
-                "dev-type": {
+                "dev_type": {
                     "title": "device type",
                     "description": "tun (layer3) or tap (layer2)",
                     "type": "string",
@@ -67,7 +67,7 @@ schema = {
                                    "If unspecified, OpenVPN will bind to all interfaces.",
                     "propertyOrder": 7,
                 },
-                "comp-lzo": {
+                "comp_lzo": {
                     "title": "LZO compression",
                     "description": "Use fast LZO compression; may add up to 1 "
                                    "byte per packet for incompressible data",
@@ -140,13 +140,13 @@ schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 15,
                 },
-                "ns-cert-type": {
+                "ns_cert_type": {
                     "title": "NS cert type",
                     "type": "string",
                     "default": "",
                     "propertyOrder": 18
                 },
-                "mtu-disc": {
+                "mtu_disc": {
                     "title": "MTU discovery",
                     "type": "string",
                     "enum": ["no", "maybe", "yes"],
@@ -160,7 +160,7 @@ schema = {
                     },
                     "propertyOrder": 19,
                 },
-                "mtu-test": {
+                "mtu_test": {
                     "title": "MTU test",
                     "description": "Empirically measures MTU on connection startup, can take up to "
                                    "3 minutes to complete",
@@ -196,7 +196,7 @@ schema = {
                     "pattern": "^(([0-9]*) ([0-9]*)|)$",
                     "propertyOrder": 23,
                 },
-                "persist-tun": {
+                "persist_tun": {
                     "title": "persist tunnel",
                     "description": "Don't close and reopen TUN/TAP device or run up/down scripts across "
                                    "SIGUSR1 or ping-restarts",
@@ -205,7 +205,7 @@ schema = {
                     "format": "checkbox",
                     "propertyOrder": 24,
                 },
-                "persist-key": {
+                "persist_key": {
                     "title": "persist key",
                     "description": "Don't re-read key files across SIGUSR1 or ping-restarts",
                     "type": "boolean",
@@ -213,7 +213,7 @@ schema = {
                     "format": "checkbox",
                     "propertyOrder": 25,
                 },
-                "tun-ipv6": {
+                "tun_ipv6": {
                     "title": "tun ipv6",
                     "description": "Build a tun link capable of forwarding IPv6 traffic",
                     "type": "boolean",
@@ -228,7 +228,7 @@ schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 27,
                 },
-                "up-delay": {
+                "up_delay": {
                     "title": "up delay",
                     "type": "integer",
                     "description": "Delay TUN/TAP open and up script execution until after TCP/UDP "
@@ -243,7 +243,7 @@ schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 29,
                 },
-                "script-security-level": {
+                "script_security_level": {
                     "title": "script security level",
                     "type": "integer",
                     "enum": [0, 1, 2, 3],
@@ -287,7 +287,7 @@ schema = {
                     "pattern": "^((\\S*) ([0-9]*)|)$",
                     "propertyOrder": 34,
                 },
-                "status-version": {
+                "status_version": {
                     "title": "status version format",
                     "type": "integer",
                     "enum": [1, 2, 3],
@@ -295,7 +295,7 @@ schema = {
                     "description": "Status file format version number. Defaults to 1",
                     "propertyOrder": 35,
                 },
-                "mute-replay-warnings": {
+                "mute_replay_warnings": {
                     "title": "mute replay warnings",
                     "description": "Silence the output of replay warnings, which "
                                    "are a common false alarm on WiFi networks",
@@ -311,7 +311,7 @@ schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 37,
                 },
-                "fast-io": {
+                "fast_io": {
                     "title": "fast IO",
                     "description": "(Experimental) Optimize TUN/TAP/UDP I/O writes by avoiding a "
                                    "call to poll/epoll/select prior to the write operation",
@@ -404,7 +404,7 @@ schema = {
                         "port": {
                             "description": "Use specific local port, ignored if nobind is enabled",
                         },
-                        "resolv-retry": {
+                        "resolv_retry": {
                             "title": "resolv-retry infinite",
                             "type": "boolean",
                             "description": "If hostname resolution fails, retry to resolve indefinitely",
@@ -412,7 +412,7 @@ schema = {
                             "format": "checkbox",
                             "propertyOrder": 8,
                         },
-                        "tls-client": {
+                        "tls_client": {
                             "title": "TLS Client",
                             "description": "Enable TLS authentication",
                             "type": "boolean",
@@ -420,13 +420,13 @@ schema = {
                             "format": "checkbox",
                             "propertyOrder": 9,
                         },
-                        "ns-cert-type": {
+                        "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "
                                            "nsCertType designation of \"server\"",
                             "enum": ["", "server"],
                             "options": {"enum_titles": ["disabled", "server"]}
                         },
-                        "auth-user-pass": {
+                        "auth_user_pass": {
                             "title": "auth user pass",
                             "description": "Path to file containing username/password on 2 lines, "
                                            "only valid when using password authentication",
@@ -451,7 +451,7 @@ schema = {
                             "default": "udp",
                             "options": {"enum_titles": ["UDP", "TCP"]}
                         },
-                        "tls-server": {
+                        "tls_server": {
                             "title": "TLS Server",
                             "description": "Enable TLS authentication",
                             "type": "boolean",
@@ -466,20 +466,20 @@ schema = {
                             "type": "string",
                             "propertyOrder": 16,
                         },
-                        "crl-verify": {
+                        "crl_verify": {
                             "title": "CRL",
                             "description": "Path to CRL file in PEM format",
                             "type": "string",
                             "pattern": "^(\\S*)$",
                             "propertyOrder": 17,
                         },
-                        "ns-cert-type": {
+                        "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "
                                            "nsCertType designation of \"client\"",
                             "enum": ["", "client"],
                             "options": {"enum_titles": ["disabled", "client"]}
                         },
-                        "duplicate-cn": {
+                        "duplicate_cn": {
                             "title": "duplicate cn",
                             "description": "Allow multiple clients with the same "
                                            "common name to concurrently connect",
@@ -488,7 +488,7 @@ schema = {
                             "format": "checkbox",
                             "propertyOrder": 40,
                         },
-                        "client-to-client": {
+                        "client_to_client": {
                             "title": "client to client",
                             "description": "Enable client to client communication",
                             "type": "boolean",
@@ -496,7 +496,7 @@ schema = {
                             "format": "checkbox",
                             "propertyOrder": 41,
                         },
-                        "client-cert-not-required": {
+                        "client_cert_not_required": {
                             "title": "client cert not required",
                             "description": "Don't require client certificate, client will authenticate "
                                            "using username/password only",
@@ -505,7 +505,7 @@ schema = {
                             "format": "checkbox",
                             "propertyOrder": 42,
                         },
-                        "username-as-common-name": {
+                        "username_as_common_name": {
                             "title": "username as cn",
                             "description": "Valid only for password authentication, use the "
                                            "authenticated username as the common name",
@@ -514,7 +514,7 @@ schema = {
                             "format": "checkbox",
                             "propertyOrder": 43,
                         },
-                        "auth-user-pass-verify": {
+                        "auth_user_pass_verify": {
                             "title": "auth user pass verify",
                             "description": "Command and method used for password authentication. "
                                            "If set requires the client to provide username and password",
