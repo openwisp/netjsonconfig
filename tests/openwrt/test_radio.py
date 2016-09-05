@@ -20,7 +20,7 @@ class TestRadio(unittest.TestCase, _TabsMixin):
                     "protocol": "802.11n",
                     "channel": 140,
                     "channel_width": 20,
-                    "country": "en"
+                    "country": "00"
                 },
                 {
                     "name": "radio1",
@@ -30,7 +30,7 @@ class TestRadio(unittest.TestCase, _TabsMixin):
                     "channel": 136,
                     "channel_width": 40,
                     "tx_power": 18,
-                    "country": "en",
+                    "country": "00",
                     "disabled": True
                 }
             ]
@@ -39,7 +39,7 @@ class TestRadio(unittest.TestCase, _TabsMixin):
 
 config wifi-device 'radio0'
     option channel '140'
-    option country 'EN'
+    option country '00'
     option htmode 'HT20'
     option hwmode '11a'
     option phy 'phy0'
@@ -47,7 +47,7 @@ config wifi-device 'radio0'
 
 config wifi-device 'radio1'
     option channel '136'
-    option country 'EN'
+    option country '00'
     option disabled '1'
     option htmode 'HT40'
     option hwmode '11a'

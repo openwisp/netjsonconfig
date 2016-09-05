@@ -4,6 +4,7 @@ http://netjson.org/rfc.html
 """
 
 from .channels import channels_2and5, channels_2ghz, channels_5ghz
+from .countries import countries
 
 schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -782,6 +783,9 @@ schema = {
                 "country": {
                     "type": "string",
                     "maxLength": 2,
+                    "default": "00",
+                    "enum": list(countries.values()),
+                    "options": {"enum_titles": list(countries.keys())},
                     "propertyOrder": 7,
                 },
                 "disabled": {
