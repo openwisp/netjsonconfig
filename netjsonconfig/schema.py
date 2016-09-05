@@ -783,7 +783,7 @@ schema = {
                 "country": {
                     "type": "string",
                     "maxLength": 2,
-                    "default": "IT",
+                    "default": "00",
                     "enum": list(countries.values()),
                     "options": {"enum_titles": list(countries.keys())},
                     "propertyOrder": 7,

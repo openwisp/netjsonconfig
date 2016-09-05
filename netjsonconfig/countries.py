@@ -2,6 +2,10 @@ from collections import OrderedDict
 
 countries = OrderedDict((
     (
+        "World",
+        "00"
+    ),
+    (
         "Afghanistan",
         "AF"
     ), 
@@ -308,6 +312,10 @@ countries = OrderedDict((
     (
         "French Southern Territories",
         "TF"
+    ),
+    (
+        "FYROM",
+        "MK"
     ), 
     (
         "Gabon",
@@ -516,10 +524,6 @@ countries = OrderedDict((
     (
         "Macao",
         "MO"
-    ), 
-    (
-        "FYROM",
-        "MK"
     ), 
     (
         "Madagascar",
