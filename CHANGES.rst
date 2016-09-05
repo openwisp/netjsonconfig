@@ -1,10 +1,12 @@
 Change log
 ==========
 
-Version 0.4.5 [unreleased]
+Version 0.4.5 [2016-09-05]
 --------------------------
 
-WIP
+- `#53 <https://github.com/openwisp/netjsonconfig/issues/53>`_: [docs] avoid ambiguity on dashes in context
+- `#52 <https://github.com/openwisp/netjsonconfig/pull/52>`_: [schema] added countries list as ``enum``
+  for radios (thanks to `@zachantre <https://github.com/zachantre>`_)
 
 Version 0.4.4 [2016-06-27]
 --------------------------
