@@ -4,12 +4,13 @@
     {% for vpn in openvpn %}
         config openvpn '{{ vpn.pop('name').replace('-', '_') }}'
             {% for key, value in vpn.items() %}
+                {% set key = key.replace('-', '_') %}
                 {% if value is not string and value is iterable %}
                     {% for element in value %}
-                        list {{ key.replace('-', '_') }} '{{ element }}'
+                        list {{ key }} '{{ element }}'
                     {% endfor %}
                 {% elif value not in ['', None] %}
-                    option {{ key.replace('-', '_') }} '{{ value }}'
+                    option {{ key }} '{{ value }}'
                 {% endif %}
             {% endfor %}
 
