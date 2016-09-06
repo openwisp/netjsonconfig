@@ -176,6 +176,7 @@ schema = {
                                    "are sent which are larger than max bytes. 0 means disabled. "
                                    "Valid only when using UDP",
                     "default": 0,
+                    "minimum": 0,
                     "propertyOrder": 21,
                 },
                 "mssfix": {
@@ -186,6 +187,7 @@ schema = {
                                    "encapsulated them, the resulting UDP packet size that OpenVPN sends "
                                    "to its peer will not exceed max bytes. Valid only when using UDP",
                     "default": 1450,
+                    "minimum": 0,
                     "propertyOrder": 22,
                 },
                 "keepalive": {
@@ -234,6 +236,7 @@ schema = {
                     "description": "Delay TUN/TAP open and up script execution until after TCP/UDP "
                                    "connection establishment with peer",
                     "default": 0,
+                    "minimum": 0,
                     "propertyOrder": 28,
                 },
                 "down": {
@@ -277,6 +280,8 @@ schema = {
                     "title": "mute",
                     "type": "integer",
                     "description": "limit repetitive logging of similar message types to max n occurrences",
+                    "default": 0,
+                    "minimum": 0,
                     "propertyOrder": 33,
                 },
                 "status": {
