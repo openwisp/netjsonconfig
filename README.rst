@@ -42,8 +42,6 @@ Its main features are:
 * **Variables**: reference variables in the configuration
 * **Command line utility**: easy to use from shell scripts or from other programming languages
 
-**Currently we are working only on OpenWRT support**.
-
 `Documentation <http://netjsonconfig.openwisp.org/>`_ |
 `Change log <https://github.com/openwisp/netjsonconfig/blob/master/CHANGES.rst>`_ |
 `Mailing List <https://groups.google.com/d/forum/openwisp>`_ |
