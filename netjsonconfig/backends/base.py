@@ -19,7 +19,7 @@ class BaseBackend(object):
     TODO: explain
     """
     schema = None
-    env_path = None
+    env_path = 'netjsonconfig.backends.base'
     FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
 
     def __init__(self, config, templates=[], context={}):
