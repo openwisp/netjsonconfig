@@ -39,6 +39,7 @@ Its main features are:
 
     * `OpenWRT <http://openwrt.org>`_ / `LEDE <https://www.lede-project.org/>`_ support
     * `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_ support
+    * `OpenVPN <https://openvpn.net>`_ support
     * Possibility to support more firmwares via custom backends
     * Based on the `NetJSON RFC <http://netjson.org/rfc.html>`_
     * **Validation** based on `JSON-Schema <http://json-schema.org/>`_
