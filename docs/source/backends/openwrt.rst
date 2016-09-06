@@ -9,7 +9,7 @@ OpenWRT Backend
         <iframe src="https://nodeshot.org/github-btn.html?user=openwisp&amp;repo=netjsonconfig&amp;type=fork&amp;count=true&amp;size=large" frameborder="0" scrolling="0" width="120" height="33"></iframe>
     </p>
 
-The ``OpenWrt`` backend is the base backend of the library.
+The ``OpenWrt`` backend allows to generate OpenWRT compatible configurations.
 
 .. note::
     This backend purposely generates only named UCI blocks.
@@ -1979,6 +1979,69 @@ The following example will create an executable shell script:
     })
     o.generate()
 
+OpenVPN
+-------
+
+This backend includes the schema of the ``OpenVpn`` backend, inheriting its features.
+
+For details regarding the OpenVPN schema please see :ref:`openvpn_backend_schema`.
+
+Schema additions
+~~~~~~~~~~~~~~~~
+
+The ``OpenWrt`` backend adds a few properties to the OpenVPN schema, see below.
+
+**Required properties:**
+
+* enabled
+
++--------------------------+---------+--------------+-------------------------------------------------------------+
+| key name                 | type    | default      | allowed values                                              |
++==========================+=========+==============+=============================================================+
+| ``enabled``              | boolean | ``True``     |                                                             |
++--------------------------+---------+--------------+-------------------------------------------------------------+
+
+OpenVPN example
+~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "openvpn": [
+            {
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "enabled": True,
+                "key": "key.pem",
+                "mode": "server",
+                "name": "test-vpn-server",
+                "proto": "udp",
+                "tls_server": True
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package openvpn
+
+    config openvpn 'test_vpn_server'
+            option ca 'ca.pem'
+            option cert 'cert.pem'
+            option dev 'tap0'
+            option dev_type 'tap'
+            option dh 'dh.pem'
+            option enabled '1'
+            option key 'key.pem'
+            option mode 'server'
+            option proto 'udp'
+            option tls_server '1'
+
 All the other settings
 ----------------------
 
@@ -2025,61 +2088,3 @@ Will be rendered as follows::
             option PasswordAuth 'on'
             option Port '22'
             option RootPasswordAuth 'on'
-
-OpenVPN example
-~~~~~~~~~~~~~~~
-
-The following *configuration dictionary*:
-
-.. code-block:: python
-
-    {
-        "openvpn": [
-            {
-                "config_name": "openvpn",
-                "config_value": "client_tun_0",
-                "enabled": True,
-                "client": True,
-                "dev": "tun",
-                "proto": "tcp",
-                "resolv_retry": "infinite",
-                "nobind": True,
-                "persist_tun": True,
-                "persist_key": True,
-                "ca": "/etc/openvpn/ca.crt",
-                "cert": "/etc/openvpn/client.crt",
-                "key": "/etc/openvpn/client.crt",
-                "cipher": "BF-CBC",
-                "comp_lzo": "yes",
-                "remote": "vpn.myserver.com 1194",
-                "enable": True,
-                "tls_auth": "/etc/openvpn/ta.key 1",
-                "verb": 5,
-                "log": "/tmp/openvpn.log"
-            }
-        ]
-    }
-
-Will be rendered as follows::
-
-    package openvpn
-
-    config openvpn 'client_tun_0'
-            option ca '/etc/openvpn/ca.crt'
-            option cert '/etc/openvpn/client.crt'
-            option cipher 'BF-CBC'
-            option client '1'
-            option comp_lzo 'yes'
-            option dev 'tun'
-            option enable '1'
-            option enabled '1'
-            option key '/etc/openvpn/client.crt'
-            option log '/tmp/openvpn.log'
-            option nobind '1'
-            option persist_key '1'
-            option persist_tun '1'
-            option proto 'tcp'
-            option remote 'owm.provinciawifi.it 1194'
-            option resolv_retry 'infinite'
-            option tls_auth '/etc/openvpn/ta.key 1'
-            option verb '5'
