@@ -56,6 +56,7 @@ Contents:
    /general/basics
    /backends/openwrt
    /backends/openwisp
+   /backends/openvpn
    /general/commandline_utility
    /general/running_tests
    /general/contributing
