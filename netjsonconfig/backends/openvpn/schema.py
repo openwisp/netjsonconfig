@@ -366,6 +366,14 @@ schema = {
                             "default": "udp",
                             "options": {"enum_titles": ["UDP", "TCP"]}
                         },
+                        "nobind": {
+                            "title": "nobind",
+                            "description": "ports are dynamically selected",
+                            "type": "boolean",
+                            "default": True,
+                            "format": "checkbox",
+                            "propertyOrder": 4,
+                        },
                         "remote": {
                             "title": "remote",
                             "type": "array",
@@ -397,14 +405,6 @@ schema = {
                                     }
                                 }
                             }
-                        },
-                        "nobind": {
-                            "title": "nobind",
-                            "description": "ports are dynamically selected",
-                            "type": "boolean",
-                            "default": True,
-                            "format": "checkbox",
-                            "propertyOrder": 6,
                         },
                         "port": {
                             "description": "Use specific local port, ignored if nobind is enabled",
