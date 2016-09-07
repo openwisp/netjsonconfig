@@ -380,3 +380,133 @@ proto udp
 tls-server
 """
         self.assertEqual(contents, expected)
+
+    def test_generate_client_simple(self):
+        client_config = OpenVpn.generate_client('vpn1.test.com', {
+            "ca": "ca.pem",
+            "cert": "cert.pem",
+            "dev": "tap0",
+            "dev_type": "tap",
+            "dh": "dh.pem",
+            "key": "key.pem",
+            "mode": "server",
+            "name": "example-vpn",
+            "proto": "udp",
+        })
+        o = OpenVpn({"openvpn": [client_config]})
+        expected = """# openvpn config: example-vpn
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+key key.pem
+mode client
+nobind
+proto udp
+remote vpn1.test.com 1195
+resolv-retry
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_generate_client_tls(self):
+        client_config = OpenVpn.generate_client('vpn2.test.com', {
+            "ca": "ca.pem",
+            "cert": "cert.pem",
+            "dev": "tap0",
+            "dev_type": "tap",
+            "dh": "dh.pem",
+            "key": "key.pem",
+            "mode": "server",
+            "name": "example-vpn",
+            "port": 1196,
+            "proto": "tcp-server",
+            "tls_server": True
+        })
+        o = OpenVpn({"openvpn": [client_config]})
+        expected = """# openvpn config: example-vpn
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+key key.pem
+mode client
+nobind
+proto tcp-client
+remote vpn2.test.com 1196
+resolv-retry
+tls-client
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_generate_client_complex(self):
+        client_config = OpenVpn.generate_client('vpn1.test.com', {
+            "ca": "ca.pem",
+            "cert": "cert.pem",
+            "dev": "tap0",
+            "dev_type": "tap",
+            "dh": "dh.pem",
+            "key": "key.pem",
+            "mode": "server",
+            "name": "example-vpn",
+            "proto": "tcp-server",
+            "tls_server": True,
+            "comp_lzo": "yes",
+            "auth": "RSA-SHA1",
+            "cipher": "AES-128-CFB",
+            "engine": "dynamic",
+            "ns_cert_type": "client",
+
+        })
+        o = OpenVpn({"openvpn": [client_config]})
+        expected = """# openvpn config: example-vpn
+
+auth RSA-SHA1
+ca ca.pem
+cert cert.pem
+cipher AES-128-CFB
+comp-lzo yes
+dev tap0
+dev-type tap
+key key.pem
+mode client
+nobind
+ns-cert-type server
+proto tcp-client
+remote vpn1.test.com 1195
+resolv-retry
+tls-client
+"""
+        self.assertEqual(o.render(), expected)
+
+    def test_generate_client_ns_cert_type_empty(self):
+        client_config = OpenVpn.generate_client('vpn1.test.com', {
+            "ca": "ca.pem",
+            "cert": "cert.pem",
+            "dev": "tap0",
+            "dev_type": "tap",
+            "dh": "dh.pem",
+            "key": "key.pem",
+            "mode": "server",
+            "name": "example-vpn",
+            "proto": "udp",
+            "tls_server": True,
+            "ns_cert_type": "",
+        })
+        o = OpenVpn({"openvpn": [client_config]})
+        expected = """# openvpn config: example-vpn
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+key key.pem
+mode client
+nobind
+proto udp
+remote vpn1.test.com 1195
+resolv-retry
+tls-client
+"""
+        self.assertEqual(o.render(), expected)

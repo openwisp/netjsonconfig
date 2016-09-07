@@ -224,3 +224,45 @@ For a list of all the OpenVPN configuration settings, refer to the `OpenVPN 2.3 
 
 .. _auth property source code: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openvpn/schema.py#L79-L89
 .. _cipher property source code: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openvpn/schema.py#L90-L103
+
+Automatic generation of clients
+-------------------------------
+
+.. automethod:: netjsonconfig.OpenVpn.generate_client
+
+Example:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenVpn
+
+    client_config = OpenVpn.generate_client('vpn1.test.com', {
+        "ca": "ca.pem",
+        "cert": "cert.pem",
+        "dev": "tap0",
+        "dev_type": "tap",
+        "dh": "dh.pem",
+        "key": "key.pem",
+        "mode": "server",
+        "name": "example-vpn",
+        "proto": "udp",
+        "tls_server": True
+    })
+    client = OpenVpn({"openvpn": [client_config]})
+    print(client.render())
+
+Will be rendered as::
+
+    # openvpn config: example-vpn
+
+    ca ca.pem
+    cert cert.pem
+    dev tap0
+    dev-type tap
+    key key.pem
+    mode client
+    nobind
+    proto udp
+    remote vpn1.test.com 1195
+    resolv-retry
+    tls-client

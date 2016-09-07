@@ -16,7 +16,7 @@ from ..utils import evaluate_vars, merge_config, var_pattern
 
 class BaseBackend(object):
     """
-    TODO: explain
+    Base Backend class
     """
     schema = None
     env_path = 'netjsonconfig.backends.base'
