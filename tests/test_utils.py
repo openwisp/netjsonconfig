@@ -133,3 +133,12 @@ class TestUtils(unittest.TestCase):
     def test_evaluate_vars_list_in_dict(self):
         val = evaluate_vars({'l': ['{{ a }}', '{{ b }}']}, {'a': '1', 'b': '2'})
         self.assertEqual(val, {'l': ['1', '2']})
+
+    def test_evaluate_vars_nowhitespace(self):
+        self.assertEqual(evaluate_vars('{{tz}}', {'tz': 'UTC'}), 'UTC')
+
+    def test_evaluate_vars_doublewhitespace(self):
+        self.assertEqual(evaluate_vars('{{  tz  }}', {'tz': 'UTC'}), 'UTC')
+
+    def test_evaluate_vars_strangewhitespace(self):
+        self.assertEqual(evaluate_vars('{{  tz}}', {'tz': 'UTC'}), 'UTC')

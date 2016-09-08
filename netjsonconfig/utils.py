@@ -37,7 +37,7 @@ def sorted_dict(dictionary):
     return OrderedDict(sorted(dictionary.items()))
 
 
-var_pattern = re.compile(r'\{\{\s(\w*)\s\}\}')
+var_pattern = re.compile(r'\{\{(.*)\}\}')
 
 
 def evaluate_vars(data, context={}):
@@ -58,8 +58,9 @@ def evaluate_vars(data, context={}):
             data[key] = evaluate_vars(value, context)
     elif isinstance(data, six.string_types):
         for var in var_pattern.findall(data):
+            var = var.strip()
             if var in context:
-                data = data.replace('{{ %s }}' % var, context[var])
+                data = re.sub(var_pattern, context[var], data)
     return data
 
 

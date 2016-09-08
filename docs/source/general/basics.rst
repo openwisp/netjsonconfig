@@ -354,8 +354,7 @@ Let's see the result with:
 .. warning::
     **When using variables, keep in mind the following rules**:
 
-     * variables must be written in the form of ``{{ var_name }}``, including
-       spaces around ``var_name``;
+     * variables must be written in the form of ``{{ var_name }}`` or ``{{var_name}}``;
      * variable names can contain only alphanumeric characters and underscores;
      * unrecognized variables will be ignored;
 
