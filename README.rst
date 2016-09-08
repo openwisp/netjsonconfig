@@ -14,9 +14,6 @@ netjsonconfig
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
    :target: http://badge.fury.io/py/netjsonconfig
 
-.. image:: https://img.shields.io/pypi/dm/netjsonconfig.svg
-   :target: https://pypi.python.org/pypi/netjsonconfig
-
 ------------
 
 Netjsonconfig is part of the `OpenWISP project <http://openwrt.org>`_.
