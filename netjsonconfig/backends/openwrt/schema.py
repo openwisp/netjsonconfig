@@ -464,7 +464,6 @@ schema = merge_config(schema, openvpn_schema)
 schema = merge_config(schema, {
     "definitions": {
         "tunnel": {
-            "required": ["enabled"],
             "properties": {
                 "enabled": {
                     "title": "enabled",

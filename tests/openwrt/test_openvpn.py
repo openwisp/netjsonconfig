@@ -273,3 +273,34 @@ config openvpn 'test_properties'
     option z_true_val '1'
 """)
         self.assertEqual(c.render(), expected)
+
+    def test_enabled_missing(self):
+        c = OpenWrt({
+            "openvpn": [{
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "key": "key.pem",
+                "mode": "server",
+                "name": "test-properties",
+                "proto": "udp",
+                "tls_server": True
+            }]
+        })
+        expected = self._tabs("""package openvpn
+
+config openvpn 'test_properties'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option tls_server '1'
+""")
+        self.assertEqual(c.render(), expected)

@@ -1991,10 +1991,6 @@ Schema additions
 
 The ``OpenWrt`` backend adds a few properties to the OpenVPN schema, see below.
 
-**Required properties:**
-
-* enabled
-
 +--------------------------+---------+--------------+-------------------------------------------------------------+
 | key name                 | type    | default      | allowed values                                              |
 +==========================+=========+==============+=============================================================+

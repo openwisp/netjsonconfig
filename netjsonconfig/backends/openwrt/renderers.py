@@ -485,4 +485,8 @@ class OpenVpnRenderer(BaseOpenWrtRenderer, BaseOpenVpnRenderer):
     """
     Produces an OpenVPN configuration in UCI format for OpenWRT
     """
-    pass
+    def _transform_vpn(self, vpn):
+        config = super(OpenVpnRenderer, self)._transform_vpn(vpn)
+        if 'enabled' not in config:
+            config['enabled'] = True
+        return config
