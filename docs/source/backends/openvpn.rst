@@ -228,7 +228,7 @@ For a list of all the OpenVPN configuration settings, refer to the `OpenVPN 2.3 
 Automatic generation of clients
 -------------------------------
 
-.. automethod:: netjsonconfig.OpenVpn.generate_client
+.. automethod:: netjsonconfig.OpenVpn.auto_client
 
 Example:
 
@@ -236,7 +236,7 @@ Example:
 
     from netjsonconfig import OpenVpn
 
-    client_config = OpenVpn.generate_client('vpn1.test.com', {
+    client_config = OpenVpn.auto_client('vpn1.test.com', {
         "ca": "ca.pem",
         "cert": "cert.pem",
         "dev": "tap0",

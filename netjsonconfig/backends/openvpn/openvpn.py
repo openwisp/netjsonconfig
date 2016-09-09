@@ -39,11 +39,12 @@ class OpenVpn(BaseBackend):
                            contents=text_contents)
 
     @classmethod
-    def generate_client(self, host, server):
+    def auto_client(self, host, server):
         """
-        Generates an OpenVPN client configuration
-        from an existing server configuration.
+        Returns a dictionary representing an OpenVPN client configuration
+        that is compatible with the passed server configuration.
 
+        :param host: remote VPN server
         :param server: dictionary representing a single OpenVPN server configuration
         :returns: dictionary representing a single OpenVPN client configuration
         """

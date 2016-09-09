@@ -381,8 +381,8 @@ tls-server
 """
         self.assertEqual(contents, expected)
 
-    def test_generate_client_simple(self):
-        client_config = OpenVpn.generate_client('vpn1.test.com', {
+    def test_auto_client_simple(self):
+        client_config = OpenVpn.auto_client('vpn1.test.com', {
             "ca": "ca.pem",
             "cert": "cert.pem",
             "dev": "tap0",
@@ -409,8 +409,8 @@ resolv-retry
 """
         self.assertEqual(o.render(), expected)
 
-    def test_generate_client_tls(self):
-        client_config = OpenVpn.generate_client('vpn2.test.com', {
+    def test_auto_client_tls(self):
+        client_config = OpenVpn.auto_client('vpn2.test.com', {
             "ca": "ca.pem",
             "cert": "cert.pem",
             "dev": "tap0",
@@ -440,8 +440,8 @@ tls-client
 """
         self.assertEqual(o.render(), expected)
 
-    def test_generate_client_complex(self):
-        client_config = OpenVpn.generate_client('vpn1.test.com', {
+    def test_auto_client_complex(self):
+        client_config = OpenVpn.auto_client('vpn1.test.com', {
             "ca": "ca.pem",
             "cert": "cert.pem",
             "dev": "tap0",
@@ -480,8 +480,8 @@ tls-client
 """
         self.assertEqual(o.render(), expected)
 
-    def test_generate_client_ns_cert_type_empty(self):
-        client_config = OpenVpn.generate_client('vpn1.test.com', {
+    def test_auto_client_ns_cert_type_empty(self):
+        client_config = OpenVpn.auto_client('vpn1.test.com', {
             "ca": "ca.pem",
             "cert": "cert.pem",
             "dev": "tap0",
