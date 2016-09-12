@@ -236,7 +236,7 @@ Example:
 
     from netjsonconfig import OpenVpn
 
-    client_config = OpenVpn.auto_client('vpn1.test.com', {
+    server_config = {
         "ca": "ca.pem",
         "cert": "cert.pem",
         "dev": "tap0",
@@ -247,8 +247,17 @@ Example:
         "name": "example-vpn",
         "proto": "udp",
         "tls_server": True
-    })
-    client = OpenVpn({"openvpn": [client_config]})
+    }
+    dummy_contents = '------ EXAMPLE ------'
+    client_config = OpenVpn.auto_client('vpn1.test.com',
+                                        server=server_config,
+                                        ca_path='ca.pem',
+                                        ca_contents=dummy_contents,
+                                        cert_path='cert.pem',
+                                        cert_contents=dummy_contents,
+                                        key_path='key.pem',
+                                        key_contents=dummy_contents)
+    client = OpenVpn(client_config)
     print(client.render())
 
 Will be rendered as::
@@ -266,3 +275,20 @@ Will be rendered as::
     remote vpn1.test.com 1195
     resolv-retry
     tls-client
+
+    # ---------- files ---------- #
+
+    # path: ca.pem
+    # mode: 0644
+
+    ------ EXAMPLE ------
+
+    # path: cert.pem
+    # mode: 0644
+
+    ------ EXAMPLE ------
+
+    # path: key.pem
+    # mode: 0644
+
+    ------ EXAMPLE ------

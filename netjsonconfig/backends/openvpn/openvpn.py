@@ -39,13 +39,24 @@ class OpenVpn(BaseBackend):
                            contents=text_contents)
 
     @classmethod
-    def auto_client(self, host, server):
+    def auto_client(self, host, server, ca_path=None, ca_contents=None,
+                    cert_path=None, cert_contents=None, key_path=None,
+                    key_contents=None):
         """
-        Returns a dictionary representing an OpenVPN client configuration
+        Returns a configuration dictionary representing an OpenVPN client configuration
         that is compatible with the passed server configuration.
 
         :param host: remote VPN server
         :param server: dictionary representing a single OpenVPN server configuration
+        :param ca_path: optional string representing path to CA, will consequently add
+                        a file in the resulting configuration dictionary
+        :param ca_contents: optional string representing contents of CA file
+        :param cert_path: optional string representing path to certificate, will consequently add
+                        a file in the resulting configuration dictionary
+        :param cert_contents: optional string representing contents of cert file
+        :param key_path: optional string representing path to key, will consequently add
+                        a file in the resulting configuration dictionary
+        :param key_contents: optional string representing contents of key file
         :returns: dictionary representing a single OpenVPN client configuration
         """
         # client defaults
@@ -79,4 +90,25 @@ class OpenVpn(BaseBackend):
         for key in copy_keys:
             if key in server:
                 c[key] = server[key]
-        return c
+        # prepare files if necessary
+        files = []
+        if ca_path and ca_contents:
+            c['ca'] = ca_path
+            files.append(dict(path=ca_path,
+                              mode='0644',
+                              contents=ca_contents))
+        if cert_path and cert_contents:
+            c['cert'] = cert_path
+            files.append(dict(path=cert_path,
+                              mode='0644',
+                              contents=cert_contents))
+        if key_path and key_contents:
+            c['key'] = key_path
+            files.append(dict(path=key_path,
+                              mode='0644',
+                              contents=key_contents))
+        # prepare result
+        netjson = {'openvpn': [c]}
+        if files:
+            netjson['files'] = files
+        return netjson

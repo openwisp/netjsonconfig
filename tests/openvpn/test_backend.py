@@ -393,7 +393,7 @@ tls-server
             "name": "example-vpn",
             "proto": "udp",
         })
-        o = OpenVpn({"openvpn": [client_config]})
+        o = OpenVpn(client_config)
         expected = """# openvpn config: example-vpn
 
 ca ca.pem
@@ -423,7 +423,7 @@ resolv-retry
             "proto": "tcp-server",
             "tls_server": True
         })
-        o = OpenVpn({"openvpn": [client_config]})
+        o = OpenVpn(client_config)
         expected = """# openvpn config: example-vpn
 
 ca ca.pem
@@ -441,13 +441,10 @@ tls-client
         self.assertEqual(o.render(), expected)
 
     def test_auto_client_complex(self):
-        client_config = OpenVpn.auto_client('vpn1.test.com', {
-            "ca": "ca.pem",
-            "cert": "cert.pem",
+        config = {
             "dev": "tap0",
             "dev_type": "tap",
             "dh": "dh.pem",
-            "key": "key.pem",
             "mode": "server",
             "name": "example-vpn",
             "proto": "tcp-server",
@@ -456,20 +453,27 @@ tls-client
             "auth": "RSA-SHA1",
             "cipher": "AES-128-CFB",
             "engine": "dynamic",
-            "ns_cert_type": "client",
-
-        })
-        o = OpenVpn({"openvpn": [client_config]})
+            "ns_cert_type": "client"
+        }
+        client_config = OpenVpn.auto_client('vpn1.test.com',
+                                            config,
+                                            ca_path='{{ca_path_1}}',
+                                            ca_contents='{{ca_contents_1}}',
+                                            cert_path='{{cert_path_1}}',
+                                            cert_contents='{{cert_contents_1}}',
+                                            key_path='{{key_path_1}}',
+                                            key_contents='{{key_contents_1}}')
+        o = OpenVpn(client_config)
         expected = """# openvpn config: example-vpn
 
 auth RSA-SHA1
-ca ca.pem
-cert cert.pem
+ca {{ca_path_1}}
+cert {{cert_path_1}}
 cipher AES-128-CFB
 comp-lzo yes
 dev tap0
 dev-type tap
-key key.pem
+key {{key_path_1}}
 mode client
 nobind
 ns-cert-type server
@@ -477,6 +481,24 @@ proto tcp-client
 remote vpn1.test.com 1195
 resolv-retry
 tls-client
+
+# ---------- files ---------- #
+
+# path: {{ca_path_1}}
+# mode: 0644
+
+{{ca_contents_1}}
+
+# path: {{cert_path_1}}
+# mode: 0644
+
+{{cert_contents_1}}
+
+# path: {{key_path_1}}
+# mode: 0644
+
+{{key_contents_1}}
+
 """
         self.assertEqual(o.render(), expected)
 
@@ -494,7 +516,7 @@ tls-client
             "tls_server": True,
             "ns_cert_type": "",
         })
-        o = OpenVpn({"openvpn": [client_config]})
+        o = OpenVpn(client_config)
         expected = """# openvpn config: example-vpn
 
 ca ca.pem
