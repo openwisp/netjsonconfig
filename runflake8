@@ -2,7 +2,7 @@
 set -e
 
 flake8 --max-line-length=110 \
-      --max-complexity=24 \
+      --max-complexity=26 \
       ./netjsonconfig/backends/openwrt/renderers.py || exit 1
 flake8 --max-line-length=110 \
        --max-complexity=11 \

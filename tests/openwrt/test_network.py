@@ -32,7 +32,8 @@ class TestNetworkRenderer(unittest.TestCase, _TabsMixin):
 
 config interface 'lo'
     option ifname 'lo'
-    option ipaddr '127.0.0.1/8'
+    option ipaddr '127.0.0.1'
+    option netmask '255.0.0.0'
     option proto 'static'
 """)
         self.assertEqual(o.render(), expected)
@@ -72,13 +73,15 @@ config interface 'lo'
 config interface 'eth0_1'
     option auto '1'
     option ifname 'eth0.1'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 
 config interface 'eth0_1_2'
     option auto '1'
     option ifname 'eth0.1'
-    option ipaddr '192.168.2.1/24'
+    option ipaddr '192.168.2.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 
 config interface 'eth0_1_3'
@@ -183,7 +186,8 @@ config interface 'eth0_2'
 
 config interface 'eth1'
     option ifname 'eth1'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 
 config route 'route1'
@@ -421,14 +425,16 @@ config interface 'eth1'
 
 config interface 'lan'
     option ifname 'eth0 eth1'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
     option type 'bridge'
 
 config interface 'lan_2'
     option gateway '10.0.0.10'
     option ifname 'br-lan'
-    option ipaddr '10.0.0.1/24'
+    option ipaddr '10.0.0.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 """)
         self.assertEqual(o.render(), expected)
@@ -528,7 +534,8 @@ config interface 'eth0'
     option dns '10.11.12.13 8.8.8.8'
     option dns_search 'netjson.org openwisp.org'
     option ifname 'eth0'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 """)
         self.assertEqual(o.render(), expected)
@@ -838,12 +845,14 @@ config interface 'eth0'
 
 config interface 'lan'
     option ifname 'eth0'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 
 config interface 'lan_2'
     option ifname 'eth0'
-    option ipaddr '192.168.2.1/24'
+    option ipaddr '192.168.2.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 """)
         self.assertEqual(o.render(), expected)

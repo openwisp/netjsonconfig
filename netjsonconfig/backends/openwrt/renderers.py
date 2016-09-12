@@ -92,6 +92,7 @@ class NetworkRenderer(BaseOpenWrtRenderer):
                 # default values
                 address_key = None
                 address_value = None
+                netmask = None
                 proto = self.__get_proto(uci_interface, address)
                 # add suffix if there is more than one config block
                 if counter > 1:
@@ -105,6 +106,11 @@ class NetworkRenderer(BaseOpenWrtRenderer):
                     proto = proto.replace('dhcp', 'dhcpv6')
                 if address.get('address') and address.get('mask'):
                     address_value = '{address}/{mask}'.format(**address)
+                    # do not use CIDR notation when using ipv4
+                    # see https://github.com/openwisp/netjsonconfig/issues/54
+                    if address.get('family') == 'ipv4':
+                        netmask = str(ip_interface(address_value).netmask)
+                        address_value = address['address']
                 # update interface dict
                 uci_interface.update({
                     'name': name,
@@ -138,6 +144,9 @@ class NetworkRenderer(BaseOpenWrtRenderer):
                 # add address if any (with correct option name)
                 if address_key and address_value:
                     uci_interface[address_key] = address_value
+                # add netmask option (only for IPv4)
+                if netmask:
+                    uci_interface['netmask'] = netmask
                 # merge additional address fields (discard default ones first)
                 address_copy = address.copy()
                 for key in ['address', 'mask', 'proto', 'family']:

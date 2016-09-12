@@ -156,7 +156,8 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         contents = tar.extractfile(network).read().decode()
         expected = self._tabs("""config interface 'wlan0'
     option ifname 'wlan0'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 
 """)

@@ -90,12 +90,14 @@ Will return the following output::
     config interface 'eth0_1'
             option ifname 'eth0.1'
             option proto 'static'
-            option ipaddr '192.168.1.1/24'
+            option ipaddr '192.168.1.1'
+            option netmask '255.255.255.0'
 
     config interface 'eth0_1_2'
             option ifname 'eth0.1'
             option proto 'static'
-            option ipaddr '192.168.2.1/24'
+            option ipaddr '192.168.2.1'
+            option netmask '255.255.255.0'
 
     config interface 'eth0_1_3'
             option ifname 'eth0.1'
@@ -319,7 +321,8 @@ Will be rendered as follows::
 
     config interface 'lo'
             option ifname 'lo'
-            option ipaddr '127.0.0.1/8'
+            option ipaddr '127.0.0.1'
+            option netmask '255.0.0.0'
             option proto 'static'
 
 Dualstack (IPv4 & IPv6)
@@ -358,7 +361,8 @@ Will be rendered as follows::
 
     config interface 'eth0'
             option ifname 'eth0'
-            option ipaddr '10.27.251.1/24'
+            option ipaddr '10.27.251.1'
+            option netmask '255.255.255.0'
             option proto 'static'
 
     config interface 'eth0_2'
@@ -423,7 +427,8 @@ Will return the following UCI output::
             option dns '10.11.12.13 8.8.8.8'
             option dns_search 'openwisp.org netjson.org'
             option ifname 'eth0'
-            option ipaddr '192.168.1.1/24'
+            option ipaddr '192.168.1.1'
+            option netmask '255.255.255.0'
             option proto 'static'
 
     config interface 'eth1'
@@ -537,7 +542,8 @@ Will be rendered as follows::
     config interface 'lan_bridge'
             option ifname 'eth0.1 eth0.2'
             option igmp_snooping '1'
-            option ipaddr '172.17.0.2/24'
+            option ipaddr '172.17.0.2'
+            option netmask '255.255.255.0'
             option proto 'static'
             option type 'bridge'
             option stp '1'
@@ -726,7 +732,8 @@ Will be rendered as follows::
 
     config interface 'lan'
             option ifname 'eth0 wlan0'
-            option ipaddr '192.168.0.2/24'
+            option ipaddr '192.168.0.2'
+            option netmask '255.255.255.0'
             option proto 'static'
             option type 'bridge'
 
@@ -848,7 +855,8 @@ UCI output::
 
     config interface 'lan'
             option ifname 'eth0 mesh0'
-            option ipaddr '192.168.0.1/24'
+            option ipaddr '192.168.0.1'
+            option netmask '255.255.255.0'
             option proto 'static'
             option type 'bridge'
 

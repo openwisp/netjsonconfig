@@ -41,7 +41,8 @@ class TestWireless(unittest.TestCase, _TabsMixin):
 
 config interface 'wlan0'
     option ifname 'wlan0'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
 
 package wireless
@@ -176,7 +177,8 @@ config interface 'wlan0'
 
 config interface 'br_lan'
     option ifname 'eth0.1 wlan0'
-    option ipaddr '192.168.1.1/24'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
     option proto 'static'
     option type 'bridge'
 
@@ -694,7 +696,8 @@ config interface 'mesh0'
 
 config interface 'lan'
     option ifname 'mesh0'
-    option ipaddr '192.168.0.1/24'
+    option ipaddr '192.168.0.1'
+    option netmask '255.255.255.0'
     option proto 'static'
     option type 'bridge'
 
