@@ -1023,7 +1023,7 @@ schema = {
             "title": "Files",
             "uniqueItems": True,
             "additionalItems": True,
-            "propertyOrder": 11,
+            "propertyOrder": 20,
             "items": {
                 "type": "object",
                 "title": "File",
