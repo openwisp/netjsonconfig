@@ -4,7 +4,7 @@ OpenWrt specific JSON-Schema definition
 from ...schema import schema as default_schema
 from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
-from ..openvpn.schema import schema as openvpn_schema
+from ..openvpn.schema import base_openvpn_schema
 from .timezones import timezones
 
 schema = merge_config(default_schema, {
@@ -459,7 +459,7 @@ schema = merge_config(default_schema, {
 })
 
 # add OpenVPN schema
-schema = merge_config(schema, openvpn_schema)
+schema = merge_config(schema, base_openvpn_schema)
 # OpenVPN customizations for OpenWRT
 schema = merge_config(schema, {
     "definitions": {

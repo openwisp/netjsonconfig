@@ -1,8 +1,11 @@
 """
 OpenVpn 2.3 specific JSON-Schema definition
 """
+from copy import deepcopy
 
-schema = {
+from ...schema import schema as default_schema
+
+base_openvpn_schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "additionalProperties": True,
@@ -551,3 +554,6 @@ schema = {
         }
     }
 }
+
+schema = deepcopy(base_openvpn_schema)
+schema['properties']['files'] = default_schema['properties']['files']
