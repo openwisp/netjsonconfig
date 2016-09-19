@@ -1,10 +1,13 @@
 Change log
 ==========
 
-Version 0.5.0 [unreleased]
+Version 0.5.0 [2016-09-19]
 --------------------------
 
-WIP
+- added ``OpenVpn`` backend
+- `afbc3a3 <https://github.com/openwisp/netjsonconfig/commit/afbc3a3>`_: [openwisp] fixed openvpn integration (partially backward incompatible)
+- `1234c34 <https://github.com/openwisp/netjsonconfig/commit/1234c34>`_: [context] improved flexibility of configuration variables
+- `#54 <https://github.com/openwisp/netjsonconfig/issues/54>`_: [openwrt] fixed netmask issue on ipv4
 
 Version 0.4.5 [2016-09-05]
 --------------------------
