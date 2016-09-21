@@ -232,6 +232,7 @@ The following example shows a full working *configuration dictionary* for the
                 "key": "/tmp/owispmanager/openvpn/x509/l2vpn_client_2693.pem",
                 "ns_cert_type": "server",
                 "mode": "p2p",
+                "pull": True,
                 "enabled": True,
                 "comp_lzo": "yes",
                 "down": "/tmp/owispmanager/openvpn/vpn_2693_script_down.sh",

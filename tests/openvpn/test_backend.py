@@ -129,6 +129,7 @@ verb 3
                     "persist_tun": True,
                     "port": 1195,
                     "proto": "tcp-client",
+                    "pull": True,
                     "remote": [
                         {
                             "host": "vpn1.test.com",
@@ -177,6 +178,7 @@ persist-key
 persist-tun
 port 1195
 proto tcp-client
+pull
 remote vpn1.test.com 1194
 remote vpn2.test.com 1195
 resolv-retry

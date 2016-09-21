@@ -428,6 +428,15 @@ base_openvpn_schema = {
                             "format": "checkbox",
                             "propertyOrder": 9,
                         },
+                        "pull": {
+                            "title": "pull",
+                            "description": "accept options pushed by the server, provided they are "
+                                           "part of the legal set of pushable options",
+                            "type": "boolean",
+                            "default": True,
+                            "format": "checkbox",
+                            "propertyOrder": 10,
+                        },
                         "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "
                                            "nsCertType designation of \"server\"",
