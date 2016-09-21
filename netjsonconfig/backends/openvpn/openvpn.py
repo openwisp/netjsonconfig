@@ -61,7 +61,7 @@ class OpenVpn(BaseBackend):
         """
         # client defaults
         c = {
-            "mode": "client",
+            "mode": "p2p",
             "nobind": True,
             "resolv_retry": True,
             "tls_client": True

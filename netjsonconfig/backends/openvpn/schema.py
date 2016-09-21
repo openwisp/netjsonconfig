@@ -363,7 +363,7 @@ base_openvpn_schema = {
                     "type": "object",
                     "required": ["remote"],
                     "properties": {
-                        "mode": {"enum": ["client"]},
+                        "mode": {"enum": ["p2p"]},
                         "proto": {
                             "enum": ["udp", "tcp-client"],
                             "default": "udp",

@@ -116,7 +116,7 @@ verb 3
                     "key": "key.pem",
                     "local": "",
                     "log": "/var/log/openvpn.log",
-                    "mode": "client",
+                    "mode": "p2p",
                     "mssfix": 1450,
                     "mtu_disc": "yes",
                     "mtu_test": True,
@@ -165,7 +165,7 @@ dev-type tun
 down /home/user/down-command.sh
 key key.pem
 log /var/log/openvpn.log
-mode client
+mode p2p
 mssfix 1450
 mtu-disc yes
 mtu-test
@@ -401,7 +401,7 @@ cert cert.pem
 dev tap0
 dev-type tap
 key key.pem
-mode client
+mode p2p
 nobind
 proto udp
 remote vpn1.test.com 1195
@@ -431,7 +431,7 @@ cert cert.pem
 dev tap0
 dev-type tap
 key key.pem
-mode client
+mode p2p
 nobind
 proto tcp-client
 remote vpn2.test.com 1196
@@ -474,7 +474,7 @@ comp-lzo yes
 dev tap0
 dev-type tap
 key {{key_path_1}}
-mode client
+mode p2p
 nobind
 ns-cert-type server
 proto tcp-client
@@ -524,7 +524,7 @@ cert cert.pem
 dev tap0
 dev-type tap
 key key.pem
-mode client
+mode p2p
 nobind
 proto udp
 remote vpn1.test.com 1195

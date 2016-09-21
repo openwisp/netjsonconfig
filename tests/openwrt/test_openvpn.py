@@ -120,7 +120,7 @@ config openvpn 'test_server'
                     "key": "key.pem",
                     "local": "",
                     "log": "/var/log/openvpn.log",
-                    "mode": "client",
+                    "mode": "p2p",
                     "mssfix": 1450,
                     "mtu_disc": "yes",
                     "mtu_test": True,
@@ -171,7 +171,7 @@ config openvpn 'test_client'
     option enabled '1'
     option key 'key.pem'
     option log '/var/log/openvpn.log'
-    option mode 'client'
+    option mode 'p2p'
     option mssfix '1450'
     option mtu_disc 'yes'
     option mtu_test '1'

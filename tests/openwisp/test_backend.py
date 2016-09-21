@@ -75,7 +75,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "keepalive": "5 40",
                 "key": "/tmp/owispmanager/openvpn/x509/l2vpn_client_2693.pem",
                 "log": "/tmp/openvpn_2693.log",
-                "mode": "client",
+                "mode": "p2p",
                 "mute": 10,
                 "mute_replay_warnings": True,
                 "name": "2693",

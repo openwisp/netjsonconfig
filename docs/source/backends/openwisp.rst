@@ -231,7 +231,7 @@ The following example shows a full working *configuration dictionary* for the
                 "keepalive": "5 40",
                 "key": "/tmp/owispmanager/openvpn/x509/l2vpn_client_2693.pem",
                 "ns_cert_type": "server",
-                "mode": "client",
+                "mode": "p2p",
                 "enabled": True,
                 "comp_lzo": "yes",
                 "down": "/tmp/owispmanager/openvpn/vpn_2693_script_down.sh",
