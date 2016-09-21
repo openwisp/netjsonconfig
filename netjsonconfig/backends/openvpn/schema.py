@@ -32,12 +32,12 @@ base_openvpn_schema = {
                 "mode": {
                     "title": "mode",
                     "type": "string",
-                    "propertyOrder": 1,
+                    "propertyOrder": 2,
                 },
                 "proto": {
                     "title": "protocol",
                     "type": "string",
-                    "propertyOrder": 2,
+                    "propertyOrder": 3,
                 },
                 "port": {
                     "title": "port",
@@ -45,14 +45,14 @@ base_openvpn_schema = {
                     "default": 1194,
                     "maximum": 65535,
                     "minimum": 1,
-                    "propertyOrder": 3,
+                    "propertyOrder": 4,
                 },
                 "dev_type": {
                     "title": "device type",
                     "description": "tun (layer3) or tap (layer2)",
                     "type": "string",
                     "enum": ["tun", "tap"],
-                    "propertyOrder": 4,
+                    "propertyOrder": 5,
                 },
                 "dev": {
                     "title": "device name",
@@ -61,14 +61,14 @@ base_openvpn_schema = {
                     "minLength": 2,
                     "maxLength": 15,
                     "pattern": "^[^\\s]*$",
-                    "propertyOrder": 5,
+                    "propertyOrder": 6,
                 },
                 "local": {
                     "title": "local",
                     "type": "string",
                     "description": "Local hostname or IP address on which OpenVPN will listen to. "
                                    "If unspecified, OpenVPN will bind to all interfaces.",
-                    "propertyOrder": 7,
+                    "propertyOrder": 8,
                 },
                 "comp_lzo": {
                     "title": "LZO compression",
@@ -77,7 +77,7 @@ base_openvpn_schema = {
                     "type": "string",
                     "enum": ["yes", "no", "adaptive"],
                     "default": "adaptive",
-                    "propertyOrder": 8,
+                    "propertyOrder": 9,
                 },
                 "auth": {
                     "title": "auth digest algorithm",
@@ -88,7 +88,7 @@ base_openvpn_schema = {
                              "RSA-SHA384", "RSA-SHA512", "SHA", "SHA1", "SHA224", "SHA256",
                              "SHA384", "SHA512", "ecdsa-with-SHA1", "whirlpool", "none"],
                     "default": "SHA1",
-                    "propertyOrder": 10,
+                    "propertyOrder": 11,
                 },
                 "cipher": {
                     "title": "cipher",
@@ -102,7 +102,7 @@ base_openvpn_schema = {
                              "CAMELLIA-192-CFB", "CAMELLIA-192-CFB1", "CAMELLIA-192-CFB8",
                              "CAMELLIA-192-OFB", "CAMELLIA-256-CBC", "none"],
                     "default": "BF-CBC",
-                    "propertyOrder": 11,
+                    "propertyOrder": 12,
                 },
                 "engine": {
                     "title": "engine",
@@ -118,14 +118,14 @@ base_openvpn_schema = {
                         ]
                     },
                     "default": "",
-                    "propertyOrder": 12,
+                    "propertyOrder": 13,
                 },
                 "ca": {
                     "title": "CA",
                     "description": "Path to Certificate authority (CA) file in PEM format",
                     "type": "string",
                     "pattern": "^(\\S*)$",
-                    "propertyOrder": 13,
+                    "propertyOrder": 14,
                 },
                 "cert": {
                     "title": "cert",
@@ -133,7 +133,7 @@ base_openvpn_schema = {
                                    "a certificate authority whose certificate is specified in the CA option",
                     "type": "string",
                     "pattern": "^(\\S*)$",
-                    "propertyOrder": 14,
+                    "propertyOrder": 15,
                 },
                 "key": {
                     "title": "key",
@@ -141,13 +141,13 @@ base_openvpn_schema = {
                                    "key which was generated when you built your peer's certificate",
                     "type": "string",
                     "pattern": "^(\\S*)$",
-                    "propertyOrder": 15,
+                    "propertyOrder": 16,
                 },
                 "ns_cert_type": {
                     "title": "NS cert type",
                     "type": "string",
                     "default": "",
-                    "propertyOrder": 18
+                    "propertyOrder": 19
                 },
                 "mtu_disc": {
                     "title": "MTU discovery",
@@ -161,7 +161,7 @@ base_openvpn_schema = {
                             "Yes - always DF"
                         ]
                     },
-                    "propertyOrder": 19,
+                    "propertyOrder": 20,
                 },
                 "mtu_test": {
                     "title": "MTU test",
@@ -170,7 +170,7 @@ base_openvpn_schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 20,
+                    "propertyOrder": 21,
                 },
                 "fragment": {
                     "title": "fragment",
@@ -180,7 +180,7 @@ base_openvpn_schema = {
                                    "Valid only when using UDP",
                     "default": 0,
                     "minimum": 0,
-                    "propertyOrder": 21,
+                    "propertyOrder": 22,
                 },
                 "mssfix": {
                     "title": "mssfix",
@@ -191,7 +191,7 @@ base_openvpn_schema = {
                                    "to its peer will not exceed max bytes. Valid only when using UDP",
                     "default": 1450,
                     "minimum": 0,
-                    "propertyOrder": 22,
+                    "propertyOrder": 23,
                 },
                 "keepalive": {
                     "type": "string",
@@ -199,7 +199,7 @@ base_openvpn_schema = {
                     "description": "Two numbers separated by space. Refer to the OpenVPN manual page"
                                    "for more information",
                     "pattern": "^(([0-9]*) ([0-9]*)|)$",
-                    "propertyOrder": 23,
+                    "propertyOrder": 24,
                 },
                 "persist_tun": {
                     "title": "persist tunnel",
@@ -208,7 +208,7 @@ base_openvpn_schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 24,
+                    "propertyOrder": 25,
                 },
                 "persist_key": {
                     "title": "persist key",
@@ -216,7 +216,7 @@ base_openvpn_schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 25,
+                    "propertyOrder": 26,
                 },
                 "tun_ipv6": {
                     "title": "tun ipv6",
@@ -224,14 +224,14 @@ base_openvpn_schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 26,
+                    "propertyOrder": 27,
                 },
                 "up": {
                     "title": "up command",
                     "description": "Run command after successful TUN/TAP device open (pre user UID change)",
                     "type": "string",
                     "pattern": "^(\\S*)$",
-                    "propertyOrder": 27,
+                    "propertyOrder": 28,
                 },
                 "up_delay": {
                     "title": "up delay",
@@ -240,14 +240,14 @@ base_openvpn_schema = {
                                    "connection establishment with peer",
                     "default": 0,
                     "minimum": 0,
-                    "propertyOrder": 28,
+                    "propertyOrder": 29,
                 },
                 "down": {
                     "title": "down command",
                     "description": "Run command after a TUN/TAP device is closed",
                     "type": "string",
                     "pattern": "^(\\S*)$",
-                    "propertyOrder": 29,
+                    "propertyOrder": 30,
                 },
                 "script_security": {
                     "title": "script security",
@@ -263,21 +263,21 @@ base_openvpn_schema = {
                             " (potentially unsafe)",
                         ]
                     },
-                    "propertyOrder": 30,
+                    "propertyOrder": 31,
                 },
                 "user": {
                     "title": "user",
                     "description": "Change the user ID of the OpenVPN process to the specified user "
                                    "after initialization, dropping privileges in the process",
                     "type": "string",
-                    "propertyOrder": 31,
+                    "propertyOrder": 32,
                 },
                 "group": {
                     "title": "group",
                     "description": "Change the group ID of the OpenVPN process to the speified "
                                    "group after initialization",
                     "type": "string",
-                    "propertyOrder": 32,
+                    "propertyOrder": 33,
                 },
                 "mute": {
                     "title": "mute",
@@ -285,7 +285,7 @@ base_openvpn_schema = {
                     "description": "limit repetitive logging of similar message types to max n occurrences",
                     "default": 0,
                     "minimum": 0,
-                    "propertyOrder": 33,
+                    "propertyOrder": 34,
                 },
                 "status": {
                     "title": "status file",
@@ -293,7 +293,7 @@ base_openvpn_schema = {
                                    "eg: \"/var/run/openvpn.status 10\"",
                     "type": "string",
                     "pattern": "^((\\S*) ([0-9]*)|)$",
-                    "propertyOrder": 34,
+                    "propertyOrder": 35,
                 },
                 "status_version": {
                     "title": "status version format",
@@ -301,7 +301,7 @@ base_openvpn_schema = {
                     "enum": [1, 2, 3],
                     "default": 1,
                     "description": "Status file format version number. Defaults to 1",
-                    "propertyOrder": 35,
+                    "propertyOrder": 36,
                 },
                 "mute_replay_warnings": {
                     "title": "mute replay warnings",
@@ -310,14 +310,14 @@ base_openvpn_schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 36,
+                    "propertyOrder": 37,
                 },
                 "secret": {
                     "title": "secret",
                     "description": "Path to key for Static Key encryption mode (non-TLS)",
                     "type": "string",
                     "pattern": "^(\\S*)$",
-                    "propertyOrder": 37,
+                    "propertyOrder": 38,
                 },
                 "fast_io": {
                     "title": "fast IO",
@@ -326,7 +326,7 @@ base_openvpn_schema = {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
-                    "propertyOrder": 49,
+                    "propertyOrder": 50,
                 },
                 "log": {
                     "title": "log",
@@ -334,7 +334,7 @@ base_openvpn_schema = {
                                    "stdout/stderr which is generated by called scripts",
                     "type": "string",
                     "pattern": "^(\\S*)$",
-                    "propertyOrder": 50,
+                    "propertyOrder": 51,
                 },
                 "verb": {
                     "title": "verbosity",
@@ -351,7 +351,7 @@ base_openvpn_schema = {
                     },
                     "default": 1,
                     "description": "Set output verbosity for logging and debugging",
-                    "propertyOrder": 51,
+                    "propertyOrder": 52,
                 },
             }
         },
@@ -375,14 +375,14 @@ base_openvpn_schema = {
                             "type": "boolean",
                             "default": True,
                             "format": "checkbox",
-                            "propertyOrder": 4,
+                            "propertyOrder": 5,
                         },
                         "remote": {
                             "title": "remote",
                             "type": "array",
                             "additionalItems": True,
                             "minItems": 1,
-                            "propertyOrder": 7,
+                            "propertyOrder": 8,
                             "items": {
                                 "type": "object",
                                 "title": "remote",
@@ -418,7 +418,7 @@ base_openvpn_schema = {
                             "description": "If hostname resolution fails, retry to resolve indefinitely",
                             "default": True,
                             "format": "checkbox",
-                            "propertyOrder": 8,
+                            "propertyOrder": 9,
                         },
                         "tls_client": {
                             "title": "TLS Client",
@@ -426,7 +426,7 @@ base_openvpn_schema = {
                             "type": "boolean",
                             "default": True,
                             "format": "checkbox",
-                            "propertyOrder": 9,
+                            "propertyOrder": 10,
                         },
                         "pull": {
                             "title": "pull",
@@ -435,7 +435,7 @@ base_openvpn_schema = {
                             "type": "boolean",
                             "default": True,
                             "format": "checkbox",
-                            "propertyOrder": 10,
+                            "propertyOrder": 11,
                         },
                         "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "
@@ -449,7 +449,7 @@ base_openvpn_schema = {
                                            "only valid when using password authentication",
                             "type": "string",
                             "pattern": "^(\\S*)$",
-                            "propertyOrder": 39,
+                            "propertyOrder": 40,
                         }
                     }
                 }
@@ -457,90 +457,146 @@ base_openvpn_schema = {
         },
         "server": {
             "title": "Server",
+            "type": "object",
+            "properties": {
+                "mode": {"enum": ["server"]},
+                "proto": {
+                    "enum": ["udp", "tcp-server"],
+                    "default": "udp",
+                    "options": {"enum_titles": ["UDP", "TCP"]}
+                },
+                "tls_server": {
+                    "title": "TLS Server",
+                    "description": "Enable TLS authentication",
+                    "type": "boolean",
+                    "default": True,
+                    "format": "checkbox",
+                    "propertyOrder": 10,
+                },
+                "dh": {
+                    "title": "DH",
+                    "description": "Path to file containing Diffie Hellman parameters in PEM format, "
+                                   "required only in TLS-server mode",
+                    "type": "string",
+                    "propertyOrder": 17,
+                },
+                "crl_verify": {
+                    "title": "CRL",
+                    "description": "Path to CRL file in PEM format",
+                    "type": "string",
+                    "pattern": "^(\\S*)$",
+                    "propertyOrder": 18,
+                },
+                "ns_cert_type": {
+                    "description": "Require that peer certificate was signed with an explicit "
+                                   "nsCertType designation of \"client\"",
+                    "enum": ["", "client"],
+                    "options": {"enum_titles": ["disabled", "client"]}
+                },
+                "duplicate_cn": {
+                    "title": "duplicate cn",
+                    "description": "Allow multiple clients with the same "
+                                   "common name to concurrently connect",
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 41,
+                },
+                "client_to_client": {
+                    "title": "client to client",
+                    "description": "Enable client to client communication",
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 42,
+                },
+                "client_cert_not_required": {
+                    "title": "client cert not required",
+                    "description": "Don't require client certificate, client will authenticate "
+                                   "using username/password only",
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 43,
+                },
+                "username_as_common_name": {
+                    "title": "username as cn",
+                    "description": "Valid only for password authentication, use the "
+                                   "authenticated username as the common name",
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 44,
+                },
+                "auth_user_pass_verify": {
+                    "title": "auth user pass verify",
+                    "description": "Command and method used for password authentication. "
+                                   "If set requires the client to provide username and password",
+                    "type": "string",
+                    "pattern": "^((\\S*) (\\S*)|)$",
+                    "propertyOrder": 45,
+                }
+            }
+        },
+        "server_manual": {
+            "title": "Server (manual)",
             "allOf": [
                 {"$ref": "#/definitions/tunnel"},
+                {"$ref": "#/definitions/server"},
+                {"not": {"required": ["server"]}},
+                {"not": {"required": ["server_bridge"]}}
+            ]
+        },
+        "server_bridged": {
+            "title": "Server (bridged)",
+            "allOf": [
                 {
                     "type": "object",
+                    "required": ["server_bridge"],
                     "properties": {
-                        "mode": {"enum": ["server"]},
-                        "proto": {
-                            "enum": ["udp", "tcp-server"],
-                            "default": "udp",
-                            "options": {"enum_titles": ["UDP", "TCP"]}
-                        },
-                        "tls_server": {
-                            "title": "TLS Server",
-                            "description": "Enable TLS authentication",
-                            "type": "boolean",
-                            "default": True,
-                            "format": "checkbox",
-                            "propertyOrder": 9,
-                        },
-                        "dh": {
-                            "title": "DH",
-                            "description": "Path to file containing Diffie Hellman parameters in PEM format, "
-                                           "required only in TLS-server mode",
+                        "server_bridge": {
+                            "title": "server-bridge",
+                            "description": "Example usage: \"10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254\". "
+                                           "If server-bridge is used without any parameters, it will "
+                                           "enable a DHCP-proxy mode, where connecting OpenVPN clients "
+                                           "will receive an IP address for their TAP adapter from the "
+                                           "DHCP server running on the OpenVPN server-side LAN. Note "
+                                           "that only clients that support the binding of a DHCP "
+                                           "client with the TAP adapter (such as Windows) can support "
+                                           "this mode. The optional nogw flag (advanced) indicates "
+                                           "that gateway information should not be pushed to the client",
                             "type": "string",
-                            "propertyOrder": 16,
-                        },
-                        "crl_verify": {
-                            "title": "CRL",
-                            "description": "Path to CRL file in PEM format",
-                            "type": "string",
-                            "pattern": "^(\\S*)$",
-                            "propertyOrder": 17,
-                        },
-                        "ns_cert_type": {
-                            "description": "Require that peer certificate was signed with an explicit "
-                                           "nsCertType designation of \"client\"",
-                            "enum": ["", "client"],
-                            "options": {"enum_titles": ["disabled", "client"]}
-                        },
-                        "duplicate_cn": {
-                            "title": "duplicate cn",
-                            "description": "Allow multiple clients with the same "
-                                           "common name to concurrently connect",
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 40,
-                        },
-                        "client_to_client": {
-                            "title": "client to client",
-                            "description": "Enable client to client communication",
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 41,
-                        },
-                        "client_cert_not_required": {
-                            "title": "client cert not required",
-                            "description": "Don't require client certificate, client will authenticate "
-                                           "using username/password only",
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 42,
-                        },
-                        "username_as_common_name": {
-                            "title": "username as cn",
-                            "description": "Valid only for password authentication, use the "
-                                           "authenticated username as the common name",
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 43,
-                        },
-                        "auth_user_pass_verify": {
-                            "title": "auth user pass verify",
-                            "description": "Command and method used for password authentication. "
-                                           "If set requires the client to provide username and password",
-                            "type": "string",
-                            "pattern": "^((\\S*) (\\S*)|)$",
-                            "propertyOrder": 44,
+                            "propertyOrder": 1,
                         }
                     }
-                }
+                },
+                {"$ref": "#/definitions/tunnel"},
+                {"$ref": "#/definitions/server"},
+            ]
+        },
+        "server_routed": {
+            "title": "Server (routed)",
+            "allOf": [
+                {
+                    "type": "object",
+                    "required": ["server"],
+                    "properties": {
+                        "server": {
+                            "title": "server",
+                            "description": "Example usage: \"10.8.0.0 255.255.255.0\". "
+                                           "This directive will set up an OpenVPN server which will "
+                                           "allocate addresses to clients out of the given network/netmask. "
+                                           "The server itself will take the \".1\" address of the given "
+                                           "network for use as the server-side endpoint of the local "
+                                           "TUN/TAP interface.",
+                            "type": "string",
+                            "minLength": 15,
+                            "propertyOrder": 1,
+                        }
+                    }
+                },
+                {"$ref": "#/definitions/tunnel"},
+                {"$ref": "#/definitions/server"},
             ]
         }
     },
@@ -557,7 +613,9 @@ base_openvpn_schema = {
                 "additionalProperties": True,
                 "oneOf": [
                     {"$ref": "#/definitions/client"},
-                    {"$ref": "#/definitions/server"},
+                    {"$ref": "#/definitions/server_manual"},
+                    {"$ref": "#/definitions/server_bridged"},
+                    {"$ref": "#/definitions/server_routed"},
                 ]
             }
         }

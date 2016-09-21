@@ -304,3 +304,105 @@ config openvpn 'test_properties'
     option tls_server '1'
 """)
         self.assertEqual(c.render(), expected)
+
+    def test_server_bridge(self):
+        c = OpenWrt({
+            "openvpn": [{
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "enabled": True,
+                "key": "key.pem",
+                "mode": "server",
+                "name": "bridged",
+                "proto": "udp",
+                "server_bridge": "10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254",
+                "tls_server": True
+            }]
+        })
+        expected = self._tabs("""package openvpn
+
+config openvpn 'bridged'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option server_bridge '10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254'
+    option tls_server '1'
+""")
+        self.assertEqual(c.render(), expected)
+
+    def test_server_bridge_proxy(self):
+        c = OpenWrt({
+            "openvpn": [{
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "enabled": True,
+                "key": "key.pem",
+                "mode": "server",
+                "name": "bridged-proxy",
+                "proto": "udp",
+                "server_bridge": "",
+                "tls_server": True
+            }]
+        })
+        expected = self._tabs("""package openvpn
+
+config openvpn 'bridged_proxy'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option server_bridge '1'
+    option tls_server '1'
+""")
+        self.assertEqual(c.render(), expected)
+
+    def test_server_bridge_routed(self):
+        c = OpenWrt({
+            "openvpn": [{
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "enabled": True,
+                "key": "key.pem",
+                "mode": "server",
+                "name": "routed",
+                "proto": "udp",
+                "server": "10.8.0.0 255.255.0.0",
+                "tls_server": True
+            }]
+        })
+        expected = self._tabs("""package openvpn
+
+config openvpn 'routed'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option server '10.8.0.0 255.255.0.0'
+    option tls_server '1'
+""")
+        self.assertEqual(c.render(), expected)

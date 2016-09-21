@@ -5,5 +5,5 @@ flake8 --max-line-length=110 \
       --max-complexity=26 \
       ./netjsonconfig/backends/openwrt/renderers.py || exit 1
 flake8 --max-line-length=110 \
-       --max-complexity=11 \
+       --max-complexity=12 \
        --exclude=./docs/,./build/,./setup.py,./netjsonconfig/backends/openwrt/renderers.py || exit 1

@@ -74,6 +74,9 @@ class OpenVpn(BaseBackend):
             c['proto'] = 'tcp-client'
         else:
             c['proto'] = 'udp'
+        # determine if pull must be True
+        if 'server' in server or 'server_bridge' in server:
+            c['pull'] = True
         # tls_client
         if 'tls_server' not in server or not server['tls_server']:
             c['tls_client'] = False

@@ -20,6 +20,9 @@ class OpenVpnRenderer(BaseRenderer):
         config = deepcopy(vpn)
         skip_keys = ['script_security', 'remote']
         delete_keys = []
+        # allow server_bridge to be empty and still rendered
+        if config.get('server_bridge') == '':
+            config['server_bridge'] = True
         for key, value in config.items():
             if key in skip_keys:
                 continue

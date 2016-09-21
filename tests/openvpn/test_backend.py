@@ -225,6 +225,99 @@ tls-server
 """
         self.assertEqual(c.render(), expected)
 
+    def test_server_bridge(self):
+        c = OpenVpn({
+            "openvpn": [{
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "key": "key.pem",
+                "mode": "server",
+                "name": "bridged",
+                "proto": "udp",
+                "server_bridge": "10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254",
+                "tls_server": True,
+            }]
+        })
+        expected = """# openvpn config: bridged
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+server-bridge 10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254
+tls-server
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_server_bridge_proxy(self):
+        c = OpenVpn({
+            "openvpn": [{
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "key": "key.pem",
+                "mode": "server",
+                "name": "bridged-proxy",
+                "proto": "udp",
+                "server_bridge": "",
+                "tls_server": True,
+            }]
+        })
+        expected = """# openvpn config: bridged-proxy
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+server-bridge
+tls-server
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_server_routed(self):
+        c = OpenVpn({
+            "openvpn": [{
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "key": "key.pem",
+                "mode": "server",
+                "name": "routed",
+                "proto": "udp",
+                "server": "10.8.0.0 255.255.0.0",
+                "tls_server": True,
+            }]
+        })
+        expected = """# openvpn config: routed
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+server 10.8.0.0 255.255.0.0
+tls-server
+"""
+        self.assertEqual(c.render(), expected)
+
     def test_additional_properties(self):
         c = OpenVpn({
             "openvpn": [{
@@ -423,6 +516,7 @@ resolv-retry
             "name": "example-vpn",
             "port": 1196,
             "proto": "tcp-server",
+            "server_bridge": "10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254",
             "tls_server": True
         })
         o = OpenVpn(client_config)
@@ -436,6 +530,7 @@ key key.pem
 mode p2p
 nobind
 proto tcp-client
+pull
 remote vpn2.test.com 1196
 resolv-retry
 tls-client
@@ -455,7 +550,8 @@ tls-client
             "auth": "RSA-SHA1",
             "cipher": "AES-128-CFB",
             "engine": "dynamic",
-            "ns_cert_type": "client"
+            "ns_cert_type": "client",
+            "server_bridge": "",
         }
         client_config = OpenVpn.auto_client('vpn1.test.com',
                                             config,
@@ -480,6 +576,7 @@ mode p2p
 nobind
 ns-cert-type server
 proto tcp-client
+pull
 remote vpn1.test.com 1195
 resolv-retry
 tls-client
@@ -515,6 +612,7 @@ tls-client
             "mode": "server",
             "name": "example-vpn",
             "proto": "udp",
+            "server": "10.8.0.0 255.255.0.0",
             "tls_server": True,
             "ns_cert_type": "",
         })
@@ -529,6 +627,7 @@ key key.pem
 mode p2p
 nobind
 proto udp
+pull
 remote vpn1.test.com 1195
 resolv-retry
 tls-client
