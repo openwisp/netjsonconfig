@@ -52,9 +52,9 @@ class TestContext(unittest.TestCase, _TabsMixin):
     def test_no_variables_found(self):
         config = {
             "general": {
-                "hostname": "host",
+                "description": "{{ desc }}",
             }
         }
         o = OpenWrt(config, context={"a": "b"})
         output = o.render()
-        self.assertIn("option hostname 'host'", output)
+        self.assertIn("option description '{{ desc }}'", output)
