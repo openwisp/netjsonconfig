@@ -1,10 +1,12 @@
 Change log
 ==========
 
-Version 0.5.1 [unreleased]
+Version 0.5.1 [2016-09-22]
 --------------------------
 
-WIP
+- `b486c4d <https://github.com/openwisp/netjsonconfig/commit/b486c4d>`_: [openvpn] corrected wrong ``client`` mode, renamed to ``p2p``
+- `c7e51c6 <https://github.com/openwisp/netjsonconfig/commit/c7e51c6>`_: [openvpn] added ``pull`` option for clients
+- `dde3128 <https://github.com/openwisp/netjsonconfig/commit/dde3128>`_: [openvpn] differentiate server between manual, routed and bridged
 
 Version 0.5.0 [2016-09-19]
 --------------------------
