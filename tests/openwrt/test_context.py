@@ -58,3 +58,22 @@ class TestContext(unittest.TestCase, _TabsMixin):
         o = OpenWrt(config, context={"a": "b"})
         output = o.render()
         self.assertIn("option description '{{ desc }}'", output)
+
+    def test_context_bug(self):
+        """
+        see https://github.com/openwisp/netjsonconfig/issues/55
+        """
+        config = {"general": {"hostname": "test-context"}}
+        template = {
+            "files": [
+                {
+                    "path": "/etc/vpnserver1",
+                    "mode": "0644",
+                    "contents": "{{ name }}\n{{ vpnserver1 }}\n"
+                }
+            ]
+        }
+        context = {"name": "test-context",
+                   "vpnserver1": "vpn.testdomain.com"}
+        o = OpenWrt(config, context=context, templates=[template])
+        self.assertIn("vpn.testdomain.com", o.render())

@@ -143,5 +143,11 @@ class TestUtils(unittest.TestCase):
     def test_evaluate_vars_strangewhitespace(self):
         self.assertEqual(evaluate_vars('{{  tz}}', {'tz': 'UTC'}), 'UTC')
 
+    def test_evaluate_vars_multiple_newline(self):
+        """
+        see https://github.com/openwisp/netjsonconfig/issues/55
+        """
+        output = evaluate_vars('{{ a }}\n{{ b }}\n', {'a': 'a', 'b': 'b'})
+        self.assertEqual(output, 'a\nb\n')
     def test_evaluate_vars_one_char(self):
         self.assertEqual(evaluate_vars('{{ a }}', {'a': 'letter-A'}), 'letter-A')
