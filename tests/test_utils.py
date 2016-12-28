@@ -149,5 +149,22 @@ class TestUtils(unittest.TestCase):
         """
         output = evaluate_vars('{{ a }}\n{{ b }}\n', {'a': 'a', 'b': 'b'})
         self.assertEqual(output, 'a\nb\n')
+
+    def test_evaluate_vars_multiple_space(self):
+        output = evaluate_vars('{{ a }} {{ b }}', {'a': 'a', 'b': 'b'})
+        self.assertEqual(output, 'a b')
+
+    def test_evaluate_vars_comma(self):
+        output = evaluate_vars('{{ a }},{{ b }}', {'a': 'a', 'b': 'b'})
+        self.assertEqual(output, 'a,b')
+
+    def test_evaluate_vars_multiple_immersed(self):
+        output = evaluate_vars('content{{a}}content{{ b }}content', {'a': 'A', 'b': 'B'})
+        self.assertEqual(output, 'contentAcontentBcontent')
+
+    def test_evaluate_vars_immersed(self):
+        output = evaluate_vars('content{{a}}content', {'a': 'A'})
+        self.assertEqual(output, 'contentAcontent')
+
     def test_evaluate_vars_one_char(self):
         self.assertEqual(evaluate_vars('{{ a }}', {'a': 'letter-A'}), 'letter-A')
