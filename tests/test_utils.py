@@ -142,3 +142,6 @@ class TestUtils(unittest.TestCase):
 
     def test_evaluate_vars_strangewhitespace(self):
         self.assertEqual(evaluate_vars('{{  tz}}', {'tz': 'UTC'}), 'UTC')
+
+    def test_evaluate_vars_one_char(self):
+        self.assertEqual(evaluate_vars('{{ a }}', {'a': 'letter-A'}), 'letter-A')
