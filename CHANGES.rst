@@ -1,10 +1,10 @@
 Change log
 ==========
 
-Version 0.5.2 [unreleased]
+Version 0.5.2 [2016-12-29]
 --------------------------
 
-WIP
+- `#55 <https://github.com/openwisp/netjsonconfig/issues/55>`_: [vars] Fixed broken evaluation of multiple variables
 
 Version 0.5.1 [2016-09-22]
 --------------------------
