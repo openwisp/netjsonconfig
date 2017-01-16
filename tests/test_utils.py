@@ -1,6 +1,6 @@
 import unittest
 
-from netjsonconfig.utils import evaluate_vars, merge_config
+from netjsonconfig.utils import evaluate_vars, merge_config, merge_list
 
 
 class TestUtils(unittest.TestCase):
@@ -168,3 +168,21 @@ class TestUtils(unittest.TestCase):
 
     def test_evaluate_vars_one_char(self):
         self.assertEqual(evaluate_vars('{{ a }}', {'a': 'letter-A'}), 'letter-A')
+
+    def test_merge_list_override(self):
+        template = [{"name": "test1", "tx": 1}]
+        config = [{"name": "test1", "tx": 2}]
+        result = merge_list(template, config)
+        self.assertEqual(result, config)
+
+    def test_merge_list_union_and_override(self):
+        template = [{"id": "test1", "a": "a"}]
+        config = [
+            {"id": "test1", "a": "0", "b": "b"},
+            {"id": "test2", "c": "c"}
+        ]
+        result = merge_list(template, config)
+        self.assertEqual(result, [
+            {"id": "test1", "a": "0", "b": "b"},
+            {"id": "test2", "c": "c"}
+        ])

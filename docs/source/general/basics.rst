@@ -275,10 +275,12 @@ refactor the previous code as follows:
     }
     router2 = OpenWrt(router2_config, templates=[dhcp_template])
 
-The function used under the hood to merge dictionaries and lists
-is ``netjsonconfig.utils.merge_config``:
+The functions used under the hood to merge configurations and templates
+are ``netjsonconfig.utils.merge_config`` and ``netjsonconfig.utils.merge_list``:
 
 .. autofunction:: netjsonconfig.utils.merge_config
+
+.. autofunction:: netjsonconfig.utils.merge_list
 
 .. _multiple_templates:
 

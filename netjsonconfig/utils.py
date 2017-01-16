@@ -13,8 +13,8 @@ def merge_config(template, config):
 
     * simple values (eg: ``str``, ``int``, ``float``, ecc) in ``config`` will
       overwrite the ones in ``template``
-    * values of type ``list`` in both ``config`` and ``template`` will be summed
-      in order to create a list which contains elements of both
+    * values of type ``list`` in both ``config`` and ``template`` will be
+      merged using to the ``merge_list`` function
     * values of type ``dict`` will be merged recursively
 
     :param template: template ``dict``
@@ -27,10 +27,41 @@ def merge_config(template, config):
             node = result.get(key, {})
             result[key] = merge_config(node, value)
         elif isinstance(value, list) and isinstance(result.get(key), list):
-            result[key] = deepcopy(result[key]) + deepcopy(value)
+            result[key] = merge_list(result[key], value)
         else:
             result[key] = value
     return result
+
+
+def merge_list(list1, list2):
+    """
+    Merges ``list2`` on top of ``list1``.
+
+    If both lists contain dictionaries which have keys like
+    ``name`` or ``id`` of equal values, those dicts are merged
+    (dicts in ``list2`` will override dicts in ``list1``).
+    The remaining elements will be summed in order to create a list
+    which contains elements of both lists.
+
+    :param list1: list from template
+    :param list2: list from config
+    :returns: merged ``list``
+    """
+    dict_map = {'list1': OrderedDict(), 'list2': OrderedDict()}
+    counter = 1
+    for list_ in [list1, list2]:
+        container = dict_map['list{0}'.format(counter)]
+        for el in list_:
+            if isinstance(el, dict) and 'name' in el:
+                key = el['name']
+            elif isinstance(el, dict) and 'id' in el:
+                key = el['id']
+            else:
+                key = id(el)
+            container[key] = deepcopy(el)
+        counter += 1
+    merged = merge_config(dict_map['list1'], dict_map['list2'])
+    return list(merged.values())
 
 
 def sorted_dict(dictionary):
