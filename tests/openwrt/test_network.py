@@ -1151,3 +1151,19 @@ config interface 'eth0'
     option proto 'none'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_interface_disabled_bug(self):
+        """
+        see https://github.com/openwisp/netjsonconfig/issues/57
+        """
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "type": "ethernet",
+                    "name": "eth0",
+                    "disabled": False
+                }
+            ]
+        })
+        self.assertNotIn("disabled '0'", o.render())
+        self.assertIn("enabled '1'", o.render())

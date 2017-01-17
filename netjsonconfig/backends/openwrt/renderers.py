@@ -80,7 +80,7 @@ class NetworkRenderer(BaseOpenWrtRenderer):
                 if 'autostart' in uci_interface:
                     uci_interface['auto'] = interface['autostart']
                     del uci_interface['autostart']
-                if uci_interface.get('disabled'):
+                if 'disabled' in uci_interface:
                     uci_interface['enabled'] = not interface['disabled']
                     del uci_interface['disabled']
                 if 'addresses' in uci_interface:
