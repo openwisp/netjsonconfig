@@ -465,11 +465,11 @@ schema = merge_config(schema, {
     "definitions": {
         "tunnel": {
             "properties": {
-                "enabled": {
-                    "title": "enabled",
-                    "description": "uncheck this to disable this VPN without deleting its configuration",
+                "disabled": {
+                    "title": "disabled",
+                    "description": "disable this VPN without deleting its configuration",
                     "type": "boolean",
-                    "default": True,
+                    "default": False,
                     "format": "checkbox",
                     "propertyOrder": 1
                 }

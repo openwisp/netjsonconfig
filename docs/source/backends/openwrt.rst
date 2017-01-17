@@ -2002,7 +2002,7 @@ The ``OpenWrt`` backend adds a few properties to the OpenVPN schema, see below.
 +--------------------------+---------+--------------+-------------------------------------------------------------+
 | key name                 | type    | default      | allowed values                                              |
 +==========================+=========+==============+=============================================================+
-| ``enabled``              | boolean | ``True``     |                                                             |
+| ``disabled``             | boolean | ``False``    |                                                             |
 +--------------------------+---------+--------------+-------------------------------------------------------------+
 
 OpenVPN example
@@ -2020,7 +2020,7 @@ The following *configuration dictionary*:
                 "dev": "tap0",
                 "dev_type": "tap",
                 "dh": "dh.pem",
-                "enabled": True,
+                "disabled": False,
                 "key": "key.pem",
                 "mode": "server",
                 "name": "test-vpn-server",

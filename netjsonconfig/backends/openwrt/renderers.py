@@ -496,6 +496,10 @@ class OpenVpnRenderer(BaseOpenWrtRenderer, BaseOpenVpnRenderer):
     """
     def _transform_vpn(self, vpn):
         config = super(OpenVpnRenderer, self)._transform_vpn(vpn)
-        if 'enabled' not in config:
+        if 'disabled' in config:
+            config['enabled'] = not config['disabled']
+            del config['disabled']
+        # TODO: keep 'enabled' check until 0.6 and then drop it
+        elif 'disabled' not in config and 'enabled' not in config:
             config['enabled'] = True
         return config
