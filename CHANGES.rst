@@ -1,10 +1,12 @@
 Change log
 ==========
 
-Version 0.5.3 [unreleased]
+Version 0.5.3 [2017-01-17]
 --------------------------
 
-WIP
+- `#56 <https://github.com/openwisp/netjsonconfig/issues/56>`_: [general] Implemented smarter merge mechanism
+- `#57 <https://github.com/openwisp/netjsonconfig/issues/57>`_: [openwrt] Fixed interface enabled bug
+- `7a152a3 <https://github.com/openwisp/netjsonconfig/commit/7a152a3>`_: [openwrt] Renamed enabled to disabled in OpenVPN secion (for consistency)
 
 Version 0.5.2 [2016-12-29]
 --------------------------
