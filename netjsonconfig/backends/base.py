@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError as JsonSchemaError
 
 from ..exceptions import ValidationError
 from ..schema import DEFAULT_FILE_MODE
-from ..utils import evaluate_vars, merge_config, var_pattern
+from ..utils import evaluate_vars, merge_config
 
 
 class BaseBackend(object):
@@ -68,10 +68,6 @@ class BaseBackend(object):
         """ evaluates configuration variables """
         # return immediately if context is empty
         if not context:
-            return config
-        # return immediately if no variables are found
-        netjson = self.json(validate=False)
-        if var_pattern.search(netjson) is None:
             return config
         # only if variables are found perform evaluation
         return evaluate_vars(config, context)
