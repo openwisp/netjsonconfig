@@ -186,3 +186,9 @@ class TestUtils(unittest.TestCase):
             {"id": "test1", "a": "0", "b": "b"},
             {"id": "test2", "c": "c"}
         ])
+
+    def test_merge_list_config_value(self):
+        template = [{"config_value": "test1", "tx": 1}]
+        config = [{"config_value": "test1", "tx": 2}]
+        result = merge_list(template, config)
+        self.assertEqual(result, config)

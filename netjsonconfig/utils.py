@@ -33,7 +33,7 @@ def merge_config(template, config):
     return result
 
 
-def merge_list(list1, list2, identifiers=['name', 'id']):
+def merge_list(list1, list2, identifiers=['name', 'config_value', 'id']):
     """
     Merges ``list2`` on top of ``list1``.
 

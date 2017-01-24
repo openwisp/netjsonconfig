@@ -109,3 +109,39 @@ config core 'main'
             ]
         })
         self.assertEqual(o.render(), 'package luci\n')
+
+    def test_merge(self):
+        template = {
+            "luci": [
+                {
+                    "config_name": "core",
+                    "config_value": "main",
+                    "number": 3,
+                    "list": ["eth0"],
+                    "some_value": True
+                }
+            ]
+        }
+        config = {
+            "luci": [
+                {
+                    "config_name": "core",
+                    "config_value": "main",
+                    "number": 4,
+                    "list": ["wlan0"]
+                }
+            ]
+        }
+        expected = {
+            "luci": [
+                {
+                    "config_name": "core",
+                    "config_value": "main",
+                    "number": 4,
+                    "list": ["eth0", "wlan0"],
+                    "some_value": True
+                }
+            ]
+        }
+        o = OpenWrt(config, templates=[template])
+        self.assertEqual(o.config, expected)
