@@ -33,13 +33,13 @@ def merge_config(template, config):
     return result
 
 
-def merge_list(list1, list2):
+def merge_list(list1, list2, identifiers=['name', 'id']):
     """
     Merges ``list2`` on top of ``list1``.
 
-    If both lists contain dictionaries which have keys like
-    ``name`` or ``id`` of equal values, those dicts are merged
-    (dicts in ``list2`` will override dicts in ``list1``).
+    If both lists contain dictionaries which have keys specified
+    in ``identifiers`` which have equal values, those dicts will
+    be merged (dicts in ``list2`` will override dicts in ``list1``).
     The remaining elements will be summed in order to create a list
     which contains elements of both lists.
 
@@ -52,12 +52,14 @@ def merge_list(list1, list2):
     for list_ in [list1, list2]:
         container = dict_map['list{0}'.format(counter)]
         for el in list_:
-            if isinstance(el, dict) and 'name' in el:
-                key = el['name']
-            elif isinstance(el, dict) and 'id' in el:
-                key = el['id']
-            else:
-                key = id(el)
+            # merge by internal python id by default
+            key = id(el)
+            # if el is a dict, merge by keys specified in ``identifiers``
+            if isinstance(el, dict):
+                for id_key in identifiers:
+                    if id_key in el:
+                        key = el[id_key]
+                        break
             container[key] = deepcopy(el)
         counter += 1
     merged = merge_config(dict_map['list1'], dict_map['list2'])
