@@ -2077,6 +2077,7 @@ The following *configuration dictionary*:
         "dropbear": [
             {
                 "config_name": "dropbear",
+                "config_value": "dropbear_1",
                 "PasswordAuth": "on",
                 "RootPasswordAuth": "on",
                 "Port": 22
@@ -2092,3 +2093,55 @@ Will be rendered as follows::
             option PasswordAuth 'on'
             option Port '22'
             option RootPasswordAuth 'on'
+
+OLSRd2 example
+~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "olsrd2": [
+            {
+                "config_name": "global",
+                "config_value": "global",
+                "pidfile": "/var/run/olsrd2.pid",
+                "lockfile": "/var/lock/olsrd2"
+            },
+            {
+                "config_name": "log",
+                "config_value": "log",
+                "syslog": "true",
+                "stderr": "true",
+                "file": "/var/log/olsrd2.log"
+            },
+            {
+                "config_name": "interface",
+                "config_value": "olsr2_common",
+                "ifname": [
+                    "loopback",
+                    "wlan0",
+                    "wlan1"
+                ]
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package olsrd2
+
+    config global 'global'
+        option lockfile '/var/lock/olsrd2'
+        option pidfile '/var/run/olsrd2.pid'
+
+    config log 'log'
+        option file '/var/log/olsrd2.log'
+        option stderr 'true'
+        option syslog 'true'
+
+    config interface 'olsr2_common'
+        list ifname 'loopback'
+        list ifname 'wlan0'
+        list ifname 'wlan1'
