@@ -468,6 +468,16 @@ base_openvpn_schema = {
                     "default": "udp",
                     "options": {"enum_titles": ["UDP", "TCP"]}
                 },
+                "topology": {
+                    "title": "topology",
+                    "description": "Configure virtual addressing topology when running in tun "
+                                   "mode. This directive has no meaning in tap mode, which "
+                                   "always uses a subnet topology.",
+                    "enum": ["net30", "p2p", "subnet"],
+                    "type": "string",
+                    "default": "subnet",
+                    "propertyOrder": 7,
+                },
                 "tls_server": {
                     "title": "TLS Server",
                     "description": "Enable TLS authentication",

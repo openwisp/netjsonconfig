@@ -147,6 +147,7 @@ verb 3
                     "status": "/var/log/openvpn.status 30",
                     "status_version": 1,
                     "tls_client": True,
+                    "topology": "p2p",
                     "tun_ipv6": True,
                     "up": "/home/user/up-command.sh",
                     "up_delay": 10,
@@ -187,6 +188,7 @@ script-security 1
 status /var/log/openvpn.status 30
 status-version 1
 tls-client
+topology p2p
 tun-ipv6
 up /home/user/up-command.sh
 up-delay 10
