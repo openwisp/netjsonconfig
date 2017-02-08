@@ -197,36 +197,28 @@ verb 1
 """
         self.assertEqual(c.render(), expected)
 
-    def test_no_status_file(self):
-        c = OpenVpn({
-            "openvpn": [{
-                "ca": "ca.pem",
-                "cert": "cert.pem",
-                "dev": "tap0",
-                "dev_type": "tap",
-                "dh": "dh.pem",
-                "key": "key.pem",
-                "mode": "server",
-                "name": "test-no-status",
-                "proto": "udp",
-                "status": "",
-                "status_version": 1,
-                "tls_server": True
-            }]
-        })
-        expected = """# openvpn config: test-no-status
+    _simple_conf = {
+        "openvpn": [{
+            "ca": "ca.pem",
+            "cert": "cert.pem",
+            "dev": "tap0",
+            "dev_type": "tap",
+            "dh": "dh.pem",
+            "key": "key.pem",
+            "mode": "server",
+            "name": "test",
+            "proto": "udp",
+            "status": "",
+            "status_version": 1,
+            "tls_server": True
+        }]
+    }
 
-ca ca.pem
-cert cert.pem
-dev tap0
-dev-type tap
-dh dh.pem
-key key.pem
-mode server
-proto udp
-tls-server
-"""
-        self.assertEqual(c.render(), expected)
+    def test_no_status_file(self):
+        c = OpenVpn(self._simple_conf)
+        output = c.render()
+        self.assertNotIn('status', output)
+        self.assertNotIn('status-version', output)
 
     def test_server_bridge(self):
         c = OpenVpn({
