@@ -292,7 +292,7 @@ base_openvpn_schema = {
                     "description": "Write operational status to file every n seconds; "
                                    "eg: \"/var/run/openvpn.status 10\"",
                     "type": "string",
-                    "pattern": "^((\\S*) ([0-9]*)|)$",
+                    "pattern": "^((\\S*) ([0-9]*)|(\\S*)|)$",
                     "propertyOrder": 35,
                 },
                 "status_version": {

@@ -1,3 +1,4 @@
+import copy
 import tarfile
 import unittest
 
@@ -219,6 +220,12 @@ verb 1
         output = c.render()
         self.assertNotIn('status', output)
         self.assertNotIn('status-version', output)
+
+    def test_status_file_no_seconds(self):
+        conf = copy.deepcopy(self._simple_conf)
+        conf['openvpn'][0]['status'] = '/var/run/openvpn.status'
+        c = OpenVpn(conf)
+        self.assertIn('status /var/run/openvpn.status', c.render())
 
     def test_server_bridge(self):
         c = OpenVpn({
