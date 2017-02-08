@@ -413,11 +413,14 @@ base_openvpn_schema = {
                             "description": "Use specific local port, ignored if nobind is enabled",
                         },
                         "resolv_retry": {
-                            "title": "resolv-retry infinite",
-                            "type": "boolean",
-                            "description": "If hostname resolution fails, retry to resolve indefinitely",
-                            "default": True,
-                            "format": "checkbox",
+                            "title": "resolv-retry",
+                            "type": "string",
+                            "description": "Retries to resolve hostname for the specified number of "
+                                           "seconds. Set 'infinite' to retry indefinitely, set to 0 "
+                                           "to disable",
+                            "default": "infinite",
+                            # accept "infinite" or any non negative number
+                            "pattern": "^(infinite)|([0-9])$",
                             "propertyOrder": 9,
                         },
                         "tls_client": {

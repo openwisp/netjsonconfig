@@ -63,7 +63,7 @@ class OpenVpn(BaseBackend):
         c = {
             "mode": "p2p",
             "nobind": True,
-            "resolv_retry": True,
+            "resolv_retry": "infinite",
             "tls_client": True
         }
         # remote

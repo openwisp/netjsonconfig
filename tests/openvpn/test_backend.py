@@ -2,6 +2,7 @@ import tarfile
 import unittest
 
 from netjsonconfig import OpenVpn
+from netjsonconfig.exceptions import ValidationError
 
 
 class TestBackend(unittest.TestCase):
@@ -140,7 +141,7 @@ verb 3
                             "port": 1195
                         }
                     ],
-                    "resolv_retry": True,
+                    "resolv_retry": "infinite",
                     "script_security": 1,
                     "secret": "",
                     "status": "/var/log/openvpn.status 30",
@@ -181,7 +182,7 @@ proto tcp-client
 pull
 remote vpn1.test.com 1194
 remote vpn2.test.com 1195
-resolv-retry
+resolv-retry infinite
 script-security 1
 status /var/log/openvpn.status 30
 status-version 1
@@ -500,7 +501,7 @@ mode p2p
 nobind
 proto udp
 remote vpn1.test.com 1195
-resolv-retry
+resolv-retry infinite
 """
         self.assertEqual(o.render(), expected)
 
@@ -532,7 +533,7 @@ nobind
 proto tcp-client
 pull
 remote vpn2.test.com 1196
-resolv-retry
+resolv-retry infinite
 tls-client
 """
         self.assertEqual(o.render(), expected)
@@ -578,7 +579,7 @@ ns-cert-type server
 proto tcp-client
 pull
 remote vpn1.test.com 1195
-resolv-retry
+resolv-retry infinite
 tls-client
 
 # ---------- files ---------- #
@@ -629,7 +630,51 @@ nobind
 proto udp
 pull
 remote vpn1.test.com 1195
-resolv-retry
+resolv-retry infinite
 tls-client
 """
         self.assertEqual(o.render(), expected)
+
+    def _get_client(self):
+        return OpenVpn.auto_client('vpn1.test.com', {
+            "ca": "ca.pem",
+            "cert": "cert.pem",
+            "dev": "tap0",
+            "dev_type": "tap",
+            "dh": "dh.pem",
+            "key": "key.pem",
+            "mode": "server",
+            "name": "example-vpn",
+            "proto": "udp",
+        })
+
+    def test_resolv_retry_number(self):
+        client = self._get_client()
+        client['openvpn'][0]['resolv_retry'] = '10'
+        o = OpenVpn(client)
+        self.assertIn('resolv-retry 10', o.render())
+
+    def test_resolv_retry_disabled(self):
+        client = self._get_client()
+        client['openvpn'][0]['resolv_retry'] = '0'
+        o = OpenVpn(client)
+        self.assertIn('resolv-retry 0', o.render())
+
+    def test_resolv_retry_infinite(self):
+        client = self._get_client()
+        client['openvpn'][0]['resolv_retry'] = 'infinite'
+        o = OpenVpn(client)
+        self.assertIn('resolv-retry infinite', o.render())
+
+    def test_resolv_retry_not_present(self):
+        client = self._get_client()
+        del client['openvpn'][0]['resolv_retry']
+        o = OpenVpn(client)
+        self.assertNotIn('resolv-retry', o.render())
+
+    def test_resolv_retry_invalid(self):
+        client = self._get_client()
+        client['openvpn'][0]['resolv_retry'] = 'true'
+        o = OpenVpn(client)
+        with self.assertRaises(ValidationError):
+            o.validate()

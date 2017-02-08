@@ -89,7 +89,6 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                         "port": 12128
                     }
                 ],
-                "resolv_retry": True,
                 "script_security": 1,
                 "tls_client": True,
                 "up": "/tmp/owispmanager/openvpn/vpn_2693_script_up.sh",

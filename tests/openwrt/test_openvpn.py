@@ -145,7 +145,7 @@ config openvpn 'test_server'
                             "port": 1195
                         }
                     ],
-                    "resolv_retry": True,
+                    "resolv_retry": "infinite",
                     "script_security": 1,
                     "secret": "",
                     "status": "/var/log/openvpn.status 30",
@@ -187,7 +187,7 @@ config openvpn 'test_client'
     option proto 'tcp-client'
     list remote 'vpn1.test.com 1194'
     list remote 'vpn2.test.com 1195'
-    option resolv_retry '1'
+    option resolv_retry 'infinite'
     option script_security '1'
     option status '/var/log/openvpn.status 30'
     option status_version '1'
