@@ -1,10 +1,24 @@
 Change log
 ==========
 
-Version 0.5.4 [unreleased]
+Version 0.5.4 [2017-02-14]
 --------------------------
 
-WIP
+- `6f712d1 <https://github.com/openwisp/netjsonconfig/commit/6f712d1>`_:
+  [utils] Implemented identifiers as parameters in ``utils.merge_list``
+- `fcae96c <https://github.com/openwisp/netjsonconfig/commit/fcae96c>`_:
+  [openwrt] Added ``config_value`` identifier in ``utils.merge_list``
+- `eaa04de <https://github.com/openwisp/netjsonconfig/commit/eaa04de>`_:
+  [docs] Improved `"All the other settings"
+  <http://netjsonconfig.openwisp.org/en/stable/backends/openwrt.html#all-the-other-settings>`_
+  section in ``OpenWrt`` backend
+- `#60 <https://github.com/openwisp/netjsonconfig/issues/60>`_ [openvpn] Fixed ``resolv_retry`` bug;
+  **minor backward incompatible change**: handled in `django-netjsonconfig with a migration
+  <https://github.com/openwisp/django-netjsonconfig/commit/f16768d3e9031197a71cd988c0643f88a4badbd7>`_
+- `f25e77e <https://github.com/openwisp/netjsonconfig/commit/f25e77e>`_:
+  [openvpn] Added ``topology`` attribute to schema
+- `c4aa07a <https://github.com/openwisp/netjsonconfig/commit/c4aa07a>`_:
+  [openvpn] Allow to omit seconds in status attribute
 
 Version 0.5.3 [2017-01-17]
 --------------------------
