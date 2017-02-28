@@ -369,7 +369,7 @@ If you are interested in this topic you can read more about the
 Support
 -------
 
-Send questions to the `OpenWISP Mailing List <https://groups.google.com/d/forum/openwisp>`_.
+See `OpenWISP Support Channels <http://openwisp.org/support.html>`_.
 
 License
 -------

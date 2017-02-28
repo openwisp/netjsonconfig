@@ -42,6 +42,6 @@ Its main features are:
 
 `Documentation <http://netjsonconfig.openwisp.org/>`_ |
 `Change log <https://github.com/openwisp/netjsonconfig/blob/master/CHANGES.rst>`_ |
-`Mailing List <https://groups.google.com/d/forum/openwisp>`_ |
+`Support channels <http://openwisp.org/support.html>`_ |
 `Issue Tracker <https://github.com/openwisp/netjsonconfig/issues>`_ |
 `License <https://github.com/openwisp/netjsonconfig/blob/master/LICENSE>`_
