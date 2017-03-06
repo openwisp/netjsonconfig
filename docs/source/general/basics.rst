@@ -172,6 +172,10 @@ If you have devices with very similar *configuration dictionaries* you can store
 blocks in one or more reusable templates which will be used as a base to build
 the final configuration.
 
+.. note::
+    When using multiple templates, their order is important.
+    Templates that come afterwards overrides the templates that come before it.
+
 Let's illustrate this with a practical example, we have two devices:
 
  * Router1
