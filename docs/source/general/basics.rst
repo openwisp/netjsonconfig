@@ -171,8 +171,10 @@ Template
 If you have devices with very similar *configuration dictionaries* you can store the shared
 blocks in one or more reusable templates which will be used as a base to build
 the final configuration.
-When using multiple templates, their order is important.
-Templates that come afterwards overrides the templates that come before it.
+
+.. note::
+    When using multiple templates, their order is important.
+    Templates that come afterwards overrides the templates that come before it.
 
 Let's illustrate this with a practical example, we have two devices:
 
