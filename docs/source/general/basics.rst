@@ -174,7 +174,7 @@ the final configuration.
 
 .. note::
     When using multiple templates, their order is important.
-    Templates that come afterwards overrides the templates that come before it.
+    Templates that are specified afterwards override the ones that come first.
 
 Let's illustrate this with a practical example, we have two devices:
 
