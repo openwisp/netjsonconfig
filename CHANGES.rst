@@ -1,6 +1,12 @@
 Change log
 ==========
 
+Version 0.5.4.post1 [2017-03-07]
+--------------------------------
+
+- `4aaecae <https://github.com/openwisp/netjsonconfig/commit/4aaecae>`_:
+  [docs] Added documentation regarding template overrides
+
 Version 0.5.4 [2017-02-14]
 --------------------------
 
