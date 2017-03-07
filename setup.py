@@ -14,6 +14,8 @@ if sys.argv[-1] == 'setup.py':
 if sys.argv[-1] == 'publish':
     import os
     # bdist_wheel removed because conditional requirement of py2-ipaddress won't work!
+    os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
+    os.system('rm -rf build/')
     os.system("python setup.py sdist upload -s")
     args = {'version': get_version()}
     print("You probably want to also tag the version now:")
