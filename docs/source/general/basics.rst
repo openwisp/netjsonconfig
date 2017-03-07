@@ -172,9 +172,8 @@ If you have devices with very similar *configuration dictionaries* you can store
 blocks in one or more reusable templates which will be used as a base to build
 the final configuration.
 
-.. note::
-    When using multiple templates, their order is important.
-    Templates that are specified afterwards override the ones that come first.
+Combining different templates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's illustrate this with a practical example, we have two devices:
 
@@ -279,14 +278,58 @@ refactor the previous code as follows:
     }
     router2 = OpenWrt(router2_config, templates=[dhcp_template])
 
-The functions used under the hood to merge configurations and templates
-are ``netjsonconfig.utils.merge_config`` and ``netjsonconfig.utils.merge_list``:
+Overriding a template
+~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: netjsonconfig.utils.merge_config
+In many occasions you may want to define a general template which can be overridden in some specific occasions.
 
-.. autofunction:: netjsonconfig.utils.merge_list
+A common use case is to define a general radio template and override its channel on certain access points:
 
-.. _multiple_templates:
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    general_radio_template = {
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "protocol": "802.11n",
+                "driver": "mac80211",
+                "channel": 0,  # zero means "auto"
+                "channel_width": 20,
+                "country": "US",
+                "disabled": False
+            }
+        ]
+    }
+
+    specific_radio_config = {
+        "radios": [
+            {
+                "name": "radio0",
+                "channel": 10,
+            }
+        ]
+    }
+
+    router1 = OpenWrt(config=specific_radio_config,
+                      templates=[general_radio_template])
+
+    print(router1.render())
+
+Will generater the following output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel '10'
+            option country 'US'
+            option disabled '0'
+            option htmode 'HT20'
+            option hwmode '11g'
+            option phy 'phy0'
+            option type 'mac80211'
 
 Multiple template inheritance
 -----------------------------
@@ -296,7 +339,88 @@ it's possible to pass multiple templates that will be added one on top of the
 other to build the resulting *configuration dictionary*, allowing to reduce or
 even eliminate repetitions.
 
+.. note::
+    When using multiple templates, their order is important.
+    Templates that are specified afterwards override the ones that come first.
+
+    To understand this, read the section :ref:`multiple_overrides`.
+
+.. _multiple_overrides:
+
+Multiple overrides
+~~~~~~~~~~~~~~~~~~
+
+Here's a more complex example involving multiple overrides:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    general_radio_template = {
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "protocol": "802.11n",
+                "driver": "mac80211",
+                "channel": 0,  # zero means "auto"
+                "channel_width": 20,
+                "country": "00",  # world
+                "disabled": False
+            }
+        ]
+    }
+
+    united_states_radio_template = {
+        "radios": [
+            {
+                "name": "radio0",
+                "country": "US"
+            }
+        ]
+    }
+
+    specific_radio_config = {
+        "radios": [
+            {
+                "name": "radio0",
+                "channel": 10,
+            }
+        ]
+    }
+
+    router1 = OpenWrt(config=specific_radio_config,
+                      templates=[general_radio_template,
+                                 united_states_radio_template])
+
+    print(router1.render())
+
+Will generater the following output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel '10'
+            option country 'US'
+            option disabled '0'
+            option htmode 'HT20'
+            option hwmode '11g'
+            option phy 'phy0'
+            option type 'mac80211'
+
 .. _context:
+
+Implementation details
+~~~~~~~~~~~~~~~~~~~~~~
+
+The functions used under the hood to merge configurations and templates
+are ``netjsonconfig.utils.merge_config`` and ``netjsonconfig.utils.merge_list``:
+
+.. autofunction:: netjsonconfig.utils.merge_config
+
+.. autofunction:: netjsonconfig.utils.merge_list
+
+.. _multiple_templates:
 
 Context (configuration variables)
 ---------------------------------
