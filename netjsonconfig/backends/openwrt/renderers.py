@@ -273,6 +273,7 @@ class SystemRenderer(BaseOpenWrtRenderer):
             general.update({
                 'hostname': general.get('hostname', 'OpenWRT'),
                 'timezone': timezone_value,
+                'zonename': timezone_human,
             })
         return sorted_dict(general)
 

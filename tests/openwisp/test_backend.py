@@ -132,6 +132,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 config system 'system'
     option hostname 'openwisp-test'
     option timezone 'UTC'
+    option zonename 'UTC'
 """)
         self.assertEqual(contents, expected)
         tar.close()
