@@ -343,6 +343,7 @@ Let's see the result with:
     config system
             option hostname 'Router1'
             option timezone 'UTC'
+            option zonename 'UTC'
 
     package openwisp
 
