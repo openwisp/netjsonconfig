@@ -25,6 +25,7 @@ config system 'system'
     option custom_setting '1'
     option hostname 'test-system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
+    option zonename 'Europe/Rome'
 """)
         self.assertEqual(o.render(), expected)
 
