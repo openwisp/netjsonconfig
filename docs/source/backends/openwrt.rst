@@ -257,6 +257,7 @@ Will be rendered as follows::
     config system 'system'
             option hostname 'routerA'
             option timezone 'UTC'
+            option zonename 'UTC'
 
     package network
 
