@@ -1,6 +1,11 @@
 Change log
 ==========
 
+Version 0.5.5 [2017-03-15]
+--------------------------
+
+- `#65 <https://github.com/openwisp/netjsonconfig/pull/65>`_: [openwrt] Added missing zonename attribute
+
 Version 0.5.4.post1 [2017-03-07]
 --------------------------------
 
