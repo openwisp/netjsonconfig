@@ -67,6 +67,16 @@ class NetworkRenderer(BaseOpenWrtRenderer):
             address_list = interface.get('addresses')
             if not address_list:
                 address_list = default_address
+            # multi ip adress cleanup
+            for i in address_list:
+                for j in address_list:
+                    if i.get('family') == 'ipv4' and j.get('family') == 'ipv6':
+                        if j.get('address') and j.get('mask'):
+                            address_value = '{address}/{mask}'.format(**j)
+                            i['ip6addr'] = address_value
+                            temp = address_list.index(j)
+                if temp:
+                    del address_list[temp]
             # address list defaults to empty list
             for address in address_list:
                 # prepare new UCI interface directive
