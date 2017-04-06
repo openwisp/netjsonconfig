@@ -472,6 +472,47 @@ Will be rendered as follows::
             option ifname 'eth0'
             option proto 'dchpv6'
 
+Using different protocols
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+OpenWRT and LEDE support many protocols (pppoe, pppoa, pptp, l2tp, ecc) and
+the list of supported protocols evolves over time.
+
+OpenWISP and netjsonconfig try to stay out of your way by leaving you maximum
+flexibility to use any protocol and any configuration option you may need,
+just set ``type`` to ``other``, then proceed by setting `proto` and any other
+configuration option according to your needs, see the example below.
+
+PPPoE proto example
+^^^^^^^^^^^^^^^^^^^
+
+The following configuration dictionary:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "other",
+                "name": "eth0",
+                "network": "wan",
+                "proto": "pppoe",
+                "username": "<username>",
+                "password": "<password>"
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config interface 'wan'
+            option ifname 'eth0'
+            option password '<password>'
+            option proto 'ppoe'
+            option username '<username>'
+
 Bridge settings
 ---------------
 
