@@ -1,6 +1,14 @@
 Change log
 ==========
 
+Version 0.5.5.post1 [2017-04-18]
+--------------------------------
+
+- `d481781 <https://github.com/openwisp/netjsonconfig/commit/d481781>`_:
+  [docs] Added OpenWRT PPPoE example
+- `beb435b <https://github.com/openwisp/netjsonconfig/commit/beb435b>`_:
+  [docs] Fixed Basic Concepts summary
+
 Version 0.5.5 [2017-03-15]
 --------------------------
 
