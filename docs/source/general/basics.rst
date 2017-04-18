@@ -20,8 +20,8 @@ Before starting, let's quickly introduce the main concepts used in netjsonconfig
   being processed by the backend
 * :ref:`template`: common configuration options shared among routers (eg: VPNs, SSID)
   which can be passed to backends
-* :ref:`multiple_templates`: possibility inherit common configuration options from more than
-  one template
+* :ref:`multiple_templates`: possibility to inherit common configuration options
+  from more than one template
 * :ref:`context`: variables that can be referenced from the *configuration dictionary*
 
 .. _configuration_dictionary:
@@ -331,6 +331,8 @@ Will generater the following output::
             option phy 'phy0'
             option type 'mac80211'
 
+.. _multiple_templates:
+
 Multiple template inheritance
 -----------------------------
 
@@ -408,8 +410,6 @@ Will generater the following output::
             option phy 'phy0'
             option type 'mac80211'
 
-.. _context:
-
 Implementation details
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -420,7 +420,7 @@ are ``netjsonconfig.utils.merge_config`` and ``netjsonconfig.utils.merge_list``:
 
 .. autofunction:: netjsonconfig.utils.merge_list
 
-.. _multiple_templates:
+.. _context:
 
 Context (configuration variables)
 ---------------------------------
