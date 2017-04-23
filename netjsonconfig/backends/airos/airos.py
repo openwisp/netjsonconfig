@@ -14,7 +14,7 @@ class AirOS(BaseBackend):
 
     # the environment where airos
     # templates lives
-    env_path = 'netjsonconfig.backend.airos'
+    env_path = 'netjsonconfig.backends.airos'
 
     # list of renderers available
     # for this backend
