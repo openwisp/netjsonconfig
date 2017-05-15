@@ -62,7 +62,6 @@ Contents:
    /general/goals
    /general/changelog
 
-
 Indices and tables
 ==================
 
