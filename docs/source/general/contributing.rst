@@ -2,69 +2,117 @@
 Contributing
 ============
 
-We welcome contributions and feedback!
-
-If you intend to contribute in any way please keep the following guidelines in mind:
-
-1. Announce your intentions in the `OpenWISP Mailing List <https://groups.google.com/d/forum/openwisp>`_
-2. :ref:`install_git_fork_for_contributing`
-3. Follow `PEP8, Style Guide for Python Code <http://www.python.org/dev/peps/pep-0008/>`_
-4. Write code
-5. Write tests for your code
-6. Ensure all tests pass
-7. Ensure test coverage does not decrease
-8. Document your changes
-9. Send pull request
-
-
-Virtual Environment
--------------------
-
-Please use a virtual environment while developing your feature, it keeps everybody on the same page and it helps reproducing bugs and resolving problems.
-
-.. code-block:: shell
-
-    virtualenv env
-    source env/bin/activate
-    python setup.py develop
-
-.. note::
-
-    Another choice is using ``virtualenvwrapper``, they are equivalent tools but ``virtualenvwrapper`` is nicer to use
-
-Style guide enforcement
------------------------
-
-Install ``flake8`` and ``isort`` to check for common pitfalls that may have your contribution stopped, they are listed in ``requirements-test.txt`` with the other testing requirements
-
-.. code-block:: shell
-
-    source env/bin/activate
-    pip install -r requirements-test.txt
-
-Before committing your work and opening a pull request run this to check
-
-.. code-block:: shell
-
-    ./runflake8 && ./runisort
-
-.. note::
-    To speed things up you can add your virtual environment directory to the list of the excluded directories in the ``runflake8`` script
-
-Building documentation
-----------------------
-
-To build the documentation for this project please install sphinx inside the virtual environment
-
-.. code-block:: shell
-
-    source env/bin/activate
-    pip install sphinx
-    cd doc && make html
-
 .. raw:: html
 
     <p>
         <iframe src="https://nodeshot.org/github-btn.html?user=openwisp&amp;repo=netjsonconfig&amp;type=watch&amp;count=true&amp;size=large" frameborder="0" scrolling="0" width="120" height="33"></iframe>
         <iframe src="https://nodeshot.org/github-btn.html?user=openwisp&amp;repo=netjsonconfig&amp;type=fork&amp;count=true&amp;size=large" frameborder="0" scrolling="0" width="120" height="33"></iframe>
     </p>
+
+Thank you for taking the time to contribute to netjsonconfig.
+
+Follow these guidelines to speed up the process.
+
+.. contents:: **Table of Contents**:
+   :backlinks: none
+   :depth: 3
+
+Reach out before you start
+--------------------------
+
+Before opening a new issue, try the following steps:
+
+- look if somebody else has already started working on the same issue
+  by looking in the `github issues <https://github.com/openwisp/netjsonconfig/issues>`_
+  and `pull requests <https://github.com/openwisp/netjsonconfig/pulls>`_
+- look also in the `OpenWISP mailing list <https://groups.google.com/d/forum/openwisp/join>`_
+- announce your intentions by opening a new issue
+- present yourself on the mailing list
+
+Create a virtual environment
+----------------------------
+
+Please use a `python virtual environment <https://docs.python.org/3/library/venv.html>`_ while
+developing your feature, it keeps everybody on the same page and it helps reproducing bugs
+and resolving problems.
+
+We suggest you to use `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io>`_ for this task
+(consult install instructions in the virtualenvwrapper docs).
+
+.. code-block:: shell
+
+    mkvirtualenv netjsonconfig  # create virtualenv
+
+Fork repo and install your fork
+-------------------------------
+
+Once you have forked this repository to your own github account or organization,
+install your own fork in your development environment:
+
+.. code-block:: shell
+
+    git clone git@github.com:<your_fork>/netjsonconfig.git
+    cd netjsonconfig
+    workon netjsonconfig  # activate virtualenv
+    python setup.py develop
+
+Ensure test coverage does not decrease
+--------------------------------------
+
+First of all, install the test requirements:
+
+.. code-block:: shell
+
+    workon netjsonconfig  # activate virtualenv
+    pip install -r requirements-test.txt
+
+When you introduce changes, ensure test coverage is not decreased with:
+
+.. code-block:: shell
+
+    nosetests --with-coverage --cover-package=netjsonconfig
+
+Follow style conventions (PEP8, isort)
+--------------------------------------
+
+First of all, install the test requirements:
+
+.. code-block:: shell
+
+    workon netjsonconfig  # activate virtualenv
+    pip install -r requirements-test.txt
+
+Before committing your work check that your changes are not breaking the style conventions with:
+
+.. code-block:: shell
+
+    ./runflake8 && ./runisort
+
+For more information, please see:
+
+- `PEP8: Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_
+- `isort: a python utility / library to sort imports <https://github.com/timothycrosley/isort>`_
+
+Update the documentation
+------------------------
+
+If you introduce new features or change existing documented behavior,
+please remember to update the documentation!
+
+The documentation is located in the ``/docs`` directory
+of the repository.
+
+To do work on the docs, proceed with the following steps:
+
+.. code-block:: shell
+
+    workon netjsonconfig  # activate virtualenv
+    pip install sphinx
+    cd docs
+    make html
+
+Send pull request
+-----------------
+
+Now is time to push your changes to github and open a `pull request
+<https://github.com/openwisp/netjsonconfig/pulls>`_!
