@@ -18,7 +18,7 @@ Check out the available options yourself with::
     $ netjsonconfig --help
     usage: netjsonconfig [-h] --config CONFIG
                          [--templates [TEMPLATES [TEMPLATES ...]]] --backend
-                         {openwrt,openwisp} --method {render,generate,write}
+                         {openwrt,openwisp} --method {render,generate,write,validate}
                          [--args [ARGS [ARGS ...]]] [--verbose] [--version]
 
     Converts a NetJSON DeviceConfiguration object to native router configurations.
@@ -38,11 +38,12 @@ Check out the available options yourself with::
     output:
       --backend {openwrt,openwisp}, -b {openwrt,openwisp}
                             Configuration backend: openwrt or openwisp
-      --method {render,generate,write}, -m {render,generate,write}
+      --method {render,generate,write}, -m {render,generate,write, validate}
                             Backend method to use. "render" returns the
                             configuration in text format"generate" returns a
                             tar.gz archive as output; "write" is like generate but
-                            writes to disk;
+                            writes to disk, "validate" validates the resulting NetJSON
+                            against the backend schema;
       --args [ARGS [ARGS ...]], -a [ARGS [ARGS ...]]
                             Optional arguments that can be passed to methods
 
@@ -65,6 +66,9 @@ Here's the common use cases explained::
    # same as previous but exclude additional files
    netjsonconfig --config config.json --backend openwrt --method render --args files=0
 
+   # validate the config.json file against the openwrt backend
+   netjsonconfig --config config.json --backend openwrt --method validate
+
    # abbreviated options
    netjsonconfig -c config.json -b openwrt -m render -a files=0
 
@@ -74,6 +78,10 @@ Here's the common use cases explained::
 Using templates::
 
     netjsonconfig -c config.json -t template1.json template2.json -b openwrt -m render
+
+    # validate the result of merging config.json, template1.json and template2.json 
+    # against the openwrt backend
+    netjsonconfig -c config.json -t template1.json template2.json -b openwrt -m validate
 
 Environment variables
 ---------------------

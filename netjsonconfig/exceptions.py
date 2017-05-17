@@ -1,6 +1,8 @@
 class NetJsonConfigException(Exception):
     """ root netjsonconfig exception """
-    pass
+
+    def __str__(self):
+        return "%s %s %s" % (self.__class__.__name__, self.message, self.details)
 
 
 class ValidationError(NetJsonConfigException):

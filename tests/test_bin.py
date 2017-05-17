@@ -29,6 +29,16 @@ class TestBin(unittest.TestCase, _TabsMixin):
         with self.assertRaises(subprocess.CalledProcessError):
             subprocess.check_output(command, shell=True)
 
+    def test_check_invalid_netjson(self):
+        command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m validate'''
+        with self.assertRaises(subprocess.CalledProcessError):
+            subprocess.check_output(command, shell=True)
+
+    def test_check_invalid_netjson_verbose(self):
+        command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m validate --verbose'''
+        with self.assertRaises(subprocess.CalledProcessError):
+            subprocess.check_output(command, shell=True)
+
     def test_empty_netjson(self):
         output = subprocess.check_output("netjsonconfig -c '{}' -b openwrt -m render", shell=True)
         self.assertEqual(output.decode(), '')
