@@ -16,4 +16,7 @@ class SystemRenderer(BaseAirOSRenderer):
     """
 
     def _get_resolv(self):
-        dns_server = self.config.get('dns_server', [])
+        dns_server = self.config.get('dns_servers', [])
+        return {
+                'nameserver' : reversed(list(enumerate(dns_server))),
+        }

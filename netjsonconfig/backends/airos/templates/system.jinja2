@@ -1,8 +1,8 @@
 {% if not is_empty %}
 resolv.status=disable
 resolv.nameserver.status=enabled
-	{% for i, entry in enumerate(resolv) %}
-	resolv.nameserver.{{ i + 1 }}.status=enabled
-	resolv.nameserver.{{ i + 1}}.ip=entry
-	{% endfor %}
+{% for i, entry in resolv.nameserver %}
+resolv.nameserver.{{ i + 1 }}.status=enabled
+resolv.nameserver.{{ i + 1}}.ip={{ entry }}
+{% endfor %}
 {% endif %}
