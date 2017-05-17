@@ -20,3 +20,14 @@ class SystemRenderer(BaseAirOSRenderer):
         return {
                 'nameserver' : reversed(list(enumerate(dns_server))),
         }
+
+    def _get_system(self):
+        general = self.config.get('general', {}).copy()
+        if general:
+            general['timezone'] = general.get('timezone', 'UTC')
+            general['latitude'] = general.get('latitude', '')
+            general['longitude'] = general.get('longitude', '')
+            general['timestamp'] = general.get('timestamp','')
+            general['reset'] = general.get('reset', 'enabled')
+
+        return general
