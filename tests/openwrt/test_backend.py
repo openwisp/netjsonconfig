@@ -57,6 +57,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
             o.validate()
         except ValidationError as e:
             self.assertEqual(e.details.instance, 'CHANGED')
+            self.assertIn("ValidationError 'CHANGED' is not of type 'array'", str(e))
         else:
             self.fail('ValidationError not raised')
 
