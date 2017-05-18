@@ -56,7 +56,7 @@ output = parser.add_argument_group('output')
 
 output.add_argument('--backend', '-b',
                     required=True,
-                    choices=['openwrt', 'openwisp', 'openvpn'],
+                    choices=['openwrt', 'openwisp', 'openvpn', 'raspbian'],
                     action='store',
                     type=str,
                     help='Configuration backend')
@@ -169,7 +169,7 @@ method_arguments = parse_method_arguments(args.args)
 backends = {
     'openwrt': netjsonconfig.OpenWrt,
     'openwisp': netjsonconfig.OpenWisp,
-    'openvpn': netjsonconfig.OpenVpn
+    'raspbian': netjsonconfig.Raspbian
 }
 
 backend_class = backends[args.backend]
