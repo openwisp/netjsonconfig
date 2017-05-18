@@ -16,18 +16,31 @@ class TestBin(unittest.TestCase, _TabsMixin):
         os.remove('test.tar.gz')
 
     def test_file_not_found(self):
-        with self.assertRaises(subprocess.CalledProcessError):
-            subprocess.check_output("netjsonconfig -c WRONG -b openwrt -m generate", shell=True)
+        command = "netjsonconfig -c WRONG -b openwrt -m generate"
+        try:
+            subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('cannot open "WRONG"', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')
 
     def test_invalid_netjson(self):
         command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m render'''
-        with self.assertRaises(subprocess.CalledProcessError):
+        try:
             subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('JSON Schema violation', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')
 
     def test_invalid_netjson_verbose(self):
         command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m render --verbose'''
-        with self.assertRaises(subprocess.CalledProcessError):
+        try:
             subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('ValidationError', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')
 
     def test_validate_method(self):
         command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m validate'''
