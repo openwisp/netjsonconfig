@@ -57,12 +57,13 @@ output.add_argument('--backend', '-b',
 
 output.add_argument('--method', '-m',
                     required=True,
-                    choices=['render', 'generate', 'write'],
+                    choices=['render', 'generate', 'write', 'validate'],
                     action='store',
                     help='Backend method to use. '
                          '"render" returns the configuration in text format'
                          '"generate" returns a tar.gz archive as output; '
-                         '"write" is like generate but writes to disk; ')
+                         '"write" is like generate but writes to disk; '
+                         '"validate" only validate the resulting NetJSON;')
 
 output.add_argument('--args', '-a',
                     nargs='*',  # zero or more
