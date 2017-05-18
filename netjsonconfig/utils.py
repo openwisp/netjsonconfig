@@ -70,7 +70,7 @@ def sorted_dict(dictionary):
     return OrderedDict(sorted(dictionary.items()))
 
 
-var_pattern = re.compile(r'\{\{\s*([a-zA-Z0-9_]*)\s*\}\}')
+var_pattern = re.compile(r'\{\{\s*(\w*)\s*\}\}')
 
 
 def evaluate_vars(data, context=None):
