@@ -73,7 +73,7 @@ def sorted_dict(dictionary):
 var_pattern = re.compile(r'\{\{\s*([a-zA-Z0-9_]*)\s*\}\}')
 
 
-def evaluate_vars(data, context={}):
+def evaluate_vars(data, context=None):
     """
     Evaluates variables in ``data``
 
@@ -82,6 +82,7 @@ def evaluate_vars(data, context={}):
     :param context: ``dict`` containing variables
     :returns: modified data structure
     """
+    context = context or {}
     if isinstance(data, (dict, list)):
         if isinstance(data, dict):
             loop_items = data.items()
