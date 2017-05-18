@@ -40,10 +40,11 @@ Check out the available options yourself with::
                             Configuration backend: openwrt or openwisp
       --method {render,generate,write}, -m {render,generate,write, validate}
                             Backend method to use. "render" returns the
-                            configuration in text format"generate" returns a
+                            configuration in text format; "generate" returns a
                             tar.gz archive as output; "write" is like generate but
-                            writes to disk, "validate" validates the resulting NetJSON
-                            against the backend schema;
+                            writes to disk; "validate" validates the combination
+                            of config and templates passed in input;
+
       --args [ARGS [ARGS ...]], -a [ARGS [ARGS ...]]
                             Optional arguments that can be passed to methods
 
@@ -79,8 +80,8 @@ Using templates::
 
     netjsonconfig -c config.json -t template1.json template2.json -b openwrt -m render
 
-    # validate the result of merging config.json, template1.json and template2.json 
-    # against the openwrt backend
+    # validate the result of merging config.json, template1.json and template2.json
+    # against the openwrt backend schema
     netjsonconfig -c config.json -t template1.json template2.json -b openwrt -m validate
 
 Environment variables

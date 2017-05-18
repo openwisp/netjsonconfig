@@ -60,10 +60,11 @@ output.add_argument('--method', '-m',
                     choices=['render', 'generate', 'write', 'validate'],
                     action='store',
                     help='Backend method to use. '
-                         '"render" returns the configuration in text format'
+                         '"render" returns the configuration in text format; '
                          '"generate" returns a tar.gz archive as output; '
                          '"write" is like generate but writes to disk; '
-                         '"validate" only validate the resulting NetJSON;')
+                         '"validate" validates the combination of config '
+                         'and templates passed in input; ')
 
 output.add_argument('--args', '-a',
                     nargs='*',  # zero or more

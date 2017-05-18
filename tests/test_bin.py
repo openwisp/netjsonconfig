@@ -29,15 +29,23 @@ class TestBin(unittest.TestCase, _TabsMixin):
         with self.assertRaises(subprocess.CalledProcessError):
             subprocess.check_output(command, shell=True)
 
-    def test_check_invalid_netjson(self):
+    def test_validate_method(self):
         command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m validate'''
-        with self.assertRaises(subprocess.CalledProcessError):
+        try:
             subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('JSON Schema violation', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')
 
-    def test_check_invalid_netjson_verbose(self):
+    def test_validate_method_verbose(self):
         command = '''netjsonconfig -c '{ "interfaces":["w"] }' -b openwrt -m validate --verbose'''
-        with self.assertRaises(subprocess.CalledProcessError):
+        try:
             subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('ValidationError', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')
 
     def test_empty_netjson(self):
         output = subprocess.check_output("netjsonconfig -c '{}' -b openwrt -m render", shell=True)
