@@ -11,10 +11,17 @@ class Rasbian(BaseBackend):
     schema = schema
     env_path = 'netjsonconfig.baskend.openwrt'
     renderers = [
-        renderers.#
+        renderers.NetworkRenderer,
+        renderers.WirelessRenderer
     ]
     @classmethod
     def get_renderers(cls):
-        return #
+        pass
+
     def _generate_contents(self, tar):
-        return #
+        """
+        Add configuration files to tar files instance.
+
+        :param tar: tarfile instance
+        :return None
+        """
