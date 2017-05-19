@@ -12,14 +12,15 @@
     {% endif %}
     {% if ntp %}
         config timeserver 'ntp'
-        {% if ntp.server %}
-            {% for item in ntp.server %}
-                list server '{{ item }}'
-            {% endfor %}
-        {% endif %}
         {% for key, value in ntp.items() %}
-            {% if key != 'server' and value not in ['', None] %}
-                option {{ key }} '{{ value }}'
+            {% if value not in ['', None] %}
+                {% if value is not string and value is iterable %}
+                    {% for list_value in value %}
+                        list {{ key }} '{{ list_value }}'
+                    {% endfor %}
+                {% else %}
+                    option {{ key }} '{{ value }}'
+                {% endif %}
             {% endif %}
         {% endfor %}
 

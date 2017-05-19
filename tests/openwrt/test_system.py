@@ -45,12 +45,12 @@ config system 'system'
         expected = self._tabs("""package system
 
 config timeserver 'ntp'
+    option enable_server '0'
+    option enabled '1'
     list server '0.openwrt.pool.ntp.org'
     list server '1.openwrt.pool.ntp.org'
     list server '2.openwrt.pool.ntp.org'
     list server '3.openwrt.pool.ntp.org'
-    option enable_server '0'
-    option enabled '1'
 """)
         self.assertEqual(o.render(), expected)
 
