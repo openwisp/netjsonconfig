@@ -4,12 +4,12 @@ from . import renderers
 from ..base import BaseBackend
 from .schema import schema
 
-class Rasbian(BaseBackend):
+class Raspbian(BaseBackend):
     """
     Rasbian Backend
     """
     schema = schema
-    env_path = 'netjsonconfig.baskend.openwrt'
+    env_path = 'netjsonconfig.backends.raspbian'
     renderers = [
         renderers.NetworkRenderer,
         renderers.WirelessRenderer
@@ -25,3 +25,4 @@ class Rasbian(BaseBackend):
         :param tar: tarfile instance
         :return None
         """
+        pass
