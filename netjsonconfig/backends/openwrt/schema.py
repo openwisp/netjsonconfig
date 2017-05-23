@@ -7,6 +7,10 @@ from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
 from .timezones import timezones
 
+
+default_radio_driver = "mac80211"
+
+
 schema = merge_config(default_schema, {
     "definitions": {
         "interface_settings": {
@@ -113,7 +117,6 @@ schema = merge_config(default_schema, {
             ]
         },
         "base_radio_settings": {
-            "required": ["driver"],
             "properties": {
                 "driver": {
                     "type": "string",
@@ -124,6 +127,7 @@ schema = merge_config(default_schema, {
                         "ath9k",
                         "broadcom"
                     ],
+                    "default": default_radio_driver,
                     "propertyOrder": 2,
                 }
             }

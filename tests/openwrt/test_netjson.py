@@ -1,5 +1,4 @@
 import unittest
-from urllib.request import urlopen
 
 from netjsonconfig import OpenWrt
 
@@ -23,23 +22,6 @@ netjson_example = {
         "version": "Barrier Breaker",
         "revision": "r43321",
         "description": "OpenWrt Barrier Breaker 14.07"
-    },
-    "resources": {
-        "memory": {
-            "total": 67108864
-        },
-        "swap": {
-            "total": 0
-        },
-        "cpu": {
-            "frequency": 400000000
-        },
-        "flash": {
-            "total": 8388608
-        },
-        "storage": {
-            "total": None
-        }
     },
     "radios": [
         {

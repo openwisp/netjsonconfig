@@ -5,6 +5,7 @@ from ipaddress import ip_interface, ip_network
 from ...utils import sorted_dict
 from ..base import BaseRenderer
 from ..openvpn.renderers import OpenVpnRenderer as BaseOpenVpnRenderer
+from .schema import default_radio_driver
 from .timezones import timezones
 
 
@@ -302,8 +303,7 @@ class WirelessRenderer(BaseOpenWrtRenderer):
                 uci_radio['txpower'] = radio['tx_power']
                 del uci_radio['tx_power']
             # rename driver to type
-            uci_radio['type'] = radio['driver']
-            del uci_radio['driver']
+            uci_radio['type'] = uci_radio.pop('driver', default_radio_driver)
             # determine hwmode option
             uci_radio['hwmode'] = self.__get_hwmode(radio)
             del uci_radio['protocol']
@@ -311,7 +311,7 @@ class WirelessRenderer(BaseOpenWrtRenderer):
             if uci_radio['channel'] is 0:
                 uci_radio['channel'] = 'auto'
             # determine channel width
-            if radio['driver'] == 'mac80211':
+            if uci_radio['type'] == 'mac80211':
                 uci_radio['htmode'] = self.__get_htmode(radio)
             del uci_radio['channel_width']
             # ensure country is uppercase
