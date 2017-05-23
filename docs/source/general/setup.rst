@@ -31,15 +31,7 @@ The second option is to install via pip using git
 
     pip install -e git+git://github.com/openwisp/netjsonconfig#egg=netjsonconfig
 
-.. _install_git_fork_for_contributing:
-
 Install git fork for contributing
 ---------------------------------
 
-If you want to contribute, we suggest to install your cloned fork:
-
-.. code-block:: shell
-
-    git clone git@github.com:<your_fork>/netjsonconfig.git
-    cd netjsonconfig
-    python setup.py develop
+If you want to contribute see :ref:`install_fork`.

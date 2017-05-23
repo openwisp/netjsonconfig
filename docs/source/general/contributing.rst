@@ -38,6 +38,8 @@ We suggest you to use `virtualenvwrapper <https://virtualenvwrapper.readthedocs.
 
     mkvirtualenv netjsonconfig  # create virtualenv
 
+.. _install_fork:
+
 Fork repo and install your fork
 -------------------------------
 
