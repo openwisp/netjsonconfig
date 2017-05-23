@@ -2,6 +2,7 @@
 
 	{% for i, entry in bridge %}
 		bridge.{{ i + 1}}.comment=
+		bridge.{{ i + 1}}.devname={{ entry.name }}
 		bridge.{{ i + 1}}.port.1.devname={{ entry.bridge_members[0] }}
 		bridge.{{ i + 1}}.port.1.status=enabled
 		bridge.{{ i + 1}}.port.2.devname={{ entry.bridge_members[1] }}
