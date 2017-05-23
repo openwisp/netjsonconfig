@@ -31,3 +31,17 @@ class SystemRenderer(BaseAirOSRenderer):
             general['reset'] = general.get('reset', 'enabled')
 
         return general
+
+    
+class NetworkRenderer(BaseAirOSRenderer):
+    """
+    Write configuration for
+    - bridge
+    """
+
+    def _get_bridge(self):
+        interfaces = self.config.get('interfaces', [])
+        bridge_def = [
+                i for i in interfaces if i['type'] == 'bridge'
+                ]
+        return reversed(list(enumerate(bridge_def)))
