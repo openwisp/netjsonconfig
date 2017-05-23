@@ -19,7 +19,8 @@ class AirOS(BaseBackend):
     # list of renderers available
     # for this backend
     renderers = [
-            renderers.SystemRenderer
+            renderers.SystemRenderer,
+            renderers.NetworkRenderer,
     ]
 
     @classmethod
