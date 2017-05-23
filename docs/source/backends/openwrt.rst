@@ -1116,6 +1116,7 @@ you can use this type of configuration for networks like
                         "port": 1812,
                         "acct_server": "192.168.0.2",
                         "acct_port": 1813,
+                        "nasid": "hostname"
                     }
                 }
             }
@@ -1144,6 +1145,7 @@ UCI Output::
             option port '1812'
             option server '192.168.0.1'
             option ssid 'eduroam'
+            option nasid 'hostname'
 
 WPA2 Enterprise (802.1x) client
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
