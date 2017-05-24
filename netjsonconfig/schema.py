@@ -900,6 +900,10 @@ schema = {
                     "format": "hostname",
                     "propertyOrder": 1,
                 },
+                "timezone": {
+                    "type": "string",
+                    "propertyOrder": 1,
+                },
                 "ula_prefix": {
                     "type": "string",
                     "title": "ULA prefix",

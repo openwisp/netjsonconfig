@@ -173,10 +173,8 @@ schema = merge_config(default_schema, {
         "general": {
             "properties": {
                 "timezone": {
-                    "type": "string",
                     "enum": list(timezones.keys()),
                     "default": "UTC",
-                    "propertyOrder": 1,
                 }
             }
         },
