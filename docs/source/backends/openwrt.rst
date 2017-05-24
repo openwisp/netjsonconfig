@@ -786,7 +786,7 @@ Will be rendered as follows::
 Wireless access point with macfilter ACL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``OpenWrt`` renderer supports a custom NetJSON extension for wireless access point
+The ``OpenWrt`` backend supports a custom NetJSON extension for wireless access point
 interfaces: ``macfilter`` (read more about ``macfilter`` and ``maclist`` on the
 `OpenWRT documentation for Wireless configuration <https://wiki.openwrt.org/doc/uci/wireless#common_options>`_).
 
