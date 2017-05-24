@@ -1,10 +1,19 @@
 Change log
 ==========
 
-Version 0.5.6 [unreleased]
+Version 0.5.6 [2017-05-24]
 --------------------------
 
-WIP
+- `#69 <https://github.com/openwisp/netjsonconfig/pull/69>`_:
+  [docs] Improved contributing guidelines
+  (thanks to `@EdoPut <https://github.com/EdoPut>`_)
+- `#71 <https://github.com/openwisp/netjsonconfig/pull/71>`_:
+  [bin] Added ``validate`` to available methods of command line tool
+  (thanks to `@EdoPut <https://github.com/EdoPut>`_)
+- `845ed83 <https://github.com/openwisp/netjsonconfig/commit/845ed83>`_:
+  [version] Improved get_version to follow PEP440
+- `#73 <https://github.com/openwisp/netjsonconfig/pull/73>`_:
+  [netjson] Fixed compatibility with `NetJSON <http://netjson.org>`_ specification
 
 Version 0.5.5.post1 [2017-04-18]
 --------------------------------
