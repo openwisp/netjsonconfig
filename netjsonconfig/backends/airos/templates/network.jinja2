@@ -13,4 +13,11 @@
 
 	bridge.status=enabled
 
+	{% for i, entry in vlan %}
+		vlan.{{ i + 1}}.comment={{ entry.comment | default("") }}
+		vlan.{{ i + 1}}.devname={{ entry.devname }}
+		vlan.{{ i + 1}}.id={{ entry.id }}
+		vlan.{{ i + 1}}.status={{ entry.status }}
+	{% endfor %}
+
 {% endif %}
