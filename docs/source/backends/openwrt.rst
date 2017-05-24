@@ -2088,18 +2088,18 @@ Will be rendered as follows::
 All the other settings
 ----------------------
 
-Do you need to include some configuration directives that are not defined in the NetJSON
-spec nor in the schema of the ``OpenWrt`` backend? **Don't panic!**
+Do you need to include some configuration directives that are not defined in
+the NetJSON spec nor in the schema of the ``OpenWrt`` backend? **Don't panic!**
 
-Netjsonconfig aims to be very flexible, that's why the ``OpenWrt`` backend ships
-a ``DefaultRenderer``, which will try to parse any unrecognized key of the
-*configuration dictionary* and render meaningful UCI output.
+Because netjsonconfig aims to be very flexible, it ships code that will try
+to render extra parts of the *configuration dictionary* into meaningful UCI output.
 
-To supply configuration options to the ``DefaultRenderer`` a few prerequisites must be met:
+In order to accomplish this, you must add extra keys to the *configuration dictionary*
+which have to meet the following requirements:
 
 * the name of the key must be the name of the package that needs to be configured
-* the value of the key must be of type ``list``
-* each element in the list must be of type ``dict``
+* the value of the key must be a ``list``
+* each element in the list must be a ``dict``
 * each ``dict`` MUST contain a key named ``config_name``
 * each ``dict`` MAY contain a key named ``config_value``
 
