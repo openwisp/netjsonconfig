@@ -14,3 +14,13 @@ class TestNetworkRenderer(unittest.TestCase, _TabsMixin):
         })
         expected = self._tabs("""nameserver​ 10.254.0.1
 nameserver​ 10.254.0.2""")
+        self.assertEqual(o.render(), expected)
+
+    def test_dns_search(self):
+        o = Raspbian({
+            "dns_search": [
+                "domain.com"
+            ]
+        })
+        expected = self._tabs("""search​ domain.com""")
+        self.assertEqual(o.render(), expected)
