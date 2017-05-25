@@ -1,6 +1,7 @@
 import unittest
 
-from netjsonconfig.backends.base import BaseBackend, BaseRenderer
+from netjsonconfig.backends.base.backend import BaseBackend
+from netjsonconfig.backends.base.renderer import BaseRenderer
 
 
 class TestBase(unittest.TestCase):

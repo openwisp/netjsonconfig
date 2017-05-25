@@ -5,10 +5,7 @@ from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestSystemRenderer(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.openwrt.renderers.SystemRenderer
-    """
+class TestSystem(unittest.TestCase, _TabsMixin):
     def test_system(self):
         o = OpenWrt({
             "general": {

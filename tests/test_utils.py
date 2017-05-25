@@ -1,6 +1,7 @@
 import unittest
 
-from netjsonconfig.utils import evaluate_vars, merge_config, merge_list
+from netjsonconfig.utils import (evaluate_vars, get_copy, merge_config,
+                                 merge_list)
 
 
 class TestUtils(unittest.TestCase):
@@ -192,3 +193,6 @@ class TestUtils(unittest.TestCase):
         config = [{"config_value": "test1", "tx": 2}]
         result = merge_list(template, config)
         self.assertEqual(result, config)
+
+    def test_get_copy_default(self):
+        self.assertEqual('test', get_copy({}, key='hello', default='test'))

@@ -5,10 +5,7 @@ from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestNetworkRenderer(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.openwrt.renderers.NetworkRenderer
-    """
+class TestNetwork(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
     def test_loopback(self):
@@ -669,6 +666,33 @@ config rule6 'rule4'
     option action 'prohibit'
     option in 'vpn'
     option src 'fdca:1235::/64'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_rules_no_src_dest(self):
+        o = OpenWrt({
+            "ip_rules": [
+                {
+                    "in": "eth0",
+                    "out": "eth1",
+                    "tos": 2,
+                    "mark": "0x0/0x1",
+                    "invert": True,
+                    "lookup": "0",
+                    "action": "blackhole"
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config rule 'rule1'
+    option action 'blackhole'
+    option in 'eth0'
+    option invert '1'
+    option lookup '0'
+    option mark '0x0/0x1'
+    option out 'eth1'
+    option tos '2'
 """)
         self.assertEqual(o.render(), expected)
 

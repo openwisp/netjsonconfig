@@ -11,9 +11,8 @@ from netjsonconfig.utils import _TabsMixin
 
 
 class TestBackend(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.openwrt.OpenWrt
-    """
+    maxDiff = None
+
     def test_config_copy(self):
         config = {'interfaces': []}
         o = OpenWrt(config)

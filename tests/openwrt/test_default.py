@@ -4,10 +4,7 @@ from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestDefaultRenderer(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.openwrt.renderers.DefaultRenderer
-    """
+class TestDefault(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
     def test_default(self):
@@ -108,7 +105,7 @@ config core 'main'
                 }
             ]
         })
-        self.assertEqual(o.render(), 'package luci\n')
+        self.assertEqual(o.render(), '')
 
     def test_merge(self):
         template = {

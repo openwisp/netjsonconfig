@@ -5,9 +5,6 @@ from netjsonconfig.utils import _TabsMixin
 
 
 class TestRadio(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.openwrt.renderers.WirelessRenderer (radio devices)
-    """
     maxDiff = None
 
     def test_radio(self):

@@ -9,6 +9,8 @@ class TestContext(unittest.TestCase, _TabsMixin):
     """
     tests for configuration variables feature
     """
+    maxDiff = None
+
     def test_config(self):
         config = {
             "general": {

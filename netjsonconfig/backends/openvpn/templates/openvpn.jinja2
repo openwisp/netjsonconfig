@@ -1,4 +1,4 @@
-{% for vpn in openvpn %}
+{% for vpn in data.openvpn %}
 # openvpn config: {{ vpn.pop('name') }}
 
     {% for key, value in vpn.items() %}
