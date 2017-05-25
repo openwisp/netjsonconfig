@@ -15,6 +15,11 @@ class NetworkRenderer(BaseRaspbianRenderer):
         if dns_servers:
             return dns_servers
 
+    def _get_dns_search(self):
+        dns_search = self.config.get('dns_search', None)
+        if dns_search:
+            return dns_search
+
 
 class WirelessRenderer(BaseRaspbianRenderer):
     """

@@ -2,4 +2,7 @@
 {% for dns_server in dns_servers %}
 nameserver {{ dns_server}}
 {% endfor %}
+{% for dns_search in dns_search %}
+search {{ dns_search }}
+{% endfor %}
 {% endif %}
