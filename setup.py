@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 import sys
 
 from setuptools import find_packages, setup
@@ -12,20 +13,19 @@ if sys.argv[-1] == 'setup.py':
     print("To install, run 'python setup.py install'\n")
 
 if sys.argv[-1] == 'publish':
-    import os
-    # bdist_wheel removed because conditional requirement of py2-ipaddress won't work!
     os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
-    os.system('rm -rf build/')
-    os.system("python setup.py sdist upload -s")
+    os.system("python setup.py sdist bdist_wheel")
+    os.system("twine upload -s dist/*")
+    os.system("rm -rf dist build")
     args = {'version': get_version()}
     print("You probably want to also tag the version now:")
     print("  git tag -a %(version)s -m 'version %(version)s'" % args)
     print("  git push --tags")
     sys.exit()
 
-# bdist_wheel
 extras_require = {
-    # http://wheel.readthedocs.io/en/latest/#defining-conditional-dependencies
+    # used for wheel package,
+    # see http://wheel.readthedocs.io/en/latest/#defining-conditional-dependencies
     ':python_version in "2.6 2.7"' : ['py2-ipaddress']
 }
 
@@ -45,6 +45,7 @@ def get_install_requires():
     if sys.version_info.major < 3:
         requirements.append('py2-ipaddress')
     return requirements
+
 
 description = 'Netjsonconfig is a python library that converts NetJSON DeviceConfiguration '\
               'objects into real router configurations that can be installed on systems like '\
