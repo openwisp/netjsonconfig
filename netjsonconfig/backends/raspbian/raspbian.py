@@ -6,7 +6,7 @@ from .schema import schema
 
 class Raspbian(BaseBackend):
     """
-    Rasbian Backend
+    Raspbian Backend
     """
     schema = schema
     env_path = 'netjsonconfig.backends.raspbian'
