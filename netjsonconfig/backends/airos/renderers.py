@@ -4,7 +4,10 @@ from ..base import BaseRenderer
 class BaseAirOSRenderer(BaseRenderer):
 
     def cleanup(self, output):
-       return output 
+        stripped = [
+                a.strip() for a in output.splitlines() if a.strip()
+                ]
+        return '\n'.join(stripped)
 
 
 class SystemRenderer(BaseAirOSRenderer):
