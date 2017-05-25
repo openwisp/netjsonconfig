@@ -4,10 +4,7 @@ from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestOpenVpnRenderer(_TabsMixin, unittest.TestCase):
-    """
-    tests for backends.openwrt.renderers.OpenVpnRenderer
-    """
+class TestOpenVpn(_TabsMixin, unittest.TestCase):
     maxDiff = None
 
     def test_server_mode(self):

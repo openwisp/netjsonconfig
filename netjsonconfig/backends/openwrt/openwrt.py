@@ -1,26 +1,33 @@
 import re
 
-from . import renderers
-from ..base import BaseBackend
+from . import converters
+from ..base.backend import BaseBackend
+from .renderer import OpenWrtRenderer
 from .schema import schema
+
+config_path = 'etc/config/'
+packages_pattern = re.compile('^package\s', flags=re.MULTILINE)
 
 
 class OpenWrt(BaseBackend):
-    """ OpenWrt Backend """
+    """
+    OpenWRT / LEDE Configuration Backend
+    """
     schema = schema
-    env_path = 'netjsonconfig.backends.openwrt'
-    renderers = [
-        renderers.SystemRenderer,
-        renderers.NetworkRenderer,
-        renderers.WirelessRenderer,
-        renderers.DefaultRenderer,
-        renderers.OpenVpnRenderer
+    converters = [
+        converters.General,
+        converters.Ntp,
+        converters.Led,
+        converters.Interfaces,
+        converters.Routes,
+        converters.Rules,
+        converters.Switch,
+        converters.Radios,
+        converters.Wireless,
+        converters.OpenVpn,
+        converters.Default,
     ]
-    PACKAGE_EXP = re.compile('package ')
-
-    @classmethod
-    def get_renderers(cls):
-        return [r.get_name() for r in cls.renderers]
+    renderer = OpenWrtRenderer
 
     def _generate_contents(self, tar):
         """
@@ -31,14 +38,14 @@ class OpenWrt(BaseBackend):
         """
         uci = self.render(files=False)
         # create a list with all the packages (and remove empty entries)
-        packages = self.PACKAGE_EXP.split(uci)
+        packages = packages_pattern.split(uci)
         if '' in packages:
             packages.remove('')
-        # for each package create a file with its contents in /etc/config
+        # create an UCI file for each configuration package used
         for package in packages:
             lines = package.split('\n')
             package_name = lines[0]
             text_contents = '\n'.join(lines[2:])
             self._add_file(tar=tar,
-                           name='etc/config/{0}'.format(package_name),
+                           name='{0}{1}'.format(config_path, package_name),
                            contents=text_contents)

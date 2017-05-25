@@ -6,9 +6,6 @@ from netjsonconfig.utils import _TabsMixin
 
 
 class TestWireless(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.openwrt.renderers.WirelessRenderer (wireless ifaces)
-    """
     maxDiff = None
 
     def test_wifi_interfaces(self):

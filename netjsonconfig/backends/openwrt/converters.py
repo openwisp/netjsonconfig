@@ -2,9 +2,9 @@ import json
 from copy import deepcopy
 from ipaddress import ip_interface, ip_network
 
-from ...utils import sorted_dict
-from ..base import BaseRenderer
-from ..openvpn.renderers import OpenVpnRenderer as BaseOpenVpnRenderer
+from ...utils import get_copy, sorted_dict
+from ..base.converter import BaseConverter
+from ..openvpn.converters import OpenVpn as BaseOpenVpn
 from .schema import default_radio_driver
 from .timezones import timezones
 
@@ -13,51 +13,77 @@ def logical_name(name):
     return name.replace('.', '_').replace('-', '_')
 
 
-class BaseOpenWrtRenderer(BaseRenderer):
-    """
-    Base OpenWrt Renderer
-    """
-    def cleanup(self, output):
-        """
-        OpenWRT specific output cleanup
-        """
-        # correct indentation
-        output = output.replace('    ', '')\
-                       .replace('\noption', '\n\toption')\
-                       .replace('\nlist', '\n\tlist')
-        # convert True to 1 and False to 0
-        output = output.replace('True', '1')\
-                       .replace('False', '0')
-        # max 2 consecutive \n delimiters
-        output = output.replace('\n\n\n', '\n\n')
-        # if output is present
-        # ensure it always ends with 1 new line
-        if output.endswith('\n\n'):
-            return output[0:-1]
-        return output
+class General(BaseConverter):
+    def to_intermediate(self):
+        general = get_copy(self.netjson, 'general')
+        network = self.__get_ula(general)
+        system = self.__get_system(general)
+        return (
+            ('system', system),
+            ('network', network)
+        )
+
+    def __get_system(self, general):
+        if not general:
+            return None
+        timezone_human = general.get('timezone', 'UTC')
+        timezone_value = timezones[timezone_human]
+        general.update({
+            '.type': 'system',
+            '.name': 'system',
+            'hostname': general.get('hostname', 'OpenWRT'),
+            'timezone': timezone_value,
+            'zonename': timezone_human,
+        })
+        return [sorted_dict(general)]
+
+    def __get_ula(self, general):
+        if 'ula_prefix' in general:
+            ula = {
+                '.type': 'globals',
+                '.name': 'globals',
+                'ula_prefix': general.pop('ula_prefix')
+            }
+            return [sorted_dict(ula)]
+        return None
 
 
-class NetworkRenderer(BaseOpenWrtRenderer):
-    """
-    Renders content importable with:
-        uci import network
-    """
-    def _get_interfaces(self):
-        """
-        converts interfaces object to UCI interface directives
-        """
-        interfaces = self.config.get('interfaces', [])
+class Ntp(BaseConverter):
+    def to_intermediate(self):
+        ntp = get_copy(self.netjson, 'ntp')
+        result = None
+        if ntp:
+            ntp.update({
+                '.type': 'timeserver',
+                '.name': 'ntp',
+            })
+            result = [sorted_dict(ntp)]
+        return (('system', result),)
+
+
+class Led(BaseConverter):
+    def to_intermediate(self):
+        result = []
+        for led in get_copy(self.netjson, 'led'):
+            led.update({
+                '.type': 'led',
+                '.name': 'led_{0}'.format(led['name'].lower()),
+            })
+            result.append(sorted_dict(led))
+        return (('system', result),)
+
+
+class Interfaces(BaseConverter):
+    def to_intermediate(self):
+        result = []
         # this line ensures interfaces are not entirely
         # ignored if they do not contain any address
         default_address = [{'proto': 'none'}]
-        # results container
-        uci_interfaces = []
-        for interface in interfaces:
-            counter = 1
+        for interface in get_copy(self.netjson, 'interfaces'):
+            i = 1
             is_bridge = False
             # determine uci logical interface name
-            network = interface.get('network')
-            uci_name = interface['name'] if not network else network
+            uci_name = interface.get('network', interface['name'])
             # convert dot and dashes to underscore
             uci_name = logical_name(uci_name)
             # determine if must be type bridge
@@ -72,7 +98,7 @@ class NetworkRenderer(BaseOpenWrtRenderer):
             for address in address_list:
                 # prepare new UCI interface directive
                 uci_interface = deepcopy(interface)
-                if network:
+                if 'network' in uci_interface:
                     del uci_interface['network']
                 if 'mac' in uci_interface:
                     if interface.get('type') != 'wireless':
@@ -96,8 +122,8 @@ class NetworkRenderer(BaseOpenWrtRenderer):
                 netmask = None
                 proto = self.__get_proto(uci_interface, address)
                 # add suffix if there is more than one config block
-                if counter > 1:
-                    name = '{name}_{counter}'.format(name=uci_name, counter=counter)
+                if i > 1:
+                    name = '{name}_{i}'.format(name=uci_name, i=i)
                 else:
                     name = uci_name
                 if address.get('family') == 'ipv4':
@@ -114,8 +140,9 @@ class NetworkRenderer(BaseOpenWrtRenderer):
                         address_value = address['address']
                 # update interface dict
                 uci_interface.update({
-                    'name': name,
-                    'ifname': interface['name'],
+                    '.name': name,
+                    '.type': 'interface',
+                    'ifname': uci_interface.pop('name'),
                     'proto': proto,
                     'dns': self.__get_dns_servers(uci_interface, address),
                     'dns_search': self.__get_dns_search(uci_interface, address)
@@ -155,9 +182,9 @@ class NetworkRenderer(BaseOpenWrtRenderer):
                         del address_copy[key]
                 uci_interface.update(address_copy)
                 # append to interface list
-                uci_interfaces.append(sorted_dict(uci_interface))
-                counter += 1
-        return uci_interfaces
+                result.append(sorted_dict(uci_interface))
+                i += 1
+        return (('network', result),)
 
     def __get_proto(self, interface, address):
         """
@@ -170,55 +197,6 @@ class NetworkRenderer(BaseOpenWrtRenderer):
             # allow override
             return interface['proto']
 
-    def _get_routes(self):
-        routes = self.config.get('routes', [])
-        # results container
-        uci_routes = []
-        counter = 1
-        # build uci_routes
-        for route in routes:
-            # prepare UCI route directive
-            uci_route = route.copy()
-            del uci_route['device']
-            del uci_route['next']
-            del uci_route['destination']
-            del uci_route['cost']
-            network = ip_interface(route['destination'])
-            version = 'route' if network.version == 4 else 'route6'
-            target = network.ip if network.version == 4 else network.network
-            uci_route.update({
-                'version': version,
-                'name': 'route{0}'.format(counter),
-                'interface': route['device'],
-                'target': str(target),
-                'gateway': route['next'],
-                'metric': route['cost'],
-                'source': route.get('source')
-            })
-            if network.version == 4:
-                uci_route['netmask'] = str(network.netmask)
-            uci_routes.append(sorted_dict(uci_route))
-            counter += 1
-        return uci_routes
-
-    def _get_ip_rules(self):
-        rules = self.config.get('ip_rules', [])
-        uci_rules = []
-        for rule in rules:
-            uci_rule = rule.copy()
-            src_net = None
-            dest_net = None
-            family = 4
-            if rule.get('src'):
-                src_net = ip_network(rule['src'])
-            if rule.get('dest'):
-                dest_net = ip_network(rule['dest'])
-            if dest_net or src_net:
-                family = dest_net.version if dest_net else src_net.version
-            uci_rule['block_name'] = 'rule{0}'.format(family).replace('4', '')
-            uci_rules.append(sorted_dict(uci_rule))
-        return uci_rules
-
     def __get_dns_servers(self, uci, address):
         # allow override
         if 'dns' in uci:
@@ -227,7 +205,7 @@ class NetworkRenderer(BaseOpenWrtRenderer):
         if address['proto'] in ['dhcp', 'none']:
             return None
         # general setting
-        dns = self.config.get('dns_servers', None)
+        dns = self.netjson.get('dns_servers', None)
         if dns:
             return ' '.join(dns)
 
@@ -239,87 +217,119 @@ class NetworkRenderer(BaseOpenWrtRenderer):
         if address['proto'] == 'none':
             return None
         # general setting
-        dns_search = self.config.get('dns_search', None)
+        dns_search = self.netjson.get('dns_search', None)
         if dns_search:
             return ' '.join(dns_search)
 
-    def _get_switches(self):
-        uci_switches = []
-        for switch in self.config.get('switch', []):
-            uci_switch = sorted_dict(deepcopy(switch))
-            uci_switch['vlan'] = [sorted_dict(vlan) for vlan in uci_switch['vlan']]
-            uci_switches.append(uci_switch)
-        return uci_switches
 
-    def _get_globals(self):
-        ula_prefix = self.config.get('general', {}).get('ula_prefix', None)
-        if ula_prefix:
-            return {'ula_prefix': ula_prefix}
-        return {}
+class Routes(BaseConverter):
+    __delete_keys = ['device', 'next', 'destination', 'cost']
 
-
-class SystemRenderer(BaseOpenWrtRenderer):
-    """
-    Renders content importable with:
-        uci import system
-    """
-    def _get_system(self):
-        general = self.config.get('general', {}).copy()
-        # ula_prefix is not related to system
-        if 'ula_prefix' in general:
-            del general['ula_prefix']
-        if general:
-            timezone_human = general.get('timezone', 'UTC')
-            timezone_value = timezones[timezone_human]
-            general.update({
-                'hostname': general.get('hostname', 'OpenWRT'),
-                'timezone': timezone_value,
-                'zonename': timezone_human,
+    def to_intermediate(self):
+        result = []
+        i = 1
+        for route in get_copy(self.netjson, 'routes'):
+            network = ip_interface(route['destination'])
+            target = network.ip if network.version == 4 else network.network
+            route.update({
+                '.type': 'route{0}'.format('6' if network.version == 6 else ''),
+                '.name': 'route{0}'.format(i),
+                'interface': route['device'],
+                'target': str(target),
+                'gateway': route['next'],
+                'metric': route['cost'],
+                'source': route.get('source')
             })
-        return sorted_dict(general)
-
-    def _get_ntp(self):
-        return sorted_dict(self.config.get('ntp', {}))
-
-    def _get_leds(self):
-        uci_leds = []
-        for led in self.config.get('led', []):
-            uci_leds.append(sorted_dict(led))
-        return uci_leds
+            if network.version == 4:
+                route['netmask'] = str(network.netmask)
+            for key in self.__delete_keys:
+                del route[key]
+            result.append(sorted_dict(route))
+            i += 1
+        return (('network', result),)
 
 
-class WirelessRenderer(BaseOpenWrtRenderer):
-    """
-    Renders content importable with:
-        uci import wireless
-    """
-    def _get_radios(self):
-        radios = self.config.get('radios', [])
-        uci_radios = []
-        for radio in radios:
-            uci_radio = radio.copy()
+class Rules(BaseConverter):
+    netjson_key = 'ip_rules'
+
+    def to_intermediate(self):
+        result = []
+        i = 1
+        for rule in get_copy(self.netjson, 'ip_rules'):
+            src_net = None
+            dest_net = None
+            family = 4
+            if 'src' in rule:
+                src_net = ip_network(rule['src'])
+            if 'dest' in rule:
+                dest_net = ip_network(rule['dest'])
+            if dest_net or src_net:
+                family = dest_net.version if dest_net else src_net.version
+            rule.update({
+                '.type': 'rule{0}'.format(family).replace('4', ''),
+                '.name': 'rule{0}'.format(i),
+            })
+            result.append(sorted_dict(rule))
+            i += 1
+        return (('network', result),)
+
+
+class Switch(BaseConverter):
+    def to_intermediate(self):
+        result = []
+        for switch in get_copy(self.netjson, 'switch'):
+            switch.update({
+                '.type': 'switch',
+                '.name': switch['name'],
+            })
+            i = 1
+            vlans = []
+            for vlan in switch['vlan']:
+                vlan.update({
+                    '.type': 'switch_vlan',
+                    '.name': '{0}_vlan{1}'.format(switch['name'], i)
+                })
+                vlans.append(sorted_dict(vlan))
+                i += 1
+            del switch['vlan']
+            result.append(sorted_dict(switch))
+            result += vlans
+        return (('network', result),)
+
+
+class Radios(BaseConverter):
+    _delete_keys = ['name', 'protocol', 'channel_width']
+
+    def to_intermediate(self):
+        result = []
+        for radio in get_copy(self.netjson, 'radios'):
+            radio.update({
+                '.type': 'wifi-device',
+                '.name': radio['name'],
+            })
             # rename tx_power to txpower
             if 'tx_power' in radio:
-                uci_radio['txpower'] = radio['tx_power']
-                del uci_radio['tx_power']
+                radio['txpower'] = radio['tx_power']
+                del radio['tx_power']
             # rename driver to type
-            uci_radio['type'] = uci_radio.pop('driver', default_radio_driver)
+            radio['type'] = radio.pop('driver', default_radio_driver)
             # determine hwmode option
-            uci_radio['hwmode'] = self.__get_hwmode(radio)
-            del uci_radio['protocol']
+            radio['hwmode'] = self.__get_hwmode(radio)
             # check if using channel 0, that means "auto"
-            if uci_radio['channel'] is 0:
-                uci_radio['channel'] = 'auto'
+            if radio['channel'] is 0:
+                radio['channel'] = 'auto'
             # determine channel width
-            if uci_radio['type'] == 'mac80211':
-                uci_radio['htmode'] = self.__get_htmode(radio)
-            del uci_radio['channel_width']
+            if radio['type'] == 'mac80211':
+                radio['htmode'] = self.__get_htmode(radio)
             # ensure country is uppercase
-            if uci_radio.get('country'):
-                uci_radio['country'] = uci_radio['country'].upper()
+            if radio.get('country'):
+                radio['country'] = radio['country'].upper()
+            # delete unneded keys
+            for key in self._delete_keys:
+                del radio[key]
             # append sorted dict
-            uci_radios.append(sorted_dict(uci_radio))
-        return uci_radios
+            result.append(sorted_dict(radio))
+        return (('wireless', result),)
 
     def __get_hwmode(self, radio):
         """
@@ -353,28 +363,32 @@ class WirelessRenderer(BaseOpenWrtRenderer):
         # disables n
         return 'NONE'
 
-    def _get_wifi_interfaces(self):
-        # select interfaces that have type == "wireless"
-        wifi_interfaces = [i for i in self.config.get('interfaces', [])
-                           if 'wireless' in i]
-        # results container
-        uci_wifi_ifaces = []
-        for wifi_interface in wifi_interfaces:
-            wireless = wifi_interface['wireless']
+
+class Wireless(BaseConverter):
+    netjson_key = 'interfaces'
+
+    def to_intermediate(self):
+        result = []
+        for interface in get_copy(self.netjson, 'interfaces'):
+            if 'wireless' not in interface:
+                continue
+            wireless = interface['wireless']
             # prepare UCI wifi-iface directive
             uci_wifi = wireless.copy()
             # inherit "disabled" attribute if present
-            uci_wifi['disabled'] = wifi_interface.get('disabled')
+            uci_wifi['disabled'] = interface.get('disabled')
             # add ifname
-            uci_wifi['ifname'] = wifi_interface['name']
-            # uci identifier
-            uci_wifi['id'] = 'wifi_{0}'.format(logical_name(wifi_interface['name']))
+            uci_wifi['ifname'] = interface['name']
+            uci_wifi.update({
+                '.name': 'wifi_{0}'.format(logical_name(interface['name'])),
+                '.type': 'wifi-iface',
+            })
             # rename radio to device
             uci_wifi['device'] = wireless['radio']
             del uci_wifi['radio']
             # mac address override
-            if 'mac' in wifi_interface:
-                uci_wifi['macaddr'] = wifi_interface['mac']
+            if 'mac' in interface:
+                uci_wifi['macaddr'] = interface['mac']
             # map netjson wifi modes to uci wifi modes
             modes = {
                 'access_point': 'ap',
@@ -408,13 +422,13 @@ class WirelessRenderer(BaseOpenWrtRenderer):
             # but this behaviour can be overridden
             if not uci_wifi.get('network'):
                 # get network, default to ifname
-                network = wifi_interface.get('network', wifi_interface['name'])
+                network = interface.get('network', interface['name'])
                 uci_wifi['network'] = [network]
             uci_wifi['network'] = ' '.join(uci_wifi['network'])\
                                      .replace('.', '_')\
                                      .replace('-', '_')
-            uci_wifi_ifaces.append(sorted_dict(uci_wifi))
-        return uci_wifi_ifaces
+            result.append(sorted_dict(uci_wifi))
+        return (('wireless', result),)
 
     def __get_encryption(self, wireless):
         encryption = wireless.get('encryption', {})
@@ -457,22 +471,39 @@ class WirelessRenderer(BaseOpenWrtRenderer):
         return uci
 
 
-class DefaultRenderer(BaseOpenWrtRenderer):
-    """
-    Default OpenWrt Renderer
-    Allows great flexibility in defining UCI configuration in JSON format
-    """
-    def _get_custom_packages(self):
+class OpenVpn(BaseOpenVpn):
+    def __get_vpn(self, vpn):
+        config = super(OpenVpn, self).__get_vpn(vpn)
+        if 'disabled' in config:
+            config['enabled'] = not config['disabled']
+            del config['disabled']
+        # TODO: keep 'enabled' check until 0.6 and then drop it
+        elif 'disabled' not in config and 'enabled' not in config:
+            config['enabled'] = True
+        config.update({
+            '.name': logical_name(config.pop('name')),
+            '.type': 'openvpn'
+        })
+        return config
+
+
+class Default(BaseConverter):
+    @classmethod
+    def should_run(cls, config):
+        """ Always runs """
+        return True
+
+    def to_intermediate(self):
         # determine config keys to ignore
         ignore_list = list(self.backend.schema['properties'].keys())
-        ignore_list += self.backend.get_renderers()
-        # determine custom packages
-        custom_packages = {}
-        for key, value in self.config.items():
+        # determine extra packages used
+        extra_packages = {}
+        for key, value in self.netjson.items():
             if key not in ignore_list:
                 block_list = []
                 # sort each config block
                 if isinstance(value, list):
+                    i = 1
                     for block in value[:]:
                         # config block must be a dict
                         # with a key named "config_name"
@@ -482,25 +513,16 @@ class DefaultRenderer(BaseOpenWrtRenderer):
                             print('Unrecognized config block was skipped:\n\n'
                                   '{0}\n\n'.format(json_block))
                             continue
+                        block['.type'] = block.pop('config_name')
+                        block['.name'] = block.pop('config_value',
+                                                   '{0}_{1}'.format(block['.type'], i))
                         block_list.append(sorted_dict(block))
+                        i += 1
                 # if not a list just skip
                 else:  # pragma: nocover
                     continue
-                custom_packages[key] = block_list
-        # sort custom packages
-        return sorted_dict(custom_packages)
-
-
-class OpenVpnRenderer(BaseOpenWrtRenderer, BaseOpenVpnRenderer):
-    """
-    Produces an OpenVPN configuration in UCI format for OpenWRT
-    """
-    def _transform_vpn(self, vpn):
-        config = super(OpenVpnRenderer, self)._transform_vpn(vpn)
-        if 'disabled' in config:
-            config['enabled'] = not config['disabled']
-            del config['disabled']
-        # TODO: keep 'enabled' check until 0.6 and then drop it
-        elif 'disabled' not in config and 'enabled' not in config:
-            config['enabled'] = True
-        return config
+                extra_packages[key] = block_list
+        if extra_packages:
+            return sorted_dict(extra_packages).items()
+        # return empty tuple if no extra packages are used
+        return tuple()

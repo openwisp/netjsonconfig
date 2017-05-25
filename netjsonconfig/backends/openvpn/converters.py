@@ -1,23 +1,15 @@
-from copy import deepcopy
-
-from ...utils import sorted_dict
-from ..base import BaseRenderer
+from ...utils import get_copy, sorted_dict
+from ..base.converter import BaseConverter
 
 
-class OpenVpnRenderer(BaseRenderer):
-    """
-    Produces an OpenVPN configuration string
-    """
-    def cleanup(self, output):
-        # remove indentations
-        output = output.replace('    ', '')
-        # remove last newline
-        if output.endswith('\n\n'):
-            output = output[0:-1]
-        return output
+class OpenVpn(BaseConverter):
+    def to_intermediate(self):
+        result = []
+        for vpn in get_copy(self.netjson, 'openvpn'):
+            result.append(sorted_dict(self.__get_vpn(vpn)))
+        return (('openvpn', result),)
 
-    def _transform_vpn(self, vpn):
-        config = deepcopy(vpn)
+    def __get_vpn(self, config):
         skip_keys = ['script_security', 'remote']
         delete_keys = []
         # allow server_bridge to be empty and still rendered
@@ -41,10 +33,3 @@ class OpenVpnRenderer(BaseRenderer):
         if 'status' not in config and 'status_version' in config:
             del config['status_version']
         return config
-
-    def _get_openvpn(self):
-        openvpn = []
-        for vpn in self.config.get('openvpn', []):
-            config = self._transform_vpn(vpn)
-            openvpn.append(sorted_dict(config))
-        return openvpn

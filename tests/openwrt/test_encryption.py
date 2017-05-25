@@ -5,9 +5,6 @@ from netjsonconfig.utils import _TabsMixin
 
 
 class TestEncryption(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.openwrt.renderers.WirelessRenderer (wireless ifaces)
-    """
     maxDiff = None
 
     def test_wpa2_personal(self):

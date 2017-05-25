@@ -7,10 +7,10 @@ from .schema import schema
 
 
 class OpenWisp(OpenWrt):
-    """ OpenWisp 1.x Backend """
+    """
+    OpenWISP 1.x Firmware (legacy) Configuration Backend
+    """
     schema = schema
-    openwisp_env = Environment(loader=PackageLoader('netjsonconfig.backends.openwisp', 'templates'),
-                               trim_blocks=True)
 
     def validate(self):
         self._sanitize_radios()
@@ -26,7 +26,9 @@ class OpenWisp(OpenWrt):
             radio.setdefault('disabled', False)
 
     def _render_template(self, template, context={}):
-        template = self.openwisp_env.get_template(template)
+        openwisp_env = Environment(loader=PackageLoader(self.__module__, 'templates'),
+                                   trim_blocks=True)
+        template = openwisp_env.get_template(template)
         return template.render(**context)
 
     def _add_unique_file(self, item):
@@ -140,14 +142,6 @@ class OpenWisp(OpenWrt):
             "mode": "755"
         })
 
-    def generate(self):
-        """
-        Generates an openwisp configuration archive.
-
-        :returns: in-memory tar.gz archive, instance of ``BytesIO``
-        """
-        return super(OpenWisp, self).generate()
-
     def _generate_contents(self, tar):
         """
         Adds configuration files to tarfile instance.
@@ -160,7 +154,7 @@ class OpenWisp(OpenWrt):
         packages = re.split('package ', uci)
         if '' in packages:
             packages.remove('')
-        # for each package create a file with its contents in /etc/config
+        # create a file for each configuration package used
         for package in packages:
             lines = package.split('\n')
             package_name = lines[0]
