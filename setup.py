@@ -23,6 +23,12 @@ if sys.argv[-1] == 'publish':
     print("  git push --tags")
     sys.exit()
 
+# bdist_wheel
+extras_require = {
+    # http://wheel.readthedocs.io/en/latest/#defining-conditional-dependencies
+    ':python_version in "2.6 2.7"' : ['py2-ipaddress']
+}
+
 
 def get_install_requires():
     """
@@ -68,6 +74,7 @@ setup(
         'Topic :: System :: Networking',
     ],
     install_requires=get_install_requires(),
+    extras_require=extras_require,
     test_suite='nose.collector',
     scripts=['bin/netjsonconfig'],
 )
