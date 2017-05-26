@@ -25,8 +25,7 @@ class TestOpenVpn(_TabsMixin, unittest.TestCase):
                 "down": "",
                 "duplicate_cn": True,
                 "engine": "rsax",
-                # TODO: in 0.6.0 change this to "disabled": False
-                "enabled": True,
+                "disabled": False,
                 "fast_io": True,
                 "fragment": 0,
                 "group": "nogroup",
@@ -109,8 +108,7 @@ config openvpn 'test_server'
                     "dev": "tun0",
                     "dev_type": "tun",
                     "down": "/home/user/down-command.sh",
-                    # TODO: in 0.6.0 change this to "disabled": False
-                    "enabled": True,
+                    "disabled": False,
                     "engine": "",
                     "fast_io": False,
                     "fragment": 0,
@@ -205,8 +203,7 @@ config openvpn 'test_client'
                 "dev": "tap0",
                 "dev_type": "tap",
                 "dh": "dh.pem",
-                # TODO: in 0.6.0 change this to "disabled": False
-                "enabled": True,
+                "disabled": False,
                 "key": "key.pem",
                 "mode": "server",
                 "name": "test-no-status",
@@ -240,8 +237,7 @@ config openvpn 'test_no_status'
                 "dev": "tap0",
                 "dev_type": "tap",
                 "dh": "dh.pem",
-                # TODO: in 0.6.0 change this to "disabled": False
-                "enabled": True,
+                "disabled": False,
                 "key": "key.pem",
                 "mode": "server",
                 "name": "test-properties",
@@ -314,8 +310,7 @@ config openvpn 'test_properties'
                 "dev": "tap0",
                 "dev_type": "tap",
                 "dh": "dh.pem",
-                # TODO: in 0.6.0 change this to "disabled": False
-                "enabled": True,
+                "disabled": False,
                 "key": "key.pem",
                 "mode": "server",
                 "name": "bridged",
@@ -349,8 +344,7 @@ config openvpn 'bridged'
                 "dev": "tap0",
                 "dev_type": "tap",
                 "dh": "dh.pem",
-                # TODO: in 0.6.0 change this to "disabled": False
-                "enabled": True,
+                "disabled": False,
                 "key": "key.pem",
                 "mode": "server",
                 "name": "bridged-proxy",
@@ -384,8 +378,7 @@ config openvpn 'bridged_proxy'
                 "dev": "tap0",
                 "dev_type": "tap",
                 "dh": "dh.pem",
-                # TODO: in 0.6.0 change this to "disabled": False
-                "enabled": True,
+                "disabled": False,
                 "key": "key.pem",
                 "mode": "server",
                 "name": "routed",
@@ -428,37 +421,3 @@ config openvpn 'routed'
             }]
         })
         self.assertIn("option enabled '0'", c.render())
-
-    def test_disabled_and_enabled(self):
-        # disabled wins over enabled since 0.5.3
-        c = OpenWrt({
-            "openvpn": [{
-                "ca": "ca.pem",
-                "cert": "cert.pem",
-                "dev": "tap0",
-                "dev_type": "tap",
-                "dh": "dh.pem",
-                "disabled": True,
-                "enabled": True,
-                "key": "key.pem",
-                "mode": "server",
-                "name": "test-properties",
-                "proto": "udp",
-                "tls_server": True
-            }]
-        })
-        expected = self._tabs("""package openvpn
-
-config openvpn 'test_properties'
-    option ca 'ca.pem'
-    option cert 'cert.pem'
-    option dev 'tap0'
-    option dev_type 'tap'
-    option dh 'dh.pem'
-    option enabled '0'
-    option key 'key.pem'
-    option mode 'server'
-    option proto 'udp'
-    option tls_server '1'
-""")
-        self.assertEqual(c.render(), expected)

@@ -477,8 +477,7 @@ class OpenVpn(BaseOpenVpn):
         if 'disabled' in config:
             config['enabled'] = not config['disabled']
             del config['disabled']
-        # TODO: keep 'enabled' check until 0.6 and then drop it
-        elif 'disabled' not in config and 'enabled' not in config:
+        else:
             config['enabled'] = True
         config.update({
             '.name': logical_name(config.pop('name')),
