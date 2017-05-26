@@ -498,29 +498,27 @@ class Default(BaseConverter):
         # determine extra packages used
         extra_packages = {}
         for key, value in self.netjson.items():
-            if key not in ignore_list:
-                block_list = []
-                # sort each config block
-                if isinstance(value, list):
-                    i = 1
-                    for block in value[:]:
-                        # config block must be a dict
-                        # with a key named "config_name"
-                        # otherwise it's skipped with a warning
-                        if not isinstance(block, dict) or 'config_name' not in block:
-                            json_block = json.dumps(block, indent=4)
-                            print('Unrecognized config block was skipped:\n\n'
-                                  '{0}\n\n'.format(json_block))
-                            continue
-                        block['.type'] = block.pop('config_name')
-                        block['.name'] = block.pop('config_value',
-                                                   '{0}_{1}'.format(block['.type'], i))
-                        block_list.append(sorted_dict(block))
-                        i += 1
-                # if not a list just skip
-                else:  # pragma: nocover
+            # skip blocks present in ignore_list
+            # or blocks not represented by lists
+            if key in ignore_list or not isinstance(value, list):
+                continue
+            block_list = []
+            # sort each config block
+            i = 1
+            for block in value[:]:
+                # config block must be a dict
+                # with a key named "config_name"
+                # otherwise it's skipped with a warning
+                if not isinstance(block, dict) or 'config_name' not in block:
+                    json_block = json.dumps(block, indent=4)
+                    print('Unrecognized config block was skipped:\n\n'
+                          '{0}\n\n'.format(json_block))
                     continue
-                extra_packages[key] = block_list
+                block['.type'] = block.pop('config_name')
+                block['.name'] = block.pop('config_value', '{0}_{1}'.format(block['.type'], i))
+                block_list.append(sorted_dict(block))
+                i += 1
+            extra_packages[key] = block_list
         if extra_packages:
             return sorted_dict(extra_packages).items()
         # return empty tuple if no extra packages are used

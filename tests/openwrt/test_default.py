@@ -142,3 +142,7 @@ config core 'main'
         }
         o = OpenWrt(config, templates=[template])
         self.assertEqual(o.config, expected)
+
+    def test_skip_nonlists(self):
+        o = OpenWrt({"custom_package": {'unknown': True}})
+        self.assertEqual(o.render(), '')
