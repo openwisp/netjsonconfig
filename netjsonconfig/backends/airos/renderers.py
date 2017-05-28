@@ -1,7 +1,7 @@
 
-from ..base import BaseRenderer
+from ..base.renderer import BaseRenderer
 
-class BaseAirOSRenderer(BaseRenderer):
+class AirOS(BaseRenderer):
 
     def cleanup(self, output):
         stripped = [
@@ -10,7 +10,7 @@ class BaseAirOSRenderer(BaseRenderer):
         return '\n'.join(stripped)
 
 
-class SystemRenderer(BaseAirOSRenderer):
+class SystemRenderer(AirOS):
     """
     Write configuration for
     - resolv
@@ -36,7 +36,7 @@ class SystemRenderer(BaseAirOSRenderer):
         return general
 
     
-class NetworkRenderer(BaseAirOSRenderer):
+class NetworkRenderer(AirOS):
     """
     Write configuration for
     - bridge
