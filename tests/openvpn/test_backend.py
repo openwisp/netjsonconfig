@@ -679,3 +679,7 @@ tls-client
         o = OpenVpn(client)
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_double_rendering(self):
+        o = OpenVpn(self._simple_conf)
+        self.assertEqual(o.render(), o.render())
