@@ -2,7 +2,6 @@
 OpenWrt specific JSON-Schema definition
 """
 from ...schema import schema as default_schema
-from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
 from .timezones import timezones

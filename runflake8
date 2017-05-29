@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 flake8 --max-line-length=110 \
-       --max-complexity=12 \
+       --max-complexity=9 \
        --exclude=./docs/,./build/,./setup.py || exit 1

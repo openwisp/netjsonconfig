@@ -1,6 +1,7 @@
 import re
 
 from . import converters
+from ...schema import DEFAULT_FILE_MODE
 from ..base.backend import BaseBackend
 from .renderer import OpenVpnRenderer
 from .schema import schema
@@ -40,7 +41,7 @@ class OpenVpn(BaseBackend):
                            contents=text_contents)
 
     @classmethod
-    def auto_client(self, host, server, ca_path=None, ca_contents=None,
+    def auto_client(cls, host, server, ca_path=None, ca_contents=None,
                     cert_path=None, cert_contents=None, key_path=None,
                     key_contents=None):
         """
@@ -61,7 +62,7 @@ class OpenVpn(BaseBackend):
         :returns: dictionary representing a single OpenVPN client configuration
         """
         # client defaults
-        c = {
+        client = {
             "mode": "p2p",
             "nobind": True,
             "resolv_retry": "infinite",
@@ -69,23 +70,23 @@ class OpenVpn(BaseBackend):
         }
         # remote
         port = server.get('port') or 1195
-        c['remote'] = [{'host': host, 'port': port}]
+        client['remote'] = [{'host': host, 'port': port}]
         # proto
         if server.get('proto') == 'tcp-server':
-            c['proto'] = 'tcp-client'
+            client['proto'] = 'tcp-client'
         else:
-            c['proto'] = 'udp'
+            client['proto'] = 'udp'
         # determine if pull must be True
         if 'server' in server or 'server_bridge' in server:
-            c['pull'] = True
+            client['pull'] = True
         # tls_client
         if 'tls_server' not in server or not server['tls_server']:
-            c['tls_client'] = False
+            client['tls_client'] = False
         # ns_cert_type
         if not server.get('ns_cert_type'):
-            c['ns_cert_type'] = ''
+            client['ns_cert_type'] = ''
         elif server.get('ns_cert_type') == 'client':
-            c['ns_cert_type'] = 'server'
+            client['ns_cert_type'] = 'server'
         copy_keys = ['name', 'dev_type', 'dev', 'comp_lzo', 'auth',
                      'cipher', 'ca', 'cert', 'key', 'mtu_disc', 'mtu_test',
                      'fragment', 'mssfix', 'keepalive', 'persist_tun', 'mute',
@@ -93,26 +94,36 @@ class OpenVpn(BaseBackend):
                      'mute_replay_warnings', 'secret', 'fast_io', 'verb']
         for key in copy_keys:
             if key in server:
-                c[key] = server[key]
-        # prepare files if necessary
+                client[key] = server[key]
+        files = cls._auto_client_files(client, ca_path, ca_contents,
+                                       cert_path, cert_contents,
+                                       key_path, key_contents)
+        return {
+            'openvpn': [client],
+            'files': files
+        }
+
+    @classmethod
+    def _auto_client_files(cls, client, ca_path=None, ca_contents=None, cert_path=None,
+                           cert_contents=None, key_path=None, key_contents=None):
+        """
+        returns a list of NetJSON extra files for automatically generated clients
+        produces side effects in ``client`` dictionary
+        """
         files = []
         if ca_path and ca_contents:
-            c['ca'] = ca_path
+            client['ca'] = ca_path
             files.append(dict(path=ca_path,
-                              mode='0644',
-                              contents=ca_contents))
+                              contents=ca_contents,
+                              mode=DEFAULT_FILE_MODE))
         if cert_path and cert_contents:
-            c['cert'] = cert_path
+            client['cert'] = cert_path
             files.append(dict(path=cert_path,
-                              mode='0644',
-                              contents=cert_contents))
+                              contents=cert_contents,
+                              mode=DEFAULT_FILE_MODE))
         if key_path and key_contents:
-            c['key'] = key_path
+            client['key'] = key_path
             files.append(dict(path=key_path,
-                              mode='0644',
-                              contents=key_contents))
-        # prepare result
-        netjson = {'openvpn': [c]}
-        if files:
-            netjson['files'] = files
-        return netjson
+                              contents=key_contents,
+                              mode=DEFAULT_FILE_MODE,))
+        return files
