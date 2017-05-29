@@ -78,8 +78,7 @@ class Interfaces(BaseConverter):
         result = []
         for interface in get_copy(self.netjson, 'interfaces'):
             i = 1
-            # determine uci logical interface name
-            uci_name = logical_name(interface.get('network', interface['name']))
+            uci_name = self.__get_uci_name(interface)
             address_list = self.__get_addresses(interface)
             interface = self.__get_interface(interface, uci_name)
             # create one or more "config interface" UCI blocks
@@ -100,6 +99,13 @@ class Interfaces(BaseConverter):
                 result.append(sorted_dict(uci_interface))
                 i += 1
         return (('network', result),)
+
+    def __get_uci_name(self, interface):
+        """
+        determines uci logical interface name
+        """
+        name = interface.get('network') or interface['name']
+        return logical_name(name)
 
     def __get_addresses(self, interface):
         """

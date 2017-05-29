@@ -1225,3 +1225,21 @@ config interface 'eth0'
         })
         self.assertNotIn("disabled '0'", o.render())
         self.assertIn("enabled '1'", o.render())
+
+    def test_empty_network(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "network": ""
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+""")
+        self.assertEqual(o.render(), expected)
