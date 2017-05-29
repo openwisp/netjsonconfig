@@ -1,8 +1,5 @@
 #!/bin/bash
 set -e
-complex="./netjsonconfig/backends/openwrt/converters.py"
-
-flake8 --max-line-length=110 --max-complexity=26 "$complex" || exit 1
 flake8 --max-line-length=110 \
        --max-complexity=12 \
-       --exclude=./docs/,./build/,./setup.py,$complex || exit 1
+       --exclude=./docs/,./build/,./setup.py || exit 1

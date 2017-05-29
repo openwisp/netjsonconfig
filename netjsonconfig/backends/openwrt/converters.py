@@ -76,147 +76,178 @@ class Led(BaseConverter):
 class Interfaces(BaseConverter):
     def to_intermediate(self):
         result = []
-        # this line ensures interfaces are not entirely
-        # ignored if they do not contain any address
-        default_address = [{'proto': 'none'}]
         for interface in get_copy(self.netjson, 'interfaces'):
             i = 1
-            is_bridge = False
             # determine uci logical interface name
-            uci_name = interface.get('network', interface['name'])
-            # convert dot and dashes to underscore
-            uci_name = logical_name(uci_name)
-            # determine if must be type bridge
-            if interface.get('type') == 'bridge':
-                is_bridge = True
-                bridge_members = ' '.join(interface['bridge_members'])
-            # ensure address list is not never empty, even when 'addresses' is []
-            address_list = interface.get('addresses')
-            if not address_list:
-                address_list = default_address
-            # address list defaults to empty list
+            uci_name = logical_name(interface.get('network', interface['name']))
+            address_list = self.__get_addresses(interface)
+            interface = self.__get_interface(interface, uci_name)
+            # create one or more "config interface" UCI blocks
             for address in address_list:
-                # prepare new UCI interface directive
                 uci_interface = deepcopy(interface)
-                if 'network' in uci_interface:
-                    del uci_interface['network']
-                if 'mac' in uci_interface:
-                    if interface.get('type') != 'wireless':
-                        uci_interface['macaddr'] = interface['mac']
-                    del uci_interface['mac']
-                if 'autostart' in uci_interface:
-                    uci_interface['auto'] = interface['autostart']
-                    del uci_interface['autostart']
-                if 'disabled' in uci_interface:
-                    uci_interface['enabled'] = not interface['disabled']
-                    del uci_interface['disabled']
-                if 'addresses' in uci_interface:
-                    del uci_interface['addresses']
-                if 'type' in uci_interface:
-                    del uci_interface['type']
-                if 'wireless' in uci_interface:
-                    del uci_interface['wireless']
-                # default values
-                address_key = None
-                address_value = None
-                netmask = None
-                proto = self.__get_proto(uci_interface, address)
-                # add suffix if there is more than one config block
+                # add suffix to logical name when
+                # there is more than one interface
                 if i > 1:
-                    name = '{name}_{i}'.format(name=uci_name, i=i)
-                else:
-                    name = uci_name
-                if address.get('family') == 'ipv4':
-                    address_key = 'ipaddr'
-                elif address.get('family') == 'ipv6':
-                    address_key = 'ip6addr'
-                    proto = proto.replace('dhcp', 'dhcpv6')
-                if address.get('address') and address.get('mask'):
-                    address_value = '{address}/{mask}'.format(**address)
-                    # do not use CIDR notation when using ipv4
-                    # see https://github.com/openwisp/netjsonconfig/issues/54
-                    if address.get('family') == 'ipv4':
-                        netmask = str(ip_interface(address_value).netmask)
-                        address_value = address['address']
-                # update interface dict
+                    uci_interface['.name'] = '{name}_{i}'.format(name=uci_name, i=i)
                 uci_interface.update({
-                    '.name': name,
-                    '.type': 'interface',
-                    'ifname': uci_interface.pop('name'),
-                    'proto': proto,
                     'dns': self.__get_dns_servers(uci_interface, address),
-                    'dns_search': self.__get_dns_search(uci_interface, address)
+                    'dns_search': self.__get_dns_search(uci_interface, address),
+                    'proto': self.__get_proto(uci_interface, address),
                 })
-                # bridging
-                if is_bridge:
-                    uci_interface['type'] = 'bridge'
-                    # put bridge members in ifname attribute
-                    if bridge_members:
-                        uci_interface['ifname'] = bridge_members
-                    # if no members, this is an empty bridge
-                    else:
-                        uci_interface['bridge_empty'] = True
-                        del uci_interface['ifname']
-                    # ensure type "bridge" is only given to one logical interface
-                    is_bridge = False
-                # bridge has already been defined
-                # but we need to add more references to it
-                elif interface.get('type') == 'bridge':
-                    # openwrt adds "br-"" prefix to bridge interfaces
-                    # we need to take this into account when referring
-                    # to these physical names
-                    uci_interface['ifname'] = 'br-{0}'.format(interface['name'])
-                # delete bridge_members attribtue if bridge is empty
-                if uci_interface.get('bridge_members') is not None:
-                    del uci_interface['bridge_members']
-                # add address if any (with correct option name)
-                if address_key and address_value:
-                    uci_interface[address_key] = address_value
-                # add netmask option (only for IPv4)
-                if netmask:
-                    uci_interface['netmask'] = netmask
-                # merge additional address fields (discard default ones first)
-                address_copy = address.copy()
-                for key in ['address', 'mask', 'proto', 'family']:
-                    if key in address_copy:
-                        del address_copy[key]
-                uci_interface.update(address_copy)
-                # append to interface list
+                uci_interface = self.__get_bridge(uci_interface, i)
+                if address:
+                    uci_interface.update(address)
                 result.append(sorted_dict(uci_interface))
                 i += 1
         return (('network', result),)
 
+    def __get_addresses(self, interface):
+        """
+        converts NetJSON address to
+        UCI intermediate data structure
+        """
+        address_list = get_copy(interface, 'addresses')
+        # do not ignore interfaces if they do not contain any address
+        if not address_list:
+            return [{'proto': 'none'}]
+        result = []
+        static = {}
+        dhcp = []
+        for address in address_list:
+            family = address.get('family')
+            # dhcp
+            if address['proto'] == 'dhcp':
+                address['proto'] = 'dhcp' if family == 'ipv4' else 'dhcpv6'
+                dhcp.append(self.__del_address_keys(address))
+                continue
+            # static
+            address_key = 'ipaddr' if family == 'ipv4' else 'ip6addr'
+            static.setdefault(address_key, [])
+            static[address_key].append('{address}/{mask}'.format(**address))
+            static.update(self.__del_address_keys(address))
+        if static:
+            # do not use CIDR notation when using a single ipv4
+            # see https://github.com/openwisp/netjsonconfig/issues/54
+            if len(static.get('ipaddr', [])) == 1:
+                network = ip_interface(static['ipaddr'][0])
+                static['ipaddr'] = str(network.ip)
+                static['netmask'] = str(network.netmask)
+            # do not use lists when using a single ipv6 address
+            # (avoids to change output of existing configuration)
+            if len(static.get('ip6addr', [])) == 1:
+                static['ip6addr'] = static['ip6addr'][0]
+            result.append(static)
+        if dhcp:
+            result += dhcp
+        return result
+
+    def __get_interface(self, interface, uci_name):
+        """
+        converts NetJSON interface to
+        UCI intermediate data structure
+        """
+        interface.update({
+            '.type': 'interface',
+            '.name': uci_name,
+            'ifname': interface.pop('name')
+        })
+        if 'network' in interface:
+            del interface['network']
+        if 'mac' in interface:
+            # mac address of wireless interface must
+            # be set in /etc/config/wireless, therfore
+            # we can skip this in /etc/config/network
+            if interface.get('type') != 'wireless':
+                interface['macaddr'] = interface['mac']
+            del interface['mac']
+        if 'autostart' in interface:
+            interface['auto'] = interface['autostart']
+            del interface['autostart']
+        if 'disabled' in interface:
+            interface['enabled'] = not interface['disabled']
+            del interface['disabled']
+        if 'wireless' in interface:
+            del interface['wireless']
+        if 'addresses' in interface:
+            del interface['addresses']
+        return interface
+
+    _address_keys = ['address', 'mask', 'family']
+
+    def __del_address_keys(self, address):
+        """
+        deletes NetJSON address keys
+        """
+        for key in self._address_keys:
+            if key in address:
+                del address[key]
+        return address
+
+    def __get_bridge(self, interface, i):
+        """
+        converts NetJSON bridge to
+        UCI intermediate data structure
+        """
+        # ensure type "bridge" is only given to one logical interface
+        if interface['type'] == 'bridge' and i < 2:
+            bridge_members = ' '.join(interface.pop('bridge_members'))
+            # put bridge members in ifname attribute
+            if bridge_members:
+                interface['ifname'] = bridge_members
+            # if no members, this is an empty bridge
+            else:
+                interface['bridge_empty'] = True
+                del interface['ifname']
+        # bridge has already been defined
+        # but we need to add more references to it
+        elif interface['type'] == 'bridge' and i >= 2:
+            # openwrt adds "br-" prefix to bridge interfaces
+            # we need to take this into account when referring
+            # to these physical names
+            interface['ifname'] = 'br-{ifname}'.format(**interface)
+            # do not repeat bridge attributes (they have already been processed)
+            del interface['type']
+            del interface['bridge_members']
+        elif interface['type'] != 'bridge':
+            del interface['type']
+        return interface
+
     def __get_proto(self, interface, address):
         """
-        determines interface "proto" option
+        determines UCI interface "proto" option
         """
+        # proto defaults to static
+        address_proto = address.pop('proto', 'static')
         if 'proto' not in interface:
-            # proto defaults to static
-            return address.get('proto', 'static')
+            return address_proto
         else:
-            # allow override
-            return interface['proto']
+            # allow override on interface level
+            return interface.pop('proto')
 
     def __get_dns_servers(self, uci, address):
+        """
+        determines UCI interface "dns" option
+        """
         # allow override
         if 'dns' in uci:
             return uci['dns']
         # ignore if using DHCP or if "proto" is none
-        if address['proto'] in ['dhcp', 'none']:
+        if address['proto'] in ['dhcp', 'dhcpv6', 'none']:
             return None
-        # general setting
         dns = self.netjson.get('dns_servers', None)
         if dns:
             return ' '.join(dns)
 
     def __get_dns_search(self, uci, address):
+        """
+        determines UCI interface "dns_search" option
+        """
         # allow override
         if 'dns_search' in uci:
             return uci['dns_search']
         # ignore if "proto" is none
         if address['proto'] == 'none':
             return None
-        # general setting
         dns_search = self.netjson.get('dns_search', None)
         if dns_search:
             return ' '.join(dns_search)

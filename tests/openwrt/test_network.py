@@ -60,6 +60,12 @@ config interface 'lo'
                             "mask": 128,
                             "proto": "static",
                             "family": "ipv6"
+                        },
+                        {
+                            "address": "fd87::2",
+                            "mask": 128,
+                            "proto": "static",
+                            "family": "ipv6"
                         }
                     ]
                 }
@@ -70,21 +76,10 @@ config interface 'lo'
 config interface 'eth0_1'
     option auto '1'
     option ifname 'eth0.1'
-    option ipaddr '192.168.1.1'
-    option netmask '255.255.255.0'
-    option proto 'static'
-
-config interface 'eth0_1_2'
-    option auto '1'
-    option ifname 'eth0.1'
-    option ipaddr '192.168.2.1'
-    option netmask '255.255.255.0'
-    option proto 'static'
-
-config interface 'eth0_1_3'
-    option auto '1'
-    option ifname 'eth0.1'
-    option ip6addr 'fd87::1/128'
+    list ip6addr 'fd87::1/128'
+    list ip6addr 'fd87::2/128'
+    list ipaddr '192.168.1.1/24'
+    list ipaddr '192.168.2.1/24'
     option proto 'static'
 """)
         self.assertEqual(o.render(), expected)
@@ -140,6 +135,47 @@ config interface 'eth0'
 config interface 'eth0_2'
     option ifname 'eth0'
     option proto 'dhcpv6'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_multiple_ip_and_dhcp(self):
+        o = OpenWrt({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4"
+                        },
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                        {
+                            "address": "192.168.2.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                    ]
+                }
+            ]
+        })
+        expected = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    list ipaddr '192.168.1.1/24'
+    list ipaddr '192.168.2.1/24'
+    option proto 'static'
+
+config interface 'eth0_2'
+    option ifname 'eth0'
+    option proto 'dhcp'
 """)
         self.assertEqual(o.render(), expected)
 
@@ -371,7 +407,7 @@ config interface 'lan'
 """)
         self.assertEqual(o.render(), expected)
 
-    def test_eth_bridge(self):
+    def test_complex_bridge(self):
         o = OpenWrt({
             "interfaces": [
                 {
@@ -405,6 +441,10 @@ config interface 'lan'
                             "mask": 24,
                             "proto": "static",
                             "family": "ipv4"
+                        },
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4"
                         }
                     ]
                 }
@@ -421,18 +461,16 @@ config interface 'eth1'
     option proto 'none'
 
 config interface 'lan'
+    option gateway '10.0.0.10'
     option ifname 'eth0 eth1'
-    option ipaddr '192.168.1.1'
-    option netmask '255.255.255.0'
+    list ipaddr '192.168.1.1/24'
+    list ipaddr '10.0.0.1/24'
     option proto 'static'
     option type 'bridge'
 
 config interface 'lan_2'
-    option gateway '10.0.0.10'
     option ifname 'br-lan'
-    option ipaddr '10.0.0.1'
-    option netmask '255.255.255.0'
-    option proto 'static'
+    option proto 'dhcp'
 """)
         self.assertEqual(o.render(), expected)
 
@@ -856,9 +894,7 @@ config interface 'eth0'
                             "family": "ipv4"
                         },
                         {
-                            "address": "192.168.2.1",
-                            "mask": 24,
-                            "proto": "static",
+                            "proto": "dhcp",
                             "family": "ipv4"
                         }
                     ]
@@ -875,9 +911,7 @@ config interface 'lan'
 
 config interface 'lan_2'
     option ifname 'eth0'
-    option ipaddr '192.168.2.1'
-    option netmask '255.255.255.0'
-    option proto 'static'
+    option proto 'dhcp'
 """)
         self.assertEqual(o.render(), expected)
 
