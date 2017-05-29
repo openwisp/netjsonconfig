@@ -115,40 +115,42 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         with self.assertRaises(ValidationError):
             o.validate()
 
-    def test_generate(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "addresses": [
-                        {
-                            "address": "192.168.1.1",
-                            "mask": 24,
-                            "proto": "static",
-                            "family": "ipv4"
-                        }
-                    ],
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "MyWifiAP",
-                        "hidden": True
+    _config1 = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "addresses": [
+                    {
+                        "address": "192.168.1.1",
+                        "mask": 24,
+                        "proto": "static",
+                        "family": "ipv4"
                     }
+                ],
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "MyWifiAP",
+                    "hidden": True
                 }
-            ],
-            "radios": [
-                {
-                    "name": "radio0",
-                    "phy": "phy0",
-                    "driver": "mac80211",
-                    "protocol": "802.11n",
-                    "channel": 3,
-                    "channel_width": 20,
-                    "tx_power": 3
-                }
-            ]
-        })
+            }
+        ],
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11n",
+                "channel": 3,
+                "channel_width": 20,
+                "tx_power": 3
+            }
+        ]
+    }
+
+    def test_generate(self):
+        o = OpenWrt(self._config1)
         tar = tarfile.open(fileobj=o.generate(), mode='r')
         self.assertEqual(len(tar.getmembers()), 2)
         # network
@@ -183,6 +185,10 @@ config wifi-iface 'wifi_wlan0'
 """)
         self.assertEqual(contents, expected)
         tar.close()
+
+    def test_double_rendering(self):
+        o = OpenWrt(self._config1)
+        self.assertEqual(o.render(), o.render())
 
     def test_write(self):
         o = OpenWrt({
