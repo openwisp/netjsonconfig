@@ -505,11 +505,7 @@ class Wireless(BaseConverter):
 class OpenVpn(BaseOpenVpn):
     def __get_vpn(self, vpn):
         config = super(OpenVpn, self).__get_vpn(vpn)
-        if 'disabled' in config:
-            config['enabled'] = not config['disabled']
-            del config['disabled']
-        else:
-            config['enabled'] = True
+        config['enabled'] = not config.get('disabled', False)
         config.update({
             '.name': logical_name(config.pop('name')),
             '.type': 'openvpn'
