@@ -1,0 +1,5 @@
+{% for namespace, value in data.items() %}
+	{% for config in value %}
+		{{ namespace }}.{{ config['key'] }}={{ config['value'] }}
+	{% endfor %}
+{% endfor %}
