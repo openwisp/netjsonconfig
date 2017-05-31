@@ -16,8 +16,13 @@ class AirOS(BaseBackend):
     # converters from configuration
     # dictionary to intermediate representation
     converters = [
-            Dns,
+            Bridge,
+            Gui,
+            Httpd,
+            Resolv,
+            Snmp,
             Vlan,
+            Wireless,
     ]
 
     # the environment where airos
