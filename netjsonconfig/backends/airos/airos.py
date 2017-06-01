@@ -1,5 +1,7 @@
 import re
 
+from six import string_types
+
 from .converters import *
 from .renderers import AirOS
 from ..base.backend import BaseBackend
@@ -118,7 +120,7 @@ def intermediate_to_list(configuration):
 
         elif  isinstance(element, dict):
             for k, v in element.items():
-                if isinstance(v, str) or isinstance(v, int) or isinstance(v, unicode):
+                if isinstance(v, string_types) or isinstance(v, int):
                     pass
                 else:
                     # reduce to atom list
