@@ -29,29 +29,7 @@ class AirOS(BaseBackend):
     # templates lives
     env_path = 'netjsonconfig.backends.airos'
 
-    # TODO: remove
-    # list of renderers available
-    # for this backend
-#    renderers = [
-#            renderers.SystemRenderer,
-#            renderers.NetworkRenderer,
-#    ]
-
     renderer = AirOS
-
-#    @classmethod
-#    def get_renderers(cls):
-#        pass
-#
-#    def _generate_contents(self, tar):
-#        """
-#        Add configuration files rendered by backend
-#        to tarfile instance
-#        
-#        :param tar: tarfile instance
-#        :returns: None
-#        """
-#        pass
 
     def to_intermediate(self):
         super(AirOS, self).to_intermediate()
