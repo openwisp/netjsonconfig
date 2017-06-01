@@ -7,3 +7,9 @@ class VlanAirOS(AirOS):
     converters = [
             Vlan,
     ]
+
+
+class ResolvAirOS(AirOS):
+    converters = [
+            Resolv,
+    ]
