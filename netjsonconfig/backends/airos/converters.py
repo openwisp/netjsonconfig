@@ -92,10 +92,10 @@ class Resolv(BaseConverter):
         original = get_copy(self.netjson, self.netjson_key)
 
         a = {
-                'nameservers' : [],
+                'nameserver' : [],
         }
         for nameserver in original:
-            a['nameservers'].append({
+            a['nameserver'].append({
                 'ip': nameserver,
                 'status': 'enabled',
             })
