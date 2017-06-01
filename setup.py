@@ -13,6 +13,9 @@ if sys.argv[-1] == 'setup.py':
     print("To install, run 'python setup.py install'\n")
 
 if sys.argv[-1] == 'publish':
+    if sys.version_info.major < 3:
+        print('Error: do not publish release with python2!')
+        sys.exit(1)
     os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
     os.system("python setup.py sdist bdist_wheel")
     os.system("twine upload -s dist/*")
