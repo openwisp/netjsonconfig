@@ -1,10 +1,17 @@
 Change log
 ==========
 
-Version 0.6.0 [unreleased]
+Version 0.6.0 [2017-06-01]
 --------------------------
 
-WIP
+- `2a6cfb2 <https://github.com/openwisp/netjsonconfig/commit/2a6cfb2>`_:
+  [general] Refactored backends, renderers, added converters -
+  more information available in the `OpenWISP Mailing List post
+  <https://groups.google.com/d/msg/openwisp/9FOhrfykwTY/tyRjqUoFAwAJ>`_
+- `#58 <https://github.com/openwisp/netjsonconfig/pull/58>`_:
+  [openwrt] Dropped obsolete code in OpenVpn backend
+- `#59 <https://github.com/openwisp/netjsonconfig/pull/59>`_:
+  [openwrt] Improved multiple ip address output
 
 Version 0.5.6 [2017-05-24]
 --------------------------
