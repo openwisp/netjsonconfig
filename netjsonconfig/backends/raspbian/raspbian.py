@@ -1,7 +1,8 @@
 import re
 
-from . import renderers
-from ..base import BaseBackend
+from .converters import *
+from .renderers import Raspbian
+from ..base.backend import BaseBackend
 from .schema import schema
 
 class Raspbian(BaseBackend):
@@ -10,19 +11,8 @@ class Raspbian(BaseBackend):
     """
     schema = schema
     env_path = 'netjsonconfig.backends.raspbian'
-    renderers = [
-        renderers.NetworkRenderer,
-        renderers.WirelessRenderer
+    converters = [
+        DNS_Servers,
+        DNS_Search
     ]
-    @classmethod
-    def get_renderers(cls):
-        pass
-
-    def _generate_contents(self, tar):
-        """
-        Add configuration files to tar files instance.
-
-        :param tar: tarfile instance
-        :return None
-        """
-        pass
+    renderer = Raspbian
