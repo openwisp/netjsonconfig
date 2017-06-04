@@ -16,7 +16,6 @@ class DNS_Servers(BaseConverter):
                 'ip': nameserver,
             })
         result.append(sorted_dict(temp))
-        print result
         return (('dns_servers', result),)
 
 
@@ -34,5 +33,4 @@ class DNS_Search(BaseConverter):
                 'domain': domain
             })
         result.append(sorted_dict(temp))
-        print result
         return (('dns_search', result),)
