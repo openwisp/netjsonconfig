@@ -1,6 +1,6 @@
 import re
 
-from . import converters
+from .converters import *
 from .renderers import Raspbian
 from ..base.backend import BaseBackend
 from .schema import schema
