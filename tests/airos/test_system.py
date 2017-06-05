@@ -1,23 +1,51 @@
 import unittest
 
-from netjsonconfig import AirOS
-from netjsonconfig.exceptions import ValidationError
-from netjsonconfig.utils import _TabsMixin
+from .dummy import ResolvAirOS
 
 
-class TestSystemRenderer(unittest.TestCase, _TabsMixin):
-    """
-    tests for backends.airos.renderers.SystemRenderer
-    """
+class TestResolvConverter(unittest.TestCase):
+
+    backend = ResolvAirOS
+
     def test_resolv(self):
-        o = AirOS({
-            "dns_server": [
+        o = self.backend({
+            "dns_servers": [
                 "10.150.42.1"
-            ]
+            ],
         })
-        expected = self._tabs("""resolv.status=disabled
-resolv.nameserver.status=enabled
-resolv.nameserver.1.status=enabled
-resolv.nameserver.1.ip=10.150.42.1
-""")
-        self.assertEqual(o.render(), expected)
+
+        o.to_intermediate()
+
+        expected = [
+                {
+                    'host.1.name' : '',
+                },
+                {
+                    'nameserver.1.ip' : '10.150.42.1',
+                    'nameserver.1.status' : 'enabled',
+                },
+                {
+                    'status' : 'enabled',
+                },
+        ]
+
+
+        self.assertEqual(o.intermediate_data['resolv'], expected)
+
+    def test_no_dns_server(self):
+        o = self.backend({
+            "dns_servers": [],
+        })
+
+        o.to_intermediate()
+
+        expected = [
+                {
+                    'host.1.name' : '',
+                },
+                {
+                    'status' : 'enabled',
+                },
+        ]
+
+        self.assertEqual(o.intermediate_data['resolv'], expected)

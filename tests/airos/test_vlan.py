@@ -1,9 +1,6 @@
 import unittest
 
-from collections import OrderedDict
-
 from netjsonconfig.backends.airos.converters import *
-from netjsonconfig.exceptions import ValidationError
 
 from .dummy import VlanAirOS
 

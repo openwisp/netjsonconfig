@@ -16,21 +16,21 @@ class TestWirelessConverter(unittest.TestCase):
                 {
                     "type": "wireless",
                     "name": "wlan0",
-                    "mac" : "de:9f:db:30:c9:c5",
-                    "mtu" : 1500,
-                    "txqueuelen" : 1000,
-                    "autostart" : True,
-                    "wireless" : {
-                        "radio" : "radio0",
-                        "mode" : "access_point",
-                        "ssid" : "ap-ssid-example",
+                    "mac": "de:9f:db:30:c9:c5",
+                    "mtu": 1500,
+                    "txqueuelen": 1000,
+                    "autostart": True,
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "ap-ssid-example",
                     },
-                    "addresses" : [
+                    "addresses": [
                         {
-                            "address" : "192.168.1.1",
-                            "mask" : 24,
-                            "family" : "ipv4",
-                            "proto" : "static",
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "family": "ipv4",
+                            "proto": "static",
                         }
                     ],
                 }
@@ -50,7 +50,7 @@ class TestWirelessConverter(unittest.TestCase):
                         '1.wds.status': 'enabled',
                     },
                     {
-                        'status' : 'enabled',
+                        'status': 'enabled',
                     }
                 ]
 
