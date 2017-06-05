@@ -64,6 +64,35 @@ class Bridge(BaseConverter):
 class Discovery(BaseConverter):
     netjson_key = 'general'
 
+    def to_intermediate(self):
+        result = [
+               {
+                   'cdp': {
+                       'status': 'enabled',
+                    },
+                   'status': 'enabled',
+                },
+        ]
+        return (('discovery', result),)
+
+
+class Dyndns(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = [
+                [
+                    {
+                        'servicename': 'dyndns.org',
+                    },
+                ],
+                {
+                    'status': 'enabled',
+                },
+        ]
+        return (('dyndns', result),)
+
+
 class Gui(BaseConverter):
     netjson_key = 'gui'
 
