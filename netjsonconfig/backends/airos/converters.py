@@ -65,7 +65,7 @@ class Discovery(BaseConverter):
     netjson_key = 'general'
 
 class Gui(BaseConverter):
-    netjson_key = 'general'
+    netjson_key = 'gui'
 
     def to_intermediate(self):
         result = [
