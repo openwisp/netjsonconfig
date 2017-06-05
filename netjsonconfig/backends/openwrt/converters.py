@@ -1,6 +1,5 @@
 import json
 from copy import deepcopy
-
 from ipaddress import ip_interface, ip_network
 
 from ...utils import get_copy, sorted_dict
