@@ -1,6 +1,33 @@
 from ...utils import get_copy, sorted_dict
 from ..base.converter import BaseConverter
 
+
+class Aaa(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append([
+            {
+                'radius': {
+                    'acct': [
+                        {
+                            'port': 1813,
+                            'status': 'disabled',
+                        },
+                    ],
+                    'auth': [
+                        {
+                            'port': 1812,
+                        },
+                    ],
+                },
+                'status': 'disabled',
+            }
+        ])
+        return (('aaa', result),)
+
 class Bridge(BaseConverter):
     netjson_key = 'interfaces'
 
@@ -34,6 +61,8 @@ class Bridge(BaseConverter):
         return (('bridge', result),)
 
 
+class Discovery(BaseConverter):
+    netjson_key = 'general'
 
 class Gui(BaseConverter):
     netjson_key = 'general'
@@ -77,6 +106,94 @@ class Httpd(BaseConverter):
         return (('httpd', result),)
 
 
+class Netconf(BaseConverter):
+    netjson_key = 'interfaces'
+
+    def to_intermediate(self):
+        result = []
+        interfaces = []
+        original = [
+                i for i in get_copy(self.netjson, self.netjson_key)
+                ]
+
+        for interface in original:
+
+            interfaces.append({
+                'devname':  interface['name'],
+                'status':  'disabled' if interface.get('disabled', False) else 'enabled',
+            })
+
+        result.append(interfaces)
+        result.append({
+            'status':  'enabled',
+        })
+        return (('netconf', result),)
+
+
+class Netmode(BaseConverter):
+    netjson_key = 'interfaces'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'status': 'enabled',
+        })
+        return (('netmode', result), )
+
+
+class Ntpclient(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'status': 'enabled',
+        })
+        return (('ntpclient',result),)
+
+
+
+class Pwdog(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'delay': 300,
+            'period': 300,
+            'retry': 3,
+            'status': 'enabled',
+        })
+        return (('pwdog', result),)
+
+
+class Radio(BaseConverter):
+    netjson_key = 'radios'
+
+    def to_intermediate(self):
+        result = []
+
+        original = get_copyt(self.netjson, self.netjson_key)
+
+        radios = []
+
+        for r in original:
+            radios.append({
+                'devname': r['name'],
+                'status': 'enabled',
+                'txpower': r.get('tx_power',''),
+            })
+
+        result.append({
+            'status': 'enabled',
+        })
+
+        return (('radio', result),)
+
+
 class Resolv(BaseConverter):
     netjson_key = 'dns_servers'
 
@@ -84,29 +201,55 @@ class Resolv(BaseConverter):
         result = []
 
         result.append({
-            'host': [{
-                'name' : ''
+            'host':  [{
+                'name':  ''
             }]
         })
 
         original = get_copy(self.netjson, self.netjson_key)
 
         a = {
-                'nameserver' : [],
+                'nameserver':  [],
         }
         for nameserver in original:
             a['nameserver'].append({
-                'ip': nameserver,
-                'status': 'enabled',
+                'ip':  nameserver,
+                'status':  'enabled',
             })
 
         result.append(a)
 
         result.append({
-            'status': 'enabled',
+            'status':  'enabled',
         })
 
         return (('resolv', result),)
+
+
+class Route(BaseConverter):
+    netjson_key = 'routes'
+
+    def to_intermediate(self):
+        result = []
+        original = get_copy(self.netjson, self.netjson_key)
+
+        routes = []
+
+        for r in original:
+            routes.append({
+                'devname': '',
+                'gateway': '0.0.0.0',
+                'ip': '0.0.0.0',
+                'netmask': 0,
+                'status': 'enabled',
+            })
+
+        result.append(routes)
+
+        result.append({
+            'status': 'enabled',
+        })
+        return (('route', result),)
 
 
 class Snmp(BaseConverter):
@@ -114,16 +257,96 @@ class Snmp(BaseConverter):
 
     def to_intermediate(self):
         result = [
-                {
-                    'community' : 'public',
-                    'contact' : 'value',
-                    'location': '',
-                    'status': 'enabled',
+               {
+                    'community':  'public',
+                    'contact':  'value',
+                    'location':  '',
+                    'status':  'enabled',
                 },
         ]
 
         return (('snmp', result),)
 
+
+class Sshd(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'port': 22,
+            'status': 'enabled',
+        })
+        return (('sshd', result),)
+
+class Syslog(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'status': 'disabled',
+        })
+        return (('syslog', result),)
+
+
+class System(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        return (('system', result),)
+
+
+class Telnetd(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'port': 23,
+            'status': 'enabled',
+        })
+        return (('telnetd', result),)
+
+
+class Update(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'check': {
+                'status': 'enabled',
+            },
+        })
+        return (('update', result),)
+
+
+class Users(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'status': 'enabled',
+        })
+
+        result.append([
+            {
+                'name': 'root',
+                'password': 'changeme',
+                'status': 'enabled',
+            },
+        ])
+
+        return (('users', result),)
 
 
 class Vlan(BaseConverter):
@@ -181,3 +404,27 @@ class Wireless(BaseConverter):
         })
 
         return (('wireless', result),)
+
+class Wpasupplicant(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'device': [
+                {
+                    'status': 'disabled',
+                },
+            ],
+            'profile': [
+                {
+                    'network': [
+                        {
+                            'ssid': 'your-ssid-here',
+                        },
+                    ],
+                },
+            ],
+        })
+        return (('wpasupplicant', result),)
