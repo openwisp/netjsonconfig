@@ -18,13 +18,29 @@ class AirOS(BaseBackend):
     # converters from configuration
     # dictionary to intermediate representation
     converters = [
+            Aaa,
             Bridge,
+            Discovery,
+            Dyndns,
             Gui,
             Httpd,
+            Netconf,
+            Netmode,
+            Ntpclient,
+            Pwdog,
+            Radio,
             Resolv,
+            Route,
             Snmp,
+            Sshd,
+            Syslog,
+            System,
+            Telnetd,
+            Update,
+            Users,
             Vlan,
             Wireless,
+            Wpasupplicant
     ]
 
     # the environment where airos
