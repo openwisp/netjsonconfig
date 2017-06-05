@@ -51,6 +51,7 @@ Contents:
    /backends/openwrt
    /backends/openwisp
    /backends/openvpn
+   /backends/raspbian
    /general/commandline_utility
    /general/running_tests
    /general/contributing
