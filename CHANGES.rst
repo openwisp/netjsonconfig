@@ -1,6 +1,11 @@
 Change log
 ==========
 
+Version 0.6.1 [unreleased]
+--------------------------
+
+Work in progress on the `backward conversion front <https://github.com/openwisp/netjsonconfig/issues/70>`_.
+
 Version 0.6.0 [2017-06-01]
 --------------------------
 
