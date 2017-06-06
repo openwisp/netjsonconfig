@@ -21,8 +21,9 @@ class BaseBackend(object):
     schema = None
     FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
     intermediate_data = None
+    list_identifiers = []
 
-    def __init__(self, config, templates=[], context={}):
+    def __init__(self, config, templates=None, context=None):
         """
         :param config: ``dict`` containing valid **NetJSON DeviceConfiguration**
         :param templates: ``list`` containing **NetJSON** dictionaries that will be
@@ -54,17 +55,17 @@ class BaseBackend(object):
         """
         Merges config with templates
         """
+        if not templates:
+            return config
         # type check
         if not isinstance(templates, list):
             raise TypeError('templates argument must be an instance of list')
-        # merge any present template with main configuration
+        # merge templates with main configuration
         base_config = {}
-
         for template in templates:
-            template = self._load(template)
-            base_config = merge_config(base_config, template)
+            base_config = merge_config(base_config, self._load(template), self.list_identifiers)
         if base_config:
-            return merge_config(base_config, config)
+            return merge_config(base_config, config, self.list_identifiers)
         return config
 
     def _evaluate_vars(self, config, context):

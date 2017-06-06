@@ -173,7 +173,7 @@ class TestUtils(unittest.TestCase):
     def test_merge_list_override(self):
         template = [{"name": "test1", "tx": 1}]
         config = [{"name": "test1", "tx": 2}]
-        result = merge_list(template, config)
+        result = merge_list(template, config, ['name'])
         self.assertEqual(result, config)
 
     def test_merge_list_union_and_override(self):
@@ -182,7 +182,7 @@ class TestUtils(unittest.TestCase):
             {"id": "test1", "a": "0", "b": "b"},
             {"id": "test2", "c": "c"}
         ]
-        result = merge_list(template, config)
+        result = merge_list(template, config, ['id'])
         self.assertEqual(result, [
             {"id": "test1", "a": "0", "b": "b"},
             {"id": "test2", "c": "c"}
@@ -191,7 +191,7 @@ class TestUtils(unittest.TestCase):
     def test_merge_list_config_value(self):
         template = [{"config_value": "test1", "tx": 1}]
         config = [{"config_value": "test1", "tx": 2}]
-        result = merge_list(template, config)
+        result = merge_list(template, config, ['config_value'])
         self.assertEqual(result, config)
 
     def test_get_copy_default(self):

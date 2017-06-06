@@ -5,7 +5,7 @@ from copy import deepcopy
 import six
 
 
-def merge_config(template, config):
+def merge_config(template, config, list_identifiers=None):
     """
     Merges ``config`` on top of ``template``.
 
@@ -19,6 +19,7 @@ def merge_config(template, config):
 
     :param template: template ``dict``
     :param config: config ``dict``
+    :param list_identifiers: ``list`` or ``None``
     :returns: merged ``dict``
     """
     result = template.copy()
@@ -27,13 +28,13 @@ def merge_config(template, config):
             node = result.get(key, {})
             result[key] = merge_config(node, value)
         elif isinstance(value, list) and isinstance(result.get(key), list):
-            result[key] = merge_list(result[key], value)
+            result[key] = merge_list(result[key], value, list_identifiers)
         else:
             result[key] = value
     return result
 
 
-def merge_list(list1, list2, identifiers=['name', 'config_value', 'id']):
+def merge_list(list1, list2, identifiers=None):
     """
     Merges ``list2`` on top of ``list1``.
 
@@ -43,10 +44,12 @@ def merge_list(list1, list2, identifiers=['name', 'config_value', 'id']):
     The remaining elements will be summed in order to create a list
     which contains elements of both lists.
 
-    :param list1: list from template
-    :param list2: list from config
+    :param list1: ``list`` from template
+    :param list2: ``list from config
+    :param identifiers: ``list`` or ``None``
     :returns: merged ``list``
     """
+    identifiers = identifiers or []
     dict_map = {'list1': OrderedDict(), 'list2': OrderedDict()}
     counter = 1
     for list_ in [list1, list2]:

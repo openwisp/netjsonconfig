@@ -25,10 +25,11 @@ class OpenWisp(OpenWrt):
         for radio in self.config.get('radios', []):
             radio.setdefault('disabled', False)
 
-    def _render_template(self, template, context={}):
+    def _render_template(self, template, context=None):
         openwisp_env = Environment(loader=PackageLoader(self.__module__, 'templates'),
                                    trim_blocks=True)
         template = openwisp_env.get_template(template)
+        context = context or {}
         return template.render(**context)
 
     def _add_unique_file(self, item):

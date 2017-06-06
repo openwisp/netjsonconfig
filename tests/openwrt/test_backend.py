@@ -209,7 +209,7 @@ config wifi-iface 'wifi_wlan0'
             }
         }
         with self.assertRaises(TypeError):
-            OpenWrt(config, templates={})
+            OpenWrt(config, templates={'a': 'a'})
 
     def test_templates_config_error(self):
         config = {

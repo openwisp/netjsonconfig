@@ -28,6 +28,7 @@ class OpenWrt(BaseBackend):
         converters.Default,
     ]
     renderer = OpenWrtRenderer
+    list_identifiers = ['name', 'config_value', 'id']
 
     def _generate_contents(self, tar):
         """
