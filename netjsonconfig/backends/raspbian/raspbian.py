@@ -13,6 +13,7 @@ class Raspbian(BaseBackend):
     schema = schema
     env_path = 'netjsonconfig.backends.raspbian'
     converters = [
+        Wireless,
         DNS_Servers,
         DNS_Search
     ]
