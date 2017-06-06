@@ -61,12 +61,11 @@ class BaseBackend(object):
         if not isinstance(templates, list):
             raise TypeError('templates argument must be an instance of list')
         # merge templates with main configuration
-        base_config = {}
-        for template in templates:
-            base_config = merge_config(base_config, self._load(template), self.list_identifiers)
-        if base_config:
-            return merge_config(base_config, config, self.list_identifiers)
-        return config
+        result = {}
+        config_list = [config] + templates
+        for merging in config_list:
+            result = merge_config(result, self._load(merging), self.list_identifiers)
+        return result
 
     def _evaluate_vars(self, config, context):
         """
