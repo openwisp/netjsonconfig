@@ -378,3 +378,25 @@ config wifi-iface 'wifi_wlan0'
         sleep(1)
         checksum2 = md5(o.generate().getvalue()).hexdigest()
         self.assertEqual(checksum1, checksum2)
+
+    def test_override(self):
+        config = {
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "disabled": False
+                }
+            ]
+        }
+        template = {
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "disabled": True
+                }
+            ]
+        }
+        o = OpenWrt(config, templates=[template])
+        self.assertFalse(o.config['interfaces'][0]['disabled'])

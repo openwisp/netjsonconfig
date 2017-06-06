@@ -62,7 +62,7 @@ class BaseBackend(object):
             raise TypeError('templates argument must be an instance of list')
         # merge templates with main configuration
         result = {}
-        config_list = [config] + templates
+        config_list = templates + [config]
         for merging in config_list:
             result = merge_config(result, self._load(merging), self.list_identifiers)
         return result
