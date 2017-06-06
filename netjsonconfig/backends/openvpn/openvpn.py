@@ -14,6 +14,7 @@ class OpenVpn(BaseBackend):
     schema = schema
     converters = [converters.OpenVpn]
     renderer = OpenVpnRenderer
+    list_identifiers = ['name']
     VPN_REGEXP = re.compile('# openvpn config: ')
 
     def _generate_contents(self, tar):

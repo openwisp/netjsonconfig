@@ -200,6 +200,7 @@ verb 1
 
     _simple_conf = {
         "openvpn": [{
+            "name": "test",
             "ca": "ca.pem",
             "cert": "cert.pem",
             "dev": "tap0",
@@ -207,7 +208,6 @@ verb 1
             "dh": "dh.pem",
             "key": "key.pem",
             "mode": "server",
-            "name": "test",
             "proto": "udp",
             "status": "",
             "status_version": 1,
@@ -683,3 +683,19 @@ tls-client
     def test_double_rendering(self):
         o = OpenVpn(self._simple_conf)
         self.assertEqual(o.render(), o.render())
+
+    def test_override(self):
+        template = {
+            "openvpn": [{
+                "name": "test",
+                "ca": "TEST",
+                "cert": "TEST",
+                "dev": "TEST",
+                "dev_type": "TEST",
+                "dh": "TEST",
+                "key": "TEST",
+            }]
+        }
+        o = OpenVpn(self._simple_conf, templates=[template])
+        # ensure dummy values in template have been overridden
+        self.assertDictEqual(o.config, self._simple_conf)
