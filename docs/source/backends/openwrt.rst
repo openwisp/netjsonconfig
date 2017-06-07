@@ -84,20 +84,10 @@ Will return the following output::
 
     config interface 'eth0_1'
             option ifname 'eth0.1'
-            option proto 'static'
-            option ipaddr '192.168.1.1'
-            option netmask '255.255.255.0'
-
-    config interface 'eth0_1_2'
-            option ifname 'eth0.1'
-            option proto 'static'
-            option ipaddr '192.168.2.1'
-            option netmask '255.255.255.0'
-
-    config interface 'eth0_1_3'
-            option ifname 'eth0.1'
-            option proto 'static'
             option ip6addr 'fd87::1/128'
+            list ipaddr '192.168.1.1/24'
+            list ipaddr '192.168.2.1/24'
+            option proto 'static'
 
 Generate method
 ---------------
@@ -355,16 +345,7 @@ Will be rendered as follows::
 
     package network
 
-    config interface 'eth0'
-            option ifname 'eth0'
-            option ipaddr '10.27.251.1'
-            option netmask '255.255.255.0'
-            option proto 'static'
-
-    config interface 'eth0_2'
-            option ifname 'eth0'
-            option ip6addr 'fdb4:5f35:e8fd::1/48'
-            option proto 'static'
+    config interface 'eth0'        option ifname 'eth0'        option ip6addr 'fdb4:5f35:e8fd::1/48'        option ipaddr '10.27.251.1'        option netmask '255.255.255.0'        option proto 'static'
 
 DNS servers and search domains
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -419,22 +400,7 @@ Will return the following UCI output::
 
     package network
 
-    config interface 'eth0'
-            option dns '10.11.12.13 8.8.8.8'
-            option dns_search 'openwisp.org netjson.org'
-            option ifname 'eth0'
-            option ipaddr '192.168.1.1'
-            option netmask '255.255.255.0'
-            option proto 'static'
-
-    config interface 'eth1'
-            option dns_search 'openwisp.org netjson.org'
-            option ifname 'eth1'
-            option proto 'dhcp'
-
-    config interface 'eth1_31'
-            option ifname 'eth1.31'
-            option proto 'none'
+    config interface 'eth0'            option dns '10.11.12.13 8.8.8.8'            option dns_search 'openwisp.org netjson.org'            option ifname 'eth0'            option ipaddr '192.168.1.1'            option netmask '255.255.255.0'            option proto 'static'    config interface 'eth1'            option dns_search 'openwisp.org netjson.org'            option ifname 'eth1'            option proto 'dhcp'    config interface 'eth1_31'            option ifname 'eth1.31'            option proto 'none'
 
 DHCP ipv6 ethernet interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -582,8 +548,8 @@ Will be rendered as follows::
             option ipaddr '172.17.0.2'
             option netmask '255.255.255.0'
             option proto 'static'
-            option type 'bridge'
             option stp '1'
+            option type 'bridge'
 
 Wireless settings
 -----------------
@@ -1136,11 +1102,11 @@ UCI Output::
             option ifname 'wlan0'
             option key 'radius_secret'
             option mode 'ap'
+            option nasid 'hostname'
             option network 'wlan0'
             option port '1812'
             option server '192.168.0.1'
             option ssid 'eduroam'
-            option nasid 'hostname'
 
 WPA2 Enterprise (802.1x) client
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
