@@ -1,0 +1,12 @@
+{% for i, j in data.items() %}
+{% if i|string() == 'dns_servers' %}
+{% for ip in j %}
+nameserver {{ ip }}
+{% endfor %}
+{% elif i|string() == 'dns_search' %}
+{% for domain in j %}
+search {{ domain }}
+{% endfor %}
+{% else %}
+{% endif %}
+{% endfor %}
