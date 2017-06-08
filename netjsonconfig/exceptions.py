@@ -1,13 +1,17 @@
 from functools import reduce
 
 
-def list_error_in_subschema(jsonschema_error):
-    sub_errors = []
-    for validator_value, error in zip(jsonschema_error.validator_value, jsonschema_error.context):
-        sub_errors.append((validator_value, error.message))
+def _list_errors(e):
+    """
+    Returns a list of violated schema fragments and related error messages
+    :param e: ``jsonschema.exceptions.ValidationError`` instance
+    """
+    error_list = []
+    for value, error in zip(e.validator_value, e.context):
+        error_list.append((value, error.message))
         if error.context:
-            sub_errors += list_error_in_subschema(error)
-    return sub_errors
+            error_list += _list_errors(error)
+    return error_list
 
 
 class NetJsonConfigException(Exception):
@@ -15,13 +19,11 @@ class NetJsonConfigException(Exception):
     Root netjsonconfig exception
     """
     def __str__(self):
-        suberrors = list_error_in_subschema(self.details)
-
-        default_message = "%s %s\n" % (self.__class__.__name__, self.details,)
-        suberror_fmt = '\nAgainst schema %s\n%s\n'
-        suberror_message = reduce(lambda x, y: x + suberror_fmt % y, suberrors, '')
-
-        return default_message + suberror_message
+        message = "%s %s\n" % (self.__class__.__name__, self.details,)
+        errors = _list_errors(self.details)
+        separator = '\nAgainst schema %s\n%s\n'
+        details = reduce(lambda x, y: x + separator % y, errors, '')
+        return message + details
 
 
 class ValidationError(NetJsonConfigException):
