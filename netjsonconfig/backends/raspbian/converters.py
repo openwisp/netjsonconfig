@@ -60,7 +60,7 @@ class Wireless(BaseConverter):
         return (('wireless', result),)
 
 
-class DNS_Servers(BaseConverter):
+class DnsServers(BaseConverter):
     netjson_key = 'dns_servers'
 
     def to_intermediate(self):
@@ -71,7 +71,7 @@ class DNS_Servers(BaseConverter):
         return (('dns_servers', result),)
 
 
-class DNS_Search(BaseConverter):
+class DnsSearch(BaseConverter):
     netjson_key = 'dns_search'
 
     def to_intermediate(self):
