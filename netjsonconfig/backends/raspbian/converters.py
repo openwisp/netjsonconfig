@@ -2,6 +2,34 @@ from ...utils import get_copy, sorted_dict
 from ..base.converter import BaseConverter
 
 
+class Radio(BaseConverter):
+    netjson_key = 'radios'
+
+    def to_intermediate(self):
+        result = []
+        radios = get_copy(self.netjson, self.netjson_key)
+        for radio in radios:
+            temp = {
+                'name': radio['name'],
+                'protocol': radio['protocol'],
+                'channel': radio['channel'],
+                'hwmode': self._get_hwmode(radio)
+            }
+            result.append(temp)
+        return (('wireless', result),)
+
+
+    def _get_hwmode(self, radio):
+        protocol = radio['protocol']
+        if protocol in ['802.11a', '802.11b', '802.11g']:
+            return protocol[4:]
+        if radio['channel'] is 0:
+            return radio.get('hwmode')
+        elif radio['channel'] <= 13:
+            return '11g'
+        else:
+            return '11a'
+
 class Wireless(BaseConverter):
     netjson_key = 'interfaces'
 
@@ -10,13 +38,10 @@ class Wireless(BaseConverter):
         interfaces = get_copy(self.netjson, self.netjson_key)
         for interface in interfaces:
             if interface['type'] == 'wireless':
-                radio = interface['wireless'].get('radio')
-                mode = interface['wireless'].get('mode')
-                ssid = interface['wireless'].get('ssid')
                 temp = {
-                    'radio': radio,
-                    'mode': mode,
-                    'ssid': ssid,
+                    'radio': interface['wireless'].get('radio'),
+                    'mode': interface['wireless'].get('mode'),
+                    'ssid': interface['wireless'].get('ssid'),
                 }
                 bssid = interface['wireless'].get('bssid', None)
                 if bssid != None:

@@ -1,7 +1,7 @@
 import re
 
 from .converters import *
-from .renderers import Resolv, Hostapd
+from .renderers import Raspbian
 from ..base.backend import BaseBackend
 from .schema import schema
 
@@ -13,7 +13,9 @@ class Raspbian(BaseBackend):
     schema = schema
     env_path = 'netjsonconfig.backends.raspbian'
     converters = [
+        Radio,
+        Wireless,
         DNS_Servers,
         DNS_Search
     ]
-    renderer = Resolv
+    renderer = Raspbian
