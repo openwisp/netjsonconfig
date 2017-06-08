@@ -15,7 +15,7 @@ class Raspbian(BaseBackend):
     converters = [
         Radio,
         Wireless,
-        DNS_Servers,
-        DNS_Search
+        DnsServers,
+        DnsSearch,
     ]
     renderer = Raspbian
