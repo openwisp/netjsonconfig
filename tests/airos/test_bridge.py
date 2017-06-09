@@ -176,7 +176,7 @@ class TestBridgeConverter(unittest.TestCase):
 
         self.assertEqual(o.intermediate_data['bridge'], expected)
 
-    def test_no_vlan(self):
+    def test_no_bridge(self):
         o = self.backend({
             "interfaces": [
                 {
