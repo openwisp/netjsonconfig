@@ -135,11 +135,11 @@ class TestBridgeConverter(unittest.TestCase):
                     "disabled": False,
                 },
                 {
-                    "type": "br1dge",
+                    "type": "bridge",
                     "name": "br1",
                     "bridge_members": [
-                        "eth1",
                         "eth2",
+                        "eth3",
                     ],
                     "disabled": False,
                 }
