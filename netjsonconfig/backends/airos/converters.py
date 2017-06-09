@@ -209,7 +209,7 @@ class Radio(BaseConverter):
     def to_intermediate(self):
         result = []
 
-        original = get_copyt(self.netjson, self.netjson_key)
+        original = get_copy(self.netjson, self.netjson_key)
 
         radios = []
 
@@ -217,7 +217,7 @@ class Radio(BaseConverter):
             radios.append({
                 'devname': r['name'],
                 'status': 'enabled',
-                'txpower': r.get('tx_power',''),
+                'txpower': r.get('tx_power', ''),
             })
 
         result.append({
@@ -430,6 +430,7 @@ class Wireless(BaseConverter):
         for w in original:
             hide_ssid = 'enabled' if w['wireless'].get('hide_ssid') else 'disabled'
             encryption = w['wireless'].get('encryption', 'none')
+            status = 'disabled' if w['wireless'].get('disabled') else 'enabled'
             ws.append({
                 'addmtikie':  'enabled',
                 'devname':  w['name'],
@@ -443,7 +444,7 @@ class Wireless(BaseConverter):
                 'signal_led4': 15,
                 'signal_led_status': 'enabled',
                 'ssid':  w['wireless']['ssid'],
-                'status':  'enabled',
+                'status': status,
                 'wds': {
                     'status': 'enabled',
                 },
@@ -455,6 +456,7 @@ class Wireless(BaseConverter):
         })
 
         return (('wireless', result),)
+
 
 class Wpasupplicant(BaseConverter):
     netjson_key = 'general'
