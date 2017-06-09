@@ -10,19 +10,19 @@ class Aaa(BaseConverter):
 
         result.append([
             {
-                'radius': {
-                    'acct': [
-                        {
-                            'port': 1813,
-                            'status': 'disabled',
-                        },
-                    ],
-                    'auth': [
-                        {
-                            'port': 1812,
-                        },
-                    ],
-                },
+#                'radius': {
+#                    'acct': [
+#                        {
+#                            'port': 1813,
+#                            'status': 'disabled',
+#                        },
+#                    ],
+#                    'auth': [
+#                        {
+#                            'port': 1812,
+#                        },
+#                    ],
+#                },
                 'status': 'disabled',
             }
         ])
@@ -85,13 +85,13 @@ class Dyndns(BaseConverter):
 
     def to_intermediate(self):
         result = [
-                [
-                    {
-                        'servicename': 'dyndns.org',
-                    },
-                ],
+#                [
+#                    {
+#                        'servicename': 'dyndns.org',
+#                    },
+#                ],
                 {
-                    'status': 'enabled',
+                    'status': 'disabled',
                 },
         ]
         return (('dyndns', result),)
@@ -103,7 +103,7 @@ class Gui(BaseConverter):
     def to_intermediate(self):
         result = [
                {
-                    'language':  'it_IT',
+                    'language':  'en_US',
                 },
                {
                     'network': {
@@ -292,7 +292,7 @@ class Snmp(BaseConverter):
         result = [
                {
                     'community':  'public',
-                    'contact':  'value',
+                    'contact':  '',
                     'location':  '',
                     'status':  'enabled',
                 },
@@ -308,10 +308,14 @@ class Sshd(BaseConverter):
         result = []
 
         result.append({
+            'auth': {
+                'passwd': 'enabled',
+            },
             'port': 22,
             'status': 'enabled',
         })
         return (('sshd', result),)
+
 
 class Syslog(BaseConverter):
     netjson_key = 'general'
@@ -331,6 +335,11 @@ class System(BaseConverter):
     def to_intermediate(self):
         result = []
 
+        result.append({
+            'external': {
+                'reset': 'enabled',
+            },
+        })
         return (('system', result),)
 
 
@@ -342,7 +351,7 @@ class Telnetd(BaseConverter):
 
         result.append({
             'port': 23,
-            'status': 'enabled',
+            'status': 'disabled',
         })
         return (('telnetd', result),)
 
@@ -368,14 +377,14 @@ class Users(BaseConverter):
         result = []
 
         result.append({
-            'status': 'enabled',
+            'status': 'disabled',
         })
 
         result.append([
             {
                 'name': 'root',
                 'password': 'changeme',
-                'status': 'enabled',
+                'status': 'disabled',
             },
         ])
 
@@ -428,6 +437,11 @@ class Wireless(BaseConverter):
                 'security': {
                     'type': encryption
                 },
+                'signal_led1': 75,
+                'signal_led2': 50,
+                'signal_led3': 25,
+                'signal_led4': 15,
+                'signal_led_status': 'enabled',
                 'ssid':  w['wireless']['ssid'],
                 'status':  'enabled',
                 'wds': {
