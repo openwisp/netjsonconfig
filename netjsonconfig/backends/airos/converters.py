@@ -182,7 +182,7 @@ class Ntpclient(BaseConverter):
         result = []
 
         result.append({
-            'status': 'enabled',
+            'status': 'disabled',
         })
         return (('ntpclient',result),)
 
@@ -218,6 +218,7 @@ class Radio(BaseConverter):
                 'devname': r['name'],
                 'status': 'enabled',
                 'txpower': r.get('tx_power', ''),
+                'chanbw': r.get('channel_width', ''),
             })
 
         result.append({
