@@ -3,7 +3,7 @@
 {% for i, j in data.items() %}
 {% if i|string() == 'interfaces' %}
 {% for address in j %}
-{% if address.get('iftype') == 'ethernet' or address.get('iftype') == 'bridge' %}
+{% if address.get('iftype') in ['ethernet', 'bridge', 'loopback'] %}
 auto {{ address.get('ifname') }}
 {% if address.get('proto') == 'static' %}
 {% if address.get('family') == 'ipv4'%}
