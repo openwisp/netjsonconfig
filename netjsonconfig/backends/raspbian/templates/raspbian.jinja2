@@ -3,6 +3,7 @@
 {% for i, j in data.items() %}
 {% if i|string() == 'interfaces' %}
 {% for address in j %}
+{# Start of `ethernet` block #}
 {% if address.get('iftype') == 'ethernet' %}
 auto {{ address.get('ifname') }}
 {% if address.get('proto') == 'static' %}
@@ -30,6 +31,37 @@ iface {{ address.get('ifname') }} inet6 {{ address.get('proto') }}
 {% endif %}
 {% endif %}
 
+{# End of `ethernet` block #}
+{# Start of `bridge` block #}
+{% elif address.get('iftype') == 'bridge' %}
+auto {{ address.get('ifname') }}
+{% if address.get('proto') == 'static' %}
+{% if address.get('family') == 'ipv4'%}
+iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
+    address {{ address.get('address') }}
+    netmask {{ address.get('netmask') }}
+{% if address.get('gateway', None) != None %}
+    gateway {{ address.get('gateway')}}
+{% endif %}
+    bridge_ports {{ address.get('bridge_members')[0] }} {{ address.get('bridge_members')[1] }}
+{% elif address.get('family') == 'ipv6' %}
+iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
+    address {{ address.get('address') }}
+    netmask {{ address.get('netmask') }}
+{% if address.get('gateway', None) != None %}
+    gateway {{ address.get('gateway') }}
+{% endif %}
+    bridge_ports {{ address.get('bridge_members')[0] }} {{ address.get('bridge_members')[1] }}
+{% endif %}
+{% elif address.get('proto') == 'dhcp' %}
+allow-hotplug {{ address.get('ifname') }}
+{% if address.get('family') == 'ipv4'%}
+iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
+{% elif address.get('family') == 'ipv6' %}
+iface {{ address.get('ifname') }} inet6 {{ address.get('proto') }}
+{% endif %}
+{% endif %}
+{# End of `bridge` block #}
 {% endif %}
 {% endfor %}
 {% endif %}
