@@ -151,12 +151,24 @@ class Netconf(BaseConverter):
 
         for interface in original:
 
-            interfaces.append({
-                'devname':  interface['name'],
-                'status':  'disabled' if interface.get('disabled', False) else 'enabled',
-            })
+            addresses = interface.get('addresses', [])
 
-        result.append(interfaces)
+            for addr in addresses:
+                temp = {
+                    'devname':  interface['name'],
+                    'status': status(interface),
+                    'up':  status(interface),
+                    'mut': interface.get('mtu', 1500),
+                }
+                if addr['proto'] == 'dhcp':
+                    temp['autoip']['status'] = 'enabled'
+                else:
+                    temp['ip'] = addr['address']
+                    temp['netmask'] = addr['mask']
+
+                interfaces.append(temp)
+
+        result.apend(interfaces)
         result.append({
             'status':  'enabled',
         })
