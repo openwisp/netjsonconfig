@@ -14,6 +14,7 @@ class Raspbian(BaseBackend):
     env_path = 'netjsonconfig.backends.raspbian'
     converters = [
         Radio,
+        Interfaces,
         Wireless,
         DnsServers,
         DnsSearch,

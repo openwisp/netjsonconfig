@@ -1,3 +1,41 @@
+/etc/network/interfaces
+-----------------------
+{% for i, j in data.items() %}
+{% if i|string() == 'interfaces' %}
+{% for address in j %}
+{% if address.get('iftype') == 'ethernet' %}
+auto {{ address.get('ifname') }}
+{% if address.get('proto') == 'static' %}
+{% if address.get('family') == 'ipv4'%}
+iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
+    address {{ address.get('address') }}
+    netmask {{ address.get('netmask') }}
+{% if address.get('gateway', None) != None %}
+    gateway {{ address.get('gateway')}}
+{% endif %}
+{% elif address.get('family') == 'ipv6' %}
+iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
+    address {{ address.get('address') }}
+    netmask {{ address.get('netmask') }}
+{% if address.get('gateway', None) != None %}
+    gateway {{ address.get('gateway') }}
+{% endif %}
+{% endif %}
+{% elif address.get('proto') == 'dhcp' %}
+allow-hotplug {{ address.get('ifname') }}
+{% if address.get('family') == 'ipv4'%}
+iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
+{% elif address.get('family') == 'ipv6' %}
+iface {{ address.get('ifname') }} inet6 {{ address.get('proto') }}
+{% endif %}
+{% endif %}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+{%endfor%}
+
+
 /etc/resolv.conf
 ----------------
 {% for i, j in data.items() %}
