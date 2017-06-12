@@ -15,6 +15,9 @@ class Aaa(BaseConverter):
     def to_intermediate(self):
         result = []
 
+        result.append({
+                'status': 'disabled',
+        })
         result.append([
             {
 #                'radius': {
@@ -30,7 +33,6 @@ class Aaa(BaseConverter):
 #                        },
 #                    ],
 #                },
-                'status': 'disabled',
             }
         ])
         return (('aaa', result),)
