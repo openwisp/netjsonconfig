@@ -2,6 +2,13 @@ from ...utils import get_copy, sorted_dict
 from ..base.converter import BaseConverter
 
 
+def status(config, key='disabled'):
+    if config.get(key):
+        return 'disabled'
+    else:
+        return 'enabled'
+
+
 class Aaa(BaseConverter):
     netjson_key = 'general'
 
@@ -28,6 +35,7 @@ class Aaa(BaseConverter):
         ])
         return (('aaa', result),)
 
+
 class Bridge(BaseConverter):
     netjson_key = 'interfaces'
 
@@ -51,7 +59,7 @@ class Bridge(BaseConverter):
                 'comment':  interface.get('comment', ''),
                 'devname':  interface['name'],
                 'port':  bridge_ports,
-                'status':  'disabled' if interface['disabled'] else 'enabled',
+                'status':  status(interface),
                 'stp': {
                     'status':  'enabled',
                 }
@@ -196,8 +204,7 @@ class Ntpclient(BaseConverter):
         result.append({
             'status': 'disabled',
         })
-        return (('ntpclient',result),)
-
+        return (('ntpclient', result),)
 
 
 class Pwdog(BaseConverter):
@@ -419,7 +426,7 @@ class Vlan(BaseConverter):
                 'comment':  v.get('comment', ''),
                 'devname':  v['name'].split('.')[0],
                 'id':  v['name'].split('.')[1],
-                'status':  'disabled' if v['disabled'] else 'enabled',
+                'status': status(v),
             })
 
         result.append(vlans)
@@ -441,13 +448,11 @@ class Wireless(BaseConverter):
 
         ws = []
         for w in original:
-            hide_ssid = 'enabled' if w['wireless'].get('hide_ssid') else 'disabled'
             encryption = w['wireless'].get('encryption', 'none')
-            status = 'disabled' if w['wireless'].get('disabled') else 'enabled'
             ws.append({
                 'addmtikie':  'enabled',
                 'devname':  w['name'],
-                'hide_ssid':  hide_ssid,
+                'hide_ssid': status(w['wireless'], 'hide_ssid'),
                 'security': {
                     'type': encryption
                 },
@@ -457,7 +462,7 @@ class Wireless(BaseConverter):
                 'signal_led4': 15,
                 'signal_led_status': 'enabled',
                 'ssid':  w['wireless']['ssid'],
-                'status': status,
+                'status': status(w),
                 'wds': {
                     'status': 'enabled',
                 },
