@@ -1,6 +1,6 @@
 from ...utils import get_copy, sorted_dict
 from ..base.converter import BaseConverter
-
+from ipaddress import IPv4Interface, IPv6Interface
 
 class Radio(BaseConverter):
     netjson_key = 'radios'
@@ -29,6 +29,46 @@ class Radio(BaseConverter):
             return '11g'
         else:
             return '11a'
+
+class Interfaces(BaseConverter):
+    netjson_key = 'interfaces'
+
+    def to_intermediate(self):
+        result = []
+        interfaces = get_copy(self.netjson, self.netjson_key)
+        address_list = []
+        for interface in interfaces:
+            ifname = interface.get('name')
+            iftype = interface.get('type')
+            addresses = interface.get('addresses', None)
+            if addresses != None:
+                for address in addresses:
+                    address.update({
+                        'ifname': ifname,
+                        'iftype': iftype
+                        })
+
+                    address_list.append(address)
+
+        for address in address_list:
+            if address.get('iftype') == 'ethernet':
+                if address.get('proto') == 'static':
+                    if address.get('family') == 'ipv4':
+                        addressmask = str(address.get('address')) + '/' + str(address.get('mask'))
+                        temp = IPv4Interface(addressmask).with_netmask
+                        netmask = temp[-15:]
+                        address.update({'netmask': netmask})
+                        del address['mask']
+                        result.append(address)
+                    elif address.get('family') == 'ipv6':
+                        netmask = address.get('mask')
+                        address.update({'netmask': netmask})
+                        del address['mask']
+                        result.append(address)
+                elif address.get('proto') == 'dhcp':
+                    result.append(address)
+        return (('interfaces', result),)
+
 
 class Wireless(BaseConverter):
     netjson_key = 'interfaces'
