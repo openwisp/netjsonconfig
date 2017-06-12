@@ -452,7 +452,7 @@ class Wireless(BaseConverter):
             ws.append({
                 'addmtikie':  'enabled',
                 'devname':  w['name'],
-                'hide_ssid': status(w['wireless'], 'hide_ssid'),
+                'hide_ssid': 'enabled' if w['wireless'].get('hidden') else 'disabled',
                 'security': {
                     'type': encryption
                 },
