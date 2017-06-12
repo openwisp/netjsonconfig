@@ -16,16 +16,12 @@ class TestHttpdConverter(unittest.TestCase):
 
         expected = [
                 {
-                    'https': {
-                        'port': 443,
-                        'status': 'enabled',
-                    },
+                    'https.port': 443,
+                    'https.status': 'enabled',
                 },
                 {
                     'port': 80,
-                    'session': {
-                        'timeout': 9000,
-                    },
+                    'session.timeout': 900,
                     'status': 'enabled',
                 },
         ]

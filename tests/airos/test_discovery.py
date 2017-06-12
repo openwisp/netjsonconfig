@@ -16,11 +16,7 @@ class TestDiscoveryConverter(unittest.TestCase):
 
         expected = [
                 {
-                    'cdp': {
-                        'status': 'enabled',
-                    }
-                },
-                {
+                    'cdp.status': 'enabled',
                     'status': 'enabled',
                 },
         ]
