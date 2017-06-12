@@ -30,6 +30,7 @@ class TestRadioConverter(unittest.TestCase):
                     'channel': 1,
                     'channel_width': 20,
                     'disabled': False,
+                    'protocol': '802.11n',
                 }
             ]
         })
@@ -38,10 +39,10 @@ class TestRadioConverter(unittest.TestCase):
 
         expected = [
                 {
+                    '1.chanbw': 20,
                     '1.devname': 'ath0',
                     '1.status': 'enabled',
                     '1.txpower': '',
-                    '1.chanbw': 20,
                 },
                 {
                     'status': 'enabled',
@@ -58,6 +59,7 @@ class TestRadioConverter(unittest.TestCase):
                     'channel': 1,
                     'channel_width': 20,
                     'disabled': True,
+                    'protocol': '802.11n',
                 }
             ]
         })
@@ -66,10 +68,10 @@ class TestRadioConverter(unittest.TestCase):
 
         expected = [
                 {
+                    '1.chanbw': 20,
                     '1.devname': 'ath0',
                     '1.status': 'disabled',
                     '1.txpower': '',
-                    '1.chanbw': 20,
                 },
                 {
                     'status': 'enabled',

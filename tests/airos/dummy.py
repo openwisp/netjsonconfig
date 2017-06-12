@@ -37,7 +37,7 @@ class DyndnsAirOS(AirOS):
     converters = [
             Dyndns,
     ]
-    
+
 
 class GuiAirOS(AirOS):
     """
@@ -46,7 +46,7 @@ class GuiAirOS(AirOS):
     converters = [
             Gui,
     ]
-    
+
 
 class HttpdAirOS(AirOS):
     """
@@ -55,7 +55,7 @@ class HttpdAirOS(AirOS):
     converters = [
             Httpd,
     ]
-    
+
 
 class NetconfAirOS(AirOS):
     """
@@ -64,7 +64,7 @@ class NetconfAirOS(AirOS):
     converters = [
             Netconf,
     ]
-    
+
 
 class Netmode(AirOS):
     """
@@ -73,16 +73,16 @@ class Netmode(AirOS):
     converters = [
             Netmode,
     ]
-    
 
-class Ntpclient(AirOS):
+
+class NtpclientAirOS(AirOS):
     """
     Mock backend with converter for ntp settings
     """
     converters = [
             Ntpclient,
     ]
-    
+
 
 class PwdogAirOS(AirOS):
     """
@@ -91,7 +91,7 @@ class PwdogAirOS(AirOS):
     converters = [
             Pwdog,
     ]
-    
+
 
 class RadioAirOS(AirOS):
     """
@@ -100,7 +100,7 @@ class RadioAirOS(AirOS):
     converters = [
             Radio,
     ]
-    
+
 
 class ResolvAirOS(AirOS):
     """

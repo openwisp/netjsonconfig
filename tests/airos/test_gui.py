@@ -16,14 +16,10 @@ class TestGuiConverter(unittest.TestCase):
 
         expected = [
                 {
-                    'network': {
-                        'advanced': {
-                            'status': 'enabled',
-                        },
-                    }
+                    'language': 'en_US',
                 },
                 {
-                    'language': 'en_US',
+                    'network.advanced.status': 'enabled',
                 },
         ]
 

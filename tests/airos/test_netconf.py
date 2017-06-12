@@ -20,7 +20,6 @@ class TestNetconfConverter(unittest.TestCase):
                 },
         ]
 
-
         self.assertEqual(o.intermediate_data['netconf'], expected)
 
     def test_active_interface(self):
