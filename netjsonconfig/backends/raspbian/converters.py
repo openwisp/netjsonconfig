@@ -47,7 +47,8 @@ class Interfaces(BaseConverter):
                         'ifname': ifname,
                         'iftype': iftype
                         })
-
+                    if iftype == 'bridge':
+                        address.update({'bridge_members': interface.get('bridge_members')})
                     address_list.append(address)
 
         for address in address_list:
@@ -66,6 +67,19 @@ class Interfaces(BaseConverter):
                         del address['mask']
                         result.append(address)
                 elif address.get('proto') == 'dhcp':
+                    result.append(address)
+            elif address.get('iftype') == 'bridge':
+                if address.get('family') == 'ipv4':
+                    addressmask = str(address.get('address')) + '/' + str(address.get('mask'))
+                    temp = IPv4Interface(addressmask).with_netmask
+                    netmask = temp[-15:]
+                    address.update({'netmask': netmask})
+                    del address['mask']
+                    result.append(address)
+                elif address.get('family') == 'ipv6':
+                    netmask = address.get('mask')
+                    address.update({'netmask': netmask})
+                    del address['mask']
                     result.append(address)
         return (('interfaces', result),)
 
