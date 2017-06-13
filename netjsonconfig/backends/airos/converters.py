@@ -155,9 +155,7 @@ class Netconf(BaseConverter):
     def to_intermediate(self):
         result = []
         interfaces = []
-        original = [
-                i for i in get_copy(self.netjson, self.netjson_key)
-                ]
+        original = get_copy(self.netjson, self.netjson_key)
 
         for interface in original:
 
