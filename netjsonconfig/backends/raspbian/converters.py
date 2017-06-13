@@ -1,6 +1,7 @@
-from ...utils import get_copy, sorted_dict
+from ...utils import get_copy
 from ..base.converter import BaseConverter
-from ipaddress import IPv4Interface, IPv6Interface
+from ipaddress import IPv4Interface
+
 
 class Radio(BaseConverter):
     netjson_key = 'radios'
@@ -18,7 +19,6 @@ class Radio(BaseConverter):
             result.append(temp)
         return (('wireless', result),)
 
-
     def _get_hwmode(self, radio):
         protocol = radio['protocol']
         if protocol in ['802.11a', '802.11b', '802.11g']:
@@ -29,6 +29,7 @@ class Radio(BaseConverter):
             return '11g'
         else:
             return '11a'
+
 
 class Interfaces(BaseConverter):
     netjson_key = 'interfaces'
@@ -41,7 +42,7 @@ class Interfaces(BaseConverter):
             ifname = interface.get('name')
             iftype = interface.get('type')
             addresses = interface.get('addresses', None)
-            if addresses != None:
+            if addresses is not None:
                 for address in addresses:
                     address.update({
                         'ifname': ifname,
@@ -95,18 +96,18 @@ class Wireless(BaseConverter):
                     'ssid': interface['wireless'].get('ssid'),
                 }
                 bssid = interface['wireless'].get('bssid', None)
-                if bssid != None:
+                if bssid is not None:
                     temp.update({'bssid': bssid})
                 hidden = interface['wireless'].get('hidden', None)
-                if hidden != None:
+                if hidden is not None:
                     temp.update({'hidden': hidden})
                 encryption = interface['wireless'].get('encryption', None)
-                if encryption  != None:
+                if encryption is not None:
                     protocol = encryption.get('protocol')
                     key = encryption.get('key')
                     cipher = encryption.get('cipher', None)
-                    if cipher != None:
-                        temp.update({'cipher':cipher})
+                    if cipher is not None:
+                        temp.update({'cipher': cipher})
                 result.append(temp)
         return (('wireless', result),)
 

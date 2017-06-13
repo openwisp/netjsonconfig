@@ -1,7 +1,6 @@
 import unittest
 
 from netjsonconfig import Raspbian
-from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
