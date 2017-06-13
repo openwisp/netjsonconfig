@@ -110,6 +110,7 @@ iface eth0 inet6 static
 /etc/resolv.conf
 ----------------
 '''
+        self.assertEqual(o.render(), expected)
 
 
     def test_interface_ipv4_dhcp(self):
@@ -195,6 +196,7 @@ iface eth0 inet6 dhcp
 -----------------------
 auto eth0
 allow-hotplug eth0
+iface eth0 inet dhcp
 iface eth0 inet6 dhcp
 
 
@@ -228,6 +230,71 @@ auto lo
 iface lo inet static
     address 127.0.0.1
     netmask 255.0.0.0
+
+
+
+/etc/resolv.conf
+----------------
+'''
+        self.assertEqual(o.render(), expected)
+
+    def test_simple_bridge(self):
+        o = Raspbian({
+                    "interfaces": [
+                        {
+                            "network": "lan",
+                            "name": "br-lan",
+                            "type": "bridge",
+                            "bridge_members": [
+                                "eth0",
+                                "eth1"
+                            ]
+                        }
+                    ]
+        })
+
+        expected = '''/etc/network/interfaces
+-----------------------
+auto br-lan
+    bridge_ports eth0 eth1
+
+
+
+/etc/resolv.conf
+----------------
+'''
+        self.assertEqual(o.render(), expected)
+
+    def test_complex_bridge(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "mtu": 1500,
+                    "name": "brwifi",
+                    "bridge_members": [
+                        "wlan0",
+                        "vpn.40"
+                    ],
+                    "addresses": [
+                        {
+                            "mask": 64,
+                            "family": "ipv6",
+                            "proto": "static",
+                            "address": "fe80::8029:23ff:fe7d:c214"
+                        }
+                    ],
+                    "type": "bridge",
+                }
+            ]
+        })
+
+        expected = '''/etc/network/interfaces
+-----------------------
+auto brwifi
+iface brwifi inet6 static
+    address fe80::8029:23ff:fe7d:c214
+    netmask 64
+    bridge_ports wlan0 vpn.40
 
 
 
