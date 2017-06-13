@@ -1,7 +1,6 @@
 import unittest
 
 from netjsonconfig import Raspbian
-from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -111,7 +110,6 @@ iface eth0 inet6 static
 ----------------
 '''
         self.assertEqual(o.render(), expected)
-
 
     def test_interface_ipv4_dhcp(self):
         o = Raspbian({
