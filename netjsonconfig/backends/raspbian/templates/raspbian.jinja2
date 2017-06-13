@@ -17,7 +17,7 @@ iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
     bridge_ports {{ address.get('bridge_members')[0] }} {{ address.get('bridge_members')[1] }}
 {%  endif %}
 {% elif address.get('family') == 'ipv6' %}
-iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
+iface {{ address.get('ifname') }} inet6 {{ address.get('proto') }}
     address {{ address.get('address') }}
     netmask {{ address.get('netmask') }}
 {% if address.get('gateway', None) != None %}
@@ -34,6 +34,10 @@ iface {{ address.get('ifname') }} inet {{ address.get('proto') }}
 {% elif address.get('family') == 'ipv6' %}
 iface {{ address.get('ifname') }} inet6 {{ address.get('proto') }}
 {% endif %}
+{% else %}
+{% if address.get('iftype') == 'bridge' %}
+    bridge_ports {{ address.get('bridge_members')[0] }} {{ address.get('bridge_members')[1] }}
+{%  endif %}
 {% endif %}
 
 {% endif %}

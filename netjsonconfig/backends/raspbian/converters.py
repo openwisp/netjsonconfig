@@ -50,6 +50,14 @@ class Interfaces(BaseConverter):
                     if iftype == 'bridge':
                         address.update({'bridge_members': interface.get('bridge_members')})
                     address_list.append(address)
+            else:
+                temp = {
+                    'ifname': ifname,
+                    'iftype': iftype,
+                }
+                if iftype == 'bridge':
+                    temp.update({'bridge_members': interface.get('bridge_members')})
+                address_list.append(temp)
 
         for address in address_list:
             if address.get('iftype') in ['ethernet', 'bridge', 'loopback']:
@@ -67,6 +75,8 @@ class Interfaces(BaseConverter):
                         del address['mask']
                         result.append(address)
                 elif address.get('proto') == 'dhcp':
+                    result.append(address)
+                else:
                     result.append(address)
         return (('interfaces', result),)
 
