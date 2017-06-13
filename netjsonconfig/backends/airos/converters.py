@@ -176,7 +176,7 @@ class Netconf(BaseConverter):
 
                 interfaces.append(temp)
 
-        result.apend(interfaces)
+        result.append(interfaces)
         result.append({
             'status':  'enabled',
         })
@@ -235,10 +235,12 @@ class Radio(BaseConverter):
         for r in original:
             radios.append({
                 'devname': r['name'],
-                'status': 'enabled',
+                'status': status(r),
                 'txpower': r.get('tx_power', ''),
                 'chanbw': r.get('channel_width', ''),
             })
+
+        result.append(radios)
 
         result.append({
             'status': 'enabled',
