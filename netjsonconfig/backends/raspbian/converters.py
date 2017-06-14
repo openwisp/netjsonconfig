@@ -37,48 +37,52 @@ class Interfaces(BaseConverter):
     def to_intermediate(self):
         result = []
         interfaces = get_copy(self.netjson, self.netjson_key)
-        address_list = []
         for interface in interfaces:
             ifname = interface.get('name')
             iftype = interface.get('type')
             addresses = interface.get('addresses', None)
+            new_interface = {}
             if addresses is not None:
                 for address in addresses:
-                    address.update({
+                    new_interface.update({
                         'ifname': ifname,
-                        'iftype': iftype
-                        })
+                        'iftype': iftype,
+                    })
                     if iftype == 'bridge':
-                        address.update({'bridge_members': interface.get('bridge_members')})
-                    address_list.append(address)
-            else:
-                temp = {
-                    'ifname': ifname,
-                    'iftype': iftype,
-                }
-                if iftype == 'bridge':
-                    temp.update({'bridge_members': interface.get('bridge_members')})
-                address_list.append(temp)
-
-        for address in address_list:
-            if address.get('iftype') in ['ethernet', 'bridge', 'loopback']:
-                if address.get('proto') == 'static':
-                    if address.get('family') == 'ipv4':
-                        addressmask = str(address.get('address')) + '/' + str(address.get('mask'))
-                        temp = IPv4Interface(addressmask).with_netmask
-                        netmask = temp.split('/')[1]
-                        address.update({'netmask': netmask})
-                        del address['mask']
-                        result.append(address)
-                    elif address.get('family') == 'ipv6':
-                        netmask = address.get('mask')
-                        address.update({'netmask': netmask})
-                        del address['mask']
-                        result.append(address)
-                elif address.get('proto') == 'dhcp':
-                    result.append(address)
-                else:
-                    result.append(address)
+                        new_interface.update({
+                            'bridge_members': bridge_members,
+                        })
+                    if iftype in ['ethernet', 'bridge', 'loopback']:
+                        if address.get('proto') == 'static':
+                            if address.get('family') == 'ipv4':
+                                addressmask = str(address.get('address')) + '/' + str(address.get('mask'))
+                                new_interface.update({
+                                    'ip4address': address.get('address'),
+                                    'ipv4netmask': IPv4Interface(addressmask).with_netmask.split('/')[1]
+                                })
+                                if address.get('gateway', None) is not None:
+                                    new_interface.update({
+                                        'ipv4gateway': address.get('gateway'),
+                                    })
+                            if address.get('family') == 'ipv6':
+                                new_interface.update({
+                                    'ipv6address': address.get('address'),
+                                    'ipv6netmask': address.get('mask')
+                                })
+                                if address.get('gateway', None) is not None:
+                                    new_interface.update({
+                                        'ipv6gateway': address.get('gateway'),
+                                    })
+                        elif address.get('proto') == 'dhcp':
+                            if address.get('family') == 'ipv4':
+                                new_interface.update({
+                                    'ipv4dhcp': True,
+                                })
+                            elif address.get('family') == 'ipv6':
+                                new_interface.update({
+                                    'ipv6dhcp': True,
+                                })
+            result.append(new_interface)
         return (('interfaces', result),)
 
 
