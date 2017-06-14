@@ -41,47 +41,61 @@ class Interfaces(BaseConverter):
             ifname = interface.get('name')
             iftype = interface.get('type')
             addresses = interface.get('addresses', None)
-            new_interface = {}
+            new_interface = {
+                'ifname': ifname,
+                'iftype': iftype,
+            }
+            address_list = []
+            if iftype == 'bridge':
+                new_interface.update({
+                    'bridge_members': interface.get('bridge_members'),
+                })
             if addresses is not None:
                 for address in addresses:
-                    new_interface.update({
-                        'ifname': ifname,
-                        'iftype': iftype,
-                    })
-                    if iftype == 'bridge':
-                        new_interface.update({
-                            'bridge_members': bridge_members,
-                        })
+                    print address
+                    new_address = {}
                     if iftype in ['ethernet', 'bridge', 'loopback']:
                         if address.get('proto') == 'static':
                             if address.get('family') == 'ipv4':
                                 addressmask = str(address.get('address')) + '/' + str(address.get('mask'))
-                                new_interface.update({
-                                    'ip4address': address.get('address'),
+                                new_address.update({
+                                    'proto': 'static',
+                                    'family': 'ipv4',
+                                    'ipv4address': address.get('address'),
                                     'ipv4netmask': IPv4Interface(addressmask).with_netmask.split('/')[1]
                                 })
                                 if address.get('gateway', None) is not None:
-                                    new_interface.update({
+                                    new_address.update({
                                         'ipv4gateway': address.get('gateway'),
                                     })
                             if address.get('family') == 'ipv6':
-                                new_interface.update({
+                                new_address.update({
+                                    'proto': 'static',
+                                    'family': 'ipv6',
                                     'ipv6address': address.get('address'),
                                     'ipv6netmask': address.get('mask')
                                 })
                                 if address.get('gateway', None) is not None:
-                                    new_interface.update({
+                                    new_address.update({
                                         'ipv6gateway': address.get('gateway'),
                                     })
                         elif address.get('proto') == 'dhcp':
                             if address.get('family') == 'ipv4':
-                                new_interface.update({
+                                new_address.update({
+                                    'proto': 'dhcp',
+                                    'family': 'ipv4',
                                     'ipv4dhcp': True,
                                 })
                             elif address.get('family') == 'ipv6':
-                                new_interface.update({
+                                new_address.update({
+                                    'proto': 'dhcp',
+                                    'family': 'ipv6',
                                     'ipv6dhcp': True,
                                 })
+                        address_list.append(new_address)
+                    new_interface.update({
+                        'address': address_list
+                    })
             result.append(new_interface)
         return (('interfaces', result),)
 
