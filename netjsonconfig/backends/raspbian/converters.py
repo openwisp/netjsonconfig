@@ -52,7 +52,6 @@ class Interfaces(BaseConverter):
                 })
             if addresses is not None:
                 for address in addresses:
-                    print address
                     new_address = {}
                     if iftype in ['ethernet', 'bridge', 'loopback']:
                         if address.get('proto') == 'static':
