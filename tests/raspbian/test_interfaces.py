@@ -6,7 +6,7 @@ from netjsonconfig.utils import _TabsMixin
 
 class TestInterfacesRenderer(unittest.TestCase, _TabsMixin):
 
-    def test_interface_ipv4_static(self):
+    def test_ipv4_static(self):
         o = Raspbian({
             "interfaces": [
                 {
@@ -38,7 +38,7 @@ iface eth0 inet static
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_interface_ipv6_static(self):
+    def test_ipv6_static(self):
         o = Raspbian({
             "interfaces": [
                 {
@@ -70,7 +70,7 @@ iface eth0 inet6 static
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_interface_multiple_static(self):
+    def test_multiple_static(self):
         o = Raspbian({
             "interfaces": [
                 {
@@ -111,7 +111,7 @@ iface eth0 inet6 static
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_interface_ipv4_dhcp(self):
+    def test_ipv4_dhcp(self):
         o = Raspbian({
                 "interfaces": [
                     {
@@ -140,7 +140,7 @@ iface eth0 inet dhcp
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_interface_ipv6_dhcp(self):
+    def test_ipv6_dhcp(self):
         o = Raspbian({
                 "interfaces": [
                     {
@@ -169,7 +169,7 @@ iface eth0 inet6 dhcp
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_interface_multiple_dhcp(self):
+    def test_multiple_dhcp(self):
         o = Raspbian({
                     "interfaces": [
                         {
@@ -201,6 +201,151 @@ iface eth0 inet6 dhcp
 
 /etc/resolv.conf
 ----------------
+'''
+        self.assertEqual(o.render(), expected)
+
+    def test_multiple_ip(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "eth0.1",
+                    "type": "ethernet",
+                    "autostart": True,
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                        {
+                            "address": "192.168.2.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                        {
+                            "address": "fd87::1",
+                            "mask": 128,
+                            "proto": "static",
+                            "family": "ipv6"
+                        },
+                        {
+                            "address": "fd87::2",
+                            "mask": 128,
+                            "proto": "static",
+                            "family": "ipv6"
+                        }
+                    ]
+                }
+            ]
+        })
+
+        expected = '''/etc/network/interfaces
+-----------------------
+auto eth0.1
+iface eth0.1 inet static
+    address 192.168.1.1
+    netmask 255.255.255.0
+iface eth0.1 inet static
+    address 192.168.2.1
+    netmask 255.255.255.0
+iface eth0.1 inet6 static
+    address fd87::1
+    netmask 128
+iface eth0.1 inet6 static
+    address fd87::2
+    netmask 128
+
+
+
+/etc/resolv.conf
+----------------
+'''
+        self.assertEqual(o.render(), expected)
+
+    def test_multiple_ip_and_dhcp(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4"
+                        },
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                        {
+                            "address": "192.168.2.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        },
+                    ]
+                }
+            ]
+        })
+
+        expected = '''/etc/network/interfaces
+-----------------------
+auto eth0
+allow-hotplug eth0
+iface eth0 inet dhcp
+iface eth0 inet static
+    address 192.168.1.1
+    netmask 255.255.255.0
+iface eth0 inet static
+    address 192.168.2.1
+    netmask 255.255.255.0
+
+
+
+/etc/resolv.conf
+----------------
+'''
+        self.assertEqual(o.render(), expected)
+
+    def test_interface_with_resolv(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4"
+                        }
+                    ]
+                }
+            ],
+            "dns_servers": ["10.11.12.13", "8.8.8.8"],
+            "dns_search": ["netjson.org", "openwisp.org"],
+        })
+
+        expected = '''/etc/network/interfaces
+-----------------------
+auto eth0
+iface eth0 inet static
+    address 192.168.1.1
+    netmask 255.255.255.0
+
+
+
+/etc/resolv.conf
+----------------
+nameserver 10.11.12.13
+nameserver 8.8.8.8
+search netjson.org
+search openwisp.org
 '''
         self.assertEqual(o.render(), expected)
 
