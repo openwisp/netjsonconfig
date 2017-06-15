@@ -750,6 +750,7 @@ config rule 'rule1'
                         {
                             "device": "switch0",
                             "vlan": 2,
+                            "vid": None,  # ``None`` or empty string disable ``vid``
                             "ports": "0t 1"
                         }
                     ]
@@ -762,6 +763,7 @@ config rule 'rule1'
                         {
                             "device": "switch1",
                             "vlan": 3,
+                            "vid": 130,
                             "ports": "0t 6 7"
                         }
                     ]
@@ -778,6 +780,7 @@ config switch 'switch0'
 config switch_vlan 'switch0_vlan1'
     option device 'switch0'
     option ports '0t 2 3 4 5'
+    option vid '1'
     option vlan '1'
 
 config switch_vlan 'switch0_vlan2'
@@ -793,6 +796,7 @@ config switch 'switch1'
 config switch_vlan 'switch1_vlan1'
     option device 'switch1'
     option ports '0t 6 7'
+    option vid '130'
     option vlan '3'
 """)
         self.assertEqual(o.render(), expected)

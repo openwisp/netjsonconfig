@@ -1576,6 +1576,62 @@ Will be rendered as follows::
     config switch_vlan 'switch0_vlan1'
             option device 'switch0'
             option ports '0t 2 3 4 5'
+            option vid '1'
+            option vlan '1'
+
+    config switch_vlan 'switch0_vlan2'
+            option device 'switch0'
+            option ports '0t 1'
+            option vid '2'
+            option vlan '2'
+
+Overriding or disabling ``vid`` UCI option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The OpenWRT/LEDE UCI ``vid`` option of ``switch_vlan`` sections is automatically inferred
+from the ``vlan`` number, although it's possible to override it or disable it if needed:
+
+.. code-block:: python
+
+    {
+        "switch": [
+            {
+                "name": "switch0",
+                "reset": True,
+                "enable_vlan": True,
+                "vlan": [
+                    {
+                        "device": "switch0",
+                        "vlan": 1,
+                        "vid": 110,  # manual override
+                        "ports": "0t 2 3 4 5"
+                    },
+                    {
+                        "device": "switch0",
+                        "vlan": 2,
+                        # ``None`` or empty string will remove
+                        # ``vid`` output from the UCI result
+                        "vid": None,
+                        "ports": "0t 1"
+                    }
+                ]
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config switch 'switch0'
+            option enable_vlan '1'
+            option name 'switch0'
+            option reset '1'
+
+    config switch_vlan 'switch0_vlan1'
+            option device 'switch0'
+            option ports '0t 2 3 4 5'
+            option vid '110'
             option vlan '1'
 
     config switch_vlan 'switch0_vlan2'

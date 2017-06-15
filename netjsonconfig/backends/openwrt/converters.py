@@ -326,6 +326,8 @@ class Switch(BaseConverter):
                     '.type': 'switch_vlan',
                     '.name': '{0}_vlan{1}'.format(switch['name'], i)
                 })
+                if 'vid' not in vlan:
+                    vlan['vid'] = vlan['vlan']
                 vlans.append(sorted_dict(vlan))
                 i += 1
             del switch['vlan']
