@@ -83,13 +83,11 @@ class Interfaces(BaseConverter):
                                 new_address.update({
                                     'proto': 'dhcp',
                                     'family': 'ipv4',
-                                    'ipv4dhcp': True,
                                 })
                             elif address.get('family') == 'ipv6':
                                 new_address.update({
                                     'proto': 'dhcp',
                                     'family': 'ipv6',
-                                    'ipv6dhcp': True,
                                 })
                         address_list.append(new_address)
                     new_interface.update({
