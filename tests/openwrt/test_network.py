@@ -44,26 +44,28 @@ config interface 'lo'
                     "autostart": True,
                     "addresses": [
                         {
-                            "address": "192.168.1.1",
+                            "address": "192.168.1.2",
+                            "gateway": "192.168.1.1",
                             "mask": 24,
                             "proto": "static",
                             "family": "ipv4"
                         },
                         {
-                            "address": "192.168.2.1",
+                            "address": "192.168.2.3",
                             "mask": 24,
                             "proto": "static",
                             "family": "ipv4"
                         },
                         {
-                            "address": "fd87::1",
-                            "mask": 128,
+                            "address": "fd87::2",
+                            "gateway": "fd87::1",
+                            "mask": 64,
                             "proto": "static",
                             "family": "ipv6"
                         },
                         {
-                            "address": "fd87::2",
-                            "mask": 128,
+                            "address": "fd87::3",
+                            "mask": 64,
                             "proto": "static",
                             "family": "ipv6"
                         }
@@ -75,11 +77,13 @@ config interface 'lo'
 
 config interface 'eth0_1'
     option auto '1'
+    option gateway '192.168.1.1'
     option ifname 'eth0.1'
-    list ip6addr 'fd87::1/128'
-    list ip6addr 'fd87::2/128'
-    list ipaddr '192.168.1.1/24'
-    list ipaddr '192.168.2.1/24'
+    list ip6addr 'fd87::2/64'
+    list ip6addr 'fd87::3/64'
+    option ip6gw 'fd87::1'
+    list ipaddr '192.168.1.2/24'
+    list ipaddr '192.168.2.3/24'
     option proto 'static'
 """)
         self.assertEqual(o.render(), expected)

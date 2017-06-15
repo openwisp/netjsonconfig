@@ -126,6 +126,9 @@ class Interfaces(BaseConverter):
                 address['proto'] = 'dhcp' if family == 'ipv4' else 'dhcpv6'
                 dhcp.append(self.__del_address_keys(address))
                 continue
+            if 'gateway' in address:
+                uci_key = 'gateway' if family == 'ipv4' else 'ip6gw'
+                interface[uci_key] = address['gateway']
             # static
             address_key = 'ipaddr' if family == 'ipv4' else 'ip6addr'
             static.setdefault(address_key, [])
@@ -178,7 +181,7 @@ class Interfaces(BaseConverter):
             del interface['addresses']
         return interface
 
-    _address_keys = ['address', 'mask', 'family']
+    _address_keys = ['address', 'mask', 'family', 'gateway']
 
     def __del_address_keys(self, address):
         """
