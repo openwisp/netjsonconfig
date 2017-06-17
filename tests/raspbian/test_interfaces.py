@@ -31,10 +31,6 @@ iface eth0 inet static
     address 10.0.0.1
     netmask 255.255.255.240
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -63,10 +59,6 @@ iface eth0 inet6 static
     address fe80::ba27:ebff:fe1c:5477
     netmask 64
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -104,10 +96,6 @@ iface eth0 inet6 static
     address fe80::ba27:ebff:fe1c:5477
     netmask 64
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -133,10 +121,6 @@ auto eth0
 allow-hotplug eth0
 iface eth0 inet dhcp
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -162,10 +146,6 @@ auto eth0
 allow-hotplug eth0
 iface eth0 inet6 dhcp
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -197,10 +177,6 @@ allow-hotplug eth0
 iface eth0 inet dhcp
 iface eth0 inet6 dhcp
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -229,12 +205,6 @@ iface eth0 inet6 dhcp
                             "mask": 128,
                             "proto": "static",
                             "family": "ipv6"
-                        },
-                        {
-                            "address": "fd87::2",
-                            "mask": 128,
-                            "proto": "static",
-                            "family": "ipv6"
                         }
                     ]
                 }
@@ -253,14 +223,7 @@ iface eth0.1 inet static
 iface eth0.1 inet6 static
     address fd87::1
     netmask 128
-iface eth0.1 inet6 static
-    address fd87::2
-    netmask 128
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -304,10 +267,6 @@ iface eth0 inet static
     address 192.168.2.1
     netmask 255.255.255.0
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -337,8 +296,6 @@ auto eth0
 iface eth0 inet static
     address 192.168.1.1
     netmask 255.255.255.0
-
-
 
 /etc/resolv.conf
 ----------------
@@ -374,10 +331,6 @@ iface lo inet static
     address 127.0.0.1
     netmask 255.0.0.0
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -401,10 +354,6 @@ iface lo inet static
 auto br-lan
     bridge_ports eth0 eth1
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
 
@@ -439,9 +388,5 @@ iface brwifi inet6 static
     netmask 64
     bridge_ports wlan0 vpn.40
 
-
-
-/etc/resolv.conf
-----------------
 '''
         self.assertEqual(o.render(), expected)
