@@ -14,11 +14,7 @@ class TestResovlRenderer(unittest.TestCase, _TabsMixin):
             ],
         })
 
-        expected = '''/etc/network/interfaces
------------------------
-
-
-/etc/resolv.conf
+        expected = '''/etc/resolv.conf
 ----------------
 nameserver 10.254.0.1
 nameserver 10.254.0.2
@@ -32,11 +28,7 @@ nameserver 10.254.0.2
             ],
         })
 
-        expected = '''/etc/network/interfaces
------------------------
-
-
-/etc/resolv.conf
+        expected = '''/etc/resolv.conf
 ----------------
 search domain.com
 '''
@@ -53,11 +45,7 @@ search domain.com
             ],
         })
 
-        expected = '''/etc/network/interfaces
------------------------
-
-
-/etc/resolv.conf
+        expected = '''/etc/resolv.conf
 ----------------
 nameserver 10.11.12.13
 nameserver 8.8.8.8
@@ -70,11 +58,5 @@ search openwisp.org
         o = Raspbian({
         })
 
-        expected = '''/etc/network/interfaces
------------------------
-
-
-/etc/resolv.conf
-----------------
-'''
+        expected = ''''''
         self.assertEqual(o.render(), expected)
