@@ -118,7 +118,6 @@ iface eth0 inet6 static
         expected = '''/etc/network/interfaces
 -----------------------
 auto eth0
-allow-hotplug eth0
 iface eth0 inet dhcp
 
 '''
@@ -143,7 +142,6 @@ iface eth0 inet dhcp
         expected = '''/etc/network/interfaces
 -----------------------
 auto eth0
-allow-hotplug eth0
 iface eth0 inet6 dhcp
 
 '''
@@ -173,7 +171,6 @@ iface eth0 inet6 dhcp
         expected = '''/etc/network/interfaces
 -----------------------
 auto eth0
-allow-hotplug eth0
 iface eth0 inet dhcp
 iface eth0 inet6 dhcp
 
@@ -258,7 +255,6 @@ iface eth0.1 inet6 static
         expected = '''/etc/network/interfaces
 -----------------------
 auto eth0
-allow-hotplug eth0
 iface eth0 inet dhcp
 iface eth0 inet static
     address 192.168.1.1
