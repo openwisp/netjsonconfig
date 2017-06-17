@@ -29,7 +29,6 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% endif %}
 {% endif %}
 {% elif address.get('proto') == 'dhcp' %}
-allow-hotplug {{ interface.get('ifname') }}
 {% if address.get('family') == 'ipv4'%}
 iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
 {% elif address.get('family') == 'ipv6' %}
