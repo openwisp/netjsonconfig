@@ -50,6 +50,11 @@ class Interfaces(BaseConverter):
                 new_interface.update({
                     'bridge_members': interface.get('bridge_members'),
                 })
+            mtu = interface.get('mtu', None)
+            if mtu is not None:
+                new_interface.update({
+                    'mtu': mtu
+                })
             if addresses is not None:
                 for address in addresses:
                     new_address = {}
