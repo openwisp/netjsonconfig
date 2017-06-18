@@ -17,6 +17,9 @@ iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
 {% if interface.get('mtu', None) != None %}
     mtu {{ interface.get('mtu') }}
 {% endif %}
+{% if interface.get('mac', None) != None %}
+    hwaddress {{ interface.get('mac') }}
+{% endif %}
 {% if interface.get('iftype') == 'bridge' %}
     bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
 {% endif %}
@@ -30,6 +33,9 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% if interface.get('mtu', None) != None %}
     mtu {{ interface.get('mtu') }}
 {% endif %}
+{% if interface.get('mac', None) != None %}
+    hwaddress {{ interface.get('mac') }}
+{% endif %}
 {% if interface.get('iftype') == 'bridge' %}
     bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
 {% endif %}
@@ -40,10 +46,16 @@ iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
 {% if interface.get('mtu', None) != None %}
     pre-up /sbin/ifconfig $IFACE mtu {{ interface.get('mtu') }}
 {% endif %}
+{% if interface.get('mac', None) != None %}
+    hwaddress {{ interface.get('mac') }}
+{% endif %}
 {% elif address.get('family') == 'ipv6' %}
 iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% if interface.get('mtu', None) != None %}
     pre-up /sbin/ifconfig $IFACE mtu {{ interface.get('mtu') }}
+{% endif %}
+{% if interface.get('mac', None) != None %}
+    hwaddress {{ interface.get('mac') }}
 {% endif %}
 {% endif %}
 {% endif%}
