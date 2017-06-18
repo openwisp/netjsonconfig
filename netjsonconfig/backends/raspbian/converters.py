@@ -55,6 +55,11 @@ class Interfaces(BaseConverter):
                 new_interface.update({
                     'mtu': mtu
                 })
+            mac = interface.get('mac', None)
+            if mac is not None:
+                new_interface.update({
+                    'mac': mac
+                })
             if addresses is not None:
                 for address in addresses:
                     new_address = {}
