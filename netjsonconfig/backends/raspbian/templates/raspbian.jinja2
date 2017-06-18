@@ -14,6 +14,9 @@ iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
 {% if address.get('gateway', None) != None %}
     gateway {{ address.get('ipv4gateway')}}
 {% endif %}
+{% if interface.get('mtu', None) != None %}
+    mtu {{ interface.get('mtu') }}
+{% endif %}
 {% if interface.get('iftype') == 'bridge' %}
     bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
 {% endif %}
@@ -24,6 +27,9 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% if address.get('gateway', None) != None %}
     gateway {{ address.get('ipv6gateway') }}
 {% endif %}
+{% if interface.get('mtu', None) != None %}
+    mtu {{ interface.get('mtu') }}
+{% endif %}
 {% if interface.get('iftype') == 'bridge' %}
     bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
 {% endif %}
@@ -31,8 +37,14 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% elif address.get('proto') == 'dhcp' %}
 {% if address.get('family') == 'ipv4'%}
 iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
+{% if interface.get('mtu', None) != None %}
+    pre-up /sbin/ifconfig $IFACE mtu {{ interface.get('mtu') }}
+{% endif %}
 {% elif address.get('family') == 'ipv6' %}
 iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
+{% if interface.get('mtu', None) != None %}
+    pre-up /sbin/ifconfig $IFACE mtu {{ interface.get('mtu') }}
+{% endif %}
 {% endif %}
 {% endif%}
 {% endfor %}
