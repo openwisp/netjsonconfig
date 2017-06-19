@@ -382,6 +382,7 @@ auto brwifi
 iface brwifi inet6 static
     address fe80::8029:23ff:fe7d:c214
     netmask 64
+    mtu 1500
     bridge_ports wlan0 vpn.40
 
 '''
