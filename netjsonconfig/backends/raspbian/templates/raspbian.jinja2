@@ -1,7 +1,6 @@
 {% for i, j in data.items() %}
 {% if i|string() == 'interfaces' %}
-/etc/network/interfaces
------------------------
+config: /etc/network/interfaces
 {% for interface in j %}
 auto {{ interface.get('ifname') }}
 {% if interface.get('address') != None %}
@@ -68,8 +67,7 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 
 {% endfor %}
 {% elif i|string() == 'dns_servers' %}
-/etc/resolv.conf
-----------------
+config: /etc/resolv.conf
 {% for ip in j %}
 nameserver {{ ip }}
 {% endfor %}
