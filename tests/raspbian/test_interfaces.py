@@ -24,8 +24,7 @@ class TestInterfacesRenderer(unittest.TestCase, _TabsMixin):
             ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet static
     address 10.0.0.1
@@ -52,8 +51,7 @@ iface eth0 inet static
             ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet6 static
     address fe80::ba27:ebff:fe1c:5477
@@ -86,8 +84,7 @@ iface eth0 inet6 static
             ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet static
     address 10.0.0.1
@@ -115,8 +112,7 @@ iface eth0 inet6 static
                 ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet dhcp
 
@@ -139,8 +135,7 @@ iface eth0 inet dhcp
                 ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet6 dhcp
 
@@ -168,8 +163,7 @@ iface eth0 inet6 dhcp
                     ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet dhcp
 iface eth0 inet6 dhcp
@@ -208,8 +202,7 @@ iface eth0 inet6 dhcp
             ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0.1
 iface eth0.1 inet static
     address 192.168.1.1
@@ -252,8 +245,7 @@ iface eth0.1 inet6 static
             ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet dhcp
 iface eth0 inet static
@@ -286,15 +278,13 @@ iface eth0 inet static
             "dns_search": ["netjson.org", "openwisp.org"],
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto eth0
 iface eth0 inet static
     address 192.168.1.1
     netmask 255.255.255.0
 
-/etc/resolv.conf
-----------------
+config: /etc/resolv.conf
 nameserver 10.11.12.13
 nameserver 8.8.8.8
 search netjson.org
@@ -320,8 +310,7 @@ search openwisp.org
             ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto lo
 iface lo inet static
     address 127.0.0.1
@@ -345,8 +334,7 @@ iface lo inet static
                     ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto br-lan
     bridge_ports eth0 eth1
 
@@ -376,8 +364,7 @@ auto br-lan
             ]
         })
 
-        expected = '''/etc/network/interfaces
------------------------
+        expected = '''config: /etc/network/interfaces
 auto brwifi
 iface brwifi inet6 static
     address fe80::8029:23ff:fe7d:c214
