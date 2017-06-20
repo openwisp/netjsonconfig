@@ -14,8 +14,7 @@ class TestResovlRenderer(unittest.TestCase, _TabsMixin):
             ],
         })
 
-        expected = '''/etc/resolv.conf
-----------------
+        expected = '''config: /etc/resolv.conf
 nameserver 10.254.0.1
 nameserver 10.254.0.2
 '''
@@ -28,8 +27,7 @@ nameserver 10.254.0.2
             ],
         })
 
-        expected = '''/etc/resolv.conf
-----------------
+        expected = '''config: /etc/resolv.conf
 search domain.com
 '''
         self.assertEqual(o.render(), expected)
@@ -45,8 +43,7 @@ search domain.com
             ],
         })
 
-        expected = '''/etc/resolv.conf
-----------------
+        expected = '''config: /etc/resolv.conf
 nameserver 10.11.12.13
 nameserver 8.8.8.8
 search netjson.org
