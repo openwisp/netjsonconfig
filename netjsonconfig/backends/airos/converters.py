@@ -177,6 +177,9 @@ class Netconf(BaseConverter):
                     temp['ip'] = str(network.ip)
                     temp['netmask'] = str(network.netmask)
 
+                if interface['type'] == 'wireless':
+                    temp['devname'] = interface['wireless']['radio']
+
                 interfaces.append(temp)
 
         result.append(interfaces)
