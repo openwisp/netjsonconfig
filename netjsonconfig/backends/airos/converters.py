@@ -165,7 +165,7 @@ class Netconf(BaseConverter):
             for addr in addresses:
                 temp = {
                     'devname':  interface['name'],
-                    'status': status(interface),
+                    'status': 'enabled', # can't disable interfaces
                     'up':  status(interface),
                     'mut': interface.get('mtu', 1500),
                 }
