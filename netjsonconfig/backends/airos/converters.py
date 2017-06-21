@@ -1,6 +1,7 @@
 from ...utils import get_copy, sorted_dict
 from ..base.converter import BaseConverter
 
+from ipaddress import ip_interface
 
 def status(config, key='disabled'):
     if config.get(key):
@@ -169,10 +170,12 @@ class Netconf(BaseConverter):
                     'mut': interface.get('mtu', 1500),
                 }
                 if addr['proto'] == 'dhcp':
+                    temp['autoip'] = {}
                     temp['autoip']['status'] = 'enabled'
                 else:
-                    temp['ip'] = addr['address']
-                    temp['netmask'] = addr['mask']
+                    network = ip_interface('%s/%d' % (addr['address'],addr['mask']))
+                    temp['ip'] = str(network.ip)
+                    temp['netmask'] = str(network.netmask)
 
                 interfaces.append(temp)
 
