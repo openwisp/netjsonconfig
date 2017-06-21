@@ -1,7 +1,8 @@
 {% for i, j in data.items() %}
 {% if i|string() == 'interfaces' %}
-config: /etc/network/interfaces
 {% for interface in j %}
+{% if interface.get('iftype') in ['ethernet', 'bridge', 'loopback'] %}
+config: /etc/network/interfaces
 auto {{ interface.get('ifname') }}
 {% if interface.get('address') != None %}
 {% for address in interface.get('address') %}
@@ -62,6 +63,7 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% else %}
 {% if interface.get('iftype') == 'bridge' %}
     bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
+{% endif %}
 {% endif %}
 {% endif %}
 
