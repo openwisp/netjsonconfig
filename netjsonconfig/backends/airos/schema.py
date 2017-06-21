@@ -6,6 +6,31 @@ from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
 
 """
+This defines a new property in the ``Interface``.
+
+The management interface is the one that exposes the
+web interface
+
+It can be used on a single interface (ethernet, vlan) or
+on a bridge
+"""
+
+netconf_schema = {
+        "type": "object",
+        "addtionalProperties": True,
+        "definitions": {
+            "base_address": {
+                "properties": {
+                    "management": {
+                        "type": "boolean",
+                        "default": False,
+                    }
+                }
+            }
+        }
+    }
+
+"""
 This schema override the possible encryption for AirOS from the default schema
 """
 wpasupplicant_schema = {
@@ -42,5 +67,4 @@ wpasupplicant_schema = {
 }
 
 
-
-schema = merge_config(default_schema, wpasupplicant_schema)
+schema = merge_config(default_schema, netconf_schema, wpasupplicant_schema)

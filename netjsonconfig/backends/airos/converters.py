@@ -278,6 +278,9 @@ class Netconf(BaseConverter):
                 for addr in addresses:
                     temp = deepcopy(base)
 
+                    if addr.get('management'):
+                        temp['role'] = self.type_to_role(interface['type'])
+
                     # handle explicit address policy
                     if addr['proto'] == 'dhcp':
                         temp['autoip'] = {}
