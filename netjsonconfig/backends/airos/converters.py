@@ -181,27 +181,32 @@ class Netconf(BaseConverter):
             if interface['type'] == 'wireless':
                 base['devname'] = interface['wireless']['radio']
 
-            addresses = interface.get('addresses', [])
+            addresses = interface.get('addresses')
 
-            for addr in addresses:
-                temp = {
-                    'devname':  interface['name'],
-                    'status': 'enabled', # can't disable interfaces
-                    'up':  status(interface),
-                    'mut': interface.get('mtu', 1500),
-                }
-                if addr['proto'] == 'dhcp':
-                    temp['autoip'] = {}
-                    temp['autoip']['status'] = 'enabled'
-                else:
-                    network = ip_interface('%s/%d' % (addr['address'],addr['mask']))
-                    temp['ip'] = str(network.ip)
-                    temp['netmask'] = str(network.netmask)
+            if addresses:
+                # for every address policy put a
+                # configuration
+                for addr in addresses:
+                    temp = deepcopy(base)
 
-                if interface['type'] == 'wireless':
-                    temp['devname'] = interface['wireless']['radio']
+                    # handle explicit address policy
+                    if addr['proto'] == 'dhcp':
+                        temp['autoip'] = {}
+                        temp['autoip']['status'] = 'enabled'
+                    else:
+                        ip_and_mask = '%s/%d' % (addr['address'], addr['mask'])
+                        network = ip_interface(ip_and_mask)
+                        temp['ip'] = str(network.ip)
+                        temp['netmask'] = str(network.netmask)
 
-                interfaces.append(temp)
+                    interfaces.append(temp)
+            else:
+                # an interface without address
+                # is still valid with these defaults values
+                base['autoip'] = {
+                        'status': 'disabled',
+                    }
+                interfaces.append(base)
 
         result.append(interfaces)
         result.append({
