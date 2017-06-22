@@ -166,6 +166,21 @@ class Netconf(BaseConverter):
                 'mtu': interface.get('mtu', 1500),
             }
 
+            # handle interface type quirks
+            if interface['type'] == 'ethernet' and not '.' in interface['name']:
+                base['autoneg'] = 'enabled'
+                base['flowcontrol'] = {
+                        'rx': {
+                            'status': 'enabled',
+                        },
+                        'tx': {
+                            'status': 'enabled',
+                        },
+                    }
+
+            if interface['type'] == 'wireless':
+                base['devname'] = interface['wireless']['radio']
+
             addresses = interface.get('addresses', [])
 
             for addr in addresses:
