@@ -36,12 +36,15 @@ class TestNetconfConverter(unittest.TestCase):
                 {
                     '1.devname': 'eth0',
                     '1.status': 'enabled',
+                    '1.up': 'enabled',
+                    '1.flowcontrol.tx.status': 'enabled',
+                    '1.flowcontrol.rx.status': 'enabled',
+                    '1.autoip.status': 'disabled',
                 },
                 {
                     'status': 'enabled',
                 },
         ]
-
 
         self.assertEqual(o.intermediate_data['netconf'], expected)
 
@@ -59,7 +62,11 @@ class TestNetconfConverter(unittest.TestCase):
         expected = [
                 {
                     '1.devname': 'eth0',
-                    '1.status': 'disabled',
+                    '1.status': 'enabled',
+                    '1.up': 'disabled',
+                    '1.flowcontrol.tx.status': 'enabled',
+                    '1.flowcontrol.rx.status': 'enabled',
+                    '1.autoip.status': 'disabled',
                 },
                 {
                     'status': 'enabled',
@@ -85,12 +92,14 @@ class TestNetconfConverter(unittest.TestCase):
                     {
                         '1.devname': 'eth0.1',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.autoip.status': 'disabled',
                     },
                     {
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_management_vlan(self):
@@ -109,13 +118,15 @@ class TestNetconfConverter(unittest.TestCase):
                     {
                         '1.devname': 'eth0.1',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.autoip.status': 'disabled',
                         '1.role': 'mlan',
                     },
                     {
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_access_point(self):
@@ -137,14 +148,17 @@ class TestNetconfConverter(unittest.TestCase):
 
             expected = [
                     {
-                        '1.devname': 'wlan0',
+                        '1.devname': 'ath0',
+                        '1.mtu': 1500,
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.autoip.status': 'disabled',
                     },
                     {
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_station(self):
@@ -166,14 +180,17 @@ class TestNetconfConverter(unittest.TestCase):
 
             expected = [
                     {
-                        '1.devname': 'wlan0',
+                        '1.devname': 'ath0',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.mtu': 1500,
+                        '1.autoip.status': 'disabled',
                     },
                     {
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_adhoc(self):
@@ -195,14 +212,17 @@ class TestNetconfConverter(unittest.TestCase):
 
             expected = [
                     {
-                        '1.devname': 'wlan0',
+                        '1.devname': 'ath0',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.mtu': 1500,
+                        '1.autoip.status': 'disabled',
                     },
                     {
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_wds(self):
@@ -224,14 +244,17 @@ class TestNetconfConverter(unittest.TestCase):
 
             expected = [
                     {
-                        '1.devname': 'wlan0',
+                        '1.devname': 'ath0',
+                        '1.mtu': 1500,
+                        '1.up': 'enabled',
                         '1.status': 'enabled',
+                        '1.autoip.status': 'disabled',
                     },
                     {
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_monitor(self):
@@ -253,8 +276,10 @@ class TestNetconfConverter(unittest.TestCase):
 
             expected = [
                     {
-                        '1.devname': 'wlan0',
+                        '1.devname': 'ath0',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.autoip.status': 'enabled',
                     },
                     {
                         'status': 'enabled',
@@ -282,8 +307,10 @@ class TestNetconfConverter(unittest.TestCase):
 
             expected = [
                     {
-                        '1.devname': 'wlan0',
+                        '1.devname': 'ath0',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.autoip.status': 'disabled',
                     },
                     {
                         'status': 'enabled',
@@ -312,12 +339,15 @@ class TestNetconfConverter(unittest.TestCase):
                     {
                         '1.devname': 'br0',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.mtu': 1500,
+                        '1.autoip.status': 'disabled',
                     },
                     {
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_virtual(self):
@@ -341,7 +371,7 @@ class TestNetconfConverter(unittest.TestCase):
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_loopback(self):
@@ -365,7 +395,7 @@ class TestNetconfConverter(unittest.TestCase):
                         'status': 'enabled',
                     },
             ]
-        
+
             self.assertEqual(o.intermediate_data['netconf'], expected)
 
         def test_other(self):
@@ -433,14 +463,20 @@ class TestNetconfConverter(unittest.TestCase):
                     {
                         '1.devname': 'eth0',
                         '1.status': 'enabled',
+                        '1.up': 'enabled',
+                        '1.mtu': 1500,
                     },
                     {
-                        '2.devname': 'wlan0',
+                        '2.devname': 'ath0',
                         '2.status': 'enabled',
+                        '2.up': 'enabled',
+                        '3.mtu': 1500,
                     },
                     {
                         '3.devname': 'br0',
                         '3.status': 'enabled',
+                        '3.up': 'enabled',
+                        '3.mtu': 1500,
                     },
                     {
                         '4.devname': 'veth0',
@@ -451,6 +487,5 @@ class TestNetconfConverter(unittest.TestCase):
                         '5.status': 'enabled',
                     },
             ]
-        
-            self.assertEqual(o.intermediate_data['netconf'], expected)
 
+            self.assertEqual(o.intermediate_data['netconf'], expected)
