@@ -1,7 +1,9 @@
+from copy import deepcopy
 from ...utils import get_copy, sorted_dict
 from ..base.converter import BaseConverter
 
 from ipaddress import ip_interface
+
 
 def status(config, key='disabled'):
     if config.get(key):
