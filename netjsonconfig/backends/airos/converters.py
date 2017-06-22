@@ -159,6 +159,12 @@ class Netconf(BaseConverter):
         original = get_copy(self.netjson, self.netjson_key)
 
         for interface in original:
+            base = {
+                'devname':  interface['name'],
+                'status': 'enabled',  # can't disable interfaces
+                'up':  status(interface),
+                'mtu': interface.get('mtu', 1500),
+            }
 
             addresses = interface.get('addresses', [])
 
