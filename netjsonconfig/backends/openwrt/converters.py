@@ -215,8 +215,9 @@ class Interfaces(BaseConverter):
             # to these physical names
             interface['ifname'] = 'br-{ifname}'.format(**interface)
             # do not repeat bridge attributes (they have already been processed)
-            del interface['type']
-            del interface['bridge_members']
+            for attr in ['type', 'bridge_members', 'stp', 'gateway']:
+                if attr in interface:
+                    del interface[attr]
         elif interface['type'] != 'bridge':
             del interface['type']
         return interface
