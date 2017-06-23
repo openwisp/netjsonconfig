@@ -9,7 +9,7 @@ class TestNetconfConverter(unittest.TestCase):
 
     def test_netconf_key(self):
         o = self.backend({
-            "intefaces": []
+            'interfaces': []
         })
 
         o.to_intermediate()
@@ -24,7 +24,7 @@ class TestNetconfConverter(unittest.TestCase):
 
     def test_active_interface(self):
         o = self.backend({
-            "intefaces": [{
+            'interfaces': [{
                 'name': 'eth0',
                 'type': 'ethernet',
                 }]
@@ -39,22 +39,23 @@ class TestNetconfConverter(unittest.TestCase):
                     '1.up': 'enabled',
                     '1.flowcontrol.tx.status': 'enabled',
                     '1.flowcontrol.rx.status': 'enabled',
-                    '1.autoip.status': 'disabled',
                 },
                 {
                     'status': 'enabled',
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['netconf'], expected)
+        i_want_the_truth(self, o.intermediate_data['netconf'], expected)
 
     def test_inactive_interface(self):
         o = self.backend({
-            "intefaces": [{
-                'name': 'eth0',
-                'type': 'ethernet',
-                'disabled': True,
-                }]
+            'interfaces': [
+                {
+                    'name': 'eth0',
+                    'type': 'ethernet',
+                    'disabled': True,
+                }
+            ]
         })
 
         o.to_intermediate()
