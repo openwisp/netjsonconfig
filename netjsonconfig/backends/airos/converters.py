@@ -320,10 +320,21 @@ class Netmode(BaseConverter):
 
 
 class Ntpclient(BaseConverter):
-    netjson_key = 'general'
+    netjson_key = 'ntp_servers'
 
     def to_intermediate(self):
         result = []
+        temp = []
+
+        original = get_copy(self.netjson, self.netjson_key)
+
+        for ntp in original:
+            temp.append({
+                'server': ntp,
+                'status': 'enabled',
+            })
+
+        result.append(temp)
 
         result.append({
             'status': 'disabled',
