@@ -51,3 +51,47 @@ JSON method
 -----------
 
 .. automethod:: netjsonconfig.AirOS.json
+
+
+General settings
+----------------
+
+Network interface
+-----------------
+
+From the ``interfaces`` key we can configure the device network interfaces.
+
+AirOS supports the following types of interfaces
+
+* **network interfaces**: may be of type ``ethernet``
+* **wirelesss interfaces**: must be of type ``wireless``
+* **bridge interfaces**: must be of type ``bridge``
+
+A network interface can be designed to be the management interfaces by setting the ``managed`` key to ``True`` on the address chosen.
+
+As an example here is a snippet that set the vlan ``eth0.2`` to be the management interface on the address ``192.168.1.20``
+
+.. code-block:: json
+
+   {
+       "interfaces": [
+           {
+               "name": "eth0.2",
+               "type": "ethernet",
+               "addresses": [
+                   {
+                       "address": "192.168.1.20",
+                       "family": "ipv4",
+                       "managed": true,
+                       "mask": 24,
+                       "proto": "static"
+                   }
+               ]
+           }
+       ]
+   }
+
+DNS servers
+-----------
+
+
