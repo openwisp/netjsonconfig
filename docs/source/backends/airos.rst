@@ -111,6 +111,23 @@ The default values for this key are as reported below
         }
     }
 
+NTP servers
+-----------
+
+This is an extension to the `NetJSON` specification.
+
+By setting the key ``ntp_servers`` in your input you can provide a list of ntp servers to use.
+
+.. code-block:: json
+
+    {
+        "type": "DeviceConfiguration",
+        ...
+        "ntp_servers": [
+            "0.ubnt.pool.ntp.org"
+        ]
+    }
+
 WPA2
 ----
 
