@@ -624,6 +624,18 @@ class Wireless(BaseConverter):
                 'addmtikie':  'enabled',
                 'devname':  w['wireless']['radio'],
                 'hide_ssid': 'enabled' if w['wireless'].get('hidden') else 'disabled',
+                'l2_isolation': 'disabled',
+                'mac_acl': {
+                    'policy': 'allow',
+                    'status': 'disabled',
+                },
+                'mcast': {
+                    'enhance': 0,
+                },
+                'rate': {
+                    'auto': 'enabled',
+                    'mcs': -1,
+                },
                 'security': {
                     'type': 'none',
                 },
