@@ -3,34 +3,6 @@ from ..base.converter import BaseConverter
 from ipaddress import IPv4Interface
 
 
-class Radio(BaseConverter):
-    netjson_key = 'radios'
-
-    def to_intermediate(self):
-        result = []
-        radios = get_copy(self.netjson, self.netjson_key)
-        for radio in radios:
-            temp = {
-                'name': radio['name'],
-                'protocol': radio['protocol'],
-                'channel': radio['channel'],
-                'hwmode': self._get_hwmode(radio)
-            }
-            result.append(temp)
-        return (('wireless', result),)
-
-    def _get_hwmode(self, radio):
-        protocol = radio['protocol']
-        if protocol in ['802.11a', '802.11b', '802.11g']:
-            return protocol[4:]
-        if radio['channel'] is 0:
-            return radio.get('hwmode')
-        elif radio['channel'] <= 13:
-            return '11g'
-        else:
-            return '11a'
-
-
 class Interfaces(BaseConverter):
     netjson_key = 'interfaces'
 
@@ -115,27 +87,61 @@ class Wireless(BaseConverter):
         interfaces = get_copy(self.netjson, self.netjson_key)
         for interface in interfaces:
             if interface['type'] == 'wireless':
-                temp = {
-                    'radio': interface['wireless'].get('radio'),
-                    'mode': interface['wireless'].get('mode'),
-                    'ssid': interface['wireless'].get('ssid'),
+                new_interface = {
+                    'ifname': interface.get('name'),
+                    'iftype': interface.get('type'),
+                    'ssid': interface['wireless'].get('ssid')
                 }
-                bssid = interface['wireless'].get('bssid', None)
-                if bssid is not None:
-                    temp.update({'bssid': bssid})
-                hidden = interface['wireless'].get('hidden', None)
-                if hidden is not None:
-                    temp.update({'hidden': hidden})
-                encryption = interface['wireless'].get('encryption', None)
-                if encryption is not None:
-                    protocol = encryption.get('protocol')
-                    key = encryption.get('key')
-                    cipher = encryption.get('cipher', None)
-                    if cipher is not None:
-                        temp.update({'cipher': cipher})
-                result.append(temp)
+                wireless = interface.get('wireless')
+                # radio_num = interface['wireless'].get('radio')
+                # radios = get_copy(self.netjson, 'radios')
+                # print radios
+                # if radios is not None:
+                #     req_radio = [radio for radio in radios if radio['name'] == radio_num][0]
+                #     hwmode = self._get_hwmode(req_radio)
+                #     channel = req_radio['channel']
+                #     protocol = req_radio['protocol'].replace(".", "")
+                #     new_interface.update({
+                #         'hwmode': hwmode,
+                #         'channel': channel,
+                #         'protocol': protocol
+                #     })
+                new_interface.update({'encryption': self._get_encryption(wireless)})
+                result.append(new_interface)
         return (('wireless', result),)
 
+    def _get_hwmode(self, radio):
+        protocol = radio['protocol']
+        if protocol in ['802.11a', '802.11b', '802.11g']:
+            return protocol[1:]
+        if radio['channel'] is 0:
+            return radio.get('hwmode')
+        elif radio['channel'] <= 13:
+            return 'g'
+        else:
+            return 'a'
+
+    def _get_encryption(self, wireless):
+        encryption = wireless.get('encryption')
+        disabled = encryption.get('disabled', False)
+        new_encryption = {}
+        if encryption.get('protocol') is not 'none' and encryption.get('disabled') is not True:
+            protocol, method = encryption.get('protocol').split("_")
+            if protocol in ['wpa', 'wpa2']:
+                auth_algs = '1'
+                wpa = '1' if protocol == 'wpa' else '2'
+                wpa_key_mgmt = 'WPA-PSK' if method == 'personal' else 'WPA-EAP'
+                wpa_passphrase = encryption.get('key')
+                new_encryption.update({
+                    'auth_algs': auth_algs,
+                    'wpa': wpa,
+                    'wpa_key_mgmt': wpa_key_mgmt,
+                    'wpa_passphrase': wpa_passphrase
+                    })
+                if encryption.get('cipher', None) is not None or 'auto':
+                    wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
+                    new_encryption.update({'wpa_pairwise': wpa_pairwise})
+        return new_encryption
 
 class DnsServers(BaseConverter):
     netjson_key = 'dns_servers'
