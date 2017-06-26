@@ -4,7 +4,7 @@ AirOS Backend
 
 .. include:: ../_github.rst
 
-The ``AirOS`` backend allows to generate AirOS compatible configurations.
+The ``AirOS`` backend allows to generate AirOS v8.3 compatible configurations.
 
 Initialization
 --------------
@@ -29,3 +29,25 @@ read about the following basic concepts:
     * :ref:`configuration_dictionary`
     * :ref:`template`
     * :ref:`context`
+
+Render method
+-------------
+
+.. automethod:: netjsonconfig.AirOS.render
+
+Generate method
+---------------
+
+.. automethod:: netjsonconfig.AirOS.generate
+
+
+Write method
+------------
+
+.. automethod:: netjsonconfig.AirOS.write
+
+
+JSON method
+-----------
+
+.. automethod:: netjsonconfig.AirOS.json
