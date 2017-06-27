@@ -86,10 +86,10 @@ search {{ domain }}
 config: /etc/hostapd/hostapd.conf
 interface={{ wireless.get('ifname') }}
 driver=nl80211
-hw_mode=
-channel=
-ieee80211n=
-wmm_enabled=
+hw_mode={{ wireless.get('hwmode')}}
+channel={{ wireless.get('channel')}}
+ieee80211n={{ '1' if wireless.get('protocol') == '80211n' }}
+wmm_enabled=1
 ssid={{ wireless.get('ssid') }}
 {% if wireless.get('encryption') != {} %}
 auth_algs={{ wireless.get('encryption').get('auth_algs') }}
