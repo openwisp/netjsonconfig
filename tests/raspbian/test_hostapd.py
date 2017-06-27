@@ -8,6 +8,17 @@ class TestHostapdRenderer(unittest.TestCase, _TabsMixin):
 
     def test_wpa2_personal(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -30,10 +41,10 @@ class TestHostapdRenderer(unittest.TestCase, _TabsMixin):
 config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
-hw_mode=
-channel=
-ieee80211n=
-wmm_enabled=
+hw_mode=g
+channel=3
+ieee80211n=1
+wmm_enabled=1
 ssid=wpa2-personal
 auth_algs=1
 wpa=2
@@ -45,6 +56,17 @@ wpa_pairwise=TKIP CCMP
 
     def test_wpa_personal(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -67,10 +89,10 @@ wpa_pairwise=TKIP CCMP
 config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
-hw_mode=
-channel=
-ieee80211n=
-wmm_enabled=
+hw_mode=g
+channel=3
+ieee80211n=1
+wmm_enabled=1
 ssid=wpa-personal
 auth_algs=1
 wpa=1
@@ -81,6 +103,17 @@ wpa_passphrase=passphrase012345
 
     def test_wep_open(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -103,6 +136,17 @@ wpa_passphrase=passphrase012345
 
     def test_wep_shared(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -125,6 +169,17 @@ wpa_passphrase=passphrase012345
 
     def test_encryption_disabled(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -148,16 +203,27 @@ wpa_passphrase=passphrase012345
 config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
-hw_mode=
-channel=
-ieee80211n=
-wmm_enabled=
+hw_mode=g
+channel=3
+ieee80211n=1
+wmm_enabled=1
 ssid=MyNetwork
 '''
         self.assertEqual(o.render(), expected)
 
     def test_no_encryption(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -176,16 +242,27 @@ ssid=MyNetwork
 config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
-hw_mode=
-channel=
-ieee80211n=
-wmm_enabled=
+hw_mode=g
+channel=3
+ieee80211n=1
+wmm_enabled=1
 ssid=open
 '''
         self.assertEqual(o.render(), expected)
 
     def test_wpa2_personal_adhoc(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
@@ -210,6 +287,17 @@ ssid=open
 
     def test_wps(self):
         o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
             "interfaces": [
                 {
                     "name": "wlan0",
