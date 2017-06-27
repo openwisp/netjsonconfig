@@ -93,19 +93,18 @@ class Wireless(BaseConverter):
                     'ssid': interface['wireless'].get('ssid')
                 }
                 wireless = interface.get('wireless')
-                # radio_num = interface['wireless'].get('radio')
-                # radios = get_copy(self.netjson, 'radios')
-                # print radios
-                # if radios is not None:
-                #     req_radio = [radio for radio in radios if radio['name'] == radio_num][0]
-                #     hwmode = self._get_hwmode(req_radio)
-                #     channel = req_radio['channel']
-                #     protocol = req_radio['protocol'].replace(".", "")
-                #     new_interface.update({
-                #         'hwmode': hwmode,
-                #         'channel': channel,
-                #         'protocol': protocol
-                #     })
+                radio_num = interface['wireless'].get('radio')
+                radios = get_copy(self.netjson, 'radios')
+                if radios is not None:
+                    req_radio = [radio for radio in radios if radio['name'] == radio_num][0]
+                    hwmode = self._get_hwmode(req_radio)
+                    channel = req_radio['channel']
+                    protocol = req_radio['protocol'].replace(".", "")
+                    new_interface.update({
+                        'hwmode': hwmode,
+                        'channel': channel,
+                        'protocol': protocol
+                    })
                 new_interface.update({'encryption': self._get_encryption(wireless)})
                 result.append(new_interface)
         return (('wireless', result),)
