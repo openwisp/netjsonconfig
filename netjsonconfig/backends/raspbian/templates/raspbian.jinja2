@@ -77,11 +77,7 @@ nameserver {{ ip }}
 {% for domain in j %}
 search {{ domain }}
 {% endfor %}
-{% else %}
-{% endif %}
-{% endfor%}
-{% for i, j in data.items() %}
-{% if i|string() == 'wireless' %}
+{% elif i|string() == 'wireless' %}
 {% for wireless in j %}
 config: /etc/hostapd/hostapd.conf
 interface={{ wireless.get('ifname') }}
@@ -101,5 +97,6 @@ wpa_pairwise={{ wireless.get('encryption').get('wpa_pairwise')}}
 {% endif %}
 {% endif %}
 {% endfor %}
+{% else %}
 {% endif %}
-{% endfor %}
+{% endfor%}
