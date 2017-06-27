@@ -121,7 +121,9 @@ class Wireless(BaseConverter):
             return 'a'
 
     def _get_encryption(self, wireless):
-        encryption = wireless.get('encryption')
+        encryption = wireless.get('encryption', None)
+        if encryption is None:
+            return {}
         disabled = encryption.get('disabled', False)
         new_encryption = {}
         if encryption.get('protocol') is not 'none' and encryption.get('disabled') is not True:
