@@ -44,7 +44,6 @@ driver=nl80211
 hw_mode=g
 channel=3
 ieee80211n=1
-wmm_enabled=1
 ssid=wpa2-personal
 auth_algs=1
 wpa=2
@@ -92,7 +91,6 @@ driver=nl80211
 hw_mode=g
 channel=3
 ieee80211n=1
-wmm_enabled=1
 ssid=wpa-personal
 auth_algs=1
 wpa=1
@@ -206,7 +204,6 @@ driver=nl80211
 hw_mode=g
 channel=3
 ieee80211n=1
-wmm_enabled=1
 ssid=MyNetwork
 '''
         self.assertEqual(o.render(), expected)
@@ -245,7 +242,6 @@ driver=nl80211
 hw_mode=g
 channel=3
 ieee80211n=1
-wmm_enabled=1
 ssid=open
 '''
         self.assertEqual(o.render(), expected)
