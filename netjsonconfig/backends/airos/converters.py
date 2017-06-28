@@ -340,9 +340,13 @@ class Resolv(BaseConverter):
     def to_intermediate(self):
         result = []
 
+        original = get_copy(self.netjson, "general")
+        hostname = original.get('hostname', 'airos')
+
         result.append({
             'host':  [{
-                'name':  ''
+                'name':  hostname,
+                'status': 'enabled',
             }]
         })
 
