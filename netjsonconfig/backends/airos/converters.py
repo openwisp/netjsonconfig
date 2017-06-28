@@ -171,6 +171,19 @@ class Httpd(BaseConverter):
         return (('httpd', result),)
 
 
+class Igmpproxy(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = [
+               {
+                    'status':  'enabled',
+                },
+        ]
+
+        return (('igmpproxy', result),)
+
+
 class Netconf(BaseConverter):
     netjson_key = 'interfaces'
 
