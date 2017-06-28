@@ -442,6 +442,42 @@ Will be rendered as follows::
     ieee80211n=1
     ssid=myWiFi
 
+Wireless AdHoc Mode
+~~~~~~~~~~~~~~~~~~~
+
+In wireless adhoc mode, the ``bssid`` property is required.
+
+The following example:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "ssid": "freifunk",
+                    "mode": "adhoc",
+                    "bssid": "02:b8:c0:00:00:00"
+                }
+            }
+        ]
+    }
+
+Will result in::
+
+    config: /etc/network/interfaces
+    auto wireless
+    iface wireless inet static
+        address 172.128.1.1
+        netmask 255.255.255.0
+        wireless-channel 1
+        wireless-essid freifunk
+        wireless-mode ad-hoc
+        
+
 WPA2 Personal (Pre-Shared Key)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
