@@ -110,6 +110,25 @@ class Dyndns(BaseConverter):
         return (('dyndns', result),)
 
 
+class Ebtables(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = [
+               {
+                    'sys': {
+                        'fw': {
+                            'status':  'enabled',
+                        },
+                        'status': 'enabled',
+                    },
+                    'status': 'enabled',
+                },
+        ]
+
+        return (('httpd', result),)
+
+
 class Gui(BaseConverter):
     netjson_key = 'gui'
 
