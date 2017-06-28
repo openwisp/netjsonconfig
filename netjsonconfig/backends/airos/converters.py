@@ -463,6 +463,14 @@ class Telnetd(BaseConverter):
         return (('telnetd', result),)
 
 
+class Tshaper(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+
+        return (('tshaper', [{'status': 'disabled', }]),)
+
+
 class Update(BaseConverter):
     netjson_key = 'general'
 
