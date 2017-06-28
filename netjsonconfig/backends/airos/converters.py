@@ -447,9 +447,21 @@ class System(BaseConverter):
         result = []
 
         result.append({
+            'airosx': {
+                'prov': {
+                    'status': 'enabled',
+                },
+            },
+            'cfg': {
+                'version': 0,
+            },
+            'date': {
+                'status': 'enabled',
+            },
             'external': {
                 'reset': 'enabled',
             },
+            'timezone': 'GMT',
         })
         return (('system', result),)
 
