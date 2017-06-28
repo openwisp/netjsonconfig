@@ -246,41 +246,6 @@ ssid=open
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_wpa2_personal_adhoc(self):
-        o = Raspbian({
-            "radios": [
-                {
-                    "name": "radio0",
-                    "phy": "phy0",
-                    "driver": "mac80211",
-                    "protocol": "802.11n",
-                    "channel": 3,
-                    "channel_width": 20,
-                    "tx_power": 3
-                },
-            ],
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "adhoc",
-                        "ssid": "encrypted-adhoc",
-                        "bssid": "00:26:b9:20:5f:09",
-                        "encryption": {
-                            "protocol": "wpa2_personal",
-                            "cipher": "auto",
-                            "key": "passphrase012345"
-                        }
-                    }
-                }
-            ]
-        })
-
-        expected = ''''''
-        self.assertEqual(o.render(), expected)
-
     def test_wps(self):
         o = Raspbian({
             "radios": [

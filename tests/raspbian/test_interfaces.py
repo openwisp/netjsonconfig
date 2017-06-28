@@ -319,6 +319,31 @@ iface lo inet static
 '''
         self.assertEqual(o.render(), expected)
 
+    def test_adhoc_wireless(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "ssid": "freifunk",
+                        "mode": "adhoc",
+                        "bssid": "02:b8:c0:00:00:00"
+                    }
+                }
+            ]
+        })
+
+        expected = '''config: /etc/network/interfaces
+auto wireless
+iface wireless inet static
+    address 172.128.1.1
+    netmask 255.255.255.0
+    wireless-channel 1
+    wireless-essid freifunk
+    wireless-mode ad-hoc
+'''
     def test_simple_bridge(self):
         o = Raspbian({
                     "interfaces": [
