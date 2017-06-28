@@ -471,6 +471,14 @@ class Tshaper(BaseConverter):
         return (('tshaper', [{'status': 'disabled', }]),)
 
 
+class Unms(BaseConverter):
+    netjson_keu = 'general'
+
+    def to_intermediate(self):
+
+        return (('unms', [{'status': 'disabled'}]),)
+
+
 class Update(BaseConverter):
     netjson_key = 'general'
 
