@@ -1,7 +1,18 @@
 {% for i, j in data.items() %}
 {% if i|string() == 'interfaces' %}
 {% for interface in j %}
-{% if interface.get('iftype') in ['ethernet', 'bridge', 'loopback'] %}
+{% if interface.get('iftype') == 'wireless' %}
+config: /etc/network/interfaces
+{% if interface.get('mode') == 'adhoc' %}
+auto {{ interface.get('iftype') }}
+iface {{ interface.get('iftype') }} inet static
+    address 172.128.1.1
+    netmask 255.255.255.0
+    wireless-channel 1
+    wireless-essid {{ interface.get('essid') }}
+    wireless-mode ad-hoc
+{% endif %}
+{% elif interface.get('iftype') in ['ethernet', 'bridge', 'loopback'] %}
 config: /etc/network/interfaces
 auto {{ interface.get('ifname') }}
 {% if interface.get('address') != None %}
@@ -86,7 +97,7 @@ hw_mode={{ wireless.get('hwmode')}}
 channel={{ wireless.get('channel')}}
 {% if wireless.get('protocol') == '80211n' %}
 ieee80211n=1
-{% endif%}
+{% endif %}
 ssid={{ wireless.get('ssid') }}
 {% if wireless.get('encryption') != {} %}
 auth_algs={{ wireless.get('encryption').get('auth_algs') }}

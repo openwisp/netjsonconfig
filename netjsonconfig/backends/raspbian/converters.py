@@ -32,9 +32,16 @@ class Interfaces(BaseConverter):
                 new_interface.update({
                     'mac': mac
                 })
+            if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
+                wireless = interface.get('wireless')
+                new_interface.update({
+                    'essid': wireless.get('ssid'),
+                    'mode': wireless.get('mode')
+                })
             if addresses is not None:
                 for address in addresses:
                     new_address = {}
+                    print address
                     if iftype in ['ethernet', 'bridge', 'loopback']:
                         if address.get('proto') == 'static':
                             if address.get('family') == 'ipv4':
@@ -86,7 +93,7 @@ class Wireless(BaseConverter):
         result = []
         interfaces = get_copy(self.netjson, self.netjson_key)
         for interface in interfaces:
-            if interface['type'] == 'wireless':
+            if interface['type'] == 'wireless' and interface.get('wireless').get('mode') is not 'adhoc' :
                 new_interface = {
                     'ifname': interface.get('name'),
                     'iftype': interface.get('type'),
