@@ -2,8 +2,8 @@
 {% if i|string() == 'interfaces' %}
 {% for interface in j %}
 {% if interface.get('iftype') == 'wireless' %}
-config: /etc/network/interfaces
 {% if interface.get('mode') == 'adhoc' %}
+config: /etc/network/interfaces
 auto {{ interface.get('iftype') }}
 iface {{ interface.get('iftype') }} inet static
     address 172.128.1.1
