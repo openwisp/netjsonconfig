@@ -184,6 +184,25 @@ class Igmpproxy(BaseConverter):
         return (('igmpproxy', result),)
 
 
+class Iptables(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = [
+               {
+                    'sys': {
+                        'portfw':  {
+                            'status': 'enabled',
+                        },
+                        'status':  'enabled',
+                    },
+                    'status':  'enabled',
+                },
+        ]
+
+        return (('iptables', result),)
+
+
 class Netconf(BaseConverter):
     netjson_key = 'interfaces'
 
