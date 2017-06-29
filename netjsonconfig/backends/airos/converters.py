@@ -23,19 +23,19 @@ class Aaa(BaseConverter):
         })
         result.append([
             {
-#                'radius': {
-#                    'acct': [
-#                        {
-#                            'port': 1813,
-#                            'status': 'disabled',
-#                        },
-#                    ],
-#                    'auth': [
-#                        {
-#                            'port': 1812,
-#                        },
-#                    ],
-#                },
+                'radius': {
+                    'acct': [
+                        {
+                            'port': 1813,
+                            'status': 'disabled',
+                        },
+                    ],
+                    'auth': [
+                        {
+                            'port': 1812,
+                        },
+                    ],
+                },
             }
         ])
         return (('aaa', result),)
