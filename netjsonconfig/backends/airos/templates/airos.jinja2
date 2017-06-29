@@ -1,7 +1,11 @@
 {% for namespace, block in data.items() %}
-	{% for element in block %}
-		{% for k,v in element.items() %}
-			{{ namespace }}.{{ k }}={{ v }}
+	{% if namespace != 'netmode' %}
+		{% for element in block %}
+			{% for k,v in element.items() %}
+				{{ namespace }}.{{ k }}={{ v }}
+			{% endfor %}
 		{% endfor %}
-	{% endfor %}
+	{% else %}
+		netmode=bridge
+	{% endif %}
 {% endfor %}
