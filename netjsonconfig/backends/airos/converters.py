@@ -206,6 +206,13 @@ class Iptables(BaseConverter):
 class Netconf(BaseConverter):
     netjson_key = 'interfaces'
 
+    def type_to_role(self, typestr):
+        roles = {
+            'ethernet': 'mlan',
+            'bridge': 'mlan',
+        }
+        return roles.get(typestr,'')
+
     def to_intermediate(self):
         result = []
         interfaces = []
@@ -570,7 +577,7 @@ class Wireless(BaseConverter):
             encryption = w['wireless'].get('encryption', 'none')
             ws.append({
                 'addmtikie':  'enabled',
-                'devname':  w['name'],
+                'devname':  w['wireless']['radio'],
                 'hide_ssid': 'enabled' if w['wireless'].get('hidden') else 'disabled',
                 'security': {
                     'type': encryption
