@@ -343,7 +343,10 @@ iface wireless inet static
     wireless-channel 1
     wireless-essid freifunk
     wireless-mode ad-hoc
+
 '''
+        self.assertEqual(o.render(), expected)
+
     def test_simple_bridge(self):
         o = Raspbian({
                     "interfaces": [
