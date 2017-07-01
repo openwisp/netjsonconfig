@@ -41,7 +41,6 @@ class Interfaces(BaseConverter):
             if addresses is not None:
                 for address in addresses:
                     new_address = {}
-                    print address
                     if iftype in ['ethernet', 'bridge', 'loopback']:
                         if address.get('proto') == 'static':
                             if address.get('family') == 'ipv4':
@@ -93,7 +92,7 @@ class Wireless(BaseConverter):
         result = []
         interfaces = get_copy(self.netjson, self.netjson_key)
         for interface in interfaces:
-            if interface['type'] == 'wireless' and interface.get('wireless').get('mode') is not 'adhoc' :
+            if interface['type'] == 'wireless' and interface.get('wireless').get('mode') is not 'adhoc':
                 new_interface = {
                     'ifname': interface.get('name'),
                     'iftype': interface.get('type'),
@@ -133,7 +132,7 @@ class Wireless(BaseConverter):
             return {}
         disabled = encryption.get('disabled', False)
         new_encryption = {}
-        if encryption.get('protocol') is not 'none' and encryption.get('disabled') is not True:
+        if encryption.get('protocol') is not 'none' and disabled is not True:
             protocol, method = encryption.get('protocol').split("_")
             if protocol in ['wpa', 'wpa2']:
                 auth_algs = '1'
@@ -150,6 +149,7 @@ class Wireless(BaseConverter):
                     wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
                     new_encryption.update({'wpa_pairwise': wpa_pairwise})
         return new_encryption
+
 
 class DnsServers(BaseConverter):
     netjson_key = 'dns_servers'
