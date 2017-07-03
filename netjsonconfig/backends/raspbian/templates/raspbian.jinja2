@@ -79,7 +79,10 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% endif %}
 
 {% endfor %}
-{% elif i|string() == 'dns_servers' %}
+{% endif %}
+{% endfor%}
+{% for i, j in data.items() %}
+{% if i|string() == 'dns_servers' %}
 config: /etc/resolv.conf
 {% for ip in j %}
 nameserver {{ ip }}
@@ -88,7 +91,10 @@ nameserver {{ ip }}
 {% for domain in j %}
 search {{ domain }}
 {% endfor %}
-{% elif i|string() == 'wireless' %}
+{% endif %}
+{% endfor%}
+{% for i, j in data.items() %}
+{% if i|string() == 'wireless' %}
 {% for wireless in j %}
 config: /etc/hostapd/hostapd.conf
 interface={{ wireless.get('ifname') }}
@@ -111,4 +117,4 @@ wpa_pairwise={{ wireless.get('encryption').get('wpa_pairwise')}}
 {% endfor %}
 {% else %}
 {% endif %}
-{% endfor%}
+{% endfor %}
