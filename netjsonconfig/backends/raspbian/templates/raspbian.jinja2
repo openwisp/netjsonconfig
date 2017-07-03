@@ -81,9 +81,15 @@ iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
 {% endfor %}
 {% endif %}
 {% endfor%}
+{% set count = [1] %}
 {% for i, j in data.items() %}
-{% if i|string() == 'dns_servers' %}
+{% if i|string() in ['dns_servers', 'dns_search'] %}
+{% if count == [1] %}
 config: /etc/resolv.conf
+{% if count.append(count.pop() + 1) %}{% endif %}
+{% endif %}
+{% endif %}
+{% if i|string() == 'dns_servers' %}
 {% for ip in j %}
 nameserver {{ ip }}
 {% endfor %}
