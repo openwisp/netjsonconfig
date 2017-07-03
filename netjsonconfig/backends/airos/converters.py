@@ -607,26 +607,42 @@ class Wpasupplicant(BaseConverter):
     def to_intermediate(self):
         result = []
 
+        original = [
+                i for i in get_copy(self.netjson, self.netjson_key) if i['type'] == 'wireless'
+                ]
+
+        temp_dev = {
+            'profile': 'AUTO',
+            'status': 'enabled',
+            'driver': 'madwifi',
+            'devname': '',
+        }
+
+        if original:
+            head = original[0]
+            temp_dev['devname'] = head['wireless']['radio']
+
+            if head['encryption']['protocol'] == 'wpa2_personal':
+                network = wpa2_personal(head)
+
+            elif head['encryption']['protocol'] == 'wpa2_enterprise':
+                network = wpa2_enterprise(head)
+
+            else:
+                network = no_encryption(head)
+                temp_dev['status'] = 'disabled'
+                del temp_dev['driver']
+                del temp_dev['devname']
+
         result.append({
             'device': [
-                {
-                    'profile': 'AUTO',
-                    'status': 'disabled',
-                },
+                temp_dev,
             ],
             'profile': [
                 {
                     'name': 'AUTO',
                     'network': [
-                        {
-                            'key_mgmt': [
-                                {
-                                    'name': 'NONE',
-                                },
-                            ],
-                            'priority': 100,
-                            'ssid': 'your-ssid-here',
-                        },
+                        network,
                         {
                             'key_mgmt': [
                                 {
@@ -643,4 +659,5 @@ class Wpasupplicant(BaseConverter):
         result.append({
             'status': 'enabled',
         })
+
         return (('wpasupplicant', result),)
