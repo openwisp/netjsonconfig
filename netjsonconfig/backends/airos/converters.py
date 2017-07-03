@@ -574,13 +574,12 @@ class Wireless(BaseConverter):
 
         ws = []
         for w in original:
-            encryption = w['wireless'].get('encryption', 'none')
             ws.append({
                 'addmtikie':  'enabled',
                 'devname':  w['wireless']['radio'],
                 'hide_ssid': 'enabled' if w['wireless'].get('hidden') else 'disabled',
                 'security': {
-                    'type': encryption
+                    'type': 'none',
                 },
                 'signal_led1': 75,
                 'signal_led2': 50,
