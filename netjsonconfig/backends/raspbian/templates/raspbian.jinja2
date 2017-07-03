@@ -20,10 +20,10 @@ auto {{ interface.get('ifname') }}
 {% if address.get('proto') == 'static' %}
 {% if address.get('family') == 'ipv4' %}
 iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
-    address {{ address.get('ipv4address') }}
-    netmask {{ address.get('ipv4netmask') }}
+    address {{ address.get('address') }}
+    netmask {{ address.get('netmask') }}
 {% if address.get('gateway', None) != None %}
-    gateway {{ address.get('ipv4gateway')}}
+    gateway {{ address.get('gateway')}}
 {% endif %}
 {% if interface.get('mtu', None) != None %}
     mtu {{ interface.get('mtu') }}
@@ -36,8 +36,8 @@ iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
 {% endif %}
 {% elif address.get('family') == 'ipv6' %}
 iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
-    address {{ address.get('ipv6address') }}
-    netmask {{ address.get('ipv6netmask') }}
+    address {{ address.get('address') }}
+    netmask {{ address.get('netmask') }}
 {% if address.get('gateway', None) != None %}
     gateway {{ address.get('ipv6gateway') }}
 {% endif %}
