@@ -10,79 +10,135 @@ class Interfaces(BaseConverter):
         result = []
         interfaces = get_copy(self.netjson, self.netjson_key)
         for interface in interfaces:
+            new_interface = {}
             ifname = interface.get('name')
             iftype = interface.get('type')
-            addresses = interface.get('addresses', None)
-            new_interface = {
-                'ifname': ifname,
-                'iftype': iftype,
-            }
-            address_list = []
+
+            if iftype in ['ethernet', 'bridge', 'loopback']:
+                new_interface.update({
+                    'ifname': ifname,
+                    'iftype': iftype
+                })
+                addresses = self._get_address(interface)
+                new_interface.update({
+                    'address': addresses
+                })
+                mac = interface.get('mac', False)
+                if mac:
+                    new_interface.update({'mac': mac})
+                mtu = interface.get('mtu', False)
+                if mtu:
+                    new_interface.update({'mtu': mtu})
+                txqueuelen = interface.get('txqueuelen', False)
+                if txqueuelen:
+                    new_interface.update({'txqueuelen': txqueuelen})
+                autostart = interface.get('autostart', False)
+                if autostart:
+                    new_interface.update({'autostart': autostart})
             if iftype == 'bridge':
                 new_interface.update({
-                    'bridge_members': interface.get('bridge_members'),
+                    'bridge_members': interface.get('bridge_members')
                 })
-            mtu = interface.get('mtu', None)
-            if mtu is not None:
-                new_interface.update({
-                    'mtu': mtu
-                })
-            mac = interface.get('mac', None)
-            if mac is not None:
-                new_interface.update({
-                    'mac': mac
-                })
-            if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
-                wireless = interface.get('wireless')
-                new_interface.update({
-                    'essid': wireless.get('ssid'),
-                    'mode': wireless.get('mode')
-                })
-            if addresses is not None:
-                for address in addresses:
-                    new_address = {}
-                    if iftype in ['ethernet', 'bridge', 'loopback']:
-                        if address.get('proto') == 'static':
-                            if address.get('family') == 'ipv4':
-                                addressmask = str(address.get('address')) + '/' + str(address.get('mask'))
-                                new_address.update({
-                                    'proto': 'static',
-                                    'family': 'ipv4',
-                                    'ipv4address': address.get('address'),
-                                    'ipv4netmask': IPv4Interface(addressmask).with_netmask.split('/')[1]
-                                })
-                                if address.get('gateway', None) is not None:
-                                    new_address.update({
-                                        'ipv4gateway': address.get('gateway'),
-                                    })
-                            if address.get('family') == 'ipv6':
-                                new_address.update({
-                                    'proto': 'static',
-                                    'family': 'ipv6',
-                                    'ipv6address': address.get('address'),
-                                    'ipv6netmask': address.get('mask')
-                                })
-                                if address.get('gateway', None) is not None:
-                                    new_address.update({
-                                        'ipv6gateway': address.get('gateway'),
-                                    })
-                        elif address.get('proto') == 'dhcp':
-                            if address.get('family') == 'ipv4':
-                                new_address.update({
-                                    'proto': 'dhcp',
-                                    'family': 'ipv4',
-                                })
-                            elif address.get('family') == 'ipv6':
-                                new_address.update({
-                                    'proto': 'dhcp',
-                                    'family': 'ipv6',
-                                })
-                        address_list.append(new_address)
-                    new_interface.update({
-                        'address': address_list
-                    })
             result.append(new_interface)
         return (('interfaces', result),)
+
+    def _get_address(self, interface):
+        addresses = interface.get('addresses', False)
+        if addresses:
+            for address in addresses:
+                if address.get('proto') == 'static':
+                    if address.get('family') == 'ipv4':
+                        address_mask = str(address.get('address')) + '/' + str(address.get('mask'))
+                        address['netmask'] = IPv4Interface(address_mask).with_netmask.split('/')[1]
+                        del address['mask']
+                    if address.get('family') == 'ipv6':
+                        address['netmask'] = address['mask']
+                        del address['mask']
+            return addresses
+
+# [{'iftype': 'ethernet', 'ifname': 'eth0', 'address': [{'ipv4address': '10.0.0.1', 'ipv4netmask': '255.255.255.240', 'proto': 'static', 'family': 'ipv4'}, {'proto': 'static', 'family': 'ipv6', 'ipv6address': 'fe80::ba27:ebff:fe1c:5477', 'ipv6netmask': 64}]}]
+
+
+# class Interfaces(BaseConverter):
+#     netjson_key = 'interfaces'
+#
+#     def to_intermediate(self):
+#         result = []
+#         interfaces = get_copy(self.netjson, self.netjson_key)
+#         for interface in interfaces:
+#             ifname = interface.get('name')
+#             iftype = interface.get('type')
+#             addresses = interface.get('addresses', None)
+#             new_interface = {
+#                 'ifname': ifname,
+#                 'iftype': iftype,
+#             }
+#             address_list = []
+#             if iftype == 'bridge':
+#                 new_interface.update({
+#                     'bridge_members': interface.get('bridge_members'),
+#                 })
+#             mtu = interface.get('mtu', None)
+#             if mtu is not None:
+#                 new_interface.update({
+#                     'mtu': mtu
+#                 })
+#             mac = interface.get('mac', None)
+#             if mac is not None:
+#                 new_interface.update({
+#                     'mac': mac
+#                 })
+#             if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
+#                 wireless = interface.get('wireless')
+#                 new_interface.update({
+#                     'essid': wireless.get('ssid'),
+#                     'mode': wireless.get('mode')
+#                 })
+#             if addresses is not None:
+#                 for address in addresses:
+#                     new_address = {}
+#                     if iftype in ['ethernet', 'bridge', 'loopback']:
+#                         if address.get('proto') == 'static':
+#                             if address.get('family') == 'ipv4':
+#                                 addressmask = str(address.get('address')) + '/' + str(address.get('mask'))
+#                                 new_address.update({
+#                                     'proto': 'static',
+#                                     'family': 'ipv4',
+#                                     'ipv4address': address.get('address'),
+#                                     'ipv4netmask': IPv4Interface(addressmask).with_netmask.split('/')[1]
+#                                 })
+#                                 if address.get('gateway', None) is not None:
+#                                     new_address.update({
+#                                         'ipv4gateway': address.get('gateway'),
+#                                     })
+#                             if address.get('family') == 'ipv6':
+#                                 new_address.update({
+#                                     'proto': 'static',
+#                                     'family': 'ipv6',
+#                                     'ipv6address': address.get('address'),
+#                                     'ipv6netmask': address.get('mask')
+#                                 })
+#                                 if address.get('gateway', None) is not None:
+#                                     new_address.update({
+#                                         'ipv6gateway': address.get('gateway'),
+#                                     })
+#                         elif address.get('proto') == 'dhcp':
+#                             if address.get('family') == 'ipv4':
+#                                 new_address.update({
+#                                     'proto': 'dhcp',
+#                                     'family': 'ipv4',
+#                                 })
+#                             elif address.get('family') == 'ipv6':
+#                                 new_address.update({
+#                                     'proto': 'dhcp',
+#                                     'family': 'ipv6',
+#                                 })
+#                         address_list.append(new_address)
+#                     new_interface.update({
+#                         'address': address_list
+#                     })
+#             result.append(new_interface)
+#         return (('interfaces', result),)
 
 
 class Wireless(BaseConverter):
