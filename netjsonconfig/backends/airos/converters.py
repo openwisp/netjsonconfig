@@ -611,17 +611,37 @@ class Wpasupplicant(BaseConverter):
         result.append({
             'device': [
                 {
+                    'profile': 'AUTO',
                     'status': 'disabled',
                 },
             ],
             'profile': [
                 {
+                    'name': 'AUTO',
                     'network': [
                         {
+                            'key_mgmt': [
+                                {
+                                    'name': 'NONE',
+                                },
+                            ],
+                            'priority': 100,
                             'ssid': 'your-ssid-here',
+                        },
+                        {
+                            'key_mgmt': [
+                                {
+                                    'name': 'NONE',
+                                },
+                            ],
+                            'priority': 2,
+                            'status': 'disabled',
                         },
                     ],
                 },
             ],
+        })
+        result.append({
+            'status': 'enabled',
         })
         return (('wpasupplicant', result),)
