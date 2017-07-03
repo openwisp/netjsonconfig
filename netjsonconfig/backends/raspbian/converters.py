@@ -13,28 +13,33 @@ class Interfaces(BaseConverter):
             new_interface = {}
             ifname = interface.get('name')
             iftype = interface.get('type')
-
+            new_interface.update({
+                'ifname': ifname,
+                'iftype': iftype
+            })
             if iftype in ['ethernet', 'bridge', 'loopback']:
-                new_interface.update({
-                    'ifname': ifname,
-                    'iftype': iftype
-                })
                 addresses = self._get_address(interface)
                 new_interface.update({
                     'address': addresses
                 })
-                mac = interface.get('mac', False)
-                if mac:
-                    new_interface.update({'mac': mac})
-                mtu = interface.get('mtu', False)
-                if mtu:
-                    new_interface.update({'mtu': mtu})
-                txqueuelen = interface.get('txqueuelen', False)
-                if txqueuelen:
-                    new_interface.update({'txqueuelen': txqueuelen})
-                autostart = interface.get('autostart', False)
-                if autostart:
-                    new_interface.update({'autostart': autostart})
+            mac = interface.get('mac', False)
+            if mac:
+                new_interface.update({'mac': mac})
+            mtu = interface.get('mtu', False)
+            if mtu:
+                new_interface.update({'mtu': mtu})
+            txqueuelen = interface.get('txqueuelen', False)
+            if txqueuelen:
+                new_interface.update({'txqueuelen': txqueuelen})
+            autostart = interface.get('autostart', False)
+            if autostart:
+                new_interface.update({'autostart': autostart})
+            if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
+                wireless = interface.get('wireless')
+                new_interface.update({
+                    'essid': wireless.get('ssid'),
+                    'mode': wireless.get('mode')
+                })
             if iftype == 'bridge':
                 new_interface.update({
                     'bridge_members': interface.get('bridge_members')
