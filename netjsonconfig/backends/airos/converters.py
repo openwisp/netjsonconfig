@@ -602,7 +602,7 @@ class Wireless(BaseConverter):
 
 
 class Wpasupplicant(BaseConverter):
-    netjson_key = 'general'
+    netjson_key = 'interfaces'
 
     def to_intermediate(self):
         result = []
