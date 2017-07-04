@@ -627,7 +627,7 @@ class Wpasupplicant(BaseConverter):
                 network = available_encryption_protocols.get(head['encryption']['protocol'])(head)
 
             else:
-                network = no_encryption(head)
+                network = available_encryption_protocols['none'](head)
                 temp_dev['status'] = 'disabled'
                 del temp_dev['driver']
                 del temp_dev['devname']
