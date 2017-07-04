@@ -98,7 +98,7 @@ DNS servers
 WPA2
 ----
 
-AirOS v8.3 supports both WPA2 personal (PSK+CCMP) and WPA2 enterprise (EAP+CCMP) as an authentication protocol
+AirOS v8.3 supports both WPA2 personal (PSK+CCMP) and WPA2 enterprise (EAP+CCMP) as an authentication protocol. The only ciphers available is CCMP.
 
 As an example here is a snippet that set the authentication protocol to WPA2 personal
 
@@ -117,3 +117,21 @@ As an example here is a snippet that set the authentication protocol to WPA2 per
         ]
     }
 
+And another that set the authentication protocol to WPA2 enterprise
+
+.. code-block:: json
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "encryption": {
+                    "protocol": "wpa2_enterprise",
+                    "key": "changeme"
+                }
+            }
+        ]
+    }
+
+Leaving the `NetJSON Encryption object <http://netjson.org/rfc.html#rfc.section.5.4.2.1>` empty defaults to no encryption at all
