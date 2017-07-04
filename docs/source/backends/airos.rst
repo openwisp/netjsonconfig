@@ -95,3 +95,25 @@ DNS servers
 -----------
 
 
+WPA2
+----
+
+AirOS v8.3 supports both WPA2 personal (PSK+CCMP) and WPA2 enterprise (EAP+CCMP) as an authentication protocol
+
+As an example here is a snippet that set the authentication protocol to WPA2 personal
+
+.. code-block:: json
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "encryption": {
+                    "protocol": "wpa2_personal",
+                    "key": "changeme"
+                }
+            }
+        ]
+    }
+
