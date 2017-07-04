@@ -100,6 +100,8 @@ WPA2
 
 AirOS v8.3 supports both WPA2 personal (PSK+CCMP) and WPA2 enterprise (EAP+CCMP) as an authentication protocol. The only ciphers available is CCMP.
 
+As an antenna only has one wireless network available only the first wireless interface will be used during the generation.
+
 As an example here is a snippet that set the authentication protocol to WPA2 personal
 
 .. code-block:: json
