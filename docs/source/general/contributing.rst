@@ -83,7 +83,8 @@ Before committing your work check that your changes are not breaking the style c
 
 .. code-block:: shell
 
-    ./runflake8 && ./runisort
+    flake8
+    isort --check-only --recursive .
 
 For more information, please see:
 
