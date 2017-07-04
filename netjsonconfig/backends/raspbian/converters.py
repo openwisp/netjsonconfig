@@ -148,3 +148,15 @@ class DnsSearch(BaseConverter):
         for domain in dns_search:
             result.append(domain)
         return (('dns_search', result),)
+
+
+class Ntp(BaseConverter):
+    netjson_key = 'ntp'
+
+    def to_intermediate(self):
+        result  = []
+        ntp = get_copy(self.netjson, self.netjson_key)
+        if ntp.get('enabled', False) == True:
+            for server in ntp.get('server'):
+                result.append(server)
+        return (('ntp', result),)

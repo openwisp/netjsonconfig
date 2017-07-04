@@ -124,3 +124,11 @@ wpa_pairwise={{ wireless.get('encryption').get('wpa_pairwise')}}
 {% else %}
 {% endif %}
 {% endfor %}
+{% for i, j in data.items() %}
+{% if i|string() == 'ntp' %}
+config: /etc/ntp.conf
+{% for server in j %}
+server {{ server }}
+{% endfor %}
+{% endif %}
+{% endfor %}
