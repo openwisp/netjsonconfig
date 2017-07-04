@@ -4,6 +4,7 @@ from ..base.converter import BaseConverter
 
 from ipaddress import ip_interface
 
+from wpasupplicant import available_encryption_protocols
 
 def status(config, key='disabled'):
     if config.get(key):
@@ -601,93 +602,6 @@ class Wireless(BaseConverter):
         return (('wireless', result),)
 
 
-def no_encryption(interface):
-    """
-    Returns the wpasupplicant.profile.1.network
-    for encryption None as the intermediate dict
-    """
-    return {
-        'phase2=auth': 'MSCHAPV2',
-        'ssid': interface['wireless']['ssid'],
-        'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'NONE',
-            },
-        ],
-    }
-
-
-def wpa2_personal(interface):
-    """
-    Returns the wpasupplicant.profile.1.network
-    for wpa2_personal as the indernediate dict
-    """
-    return {
-        'phase2=auth': 'MSCHAPV2',
-        'eap': [
-            {
-                'status': 'disabled',
-            },
-        ],
-        'psk': interface['encryption']['key'],
-        'pairwise': [
-            {
-                'name': 'CCMP',
-            },
-        ],
-        'proto': [
-            {
-                'name': 'RSN',
-            },
-        ],
-        'ssid': interface['wireless']['ssid'],
-        'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'WPA-PSK',
-            },
-        ],
-    }
-
-
-def wpa2_enterprise(interface):
-    """
-    Returns the wpasupplicant.profile.1.network
-    for wpa2_enterprise as the intermediate dict
-    """
-    return {
-        'phase2=auth': 'MSCHAPV2',
-        'eap': [
-            {
-                'name': 'TTLS',
-                'status': 'enabled',
-            },
-        ],
-        'password': 'TODO',
-        'identity': 'TODO',
-        'anonymous_identity': 'TODO',
-        'psk': interface['encryption']['key'],
-        'pairwise': [
-            {
-                'name': 'CCMP',
-            },
-        ],
-        'proto': [
-            {
-                'name': 'RSN',
-            },
-        ],
-        'ssid': interface['wireless']['ssid'],
-        'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'WPA-EAP',
-            },
-        ],
-    }
-
-
 class Wpasupplicant(BaseConverter):
     netjson_key = 'interfaces'
 
@@ -709,11 +623,8 @@ class Wpasupplicant(BaseConverter):
             head = original[0]
             temp_dev['devname'] = head['wireless']['radio']
 
-            if head['encryption']['protocol'] == 'wpa2_personal':
-                network = wpa2_personal(head)
-
-            elif head['encryption']['protocol'] == 'wpa2_enterprise':
-                network = wpa2_enterprise(head)
+            if head['encryption']:
+                network = available_encryption_protocols.get(head['encryption']['protocol'])(head)
 
             else:
                 network = no_encryption(head)
