@@ -5,7 +5,7 @@ from ...utils import sorted_dict
 from ..base.parser import BaseParser
 
 vpn_pattern = re.compile('^# openvpn config:\s', flags=re.MULTILINE)
-config_pattern = re.compile('^([^\s]*)\s?(.*)?$')
+config_pattern = re.compile('^([^\s]*) ?(.*)$')
 config_suffix = '.conf'
 
 
