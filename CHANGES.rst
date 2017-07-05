@@ -1,10 +1,28 @@
 Change log
 ==========
 
-Version 0.6.1 [unreleased]
+Version 0.6.1 [2017-07-05]
 --------------------------
 
-Work in progress on the `backward conversion front <https://github.com/openwisp/netjsonconfig/issues/70>`_.
+- `5ddc201 <https://github.com/openwisp/netjsonconfig/commit/5ddc201>`_:
+  [general] Avoid default mutable arguments
+- `dde3c9b <https://github.com/openwisp/netjsonconfig/commit/dde3c9b>`_:
+  [openvpn] Added explicit ``list_identifiers`` attribute
+- `8c26cd6 <https://github.com/openwisp/netjsonconfig/commit/8c26cd6>`_:
+  [docs] Updated outdated OpenWRT rendering examples
+- `5f8483e <https://github.com/openwisp/netjsonconfig/commit/5f8483e>`_:
+  [openwrt] Fixed repeated bridge gateway case
+- `#84 <https://github.com/openwisp/netjsonconfig/pull/84>`_
+  [exceptions] Improved validation errors
+  (thanks to `@EdoPut <https://github.com/EdoPut>`_)
+- `#85 <https://github.com/openwisp/netjsonconfig/issues/85>`_
+  [openwrt] Added "vid" option in "switch"
+- `#86 <https://github.com/openwisp/netjsonconfig/issues/86>`_
+  [openwrt] Added support for "ip6gw" option
+- `#70 <https://github.com/openwisp/netjsonconfig/pull/70>`_
+  [feature] Backward conversion
+- `#87 <https://github.com/openwisp/netjsonconfig/issues/87>`_
+  [openwrt] Removed automatic timezone
 
 Version 0.6.0 [2017-06-01]
 --------------------------
