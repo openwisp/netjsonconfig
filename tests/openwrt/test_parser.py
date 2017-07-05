@@ -214,9 +214,7 @@ config interface 'lan'
                 {
                     ".type": "system",
                     ".name": "system",
-                    "hostname": "parse-tar-bytesio",
-                    "timezone": "UTC",
-                    "zonename": "UTC"
+                    "hostname": "parse-tar-bytesio"
                 }
             ]
         }
@@ -231,9 +229,7 @@ config interface 'lan'
                 {
                     ".type": "system",
                     ".name": "system",
-                    "hostname": "parse-tar-file",
-                    "timezone": "UTC",
-                    "zonename": "UTC"
+                    "hostname": "parse-tar-file"
                 }
             ]
         }

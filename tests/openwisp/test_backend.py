@@ -119,11 +119,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     }
 
     def test_uci(self):
-        o = OpenWisp({
-            "general": {
-                "hostname": "openwisp-test"
-            }
-        })
+        o = OpenWisp({"general": {"hostname": "openwisp-test"}})
         tar = tarfile.open(fileobj=o.generate(), mode='r')
         system = tar.getmember('uci/system.conf')
         contents = tar.extractfile(system).read().decode()
@@ -131,18 +127,12 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 
 config system 'system'
     option hostname 'openwisp-test'
-    option timezone 'UTC'
-    option zonename 'UTC'
 """)
         self.assertEqual(contents, expected)
         tar.close()
 
     def test_hostname_required(self):
-        o = OpenWisp({
-            "general": {
-                "timezone": "UTC"
-            }
-        })
+        o = OpenWisp({"general": {"timezone": "UTC"}})
         with self.assertRaises(ValidationError):
             o.validate()
 
