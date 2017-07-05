@@ -20,7 +20,7 @@ class TestSystemRender(unittest.TestCase, _TabsMixin):
             }
         })
 
-        expected = '''config: /etc/ntp.config
+        expected = '''config: /etc/ntp.conf
 server 0.openwrt.pool.ntp.org
 server 1.openwrt.pool.ntp.org
 server 2.openwrt.pool.ntp.org
