@@ -1,12 +1,8 @@
-import re
-
 from . import converters
 from ..base.backend import BaseBackend
+from .parser import OpenWrtParser, config_path, packages_pattern
 from .renderer import OpenWrtRenderer
 from .schema import schema
-
-config_path = 'etc/config/'
-packages_pattern = re.compile('^package\s', flags=re.MULTILINE)
 
 
 class OpenWrt(BaseBackend):
@@ -27,6 +23,7 @@ class OpenWrt(BaseBackend):
         converters.OpenVpn,
         converters.Default,
     ]
+    parser = OpenWrtParser
     renderer = OpenWrtRenderer
     list_identifiers = ['name', 'config_value', 'id']
 

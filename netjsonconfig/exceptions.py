@@ -37,3 +37,10 @@ class ValidationError(NetJsonConfigException):
         """
         self.message = e.message
         self.details = e
+
+
+class ParseError(NetJsonConfigException):
+    """
+    Error while parsing native configuration
+    """
+    pass

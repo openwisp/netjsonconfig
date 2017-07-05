@@ -400,3 +400,11 @@ config wifi-iface 'wifi_wlan0'
         }
         o = OpenWrt(config, templates=[template])
         self.assertFalse(o.config['interfaces'][0]['disabled'])
+
+    def test_value_error(self):
+        with self.assertRaises(ValueError):
+            OpenWrt()
+        with self.assertRaises(ValueError):
+            OpenWrt(templates=[])
+        with self.assertRaises(ValueError):
+            OpenWrt(context=[])

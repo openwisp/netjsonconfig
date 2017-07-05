@@ -11,10 +11,11 @@ languages.
 Check out the available options yourself with::
 
     $ netjsonconfig --help
-    usage: netjsonconfig [-h] --config CONFIG
-                         [--templates [TEMPLATES [TEMPLATES ...]]] --backend
-                         {openwrt,openwisp} --method {render,generate,write,validate}
-                         [--args [ARGS [ARGS ...]]] [--verbose] [--version]
+    usage: netjsonconfig [-h] [--config CONFIG]
+                     [--templates [TEMPLATES [TEMPLATES ...]]]
+                     [--native NATIVE] --backend {openwrt,openwisp,openvpn}
+                     --method {render,generate,write,validate,json}
+                     [--args [ARGS [ARGS ...]]] [--verbose] [--version]
 
     Converts a NetJSON DeviceConfiguration object to native router configurations.
     Exhaustive documentation is available at: http://netjsonconfig.openwisp.org/
@@ -29,17 +30,19 @@ Check out the available options yourself with::
       --templates [TEMPLATES [TEMPLATES ...]], -t [TEMPLATES [TEMPLATES ...]]
                             list of template config files or strings separated by
                             space
+      --native NATIVE, -n NATIVE
+                            path to native configuration file or archive
 
     output:
-      --backend {openwrt,openwisp}, -b {openwrt,openwisp}
-                            Configuration backend: openwrt or openwisp
-      --method {render,generate,write}, -m {render,generate,write, validate}
+      --backend {openwrt,openwisp,openvpn}, -b {openwrt,openwisp,openvpn}
+                            Configuration backend
+      --method {render,generate,write,validate,json}, -m {render,generate,write,validate,json}
                             Backend method to use. "render" returns the
                             configuration in text format; "generate" returns a
                             tar.gz archive as output; "write" is like generate but
                             writes to disk; "validate" validates the combination
                             of config and templates passed in input;
-
+                            "json" returns NetJSON output:
       --args [ARGS [ARGS ...]], -a [ARGS [ARGS ...]]
                             Optional arguments that can be passed to methods
 
@@ -47,11 +50,13 @@ Check out the available options yourself with::
       --verbose             verbose output
       --version, -v         show program's version number and exit
 
-
 Here's the common use cases explained::
 
    # generate tar.gz from a NetJSON DeviceConfiguration object and save its output to a file
    netjsonconfig --config config.json --backend openwrt --method generate > config.tar.gz
+
+   # convert an OpenWRT tar.gz to NetJSON and print to standard output (with 4 space indentation)
+   netjsonconfig --native config.tar.gz --backend openwrt --method json -a indent="    "
 
    # use write configuration archive to disk in /tmp/routerA.tar.gz
    netjsonconfig --config config.json --backend openwrt --method write --args name=routerA path=/tmp/

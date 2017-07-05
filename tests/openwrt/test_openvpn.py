@@ -7,11 +7,10 @@ from netjsonconfig.utils import _TabsMixin
 class TestOpenVpn(_TabsMixin, unittest.TestCase):
     maxDiff = None
 
-    def test_server_mode(self):
-        c = OpenWrt({
-            "openvpn": [{
+    _server_netjson = {
+        "openvpn": [
+            {
                 "auth": "SHA1",
-                "auth_user_pass_verify": "",
                 "ca": "ca.pem",
                 "cert": "cert.pem",
                 "cipher": "BF-CBC",
@@ -22,7 +21,6 @@ class TestOpenVpn(_TabsMixin, unittest.TestCase):
                 "dev": "tap0",
                 "dev_type": "tap",
                 "dh": "dh.pem",
-                "down": "",
                 "duplicate_cn": True,
                 "engine": "rsax",
                 "disabled": False,
@@ -31,40 +29,39 @@ class TestOpenVpn(_TabsMixin, unittest.TestCase):
                 "group": "nogroup",
                 "keepalive": "20 60",
                 "key": "key.pem",
-                "local": "",
                 "log": "/var/log/openvpn.log",
                 "mode": "server",
-                "name": "test-server",
+                "name": "test_server",
                 "mssfix": 1450,
                 "mtu_disc": "no",
                 "mtu_test": False,
                 "mute": 0,
                 "mute_replay_warnings": True,
-                "ns_cert_type": "",
                 "persist_key": True,
                 "persist_tun": True,
                 "port": 1194,
                 "proto": "udp",
                 "script_security": 0,
-                "secret": "",
                 "status": "/var/log/openvpn.status 10",
                 "status_version": 1,
                 "tls_server": True,
                 "tun_ipv6": False,
-                "up": "",
                 "up_delay": 0,
                 "user": "nobody",
                 "username_as_common_name": False,
                 "verb": 3
-            }]
-        })
-        expected = self._tabs("""package openvpn
+            }
+        ]
+    }
+    _server_uci = """package openvpn
 
 config openvpn 'test_server'
     option auth 'SHA1'
     option ca 'ca.pem'
     option cert 'cert.pem'
     option cipher 'BF-CBC'
+    option client_cert_not_required '0'
+    option client_to_client '0'
     option comp_lzo 'yes'
     option crl_verify 'crl.pem'
     option dev 'tap0'
@@ -74,6 +71,7 @@ config openvpn 'test_server'
     option enabled '1'
     option engine 'rsax'
     option fast_io '1'
+    option fragment '0'
     option group 'nogroup'
     option keepalive '20 60'
     option key 'key.pem'
@@ -81,6 +79,8 @@ config openvpn 'test_server'
     option mode 'server'
     option mssfix '1450'
     option mtu_disc 'no'
+    option mtu_test '0'
+    option mute '0'
     option mute_replay_warnings '1'
     option persist_key '1'
     option persist_tun '1'
@@ -90,71 +90,75 @@ config openvpn 'test_server'
     option status '/var/log/openvpn.status 10'
     option status_version '1'
     option tls_server '1'
+    option tun_ipv6 '0'
+    option up_delay '0'
     option user 'nobody'
+    option username_as_common_name '0'
     option verb '3'
-""")
+"""
+
+    def test_render_server_mode(self):
+        c = OpenWrt(self._server_netjson)
+        expected = self._tabs(self._server_uci)
         self.assertEqual(c.render(), expected)
 
-    def test_client_mode(self):
-        c = OpenWrt({
-            "openvpn": [
-                {
-                    "auth": "SHA256",
-                    "auth_user_pass": "",
-                    "ca": "ca.pem",
-                    "cert": "cert.pem",
-                    "cipher": "AES-128-CBC",
-                    "comp_lzo": "adaptive",
-                    "dev": "tun0",
-                    "dev_type": "tun",
-                    "down": "/home/user/down-command.sh",
-                    "disabled": False,
-                    "engine": "",
-                    "fast_io": False,
-                    "fragment": 0,
-                    "group": "",
-                    "keepalive": "",
-                    "key": "key.pem",
-                    "local": "",
-                    "log": "/var/log/openvpn.log",
-                    "mode": "p2p",
-                    "mssfix": 1450,
-                    "mtu_disc": "yes",
-                    "mtu_test": True,
-                    "mute": 10,
-                    "mute_replay_warnings": True,
-                    "name": "test-client",
-                    "nobind": True,
-                    "ns_cert_type": "server",
-                    "persist_key": True,
-                    "persist_tun": True,
-                    "port": 1195,
-                    "proto": "tcp-client",
-                    "remote": [
-                        {
-                            "host": "vpn1.test.com",
-                            "port": 1194
-                        },
-                        {
-                            "host": "vpn2.test.com",
-                            "port": 1195
-                        }
-                    ],
-                    "resolv_retry": "infinite",
-                    "script_security": 1,
-                    "secret": "",
-                    "status": "/var/log/openvpn.status 30",
-                    "status_version": 1,
-                    "tls_client": True,
-                    "tun_ipv6": True,
-                    "up": "/home/user/up-command.sh",
-                    "up_delay": 10,
-                    "user": "nobody",
-                    "verb": 1
-                }
-            ]
-        })
-        expected = self._tabs("""package openvpn
+    def test_parse_server_mode(self):
+        c = OpenWrt(native=self._server_uci)
+        self.assertEqual(c.config, self._server_netjson)
+
+    _client_netjson = {
+        "openvpn": [
+            {
+                "auth": "SHA256",
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "cipher": "AES-128-CBC",
+                "comp_lzo": "adaptive",
+                "dev": "tun0",
+                "dev_type": "tun",
+                "down": "/home/user/down-command.sh",
+                "disabled": False,
+                "fast_io": False,
+                "fragment": 0,
+                "key": "key.pem",
+                "log": "/var/log/openvpn.log",
+                "mode": "p2p",
+                "mssfix": 1450,
+                "mtu_disc": "yes",
+                "mtu_test": True,
+                "mute": 10,
+                "mute_replay_warnings": True,
+                "name": "test_client",
+                "nobind": True,
+                "ns_cert_type": "server",
+                "persist_key": True,
+                "persist_tun": True,
+                "port": 1195,
+                "proto": "tcp-client",
+                "remote": [
+                    {
+                        "host": "vpn1.test.com",
+                        "port": 1194
+                    },
+                    {
+                        "host": "vpn2.test.com",
+                        "port": 1195
+                    }
+                ],
+                "resolv_retry": "infinite",
+                "script_security": 1,
+                "status": "/var/log/openvpn.status 30",
+                "status_version": 1,
+                "tls_client": True,
+                "tun_ipv6": True,
+                "up": "/home/user/up-command.sh",
+                "up_delay": 10,
+                "user": "nobody",
+                "verb": 1
+            }
+        ]
+    }
+    _client_uci = """package openvpn
 
 config openvpn 'test_client'
     option auth 'SHA256'
@@ -166,6 +170,8 @@ config openvpn 'test_client'
     option dev_type 'tun'
     option down '/home/user/down-command.sh'
     option enabled '1'
+    option fast_io '0'
+    option fragment '0'
     option key 'key.pem'
     option log '/var/log/openvpn.log'
     option mode 'p2p'
@@ -192,8 +198,16 @@ config openvpn 'test_client'
     option up_delay '10'
     option user 'nobody'
     option verb '1'
-""")
+"""
+
+    def test_render_client_mode(self):
+        c = OpenWrt(self._client_netjson)
+        expected = self._tabs(self._client_uci)
         self.assertEqual(c.render(), expected)
+
+    def test_parse_client_mode(self):
+        c = OpenWrt(native=self._client_uci)
+        self.assertEqual(c.config, self._client_netjson)
 
     def test_no_status_file(self):
         c = OpenWrt({
@@ -263,6 +277,7 @@ config openvpn 'test_properties'
     option mode 'server'
     option proto 'udp'
     option tls_server '1'
+    option z_falsy '0'
     list z_list 'test1'
     list z_list 'test2'
     option z_number '5'
@@ -302,9 +317,9 @@ config openvpn 'test_properties'
 """)
         self.assertEqual(c.render(), expected)
 
-    def test_server_bridge(self):
-        c = OpenWrt({
-            "openvpn": [{
+    _server_bridge_netjson = {
+        "openvpn": [
+            {
                 "ca": "ca.pem",
                 "cert": "cert.pem",
                 "dev": "tap0",
@@ -317,9 +332,10 @@ config openvpn 'test_properties'
                 "proto": "udp",
                 "server_bridge": "10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254",
                 "tls_server": True
-            }]
-        })
-        expected = self._tabs("""package openvpn
+            }
+        ]
+    }
+    _server_bridge_uci = """package openvpn
 
 config openvpn 'bridged'
     option ca 'ca.pem'
@@ -333,12 +349,20 @@ config openvpn 'bridged'
     option proto 'udp'
     option server_bridge '10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254'
     option tls_server '1'
-""")
+"""
+
+    def test_render_server_bridge(self):
+        c = OpenWrt(self._server_bridge_netjson)
+        expected = self._tabs(self._server_bridge_uci)
         self.assertEqual(c.render(), expected)
 
-    def test_server_bridge_proxy(self):
-        c = OpenWrt({
-            "openvpn": [{
+    def test_parse_server_bridge(self):
+        c = OpenWrt(native=self._server_bridge_uci)
+        self.assertEqual(c.config, self._server_bridge_netjson)
+
+    _server_bridge_proxy_netjson = {
+        "openvpn": [
+            {
                 "ca": "ca.pem",
                 "cert": "cert.pem",
                 "dev": "tap0",
@@ -347,13 +371,14 @@ config openvpn 'bridged'
                 "disabled": False,
                 "key": "key.pem",
                 "mode": "server",
-                "name": "bridged-proxy",
+                "name": "bridged_proxy",
                 "proto": "udp",
                 "server_bridge": "",
                 "tls_server": True
-            }]
-        })
-        expected = self._tabs("""package openvpn
+            }
+        ]
+    }
+    _server_bridge_proxy_uci = """package openvpn
 
 config openvpn 'bridged_proxy'
     option ca 'ca.pem'
@@ -367,12 +392,20 @@ config openvpn 'bridged_proxy'
     option proto 'udp'
     option server_bridge '1'
     option tls_server '1'
-""")
+"""
+
+    def test_render_server_bridge_proxy(self):
+        c = OpenWrt(self._server_bridge_proxy_netjson)
+        expected = self._tabs(self._server_bridge_proxy_uci)
         self.assertEqual(c.render(), expected)
 
-    def test_server_bridge_routed(self):
-        c = OpenWrt({
-            "openvpn": [{
+    def test_parse_server_bridge_proxy(self):
+        c = OpenWrt(native=self._server_bridge_proxy_uci)
+        self.assertEqual(c.config, self._server_bridge_proxy_netjson)
+
+    _server_bridge_routed_netjson = {
+        "openvpn": [
+            {
                 "ca": "ca.pem",
                 "cert": "cert.pem",
                 "dev": "tap0",
@@ -385,9 +418,10 @@ config openvpn 'bridged_proxy'
                 "proto": "udp",
                 "server": "10.8.0.0 255.255.0.0",
                 "tls_server": True
-            }]
-        })
-        expected = self._tabs("""package openvpn
+            }
+        ]
+    }
+    _server_bridge_routed_uci = """package openvpn
 
 config openvpn 'routed'
     option ca 'ca.pem'
@@ -401,23 +435,64 @@ config openvpn 'routed'
     option proto 'udp'
     option server '10.8.0.0 255.255.0.0'
     option tls_server '1'
-""")
+"""
+
+    def test_render_server_bridge_routed(self):
+        c = OpenWrt(self._server_bridge_routed_netjson)
+        expected = self._tabs(self._server_bridge_routed_uci)
         self.assertEqual(c.render(), expected)
 
-    def test_disabled(self):
+    def test_parse_server_bridge_routed(self):
+        c = OpenWrt(native=self._server_bridge_routed_uci)
+        self.assertEqual(c.config, self._server_bridge_routed_netjson)
+
+    def test_render_disabled(self):
         c = OpenWrt({
-            "openvpn": [{
-                "ca": "ca.pem",
-                "cert": "cert.pem",
-                "dev": "tap0",
-                "dev_type": "tap",
-                "dh": "dh.pem",
-                "disabled": True,
-                "key": "key.pem",
-                "mode": "server",
-                "name": "test-properties",
-                "proto": "udp",
-                "tls_server": True
-            }]
+            "openvpn": [
+                {
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "disabled": True,
+                    "key": "key.pem",
+                    "mode": "server",
+                    "name": "test_disabled",
+                    "proto": "udp",
+                    "tls_server": True
+                }
+            ]
         })
         self.assertIn("option enabled '0'", c.render())
+
+    def test_parse_disabled(self):
+        c = OpenWrt(native="""package openvpn
+
+config openvpn 'test_disabled'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option enabled '0'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option tls_server '1'""")
+        self.assertTrue(c.config['openvpn'][0]['disabled'])
+
+    def test_parse_disabled_default(self):
+        c = OpenWrt(native="""package openvpn
+
+config openvpn 'test_disabled'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option tls_server '1'""")
+        self.assertTrue(c.config['openvpn'][0]['disabled'])

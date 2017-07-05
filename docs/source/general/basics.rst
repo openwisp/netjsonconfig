@@ -4,12 +4,11 @@ Basic concepts
 
 .. include:: ../_github.rst
 
-
 Before starting, let's quickly introduce the main concepts used in netjsonconfig:
 
 * :ref:`configuration_dictionary`: python dictionary representing the configuration of a router
-* :ref:`backend`: python class used to process the configuration and generate the final
-  router configuration
+* :ref:`backend`: python class used to convert the *configuration dictionary* to the format used
+  natively by a router firmware and vice versa
 * :ref:`schema`: each backend has a `JSON-Schema <http://json-schema.org>`_ which
   defines the useful configuration options that the backend is able to process
 * :ref:`validation`: the configuration is validated against its JSON-Schema before
@@ -22,8 +21,8 @@ Before starting, let's quickly introduce the main concepts used in netjsonconfig
 
 .. _configuration_dictionary:
 
-Configuration dictionary
-------------------------
+NetJSON configuration dictionary
+--------------------------------
 
 *netjsonconfig* is an implementation of the `NetJSON <http://netjson.org>`_ format,
 more specifically the ``DeviceConfiguration`` object, therefore to understand the
@@ -31,7 +30,7 @@ configuration format that the library uses to generate the final router configur
 it is essential to read at least the relevant `DeviceConfiguration section in the
 NetJSON RFC <http://netjson.org/rfc.html#rfc.section.5>`_.
 
-Here it is a simple NetJSON DeviceConfiguration object:
+Here it is a simple *NetJSON DeviceConfiguration* object represented with a python dictionary:
 
 .. code-block:: python
 
@@ -94,14 +93,16 @@ From now on we will use the term *configuration dictionary* to refer to
 Backend
 -------
 
-A backend is a python class used to process the *configuration dictionary* and
-generate the final router configuration, each supported firmware or opearting system
-will have its own backend and third parties can write their own custom backends.
+A backend is a python class used to convert the *configuration dictionary* to the format used
+natively by the router (forward conversion, from NetJSON to native) and vice versa (backward conversion,
+from native to NetJSON), each supported firmware or opearting system will have its own backend
+and third parties can write their own custom backends.
 
 The current implemented backends are:
 
  * :doc:`OpenWrt </backends/openwrt>`
  * :doc:`OpenWisp </backends/openwisp>` (based on the ``OpenWrt`` backend)
+ * :doc:`OpenVpn </backends/openvpn>` (custom backend implementing only OpenVPN configuration)
 
 Example initialization of ``OpenWrt`` backend:
 
@@ -125,6 +126,21 @@ Example initialization of ``OpenWrt`` backend:
             }
         ]
     })
+
+Each backend will implement **parsers**, **renderers** and **converters** to accomplish its
+configuration generation or parsing goals.
+
+The process is best explained with the following diagram:
+
+.. image:: ../images/netjsonconfig-backward-conversion.svg
+
+**Converters** take care of converting between *NetJSON* and the intermediate data structure
+(and vice versa).
+
+**Renderers** take care of rendering the intermediate data structure to the native format.
+
+**Parsers** perform the opposite operation of ``Renderers``: they take care of parsing native format and
+build the intermediate data structure.
 
 .. _schema:
 

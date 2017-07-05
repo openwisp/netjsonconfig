@@ -18,7 +18,15 @@ Initialization
 
 .. automethod:: netjsonconfig.OpenWrt.__init__
 
-Initialization example:
+If you are unsure about the meaning of the initalization parameters,
+read about the following basic concepts:
+
+    * :ref:`configuration_dictionary`
+    * :ref:`backend`
+    * :ref:`template`
+    * :ref:`context`
+
+Initialization example (forward conversion):
 
 .. code-block:: python
 
@@ -30,12 +38,13 @@ Initialization example:
         }
     })
 
-If you are unsure about the meaning of the initalization parameters,
-read about the following basic concepts:
+Initialization example (backward conversion):
 
-    * :ref:`configuration_dictionary`
-    * :ref:`template`
-    * :ref:`context`
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    router = OpenWrt(native=open('./openwrt-config.tar.gz'))
 
 Render method
 -------------
@@ -175,6 +184,24 @@ Example:
     >>> o.write('dhcp-router', path='/tmp/')
 
 Will write the configuration archive in ``/tmp/dhcp-router.tar.gz``.
+
+Parse method
+------------
+
+.. automethod:: netjsonconfig.OpenWrt.parse
+
+This method is automatically called when initializing the backend
+with the ``native`` argument:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    router = OpenWrt(native=open('./openwrt-config.tar.gz'))
+
+The argument passed to ``native`` can be a string containing a dump obtained via
+``uci export``, or a file object (real file or ``BytesIO`` instance) representing
+a configuration archive in tar.gz format typically used in OpenWRT/LEDE.
 
 JSON method
 -----------

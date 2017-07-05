@@ -1594,3 +1594,9 @@ timezones = OrderedDict((
         "WFT-12"
     )
 ))
+
+# TODO: explain
+timezones_reversed = OrderedDict()
+
+for key, value in timezones.items():
+    timezones_reversed[value] = key

@@ -25,7 +25,7 @@ def merge_config(template, config, list_identifiers=None):
     result = template.copy()
     for key, value in config.items():
         if isinstance(value, dict):
-            node = result.get(key, {})
+            node = result.get(key, OrderedDict())
             result[key] = merge_config(node, value)
         elif isinstance(value, list) and isinstance(result.get(key), list):
             result[key] = merge_list(result[key], value, list_identifiers)
@@ -69,8 +69,8 @@ def merge_list(list1, list2, identifiers=None):
     return list(merged.values())
 
 
-def sorted_dict(dictionary):
-    return OrderedDict(sorted(dictionary.items()))
+def sorted_dict(dict_):
+    return OrderedDict(sorted(dict_.items()))
 
 
 var_pattern = re.compile(r'\{\{\s*(\w*)\s*\}\}')

@@ -4,6 +4,7 @@ import subprocess
 import tarfile
 import unittest
 
+from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -11,9 +12,11 @@ class TestBin(unittest.TestCase, _TabsMixin):
     """
     tests for netjsonconfig command line tool
     """
+    _test_file = 'test.tar.gz'
+
     @classmethod
     def tearDownClass(self):
-        os.remove('test.tar.gz')
+        os.remove(self._test_file)
 
     def test_file_not_found(self):
         command = "netjsonconfig -c WRONG -b openwrt -m generate"
@@ -150,7 +153,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
         config = """'{"general": { "hostname": "example" }}'"""
         command = """netjsonconfig -c %s -b openwrt -m generate > test.tar.gz""" % config
         subprocess.check_output(command, shell=True)
-        tar = tarfile.open('test.tar.gz', 'r')
+        tar = tarfile.open(self._test_file, 'r')
         self.assertEqual(len(tar.getmembers()), 1)
         tar.close()
 
@@ -160,3 +163,26 @@ class TestBin(unittest.TestCase, _TabsMixin):
         output = subprocess.check_output(command, shell=True).decode()
         self.assertNotIn('{{ DESC }}', output)
         self.assertIn('testdesc', output)
+
+    def test_parse(self):
+        o = OpenWrt({
+            "type": "DeviceConfiguration",
+            "general": {
+                "hostname": "parse-test",
+                "timezone": "UTC"
+            }
+        })
+        o.write(self._test_file.replace('.tar.gz', ''))
+        command = """netjsonconfig -n %s -b openwrt -m json""" % self._test_file
+        output = subprocess.check_output(command, shell=True)
+        netjson = json.loads(output.decode())
+        self.assertDictEqual(o.config, netjson)
+
+    def test_not_enough_arguments(self):
+        command = """netjsonconfig -b openwrt -m render"""
+        try:
+            subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            self.assertIn('Expected one of the following parameters', e.output.decode())
+        else:
+            self.fail('subprocess.CalledProcessError not raised')

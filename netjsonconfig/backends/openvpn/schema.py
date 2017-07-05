@@ -411,6 +411,7 @@ base_openvpn_schema = {
                         },
                         "port": {
                             "description": "Use specific local port, ignored if nobind is enabled",
+                            "type": "integer"
                         },
                         "resolv_retry": {
                             "title": "resolv-retry",

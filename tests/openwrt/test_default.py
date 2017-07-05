@@ -7,7 +7,7 @@ from netjsonconfig.utils import _TabsMixin
 class TestDefault(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
-    def test_default(self):
+    def test_render_default(self):
         o = OpenWrt({
             "luci": [
                 {
@@ -92,6 +92,98 @@ config core 'main'
         # try a second time to ensure that the usage of dict.pop
         # in templates does not cause any issue
         self.assertEqual(o.render(), expected)
+
+    def test_parse_default(self):
+        native = self._tabs("""package firewall
+
+config rule 'rule_1'
+    option family 'ipv6'
+    list icmp_type '130/0'
+    list icmp_type '131/0'
+    list icmp_type '132/0'
+    list icmp_type '143/0'
+    option name 'Allow-MLD'
+    option proto 'icmp'
+    option src 'wan'
+    option src_ip 'fe80::/10'
+    option target 'ACCEPT'
+
+package luci
+
+config core 'main'
+    option boolean '1'
+    option lang 'auto'
+    option mediaurlbase '/luci-static/bootstrap'
+    option number '4'
+    option resourcebase '/luci-static/resources'
+
+package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+
+package system
+
+config led 'led_usb1'
+    option dev '1-1.1'
+    option interval '50'
+    option name 'USB1'
+    option sysfs 'tp-link:green:usb1'
+    option trigger 'usbdev'
+
+config custom 'custom'
+    option test '1'
+""")
+        o = OpenWrt(native=native)
+        expected = {
+            "luci": [
+                {
+                    "config_name": "core",
+                    "config_value": "main",
+                    "lang": "auto",
+                    "resourcebase": "/luci-static/resources",
+                    "mediaurlbase": "/luci-static/bootstrap",
+                    "number": "4",
+                    "boolean": "1"
+                }
+            ],
+            "firewall": [
+                {
+                    "config_name": "rule",
+                    "name": "Allow-MLD",
+                    "src": "wan",
+                    "proto": "icmp",
+                    "src_ip": "fe80::/10",
+                    "family": "ipv6",
+                    "target": "ACCEPT",
+                    "icmp_type": ["130/0", "131/0", "132/0", "143/0"]
+                }
+            ],
+            "led": [
+                {
+                    "name": "USB1",
+                    "sysfs": "tp-link:green:usb1",
+                    "trigger": "usbdev",
+                    "dev": "1-1.1",
+                    "interval": 50,
+                }
+            ],
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet"
+                }
+            ],
+            "system": [
+                {
+                    "test": "1",
+                    "config_name": "custom",
+                    "config_value": "custom"
+                }
+            ]
+        }
+        self.assertDictEqual(o.config, expected)
 
     def test_skip(self):
         o = OpenWrt({"skipme": {"enabled": True}})

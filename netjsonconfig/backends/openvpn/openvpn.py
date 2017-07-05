@@ -1,8 +1,7 @@
-import re
-
 from . import converters
 from ...schema import DEFAULT_FILE_MODE
 from ..base.backend import BaseBackend
+from .parser import OpenVpnParser, config_suffix, vpn_pattern
 from .renderer import OpenVpnRenderer
 from .schema import schema
 
@@ -13,9 +12,9 @@ class OpenVpn(BaseBackend):
     """
     schema = schema
     converters = [converters.OpenVpn]
+    parser = OpenVpnParser
     renderer = OpenVpnRenderer
     list_identifiers = ['name']
-    VPN_REGEXP = re.compile('# openvpn config: ')
 
     def _generate_contents(self, tar):
         """
@@ -26,7 +25,7 @@ class OpenVpn(BaseBackend):
         """
         text = self.render(files=False)
         # create a list with all the packages (and remove empty entries)
-        vpn_instances = self.VPN_REGEXP.split(text)
+        vpn_instances = vpn_pattern.split(text)
         if '' in vpn_instances:
             vpn_instances.remove('')
         # create a file for each VPN
@@ -38,7 +37,7 @@ class OpenVpn(BaseBackend):
             if text_contents.endswith('\n\n'):
                 text_contents = text_contents[0:-1]
             self._add_file(tar=tar,
-                           name='{0}.conf'.format(vpn_name),
+                           name='{0}{1}'.format(vpn_name, config_suffix),
                            contents=text_contents)
 
     @classmethod
