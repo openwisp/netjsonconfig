@@ -16,6 +16,29 @@ def status(config, key='disabled'):
 class Aaa(BaseConverter):
     netjson_key = 'general'
 
+    def wpa2_personal(self):
+        """
+        When using wpa_personal the wifi password is written
+        in ``aaa.1.wpa.psk`` instead of ``wpasupplicant``
+        """
+        wireless = [ i for i in get_copy(self.netjson, 'interfaces') if i['type'] == 'wireless']
+
+        def get_psk(interface):
+            t = {
+                'wpa': {
+                    'psk': interface['encryption']['key'],
+                },
+            }
+            return t
+
+        def is_wpa2_personal(interface):
+            return interface['encryption']['protocol'] == 'wpa2_personal'
+
+        try:
+            return [ get_psk(i) for i in wireless if is_wpa2_personal(i)][0]
+        except IndexError:
+            return {}
+
     def to_intermediate(self):
         result = []
 
@@ -39,6 +62,11 @@ class Aaa(BaseConverter):
                 },
             }
         ])
+
+        w = self.wpa2_personal()
+        if w:
+            result.append([w])
+
         return (('aaa', result),)
 
 
