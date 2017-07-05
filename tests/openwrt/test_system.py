@@ -31,6 +31,22 @@ config system 'system'
         o = OpenWrt(native=self._system_uci)
         self.assertDictEqual(o.config, self._system_netjson)
 
+    _system_simple_netjson = {"general": {"hostname": "test-system"}}
+    _system_simple_uci = """package system
+
+config system 'system'
+    option hostname 'test-system'
+"""
+
+    def test_render_system_without_timezone(self):
+        o = OpenWrt(self._system_simple_netjson)
+        expected = self._tabs(self._system_simple_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_system_without_timezone(self):
+        o = OpenWrt(native=self._system_simple_uci)
+        self.assertEqual(o.config, self._system_simple_netjson)
+
     _system_id_netjson = {
         "general": {
             "id": "arbitrary",
