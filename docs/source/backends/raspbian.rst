@@ -476,7 +476,7 @@ Will result in::
         wireless-channel 1
         wireless-essid freifunk
         wireless-mode ad-hoc
-        
+
 
 WPA2 Personal (Pre-Shared Key)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -530,3 +530,49 @@ Will be rendered as follows::
     wpa_key_mgmt=WPA-PSK
     wpa_passphrase=passphrase012345
     wpa_pairwise=TKIP CCMP
+
+NTP settings
+------------
+
+The Network Time Protocol settings reside in the ``ntp`` key of the
+*configuration dictionary*, which is a custom NetJSON extension not present in
+the original NetJSON RFC.
+
+The ``ntp`` key must contain a dictionary, the allowed options are:
+
++-------------------+---------+---------------------+
+| key name          | type    | function            |
++===================+=========+=====================+
+| ``enabled``       | boolean | ntp client enabled  |
++-------------------+---------+---------------------+
+| ``enable_server`` | boolean | ntp server enabled  |
++-------------------+---------+---------------------+
+| ``server``        | list    | list of ntp servers |
++-------------------+---------+---------------------+
+
+NTP settings example
+~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary* :
+
+.. code-block:: python
+
+    {
+        "ntp": {
+        "enabled": True,
+        "enable_server": False,
+        "server": [
+            "0.openwrt.pool.ntp.org",
+            "1.openwrt.pool.ntp.org",
+            "2.openwrt.pool.ntp.org",
+            "3.openwrt.pool.ntp.org"
+        ]
+    }
+
+Will be rendered as follows::
+
+    config: /etc/ntp.conf
+    server 0.openwrt.pool.ntp.org
+    server 1.openwrt.pool.ntp.org
+    server 2.openwrt.pool.ntp.org
+    server 3.openwrt.pool.ntp.org
