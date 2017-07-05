@@ -623,7 +623,7 @@ class Wpasupplicant(BaseConverter):
             head = original[0]
             temp_dev['devname'] = head['wireless']['radio']
 
-            if head['encryption']:
+            if 'encryption' in head:
                 network = available_encryption_protocols.get(head['encryption']['protocol'])(head)
 
             else:
