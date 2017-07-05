@@ -4,7 +4,6 @@ def no_encryption(interface):
     for encryption None as the intermediate dict
     """
     return {
-        'phase2=auth': 'MSCHAPV2',
         'ssid': interface['wireless']['ssid'],
         'priority': 100,
         'key_mgmt': [
@@ -64,7 +63,6 @@ def wpa2_enterprise(interface):
         'password': 'TODO',
         'identity': 'TODO',
         'anonymous_identity': 'TODO',
-        'psk': interface['encryption']['key'],
         'pairwise': [
             {
                 'name': 'CCMP',
