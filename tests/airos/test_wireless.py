@@ -1,11 +1,9 @@
 import unittest
 
-from netjsonconfig.backends.airos.converters import *
-
-from .dummy import WirelessAirOS
+from .dummy import WirelessAirOS, ConverterTest
 
 
-class TestWirelessConverter(unittest.TestCase):
+class TestWirelessConverter(ConverterTest):
 
     backend = WirelessAirOS
 
@@ -59,7 +57,7 @@ class TestWirelessConverter(unittest.TestCase):
                     }
                 ]
 
-        self.assertEqual(o.intermediate_data['wireless'], expected)
+        self.assertEqualConfig(o.intermediate_data['wireless'], expected)
 
     def test_inactive_wireless(self):
 
@@ -112,4 +110,4 @@ class TestWirelessConverter(unittest.TestCase):
                     }
                 ]
 
-        self.assertEqual(o.intermediate_data['wireless'], expected)
+        self.assertEqualConfig(o.intermediate_data['wireless'], expected)
