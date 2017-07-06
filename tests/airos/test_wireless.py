@@ -42,7 +42,7 @@ class TestWirelessConverter(unittest.TestCase):
         expected = [
                     {
                         '1.addmtikie': 'enabled',
-                        '1.devname': 'wlan0',
+                        '1.devname': 'radio0',
                         '1.hide_ssid': 'disabled',
                         '1.security.type': 'none',
                         '1.signal_led1': 75,
@@ -95,7 +95,7 @@ class TestWirelessConverter(unittest.TestCase):
         expected = [
                     {
                         '1.addmtikie': 'enabled',
-                        '1.devname': 'wlan0',
+                        '1.devname': 'radio0',
                         '1.hide_ssid': 'disabled',
                         '1.security.type': 'none',
                         '1.signal_led1': 75,
