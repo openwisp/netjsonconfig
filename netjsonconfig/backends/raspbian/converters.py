@@ -3,6 +3,14 @@ from ..base.converter import BaseConverter
 from ipaddress import IPv4Interface
 
 
+class General(BaseConverter):
+    netjson_key = 'general'
+
+    def to_intermediate(self):
+        result = []
+        general = get_copy(self.netjson, self.netjson_key)
+        result.append(general)
+        return (('general', result),)
 class Interfaces(BaseConverter):
     netjson_key = 'interfaces'
 

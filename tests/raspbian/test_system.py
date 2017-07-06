@@ -6,6 +6,26 @@ from netjsonconfig.utils import _TabsMixin
 
 class TestSystemRender(unittest.TestCase, _TabsMixin):
 
+    def test_general(self):
+        o = Raspbian({
+            "general": {
+                "hostname": "test-system",
+                "timezone": "Europe/Rome",
+                "custom_setting": True,
+                "empty_setting1": None,
+                "empty_setting2": ""
+            }
+        })
+
+        expected = '''config: /etc/hostname
+test-system
+
+run commands:
+$ timedatectl set-timezone Europe/Rome
+
+'''
+        self.assertEqual(o.render(), expected)
+
     def test_ntp(self):
         o = Raspbian({
             "ntp": {
