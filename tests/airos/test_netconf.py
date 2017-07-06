@@ -114,6 +114,15 @@ class TestNetconfConverter(ConverterTest):
                 {
                     'name': 'eth0.1',
                     'type': 'ethernet',
+                    'addresses': [
+                        {
+                            'address': '192.168.1.20',
+                            'family': 'ipv4',
+                            'management': True,
+                            'mask': 24,
+                            'proto': 'static',
+                        }
+                    ]
                 }
             ],
         })
@@ -178,6 +187,7 @@ class TestNetconfConverter(ConverterTest):
                     'wireless': {
                         'radio': 'ath0',
                         'mode': 'station',
+                        'bssid': '00:11:22:33:44:55',
                         'ssid': 'ap-ssid-example',
                     }
                 }
@@ -451,6 +461,7 @@ class TestNetconfConverter(ConverterTest):
                     'wireless': {
                         'radio': 'ath0',
                         'mode': 'station',
+                        'bssid': '00:11:22:33:44:55',
                         'ssid': 'ap-ssid-example',
                     }
                 },
