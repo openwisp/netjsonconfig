@@ -1,12 +1,11 @@
 import unittest
 
-from netjsonconfig.backends.airos.converters import *
 from netjsonconfig.exceptions import ValidationError
 
-from .dummy import WpasupplicantAirOS
+from .dummy import WpasupplicantAirOS, ConverterTest
 
 
-class TestWpasupplicantConverter(unittest.TestCase):
+class TestWpasupplicantConverter(ConverterTest):
 
     backend = WpasupplicantAirOS
 
