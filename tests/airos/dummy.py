@@ -2,6 +2,33 @@ from netjsonconfig import AirOS
 
 from netjsonconfig.backends.airos.converters import *
 
+from unittest import TestCase
+
+
+class ConverterTest(TestCase):
+    """
+    Test case specific for intermediate configuration checks
+
+    The intermediate configuration is a dict-like object with
+    section names as keys and a list of configuration values
+    as values
+    """
+    maxDiff = 1000
+
+    def assertEqualConfig(self, a, b):
+        """
+        Test that the content of two list is the equal
+        element wise
+
+        This provides smaller, more specific, reports as it will trigger
+        failure for differently ordered elements or the element
+        content
+
+        If an element fails the assertion will be the only one printed
+        """
+        for (a, b) in zip(a, b):
+            self.assertEqual(a, b)
+
 
 class AaaAirOS(AirOS):
     """
