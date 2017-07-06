@@ -1,4 +1,4 @@
-import unittest
+from unittest import skip
 
 from netjsonconfig.exceptions import ValidationError
 
