@@ -33,11 +33,14 @@ class TestNetconfConverter(ConverterTest):
 
         expected = [
                 {
+                    '1.autoip.status': 'disabled',
+                    '1.autoneg': 'enabled',
                     '1.devname': 'eth0',
-                    '1.status': 'enabled',
-                    '1.up': 'enabled',
                     '1.flowcontrol.tx.status': 'enabled',
                     '1.flowcontrol.rx.status': 'enabled',
+                    '1.mtu': 1500,
+                    '1.status': 'enabled',
+                    '1.up': 'enabled',
                 },
                 {
                     'status': 'enabled',
@@ -61,12 +64,14 @@ class TestNetconfConverter(ConverterTest):
 
         expected = [
                 {
+                    '1.autoip.status': 'disabled',
+                    '1.autoneg': 'enabled',
                     '1.devname': 'eth0',
-                    '1.status': 'enabled',
-                    '1.up': 'disabled',
                     '1.flowcontrol.tx.status': 'enabled',
                     '1.flowcontrol.rx.status': 'enabled',
-                    '1.autoip.status': 'disabled',
+                    '1.mtu': 1500,
+                    '1.status': 'enabled',
+                    '1.up': 'disabled',
                 },
                 {
                     'status': 'enabled',
@@ -91,6 +96,7 @@ class TestNetconfConverter(ConverterTest):
         expected = [
                 {
                     '1.devname': 'eth0.1',
+                    '1.mtu': 1500,
                     '1.status': 'enabled',
                     '1.up': 'enabled',
                     '1.autoip.status': 'disabled',
@@ -117,10 +123,12 @@ class TestNetconfConverter(ConverterTest):
         expected = [
                 {
                     '1.devname': 'eth0.1',
+                    '1.ip': '192.168.1.20',
+                    '1.netmask': '255.255.255.0',
+                    '1.mtu': 1500,
+                    '1.role': 'mlan',
                     '1.status': 'enabled',
                     '1.up': 'enabled',
-                    '1.autoip.status': 'disabled',
-                    '1.role': 'mlan',
                 },
                 {
                     'status': 'enabled',
@@ -469,30 +477,42 @@ class TestNetconfConverter(ConverterTest):
 
         expected = [
                 {
+                    '1.autoip.status': 'disabled',
+                    '1.autoneg': 'enabled',
                     '1.devname': 'eth0',
+                    '1.flowcontrol.rx.status': 'enabled',
+                    '1.flowcontrol.tx.status': 'enabled',
+                    '1.mtu': 1500,
                     '1.status': 'enabled',
                     '1.up': 'enabled',
-                    '1.mtu': 1500,
                 },
                 {
+                    '2.autoip.status': 'disabled',
                     '2.devname': 'ath0',
+                    '2.mtu': 1500,
                     '2.status': 'enabled',
                     '2.up': 'enabled',
-                    '3.mtu': 1500,
                 },
                 {
+                    '3.autoip.status': 'disabled',
                     '3.devname': 'br0',
+                    '3.mtu': 1500,
                     '3.status': 'enabled',
                     '3.up': 'enabled',
-                    '3.mtu': 1500,
                 },
                 {
+                    '4.autoip.status': 'disabled',
                     '4.devname': 'veth0',
+                    '4.mtu': 1500,
                     '4.status': 'enabled',
+                    '4.up': 'enabled',
                 },
                 {
+                    '5.autoip.status': 'disabled',
                     '5.devname': 'loop0',
+                    '5.mtu': 1500,
                     '5.status': 'enabled',
+                    '5.up': 'enabled',
                 },
         ]
 
