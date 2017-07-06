@@ -67,6 +67,42 @@ Will return the following output::
       address fd87::1
       netmask 128
 
+General settings
+----------------
+
+The general settings reside in the ``general`` key of the
+*configuration dictionary*, which follows the
+`NetJSON General object <http://netjson.org/rfc.html#general1>`_ definition
+(see the link for the detailed specification).
+
+General settings example
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "general": {
+            "hostname": "routerA",
+            "timezone": "UTC",
+            "ula_prefix": "fd8e:f40a:6701::/48"
+        }
+    }
+
+Will be rendered as follows::
+
+    config: /etc/hostname
+    routerA
+
+    run commands:
+    $ timedatectl set-timezone UTC
+
+After modifying the config files run the following command to change the
+hostname::
+
+    $ /etc/init.d/hostname.sh start
+
 Network interfaces
 ------------------
 
