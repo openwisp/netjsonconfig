@@ -1,3 +1,4 @@
+from unittest import skip
 from .dummy import NetconfAirOS, ConverterTest
 
 
@@ -192,6 +193,7 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
+    @skip("Airos does not support ``adhoc`` mode")
     def test_adhoc(self):
         o = self.backend({
             'interfaces': [
@@ -224,7 +226,7 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
-    @unittest.skip
+    @skip("Airos does not support wds")
     def test_wds(self):
         o = self.backend({
             'interfaces': [
@@ -257,6 +259,7 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
+    @skip("Airos does not support ``monitor`` mode")
     def test_monitor(self):
         o = self.backend({
             'interfaces': [
@@ -288,7 +291,7 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
-    @unittest.skip("AirOS does not support 802.11s")
+    @skip("AirOS does not support 802.11s")
     def test_80211s(self):
         o = self.backend({
             'interfaces': [
@@ -352,6 +355,7 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
+    @skip("Airos does not support virtual interfaces")
     def test_virtual(self):
         o = self.backend({
             'interfaces': [
@@ -376,6 +380,7 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
+    @skip("Airos does not support ``loopback`` interface")
     def test_loopback(self):
         o = self.backend({
             'interfaces': [
@@ -400,6 +405,7 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
+    @skip("Airos does not support ``other`` interfaces")
     def test_other(self):
         o = self.backend({
             'interfaces': [
