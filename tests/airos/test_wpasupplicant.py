@@ -136,6 +136,7 @@ class TestWpasupplicantConverter(unittest.TestCase):
         for (a, b) in zip(o.intermediate_data['wpasupplicant'], expected):
             self.assertEqual(a, b)
 
+    @unittest.skip("target wpa2_enterprise later")
     def test_wpa2_enterprise(self):
 
         o = self.backend({

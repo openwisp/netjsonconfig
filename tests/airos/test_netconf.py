@@ -289,6 +289,8 @@ class TestNetconfConverter(unittest.TestCase):
     
         self.assertEqual(o.intermediate_data['netconf'], expected)
 
+
+    @unittest.skip("AirOS does not support 802.11s")
     def test_80211s(self):
         o = self.backend({
             'interfaces': [
