@@ -373,31 +373,36 @@ class Radio(BaseConverter):
 class Resolv(BaseConverter):
     netjson_key = 'dns_servers'
 
-    def to_intermediate(self):
-        result = []
+    @property
+    def hostname(self):
+        original = get_copy(self.netjson, 'general', {})
+        return original.get('hostname', 'airos')
 
-        original = get_copy(self.netjson, "general")
-        hostname = original.get('hostname', 'airos')
-
-        result.append({
-            'host':  [{
-                'name':  hostname,
-                'status': 'enabled',
-            }]
-        })
-
+    def nameserver(self):
         original = get_copy(self.netjson, self.netjson_key)
 
-        a = {
-                'nameserver':  [],
-        }
+        t = []
+
         for nameserver in original:
-            a['nameserver'].append({
+            t.append({
                 'ip':  nameserver,
                 'status':  'enabled',
             })
 
-        result.append(a)
+        return { 'nameserver': t }
+
+    def to_intermediate(self):
+        result = []
+
+        result.append({
+            'host':  [{
+                'name':  self.hostname,
+                'status': 'enabled',
+            }]
+        })
+
+
+        result.append(self.nameserver())
 
         result.append({
             'status':  'enabled',
