@@ -18,7 +18,7 @@ class TestResolvConverter(unittest.TestCase):
 
         expected = [
                 {
-                    'host.1.name' : '',
+                    'host.1.name' : 'airos',
                 },
                 {
                     'nameserver.1.ip' : '10.150.42.1',
@@ -41,7 +41,7 @@ class TestResolvConverter(unittest.TestCase):
 
         expected = [
                 {
-                    'host.1.name' : '',
+                    'host.1.name' : 'airos',
                 },
                 {
                     'status' : 'enabled',
