@@ -95,6 +95,22 @@ DNS servers
 -----------
 
 
+GUI
+---
+
+As an extension to `NetJSON <http://netjson.org/rfc.html>` you can use the ``gui`` key to set the language of the interface and show the advanced network configuration option.
+
+The default values for this key are as reported below
+
+.. code-block:: json
+
+    {
+        "gui": {
+            "language": "en_US",
+            "advanced": true
+        }
+    }
+
 WPA2
 ----
 
