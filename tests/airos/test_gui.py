@@ -9,7 +9,7 @@ class TestGuiConverter(unittest.TestCase):
 
     def test_gui_key(self):
         o = self.backend({
-            "general": {}
+            'gui': {},
         })
 
         o.to_intermediate()
