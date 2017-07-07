@@ -135,7 +135,7 @@ As an example here is a snippet that set the authentication protocol to WPA2 per
         ]
     }
 
-And another that set the authentication protocol to WPA2 enterprise
+And another that set the authentication protocol to WPA2 enterprise, but this is still not supported by netjsonconfig
 
 .. code-block:: json
 
