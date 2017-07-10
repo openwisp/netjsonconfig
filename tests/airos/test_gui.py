@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import GuiAirOS
+from .dummy import GuiAirOS, ConverterTest
 
 
-class TestGuiConverter(unittest.TestCase):
+class TestGuiConverter(ConverterTest):
 
     backend = GuiAirOS
 
@@ -23,5 +21,4 @@ class TestGuiConverter(unittest.TestCase):
                 },
         ]
 
-
-        self.assertEqual(o.intermediate_data['gui'], expected)
+        self.assertEqualConfig(o.intermediate_data['gui'], expected)

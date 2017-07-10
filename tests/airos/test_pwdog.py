@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import PwdogAirOS
+from .dummy import PwdogAirOS, ConverterTest
 
 
-class TestPwdogConverter(unittest.TestCase):
+class TestPwdogConverter(ConverterTest):
 
     backend = PwdogAirOS
 
@@ -23,4 +21,4 @@ class TestPwdogConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['pwdog'], expected)
+        self.assertEqualConfig(o.intermediate_data['pwdog'], expected)

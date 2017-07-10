@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import RadioAirOS
+from .dummy import RadioAirOS, ConverterTest
 
 
-class TestRadioConverter(unittest.TestCase):
+class TestRadioConverter(ConverterTest):
 
     backend = RadioAirOS
 
@@ -20,7 +18,7 @@ class TestRadioConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['radio'], expected)
+        self.assertEqualConfig(o.intermediate_data['radio'], expected)
 
     def test_active_radio(self):
         o = self.backend({
@@ -49,7 +47,7 @@ class TestRadioConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['radio'], expected)
+        self.assertEqualConfig(o.intermediate_data['radio'], expected)
 
     def test_inactive_radio(self):
         o = self.backend({
@@ -78,4 +76,4 @@ class TestRadioConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['radio'], expected)
+        self.assertEqualConfig(o.intermediate_data['radio'], expected)

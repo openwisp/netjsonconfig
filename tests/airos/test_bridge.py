@@ -1,11 +1,9 @@
-import unittest
-
 from netjsonconfig.backends.airos.converters import *
 
-from .dummy import BridgeAirOS
+from .dummy import BridgeAirOS, ConverterTest
 
 
-class TestBridgeConverter(unittest.TestCase):
+class TestBridgeConverter(ConverterTest):
     """
     tests for backends.airos.renderers.SystemRenderer
     """
@@ -55,7 +53,7 @@ class TestBridgeConverter(unittest.TestCase):
                     }
                 ]
 
-        self.assertEqual(o.intermediate_data['bridge'], expected)
+        self.assertEqualConfig(o.intermediate_data['bridge'], expected)
 
     def test_disabled_bridge(self):
         o = self.backend({
@@ -100,7 +98,7 @@ class TestBridgeConverter(unittest.TestCase):
                     }
                 ]
 
-        self.assertEqual(o.intermediate_data['bridge'], expected)
+        self.assertEqualConfig(o.intermediate_data['bridge'], expected)
 
     def test_many_bridges(self):
         o = self.backend({
@@ -174,7 +172,7 @@ class TestBridgeConverter(unittest.TestCase):
                     }
                 ]
 
-        self.assertEqual(o.intermediate_data['bridge'], expected)
+        self.assertEqualConfig(o.intermediate_data['bridge'], expected)
 
     def test_no_bridge(self):
         o = self.backend({
@@ -200,4 +198,4 @@ class TestBridgeConverter(unittest.TestCase):
                     }
                 ]
 
-        self.assertEqual(o.intermediate_data['bridge'], expected)
+        self.assertEqualConfig(o.intermediate_data['bridge'], expected)

@@ -1,5 +1,3 @@
-import unittest
-
 from .dummy import WirelessAirOS, ConverterTest
 
 

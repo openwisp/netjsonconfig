@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import HttpdAirOS
+from .dummy import HttpdAirOS, ConverterTest
 
 
-class TestHttpdConverter(unittest.TestCase):
+class TestHttpdConverter(ConverterTest):
 
     backend = HttpdAirOS
 
@@ -26,5 +24,4 @@ class TestHttpdConverter(unittest.TestCase):
                 },
         ]
 
-
-        self.assertEqual(o.intermediate_data['httpd'], expected)
+        self.assertEqualConfig(o.intermediate_data['httpd'], expected)

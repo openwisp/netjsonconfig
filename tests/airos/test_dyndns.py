@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import DyndnsAirOS
+from .dummy import DyndnsAirOS, ConverterTest
 
 
-class TestDyndnsConverter(unittest.TestCase):
+class TestDyndnsConverter(ConverterTest):
 
     backend = DyndnsAirOS
 
@@ -20,5 +18,4 @@ class TestDyndnsConverter(unittest.TestCase):
                 },
         ]
 
-
-        self.assertEqual(o.intermediate_data['dyndns'], expected)
+        self.assertEqualConfig(o.intermediate_data['dyndns'], expected)

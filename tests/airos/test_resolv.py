@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import ResolvAirOS
+from .dummy import ResolvAirOS, ConverterTest
 
 
-class TestResolvConverter(unittest.TestCase):
+class TestResolvConverter(ConverterTest):
 
     backend = ResolvAirOS
 
@@ -30,8 +28,7 @@ class TestResolvConverter(unittest.TestCase):
                 },
         ]
 
-
-        self.assertEqual(o.intermediate_data['resolv'], expected)
+        self.assertEqualConfig(o.intermediate_data['resolv'], expected)
 
     def test_no_dns_server(self):
         o = self.backend({
@@ -50,4 +47,4 @@ class TestResolvConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['resolv'], expected)
+        self.assertEqualConfig(o.intermediate_data['resolv'], expected)

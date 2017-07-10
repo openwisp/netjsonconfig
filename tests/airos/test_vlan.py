@@ -1,11 +1,7 @@
-import unittest
-
-from netjsonconfig.backends.airos.converters import *
-
-from .dummy import VlanAirOS
+from .dummy import VlanAirOS, ConverterTest
 
 
-class TestVlanConverter(unittest.TestCase):
+class TestVlanConverter(ConverterTest):
     """
     tests for backends.airos.renderers.SystemRenderer
     """
@@ -37,7 +33,7 @@ class TestVlanConverter(unittest.TestCase):
                     }
                 ]
 
-        self.assertEqual(o.intermediate_data['vlan'], expected)
+        self.assertEqualConfig(o.intermediate_data['vlan'], expected)
 
     def test_disabled_vlan(self):
 
@@ -65,7 +61,7 @@ class TestVlanConverter(unittest.TestCase):
 
         o.to_intermediate()
 
-        self.assertEqual(o.intermediate_data['vlan'], expected)
+        self.assertEqualConfig(o.intermediate_data['vlan'], expected)
 
     def test_many_vlan(self):
 
@@ -104,7 +100,7 @@ class TestVlanConverter(unittest.TestCase):
 
         o.to_intermediate()
 
-        self.assertEqual(o.intermediate_data['vlan'], expected)
+        self.assertEqualConfig(o.intermediate_data['vlan'], expected)
 
     def test_mixed_vlan(self):
 
@@ -143,7 +139,7 @@ class TestVlanConverter(unittest.TestCase):
 
         o.to_intermediate()
 
-        self.assertEqual(o.intermediate_data['vlan'], expected)
+        self.assertEqualConfig(o.intermediate_data['vlan'], expected)
 
     def test_no_vlan(self):
 
@@ -165,7 +161,7 @@ class TestVlanConverter(unittest.TestCase):
 
         o.to_intermediate()
 
-        self.assertEqual(o.intermediate_data['vlan'], expected)
+        self.assertEqualConfig(o.intermediate_data['vlan'], expected)
 
     def test_one_vlan(self):
 
@@ -199,4 +195,4 @@ class TestVlanConverter(unittest.TestCase):
 
         o.to_intermediate()
 
-        self.assertEqual(o.intermediate_data['vlan'], expected)
+        self.assertEqualConfig(o.intermediate_data['vlan'], expected)

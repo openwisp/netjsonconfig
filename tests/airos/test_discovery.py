@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import DiscoveryAirOS
+from .dummy import DiscoveryAirOS, ConverterTest
 
 
-class TestDiscoveryConverter(unittest.TestCase):
+class TestDiscoveryConverter(ConverterTest):
 
     backend = DiscoveryAirOS
 
@@ -22,4 +20,4 @@ class TestDiscoveryConverter(unittest.TestCase):
         ]
 
 
-        self.assertEqual(o.intermediate_data['discovery'], expected)
+        self.assertEqualConfig(o.intermediate_data['discovery'], expected)

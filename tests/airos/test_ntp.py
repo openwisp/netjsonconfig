@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import NtpclientAirOS
+from .dummy import NtpclientAirOS, ConverterTest
 
 
-class TestResolvConverter(unittest.TestCase):
+class TestResolvConverter(ConverterTest):
 
     backend = NtpclientAirOS
 
@@ -20,7 +18,7 @@ class TestResolvConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['ntpclient'], expected)
+        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
 
     def test_no_ntp_server(self):
         o = self.backend({
@@ -35,7 +33,7 @@ class TestResolvConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['ntpclient'], expected)
+        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
 
     def test_single_ntp_server(self):
         o = self.backend({
@@ -56,7 +54,7 @@ class TestResolvConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['ntpclient'], expected)
+        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
 
     def test_multiple_ntp_server(self):
         o = self.backend({
@@ -82,4 +80,4 @@ class TestResolvConverter(unittest.TestCase):
                 },
         ]
 
-        self.assertEqual(o.intermediate_data['ntpclient'], expected)
+        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)

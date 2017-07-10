@@ -1,9 +1,7 @@
-import unittest
-
-from .dummy import AaaAirOS
+from .dummy import AaaAirOS, ConverterTest
 
 
-class TestResolvConverter(unittest.TestCase):
+class TestResolvConverter(ConverterTest):
 
     backend = AaaAirOS
 
@@ -20,5 +18,4 @@ class TestResolvConverter(unittest.TestCase):
                 },
         ]
 
-
-        self.assertEqual(o.intermediate_data['aaa'], expected)
+        self.assertEqualConfig(o.intermediate_data['aaa'], expected)
