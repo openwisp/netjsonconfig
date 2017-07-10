@@ -5,11 +5,12 @@ from netjsonconfig.exceptions import ValidationError
 from .dummy import WpasupplicantAirOS, ConverterTest
 
 
-class TestWpasupplicantConverter(ConverterTest):
-
+class TestWpasupplicantStation(ConverterTest):
+    """
+    Test the wpasupplicant converter for a
+    device in ``station`` mode
+    """
     backend = WpasupplicantAirOS
-
-    maxDiff = 2000
 
     def test_invalid_encryption(self):
 
@@ -79,8 +80,7 @@ class TestWpasupplicantConverter(ConverterTest):
                     }
                 ]
 
-        for (a, b) in zip(o.intermediate_data['wpasupplicant'], expected):
-            self.assertEqual(a, b)
+        self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
 
     def test_wpa2_personal(self):
 
@@ -132,8 +132,7 @@ class TestWpasupplicantConverter(ConverterTest):
                     }
                 ]
 
-        for (a, b) in zip(o.intermediate_data['wpasupplicant'], expected):
-            self.assertEqual(a, b)
+        self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
 
     @skip("target wpa2_enterprise later")
     def test_wpa2_enterprise(self):
@@ -190,5 +189,4 @@ class TestWpasupplicantConverter(ConverterTest):
                     }
                 ]
 
-        for (a, b) in zip(o.intermediate_data['wpasupplicant'], expected):
-            self.assertEqual(a, b)
+        self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
