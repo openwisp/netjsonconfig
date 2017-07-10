@@ -326,19 +326,24 @@ class Ntpclient(BaseConverter):
         result = []
         temp = []
 
-        original = get_copy(self.netjson, self.netjson_key)
+        original = get_copy(self.netjson, self.netjson_key, [])
 
-        for ntp in original:
-            temp.append({
-                'server': ntp,
+        if original:
+            for ntp in original:
+                temp.append({
+                    'server': ntp,
+                    'status': 'enabled',
+                })
+
+            result.append(temp)
+            result.append({
                 'status': 'enabled',
             })
+        else:
+            result.append({
+                'status': 'disabled',
+            })
 
-        result.append(temp)
-
-        result.append({
-            'status': 'disabled',
-        })
         return (('ntpclient', result),)
 
 
