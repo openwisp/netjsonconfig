@@ -25,7 +25,7 @@ class TestWpasupplicantStation(ConverterTest):
                     "autostart": True,
                     "wireless": {
                         "radio": "radio0",
-                        "mode": "access_point",
+                        "mode": "station",
                         "ssid": "ap-ssid-example",
                     },
                     "encryption": {
@@ -50,8 +50,9 @@ class TestWpasupplicantStation(ConverterTest):
                     "autostart": True,
                     "wireless": {
                         "radio": "radio0",
-                        "mode": "access_point",
+                        "mode": "station",
                         "ssid": "ap-ssid-example",
+                        "bssid": "00:11:22:33:44:55",
                     },
                     "encryption": {
                         "protocol": "none",
@@ -95,8 +96,9 @@ class TestWpasupplicantStation(ConverterTest):
                     "autostart": True,
                     "wireless": {
                         "radio": "radio0",
-                        "mode": "access_point",
+                        "mode": "station",
                         "ssid": "ap-ssid-example",
+                        "bssid": "00:11:22:33:44:55",
                     },
                     "encryption": {
                         "protocol": "wpa2_personal",
@@ -148,7 +150,7 @@ class TestWpasupplicantStation(ConverterTest):
                     "autostart": True,
                     "wireless": {
                         "radio": "radio0",
-                        "mode": "access_point",
+                        "mode": "station",
                         "ssid": "ap-ssid-example",
                     },
                     "encryption": {
@@ -190,3 +192,12 @@ class TestWpasupplicantStation(ConverterTest):
                 ]
 
         self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
+
+
+class TestWpasupplicantAccess(ConverterTest):
+    """
+    Test the wpasupplicant converter for a
+    device in ``access_point`` mode
+    """
+
+    backend = WpasupplicantAirOS
