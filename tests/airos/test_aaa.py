@@ -7,7 +7,8 @@ class TestResolvConverter(ConverterTest):
 
     def test_aaa_key(self):
         o = self.backend({
-            "general": {}
+            "general": {},
+            "interfaces": [],
         })
 
         o.to_intermediate()

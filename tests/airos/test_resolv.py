@@ -16,15 +16,15 @@ class TestResolvConverter(ConverterTest):
 
         expected = [
                 {
-                    'host.1.name' : 'airos',
+                    'host.1.name': 'airos',
                     'host.1.status': 'enabled',
                 },
                 {
-                    'nameserver.1.ip' : '10.150.42.1',
-                    'nameserver.1.status' : 'enabled',
+                    'nameserver.1.ip': '10.150.42.1',
+                    'nameserver.1.status': 'enabled',
                 },
                 {
-                    'status' : 'enabled',
+                    'status': 'enabled',
                 },
         ]
 
@@ -39,11 +39,11 @@ class TestResolvConverter(ConverterTest):
 
         expected = [
                 {
-                    'host.1.name' : 'airos',
+                    'host.1.name': 'airos',
                     'host.1.status': 'enabled',
                 },
                 {
-                    'status' : 'enabled',
+                    'status': 'enabled',
                 },
         ]
 

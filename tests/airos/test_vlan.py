@@ -26,10 +26,10 @@ class TestVlanConverter(ConverterTest):
                         '1.comment': '',
                         '1.devname': 'eth0',
                         '1.id': '1',
-                        '1.status' : 'enabled',
+                        '1.status': 'enabled',
                     },
                     {
-                        'status' : 'enabled',
+                        'status': 'enabled',
                     }
                 ]
 
@@ -55,7 +55,7 @@ class TestVlanConverter(ConverterTest):
                         '1.status': 'disabled',
                     },
                     {
-                        'status' : 'enabled',
+                        'status': 'enabled',
                     }
                 ]
 
@@ -94,7 +94,7 @@ class TestVlanConverter(ConverterTest):
                         '2.status': 'enabled',
                     },
                     {
-                        'status' : 'enabled',
+                        'status': 'enabled',
                     }
                 ]
 
@@ -133,7 +133,7 @@ class TestVlanConverter(ConverterTest):
                         '2.status': 'enabled',
                     },
                     {
-                        'status' : 'enabled',
+                        'status': 'enabled',
                     }
                 ]
 
@@ -155,7 +155,7 @@ class TestVlanConverter(ConverterTest):
 
         expected = [
                     {
-                        'status' : 'enabled',
+                        'status': 'enabled',
                     },
                 ]
 
@@ -189,7 +189,7 @@ class TestVlanConverter(ConverterTest):
                         '1.status': 'enabled',
                     },
                     {
-                        'status' : 'enabled',
+                        'status': 'enabled',
                     },
                 ]
 
