@@ -66,9 +66,8 @@ class TestWpasupplicantStation(ConverterTest):
         expected = [
                     {
                         'device.1.profile': 'AUTO',
-                        'device.1.status': 'disabled',
+                        'device.1.status': 'enabled',
                         'profile.1.name': 'AUTO',
-                        'profile.1.network.1.phase2=auth': 'MSCHAPV2',
                         'profile.1.network.1.ssid': 'ap-ssid-example',
                         'profile.1.network.1.priority': 100,
                         'profile.1.network.1.key_mgmt.1.name': 'NONE',
