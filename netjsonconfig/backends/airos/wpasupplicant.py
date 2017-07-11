@@ -49,28 +49,33 @@ def sta_wpa2_personal(interface):
     in ``station`` mode
     """
     return {
-        'phase2=auth': 'MSCHAPV2',
+        'ssid': interface['wireless']['ssid'],
+        'psk': interface['encryption']['key'],
+        # no advanced authentication methods
+        # with psk
         'eap': [
             {
                 'status': 'disabled',
             },
         ],
-        'psk': interface['encryption']['key'],
+        'key_mgmt': [
+            {
+                'name': 'WPA-PSK',
+            },
+        ],
         'pairwise': [
             {
                 'name': 'CCMP',
             },
         ],
+        # this may be not necessary
+        # as further authentication is not
+        # supported
+        'phase2=auth': 'MSCHAPV2',
+        'priority': 100,
         'proto': [
             {
                 'name': 'RSN',
-            },
-        ],
-        'ssid': interface['wireless']['ssid'],
-        'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'WPA-PSK',
             },
         ],
     }
@@ -82,6 +87,7 @@ def sta_wpa2_enterprise(interface):
     for wpa2_enterprise as the intermediate dict
     """
     return {
+        'ssid': interface['wireless']['ssid'],
         'phase2=auth': 'MSCHAPV2',
         'eap': [
             {
@@ -102,7 +108,6 @@ def sta_wpa2_enterprise(interface):
                 'name': 'RSN',
             },
         ],
-        'ssid': interface['wireless']['ssid'],
         'priority': 100,
         'key_mgmt': [
             {

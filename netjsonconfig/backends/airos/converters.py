@@ -671,7 +671,6 @@ class Wpasupplicant(BaseConverter):
         result = []
         station_auth_protocols = available_mode_authentication['station']
 
-
         temp_dev = {
             'profile': 'AUTO',
             'status': 'enabled',
@@ -687,14 +686,9 @@ class Wpasupplicant(BaseConverter):
                 network = station_auth_protocols.get(head['encryption']['protocol'])(head)
 
             else:
-                # early return as wpasupplicant is not
-                # configured for station mode without
-                # encryption
-                return (('wpasupplicant', []),)
-
-#                network = available_auth_proto['none'](head)
-#                del temp_dev['driver']
-#                del temp_dev['devname']
+                network = station_auth_protocols['none'](head)
+                del temp_dev['driver']
+                del temp_dev['devname']
 
         result.append({
             'device': [
