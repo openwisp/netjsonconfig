@@ -720,27 +720,40 @@ class Wpasupplicant(BaseConverter):
         result = []
         ap_auth_protocols = available_mode_authentication['access_point']
 
+        temp_dev = {
+            'profile': 'AUTO',
+            'status': 'disabled',
+        }
+
         if original:
             head = original[0]
 
             if 'encryption' in head:
                 network = ap_auth_protocols.get(head['encryption']['protocol'])(head)
+                result.append({
+                    'status': 'disabled',
+                })
 
             else:
                 network = ap_auth_protocols['none'](head)
+                temp_dev['status'] = 'enabled'
+                result.append({
+                    'status': 'enabled',
+                })
 
         result.append({
+            'device': [
+                temp_dev,
+            ],
             'profile': [
                 {
+                    'name': 'AUTO',
                     'network': [
                         network,
                         self.secondary_network(),
                     ],
                 },
             ],
-        })
-        result.append({
-            'status': 'enabled',
         })
 
         return (('wpasupplicant', result),)

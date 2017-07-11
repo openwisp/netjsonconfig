@@ -54,9 +54,9 @@ class TestWpasupplicantStation(ConverterTest):
                         "ssid": "ap-ssid-example",
                         "bssid": "00:11:22:33:44:55",
                     },
-                    "encryption": {
-                        "protocol": "none",
-                    },
+#                    "encryption": {
+#                        "protocol": "none",
+#                    },
                 }
             ]
         })
@@ -130,7 +130,7 @@ class TestWpasupplicantStation(ConverterTest):
                     },
                     {
                         'status': 'enabled',
-                    }
+                    },
                 ]
 
         self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
@@ -164,6 +164,9 @@ class TestWpasupplicantStation(ConverterTest):
 
         expected = [
                     {
+                        'status': 'enabled',
+                    },
+                    {
                         'device.1.profile': 'AUTO',
                         'device.1.status': 'enabled',
                         'device.1.driver': 'madwifi',
@@ -185,9 +188,6 @@ class TestWpasupplicantStation(ConverterTest):
                         'profile.1.network.2.priority': 2,
                         'profile.1.network.2.status': 'disabled',
                     },
-                    {
-                        'status': 'enabled',
-                    }
                 ]
 
         self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
@@ -217,10 +217,10 @@ class TestWpasupplicantAccess(ConverterTest):
                         "mode": "access_point",
                         "ssid": "ap-ssid-example",
                     },
-                    "encryption": {
-                        "protocol": "none",
-                    },
-                }
+#                    "encryption": {
+#                        "protocol": "none",
+#                    },
+                },
             ]
         })
 
@@ -233,8 +233,55 @@ class TestWpasupplicantAccess(ConverterTest):
                     {
                         'device.1.profile': 'AUTO',
                         'device.1.status': 'enabled',
+                        'profile.1.name': 'AUTO',
                         'profile.1.network.1.priority': 100,
                         'profile.1.network.1.ssid': 'ap-ssid-example',
+                        'profile.1.network.1.key_mgmt.1.name': 'NONE',
+                        'profile.1.network.2.key_mgmt.1.name': 'NONE',
+                        'profile.1.network.2.priority': 2,
+                        'profile.1.network.2.status': 'disabled',
+                    },
+                ]
+
+        self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
+
+    def test_wpa2_personal(self):
+
+        o = self.backend({
+            "interfaces": [
+                {
+                    "type": "wireless",
+                    "name": "wlan0",
+                    "mac": "de:9f:db:30:c9:c5",
+                    "mtu": 1500,
+                    "txqueuelen": 1000,
+                    "autostart": True,
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "ap-ssid-example",
+                    },
+                    "encryption": {
+                        "protocol": "wpa2_personal",
+                        "key": "cucumber",
+                    },
+                }
+            ]
+        })
+
+        o.to_intermediate()
+
+        expected = [
+                    {
+                        'status': 'disabled',
+                    },
+                    {
+                        'device.1.profile': 'AUTO',
+                        'device.1.status': 'disabled',
+                        'profile.1.name': 'AUTO',
+                        'profile.1.network.1.priority': 100,
+                        'profile.1.network.1.ssid': 'ap-ssid-example',
+                        'profile.1.network.1.psk': 'cucumber',
                         'profile.1.network.1.key_mgmt.1.name': 'NONE',
                         'profile.1.network.2.key_mgmt.1.name': 'NONE',
                         'profile.1.network.2.priority': 2,

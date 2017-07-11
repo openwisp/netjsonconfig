@@ -5,6 +5,7 @@ def ap_no_encryption(interface):
     """
     return {
         'ssid': interface['wireless']['ssid'],
+        'priority': 100,
         'key_mgmt': [
             {
                 'name': 'NONE',
@@ -22,6 +23,12 @@ def ap_wpa2_personal(interface):
     return {
         'psk': interface['encryption']['key'],
         'ssid': interface['wireless']['ssid'],
+        'key_mgmt': [
+            {
+                'name': 'NONE',
+            },
+        ],
+        'priority': 100,
     }
 
 
