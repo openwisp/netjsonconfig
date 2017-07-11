@@ -4,7 +4,7 @@ from ..base.converter import BaseConverter
 
 from ipaddress import ip_interface
 
-from wpasupplicant import available_encryption_protocols
+from wpasupplicant import available_mode_authentication
 
 def status(config, key='disabled'):
     if config.get(key):
@@ -667,12 +667,10 @@ class Wireless(BaseConverter):
 class Wpasupplicant(BaseConverter):
     netjson_key = 'interfaces'
 
-    def to_intermediate(self):
+    def _station_intermediate(self, original):
         result = []
+        station_auth_protocols = available_mode_authentication['station']
 
-        original = [
-                i for i in get_copy(self.netjson, self.netjson_key) if i['type'] == 'wireless'
-                ]
 
         temp_dev = {
             'profile': 'AUTO',
@@ -686,12 +684,17 @@ class Wpasupplicant(BaseConverter):
             temp_dev['devname'] = head['wireless']['radio']
 
             if 'encryption' in head:
-                network = available_encryption_protocols.get(head['encryption']['protocol'])(head)
+                network = station_auth_protocols.get(head['encryption']['protocol'])(head)
 
             else:
-                network = available_encryption_protocols['none'](head)
-                del temp_dev['driver']
-                del temp_dev['devname']
+                # early return as wpasupplicant is not
+                # configured for station mode without
+                # encryption
+                return (('wpasupplicant', []),)
+
+#                network = available_auth_proto['none'](head)
+#                del temp_dev['driver']
+#                del temp_dev['devname']
 
         result.append({
             'device': [
@@ -702,15 +705,7 @@ class Wpasupplicant(BaseConverter):
                     'name': 'AUTO',
                     'network': [
                         network,
-                        {
-                            'key_mgmt': [
-                                {
-                                    'name': 'NONE',
-                                },
-                            ],
-                            'priority': 2,
-                            'status': 'disabled',
-                        },
+                        self.secondary_network(),
                     ],
                 },
             ],
@@ -720,3 +715,63 @@ class Wpasupplicant(BaseConverter):
         })
 
         return (('wpasupplicant', result),)
+
+    def _access_point_intermediate(self, original):
+        """
+        Intermediate representation for ``access_point`` mode
+
+        wpasupplicant.device is missing when using the ``access_point`` mode
+        to the temp_dev will not be generated
+        """
+        result = []
+        ap_auth_protocols = available_mode_authentication['access_point']
+
+        if original:
+            head = original[0]
+
+            if 'encryption' in head:
+                network = ap_auth_protocols.get(head['encryption']['protocol'])(head)
+
+            else:
+                network = ap_auth_protocols['none'](head)
+
+        result.append({
+            'profile': [
+                {
+                    'network': [
+                        network,
+                        self.secondary_network(),
+                    ],
+                },
+            ],
+        })
+        result.append({
+            'status': 'enabled',
+        })
+
+        return (('wpasupplicant', result),)
+
+    def secondary_network(self):
+        """
+        The default secondary network configuration
+        """
+        return {
+            'key_mgmt': [
+                {
+                    'name': 'NONE',
+                },
+            ],
+            'priority': 2,
+            'status': 'disabled',
+        }
+
+    def to_intermediate(self):
+        original = [
+                i for i in get_copy(self.netjson, self.netjson_key) if i['type'] == 'wireless'
+                ]
+
+        if original:
+            head = original[0]
+            # call either ``_station_intermediate`` or ``_access_point_intermediate``
+            # and return the result
+            return getattr(self, '_%s_intermediate' % head['wireless']['mode'])(original)
