@@ -228,15 +228,18 @@ class TestWpasupplicantAccess(ConverterTest):
 
         expected = [
                     {
+                        'status': 'enabled',
+                    },
+                    {
+                        'device.1.profile': 'AUTO',
+                        'device.1.status': 'enabled',
+                        'profile.1.network.1.priority': 100,
                         'profile.1.network.1.ssid': 'ap-ssid-example',
                         'profile.1.network.1.key_mgmt.1.name': 'NONE',
                         'profile.1.network.2.key_mgmt.1.name': 'NONE',
                         'profile.1.network.2.priority': 2,
                         'profile.1.network.2.status': 'disabled',
                     },
-                    {
-                        'status': 'enabled',
-                    }
                 ]
 
         self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
