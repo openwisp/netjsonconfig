@@ -201,3 +201,43 @@ class TestWpasupplicantAccess(ConverterTest):
     """
 
     backend = WpasupplicantAirOS
+
+    def test_no_encryption(self):
+
+        o = self.backend({
+            "interfaces": [
+                {
+                    "type": "wireless",
+                    "name": "wlan0",
+                    "mac": "de:9f:db:30:c9:c5",
+                    "mtu": 1500,
+                    "txqueuelen": 1000,
+                    "autostart": True,
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "ap-ssid-example",
+                    },
+                    "encryption": {
+                        "protocol": "none",
+                    },
+                }
+            ]
+        })
+
+        o.to_intermediate()
+
+        expected = [
+                    {
+                        'profile.1.network.1.ssid': 'ap-ssid-example',
+                        'profile.1.network.1.key_mgmt.1.name': 'NONE',
+                        'profile.1.network.2.key_mgmt.1.name': 'NONE',
+                        'profile.1.network.2.priority': 2,
+                        'profile.1.network.2.status': 'disabled',
+                    },
+                    {
+                        'status': 'enabled',
+                    }
+                ]
+
+        self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
