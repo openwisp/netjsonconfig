@@ -33,7 +33,7 @@ class Aaa(AirOSConverter):
         When using wpa_personal the wifi password is written
         in ``aaa.1.wpa.psk`` instead of ``wpasupplicant``
         """
-        wireless = [ i for i in get_copy(self.netjson, 'interfaces') if i['type'] == 'wireless']
+        wireless = [i for i in get_copy(self.netjson, 'interfaces', []) if i['type'] == 'wireless']
 
         def get_psk(interface):
             t = {
@@ -93,7 +93,7 @@ class Bridge(AirOSConverter):
         result = []
 
         original = [
-                i for i in get_copy(self.netjson, self.netjson_key) if i['type'] == 'bridge'
+                i for i in get_copy(self.netjson, self.netjson_key, []) if i['type'] == 'bridge'
                 ]
 
         bridges = []
@@ -256,12 +256,12 @@ class Netconf(AirOSConverter):
             'ethernet': 'mlan',
             'bridge': 'mlan',
         }
-        return roles.get(typestr,'')
+        return roles.get(typestr, '')
 
     def to_intermediate(self):
         result = []
         interfaces = []
-        original = get_copy(self.netjson, self.netjson_key)
+        original = get_copy(self.netjson, self.netjson_key, [])
 
         for interface in original:
             base = {
@@ -384,7 +384,7 @@ class Radio(BaseConverter):
     def to_intermediate(self):
         result = []
 
-        original = get_copy(self.netjson, self.netjson_key)
+        original = get_copy(self.netjson, self.netjson_key, [])
 
         radios = []
 
@@ -418,7 +418,7 @@ class Resolv(AirOSConverter):
         }
 
     def nameserver(self):
-        original = get_copy(self.netjson, self.netjson_key)
+        original = get_copy(self.netjson, self.netjson_key, [])
 
         t = []
 
@@ -449,7 +449,7 @@ class Route(AirOSConverter):
 
     def to_intermediate(self):
         result = []
-        original = get_copy(self.netjson, self.netjson_key)
+        original = get_copy(self.netjson, self.netjson_key, [])
 
         routes = []
 
@@ -610,7 +610,7 @@ class Vlan(AirOSConverter):
     def to_intermediate(self):
         result = []
         original = [
-                i for i in get_copy(self.netjson, self.netjson_key) if '.' in i['name']
+                i for i in get_copy(self.netjson, self.netjson_key, []) if '.' in i['name']
                 ]
 
         vlans = []
@@ -636,7 +636,7 @@ class Wireless(AirOSConverter):
     def to_intermediate(self):
         result = []
         original = [
-                i for i in get_copy(self.netjson, self.netjson_key) if i['type'] == 'wireless'
+                i for i in get_copy(self.netjson, self.netjson_key, []) if i['type'] == 'wireless'
                 ]
 
         ws = []
@@ -790,7 +790,7 @@ class Wpasupplicant(AirOSConverter):
 
     def to_intermediate(self):
         original = [
-                i for i in get_copy(self.netjson, self.netjson_key) if i['type'] == 'wireless'
+                i for i in get_copy(self.netjson, self.netjson_key, []) if i['type'] == 'wireless'
                 ]
 
         if original:
