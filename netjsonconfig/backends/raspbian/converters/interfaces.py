@@ -1,6 +1,7 @@
+from ipaddress import IPv4Interface
+
 from ....utils import get_copy
 from .base import RaspbianConverter
-from ipaddress import IPv4Interface
 
 
 class Interfaces(RaspbianConverter):

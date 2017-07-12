@@ -1,5 +1,5 @@
 import unittest
-from unittest import skip
+
 from netjsonconfig import Raspbian
 from netjsonconfig.utils import _TabsMixin
 
