@@ -71,6 +71,7 @@ class Aaa(AirOSConverter):
                         },
                     ],
                 },
+                'status': 'disabled',
             }
         ])
 
