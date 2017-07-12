@@ -126,11 +126,15 @@ class BaseBackend(object):
         # convert NetJSON config to intermediate data structure
         if self.intermediate_data is None:
             self.to_intermediate()
-        # render intermediate data structure into native configuration
-        renderer = self.renderer(self)
-        output = renderer.render()
-        # remove reference to renderer instance (not needed anymore)
-        del renderer
+        # support multiple renderers
+        renderers = getattr(self, 'renderers', [self.renderer])
+        # convert intermediate data structure to native configuration
+        output = ''
+        for renderer_class in renderers:
+            renderer = renderer_class(self)
+            output += renderer.render()
+            # remove reference to renderer instance (not needed anymore)
+            del renderer
         # are we required to include
         # additional files?
         if files:
