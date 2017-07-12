@@ -13,7 +13,18 @@ def status(config, key='disabled'):
         return 'enabled'
 
 
-class Aaa(BaseConverter):
+class AirOSConverter(BaseConverter):
+    """
+    Always run the converter from NetJSON
+    to native
+    """
+
+    @classmethod
+    def should_run_forward(cls, config):
+        return True
+
+
+class Aaa(AirOSConverter):
     netjson_key = 'general'
 
     def wpa2_personal(self):
@@ -70,7 +81,7 @@ class Aaa(BaseConverter):
         return (('aaa', result),)
 
 
-class Bridge(BaseConverter):
+class Bridge(AirOSConverter):
     netjson_key = 'interfaces'
 
     def to_intermediate(self):
@@ -107,7 +118,7 @@ class Bridge(BaseConverter):
         return (('bridge', result),)
 
 
-class Discovery(BaseConverter):
+class Discovery(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -122,7 +133,7 @@ class Discovery(BaseConverter):
         return (('discovery', result),)
 
 
-class Dyndns(BaseConverter):
+class Dyndns(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -139,7 +150,7 @@ class Dyndns(BaseConverter):
         return (('dyndns', result),)
 
 
-class Ebtables(BaseConverter):
+class Ebtables(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -158,7 +169,7 @@ class Ebtables(BaseConverter):
         return (('httpd', result),)
 
 
-class Gui(BaseConverter):
+class Gui(AirOSConverter):
     netjson_key = 'gui'
 
     def to_intermediate(self):
@@ -177,7 +188,7 @@ class Gui(BaseConverter):
         return (('gui', result),)
 
 
-class Httpd(BaseConverter):
+class Httpd(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -200,7 +211,7 @@ class Httpd(BaseConverter):
         return (('httpd', result),)
 
 
-class Igmpproxy(BaseConverter):
+class Igmpproxy(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -213,7 +224,7 @@ class Igmpproxy(BaseConverter):
         return (('igmpproxy', result),)
 
 
-class Iptables(BaseConverter):
+class Iptables(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -232,7 +243,7 @@ class Iptables(BaseConverter):
         return (('iptables', result),)
 
 
-class Netconf(BaseConverter):
+class Netconf(AirOSConverter):
     netjson_key = 'interfaces'
 
     def type_to_role(self, typestr):
@@ -307,7 +318,7 @@ class Netconf(BaseConverter):
         return (('netconf', result),)
 
 
-class Netmode(BaseConverter):
+class Netmode(AirOSConverter):
     netjson_key = 'interfaces'
 
     def to_intermediate(self):
@@ -319,7 +330,7 @@ class Netmode(BaseConverter):
         return (('netmode', result), )
 
 
-class Ntpclient(BaseConverter):
+class Ntpclient(AirOSConverter):
     netjson_key = 'ntp_servers'
 
     def to_intermediate(self):
@@ -347,7 +358,7 @@ class Ntpclient(BaseConverter):
         return (('ntpclient', result),)
 
 
-class Pwdog(BaseConverter):
+class Pwdog(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -389,7 +400,7 @@ class Radio(BaseConverter):
         return (('radio', result),)
 
 
-class Resolv(BaseConverter):
+class Resolv(AirOSConverter):
     netjson_key = 'dns_servers'
 
     def host(self):
@@ -428,7 +439,7 @@ class Resolv(BaseConverter):
         return (('resolv', result),)
 
 
-class Route(BaseConverter):
+class Route(AirOSConverter):
     netjson_key = 'routes'
 
     def to_intermediate(self):
@@ -454,7 +465,7 @@ class Route(BaseConverter):
         return (('route', result),)
 
 
-class Snmp(BaseConverter):
+class Snmp(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -470,7 +481,7 @@ class Snmp(BaseConverter):
         return (('snmp', result),)
 
 
-class Sshd(BaseConverter):
+class Sshd(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -486,7 +497,7 @@ class Sshd(BaseConverter):
         return (('sshd', result),)
 
 
-class Syslog(BaseConverter):
+class Syslog(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -498,7 +509,7 @@ class Syslog(BaseConverter):
         return (('syslog', result),)
 
 
-class System(BaseConverter):
+class System(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -524,7 +535,7 @@ class System(BaseConverter):
         return (('system', result),)
 
 
-class Telnetd(BaseConverter):
+class Telnetd(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -537,7 +548,7 @@ class Telnetd(BaseConverter):
         return (('telnetd', result),)
 
 
-class Tshaper(BaseConverter):
+class Tshaper(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -545,7 +556,7 @@ class Tshaper(BaseConverter):
         return (('tshaper', [{'status': 'disabled', }]),)
 
 
-class Unms(BaseConverter):
+class Unms(AirOSConverter):
     netjson_keu = 'general'
 
     def to_intermediate(self):
@@ -553,7 +564,7 @@ class Unms(BaseConverter):
         return (('unms', [{'status': 'disabled'}]),)
 
 
-class Update(BaseConverter):
+class Update(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -567,7 +578,7 @@ class Update(BaseConverter):
         return (('update', result),)
 
 
-class Users(BaseConverter):
+class Users(AirOSConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
@@ -588,7 +599,7 @@ class Users(BaseConverter):
         return (('users', result),)
 
 
-class Vlan(BaseConverter):
+class Vlan(AirOSConverter):
     netjson_key = 'interfaces'
 
     def to_intermediate(self):
@@ -614,7 +625,7 @@ class Vlan(BaseConverter):
         return (('vlan', result),)
 
 
-class Wireless(BaseConverter):
+class Wireless(AirOSConverter):
     netjson_key = 'interfaces'
 
     def to_intermediate(self):
@@ -664,7 +675,7 @@ class Wireless(BaseConverter):
         return (('wireless', result),)
 
 
-class Wpasupplicant(BaseConverter):
+class Wpasupplicant(AirOSConverter):
     netjson_key = 'interfaces'
 
     def _station_intermediate(self, original):
