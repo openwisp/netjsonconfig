@@ -219,7 +219,7 @@ iface eth0.1 inet6 static
 
     def test_mtu(self):
         o = Raspbian({
-                "interfaces": [
+            "interfaces": [
                 {
                     "mtu": 1500,
                     "name": "eth1",
@@ -245,18 +245,18 @@ iface eth1 inet dhcp
     def test_mac(self):
         o = Raspbian({
                 "interfaces": [
-                {
-                    "name": "eth1",
-                    "addresses": [
-                        {
-                            "family": "ipv4",
-                            "proto": "dhcp"
-                        }
-                    ],
-                    "type": "ethernet",
-                    "mac": "52:54:00:56:46:c0"
-                }
-            ],
+                    {
+                        "name": "eth1",
+                        "addresses": [
+                            {
+                                "family": "ipv4",
+                                "proto": "dhcp"
+                            }
+                        ],
+                        "type": "ethernet",
+                        "mac": "52:54:00:56:46:c0"
+                    }
+                ],
         })
 
         expected = '''config: /etc/network/interfaces
