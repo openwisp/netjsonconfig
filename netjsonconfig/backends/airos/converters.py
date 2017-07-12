@@ -44,7 +44,10 @@ class Aaa(AirOSConverter):
             return t
 
         def is_wpa2_personal(interface):
-            return interface['encryption']['protocol'] == 'wpa2_personal'
+            try:
+                return interface['encryption']['protocol'] == 'wpa2_personal'
+            except:
+                return False
 
         try:
             return [get_psk(i) for i in wireless if is_wpa2_personal(i)][0]
