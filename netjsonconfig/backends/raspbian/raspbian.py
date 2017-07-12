@@ -1,5 +1,5 @@
 from . import converters
-from .renderer import Raspbian
+from .renderer import *
 from ..base.backend import BaseBackend
 from .schema import schema
 
@@ -18,4 +18,22 @@ class Raspbian(BaseBackend):
         converters.DnsSearch,
         converters.Ntp
     ]
-    renderer = Raspbian
+    renderer = [
+        Hostname,
+        Hostapd,
+        Interfaces,
+        Resolv,
+        Ntp,
+        Commands
+    ]
+
+    def render(self, files=True):
+        self.validate()
+        if self.intermediate_data is None:
+            self.to_intermediate()
+        output = ''
+        for renderer_class in self.renderer:
+            renderer = renderer_class(self)
+            output += renderer.render()
+            del renderer
+        return output
