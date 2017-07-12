@@ -6,6 +6,7 @@ from ipaddress import ip_interface
 
 from wpasupplicant import available_mode_authentication
 
+
 def status(config, key='disabled'):
     if config.get(key):
         return 'disabled'
@@ -46,7 +47,7 @@ class Aaa(AirOSConverter):
             return interface['encryption']['protocol'] == 'wpa2_personal'
 
         try:
-            return [ get_psk(i) for i in wireless if is_wpa2_personal(i)][0]
+            return [get_psk(i) for i in wireless if is_wpa2_personal(i)][0]
         except IndexError:
             return {}
 
@@ -268,7 +269,7 @@ class Netconf(AirOSConverter):
             }
 
             # handle interface type quirks
-            if interface['type'] == 'ethernet' and not '.' in interface['name']:
+            if interface['type'] == 'ethernet' and '.' not in interface['name']:
                 base['autoneg'] = 'enabled'
                 base['flowcontrol'] = {
                         'rx': {
@@ -424,7 +425,7 @@ class Resolv(AirOSConverter):
                 'status':  'enabled',
             })
 
-        return { 'nameserver': t }
+        return {'nameserver': t}
 
     def to_intermediate(self):
         result = []
