@@ -1,0 +1,11 @@
+{% for i, j in data.items() %}
+{% if i|string() == 'general' %}
+{% for general in j %}
+{% if general.get('hostname') %}
+config: /etc/hostname
+{{ general.get('hostname') }}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
