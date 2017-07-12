@@ -217,6 +217,57 @@ iface eth0.1 inet6 static
 '''
         self.assertEqual(o.render(), expected)
 
+    def test_mtu(self):
+        o = Raspbian({
+                "interfaces": [
+                {
+                    "mtu": 1500,
+                    "name": "eth1",
+                    "addresses": [
+                        {
+                            "family": "ipv4",
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "type": "ethernet",
+                }
+            ],
+        })
+
+        expected = '''config: /etc/network/interfaces
+auto eth1
+iface eth1 inet dhcp
+    pre-up /sbin/ifconfig $IFACE mtu 1500
+
+'''
+        self.assertEqual(o.render(), expected)
+
+    def test_mac(self):
+        o = Raspbian({
+                "interfaces": [
+                {
+                    "name": "eth1",
+                    "addresses": [
+                        {
+                            "family": "ipv4",
+                            "proto": "dhcp"
+                        }
+                    ],
+                    "type": "ethernet",
+                    "mac": "52:54:00:56:46:c0"
+                }
+            ],
+        })
+
+        expected = '''config: /etc/network/interfaces
+auto eth1
+iface eth1 inet dhcp
+    hwaddress 52:54:00:56:46:c0
+
+'''
+
+        self.assertEqual(o.render(), expected)
+
     def test_multiple_ip_and_dhcp(self):
         o = Raspbian({
             "interfaces": [
