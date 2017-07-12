@@ -37,8 +37,7 @@ class TestHostapdRenderer(unittest.TestCase, _TabsMixin):
             ]
         })
 
-        expected = '''
-config: /etc/hostapd/hostapd.conf
+        expected = '''config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
 hw_mode=g
@@ -50,6 +49,7 @@ wpa=2
 wpa_key_mgmt=WPA-PSK
 wpa_passphrase=passphrase012345
 wpa_pairwise=TKIP CCMP
+
 '''
         self.assertEqual(o.render(), expected)
 
@@ -84,8 +84,7 @@ wpa_pairwise=TKIP CCMP
             ]
         })
 
-        expected = '''
-config: /etc/hostapd/hostapd.conf
+        expected = '''config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
 hw_mode=g
@@ -96,6 +95,7 @@ auth_algs=1
 wpa=1
 wpa_key_mgmt=WPA-PSK
 wpa_passphrase=passphrase012345
+
 '''
         self.assertEqual(o.render(), expected)
 
@@ -199,14 +199,14 @@ wpa_passphrase=passphrase012345
             ]
         })
 
-        expected = '''
-config: /etc/hostapd/hostapd.conf
+        expected = '''config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
 hw_mode=g
 channel=3
 ieee80211n=1
 ssid=MyNetwork
+
 '''
         self.assertEqual(o.render(), expected)
 
@@ -237,14 +237,14 @@ ssid=MyNetwork
             ]
         })
 
-        expected = '''
-config: /etc/hostapd/hostapd.conf
+        expected = '''config: /etc/hostapd/hostapd.conf
 interface=wlan0
 driver=nl80211
 hw_mode=g
 channel=3
 ieee80211n=1
 ssid=open
+
 '''
         self.assertEqual(o.render(), expected)
 

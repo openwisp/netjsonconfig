@@ -1,0 +1,25 @@
+{% for i, j in data.items() %}
+{% if i|string() == 'wireless' %}
+{% for wireless in j %}
+config: /etc/hostapd/hostapd.conf
+interface={{ wireless.get('ifname') }}
+driver=nl80211
+hw_mode={{ wireless.get('hwmode')}}
+channel={{ wireless.get('channel')}}
+{% if wireless.get('protocol') == '80211n' %}
+ieee80211n=1
+{% endif %}
+ssid={{ wireless.get('ssid') }}
+{% if wireless.get('encryption') != {} %}
+auth_algs={{ wireless.get('encryption').get('auth_algs') }}
+wpa={{ wireless.get('encryption').get('wpa') }}
+wpa_key_mgmt={{ wireless.get('encryption').get('wpa_key_mgmt') }}
+wpa_passphrase={{ wireless.get('encryption').get('wpa_passphrase') }}
+{% if wireless.get('encryption', None).get('wpa_pairwise') != 'AUTO' %}
+wpa_pairwise={{ wireless.get('encryption').get('wpa_pairwise')}}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% else %}
+{% endif %}
+{% endfor %}
