@@ -127,7 +127,7 @@ class BaseBackend(object):
         if self.intermediate_data is None:
             self.to_intermediate()
         # support multiple renderers
-        renderers = getattr(self, 'renderers', [self.renderer])
+        renderers = getattr(self, 'renderers', None) or [self.renderer]
         # convert intermediate data structure to native configuration
         output = ''
         for renderer_class in renderers:
