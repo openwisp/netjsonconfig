@@ -4,10 +4,15 @@
 # config: /etc/hostapd/hostapd.conf
 interface={{ wireless.get('ifname') }}
 driver=nl80211
+{% if wireless.get('protocol') == 'a' or 'b' or 'g' %}
 hw_mode={{ wireless.get('hwmode')}}
+{% endif %}
 channel={{ wireless.get('channel')}}
 {% if wireless.get('protocol') == '80211n' %}
 ieee80211n=1
+{% endif %}
+{% if wireless.get('protocol') == '80211ac' %}
+ieee80211ac=1
 {% endif %}
 ssid={{ wireless.get('ssid') }}
 {% if wireless.get('encryption') != {} %}
