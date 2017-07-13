@@ -35,9 +35,7 @@ class Wireless(RaspbianConverter):
     def _get_hwmode(self, radio):
         protocol = radio['protocol']
         if protocol in ['802.11a', '802.11b', '802.11g']:
-            return protocol[1:]
-        if radio['channel'] is 0:
-            return radio.get('hwmode')
+            return protocol[-1:]
         elif radio['channel'] <= 13:
             return 'g'
         else:
