@@ -2,7 +2,7 @@
 {% if i|string() == 'general' %}
 {% for general in j %}
 {% if general.get('hostname') %}
-config: /etc/hostname
+# config: /etc/hostname
 {{ general.get('hostname') }}
 
 {% endif %}
