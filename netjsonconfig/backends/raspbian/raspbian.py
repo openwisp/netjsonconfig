@@ -17,7 +17,7 @@ class Raspbian(BaseBackend):
         converters.DnsSearch,
         converters.Ntp
     ]
-    renderer = [
+    renderers = [
         Hostname,
         Hostapd,
         Interfaces,
@@ -25,14 +25,3 @@ class Raspbian(BaseBackend):
         Ntp,
         Commands
     ]
-
-    def render(self, files=True):
-        self.validate()
-        if self.intermediate_data is None:
-            self.to_intermediate()
-        output = ''
-        for renderer_class in self.renderer:
-            renderer = renderer_class(self)
-            output += renderer.render()
-            del renderer
-        return output
