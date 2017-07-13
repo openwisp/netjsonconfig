@@ -9,7 +9,6 @@ class Raspbian(BaseBackend):
     Raspbian Backend
     """
     schema = schema
-    env_path = 'netjsonconfig.backends.raspbian'
     converters = [
         converters.General,
         converters.Interfaces,

@@ -1,7 +1,7 @@
 {% for i, j in data.items() %}
 {% if i|string() == 'wireless' %}
 {% for wireless in j %}
-config: /etc/hostapd/hostapd.conf
+# config: /etc/hostapd/hostapd.conf
 interface={{ wireless.get('ifname') }}
 driver=nl80211
 hw_mode={{ wireless.get('hwmode')}}
