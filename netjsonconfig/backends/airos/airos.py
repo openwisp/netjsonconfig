@@ -51,7 +51,7 @@ class AirOS(BaseBackend):
 
     def to_intermediate(self):
         super(AirOS, self).to_intermediate()
-        for k,v in self.intermediate_data.items():
+        for k, v in self.intermediate_data.items():
             self.intermediate_data[k] = filter(lambda x: x != {}, flatten(intermediate_to_list(v)))
 
 def flatten(xs):

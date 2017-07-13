@@ -1,5 +1,5 @@
 from copy import deepcopy
-from ...utils import get_copy, sorted_dict
+from ...utils import get_copy
 from ..base.converter import BaseConverter
 
 from ipaddress import ip_interface
@@ -463,7 +463,6 @@ class Route(AirOSConverter):
             })
 
         result.append(routes)
-
         result.append({
             'status': 'enabled',
         })
