@@ -454,11 +454,14 @@ class Route(AirOSConverter):
         routes = []
 
         for r in original:
+            network = ip_interface(r['destination'])
+            temp = {}
+            temp['ip'] = str(network.ip)
+            temp['netmask'] = str(network.netmask)
             routes.append({
-                'devname': '',
-                'gateway': '0.0.0.0',
-                'ip': '0.0.0.0',
-                'netmask': 0,
+                'gateway': r['next'],
+                'ip': temp['ip'],
+                'netmask': temp['netmask'],
                 'status': 'enabled',
             })
 
