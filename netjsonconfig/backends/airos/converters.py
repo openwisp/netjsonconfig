@@ -163,7 +163,7 @@ class Ebtables(AirOSConverter):
                {
                     'sys': {
                         'fw': {
-                            'status':  'enabled',
+                            'status':  'disabled',
                         },
                         'status': 'enabled',
                     },
@@ -222,7 +222,7 @@ class Igmpproxy(AirOSConverter):
     def to_intermediate(self):
         result = [
                {
-                    'status':  'enabled',
+                    'status':  'disabled',
                 },
         ]
 
@@ -237,11 +237,11 @@ class Iptables(AirOSConverter):
                {
                     'sys': {
                         'portfw':  {
-                            'status': 'enabled',
+                            'status': 'disabled',
                         },
                         'status':  'enabled',
                     },
-                    'status':  'enabled',
+                    'status':  'disabled',
                 },
         ]
 
@@ -508,7 +508,11 @@ class Syslog(AirOSConverter):
         result = []
 
         result.append({
-            'status': 'disabled',
+            'remote': {
+                'port': 514,
+                'status': 'disabled',
+            },
+            'status': 'enabled',
         })
         return (('syslog', result),)
 
