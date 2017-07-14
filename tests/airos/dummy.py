@@ -93,7 +93,7 @@ class NetconfAirOS(AirOS):
     ]
 
 
-class Netmode(AirOS):
+class NetmodeAirOS(AirOS):
     """
     Mock backend with converter for network mode
     """
