@@ -4,7 +4,7 @@ from ..base.converter import BaseConverter
 
 from ipaddress import ip_interface
 
-from wpasupplicant import available_mode_authentication
+from .wpasupplicant import available_mode_authentication
 
 
 def status(config, key='disabled'):
