@@ -6,6 +6,8 @@
 			{% endfor %}
 		{% endfor %}
 	{% else %}
-		netmode=bridge
+                {% for element in block %}
+                        netmode={{ element['status'] }}
+                {% endfor %}
 	{% endif %}
 {% endfor %}
