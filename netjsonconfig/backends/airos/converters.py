@@ -171,7 +171,7 @@ class Ebtables(AirOSConverter):
                 },
         ]
 
-        return (('httpd', result),)
+        return (('ebtables', result),)
 
 
 class Gui(AirOSConverter):
