@@ -324,13 +324,13 @@ class Netconf(AirOSConverter):
 
 
 class Netmode(AirOSConverter):
-    netjson_key = 'interfaces'
+    netjson_key = 'netmode'
 
     def to_intermediate(self):
         result = []
 
         result.append({
-            'status': 'enabled',
+            'status': self.netjson.get('netmode', 'bridge'),
         })
         return (('netmode', result), )
 
