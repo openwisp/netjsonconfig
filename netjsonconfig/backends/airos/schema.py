@@ -31,6 +31,27 @@ netconf_schema = {
     }
 
 """
+This schema defines a new property for netjson
+
+As the antenna can be in ``bridge`` or ``router`` mode
+this mode can be selected from this property
+"""
+
+netmode_schema = {
+        "type": "object",
+        "properties": {
+            "netmode": {
+                "enum": [
+                    "bridge",
+                    "router",
+                ],
+                "default": "bridge",
+                "type": "string",
+            },
+        },
+    }
+
+"""
 This schema override the possible encryption for AirOS from the default schema
 """
 wpasupplicant_schema = {
@@ -67,4 +88,9 @@ wpasupplicant_schema = {
 }
 
 
-schema = merge_config(default_schema, netconf_schema, wpasupplicant_schema)
+schema = merge_config(
+        default_schema,
+        netconf_schema,
+        netmode_schema,
+        wpasupplicant_schema,
+    )
