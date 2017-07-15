@@ -126,18 +126,20 @@ def intermediate_to_list(configuration):
         elif isinstance(element, tuple):
             (index, config) = element
             # update the keys to prefix the index
+            temp = {}
             for k, v in config.items():
                 # write the new key
-                config['{i}.{key}'.format(i=index + 1, key=k)] = v
-                # delete the old
-                del config[k]
+                temp['{i}.{key}'.format(i=index + 1, key=k)] = v
+
+            config = temp
             # now the keys are updated with the index
             # reduce to atoms the new config
             # by recursively calling yourself
             # on a list containing the new atom
             result = result + intermediate_to_list([config])
 
-        elif  isinstance(element, dict):
+        elif isinstance(element, dict):
+            temp = {}
             for k, v in element.items():
                 if isinstance(v, string_types) or isinstance(v, int):
                     pass
@@ -149,13 +151,10 @@ def intermediate_to_list(configuration):
 
                         for sk, sv in son.items():
                             nested_key = '{key}.{subkey}'.format(key=k, subkey=sk)
-                            element[nested_key] = sv
-
-                    # remove the nested object
-                    del element[k]
+                            temp[nested_key] = sv
 
             # now it is atomic, append it to 
-            result.append(element)
+            result.append(temp)
 
         else:
             raise Exception('malformed intermediate representation')
