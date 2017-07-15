@@ -73,8 +73,8 @@ def intermediate_to_list(configuration):
     - list -> prepend the list index to every item key
     - dictionary -> prepend the father key to every key
 
-    configuration :: list
-    return list
+    configuration :: List[Enum[Dict,List]]
+    return List[Dict]
 
     >>> intermediate_to_list([
         {
