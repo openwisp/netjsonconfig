@@ -804,3 +804,6 @@ class Wpasupplicant(AirOSConverter):
             # call either ``_station_intermediate`` or ``_access_point_intermediate``
             # and return the result
             return getattr(self, '_%s_intermediate' % head['wireless']['mode'])(original)
+
+
+__all__ = []

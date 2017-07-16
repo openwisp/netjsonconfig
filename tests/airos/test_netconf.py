@@ -78,7 +78,6 @@ class TestNetconfConverter(ConverterTest):
                 },
         ]
 
-
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
     def test_vlan(self):
@@ -143,7 +142,7 @@ class TestNetconfConverter(ConverterTest):
                     'status': 'enabled',
                 },
         ]
-        
+
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
     def test_access_point(self):
@@ -445,7 +444,7 @@ class TestNetconfConverter(ConverterTest):
                     'status': 'enabled',
                 },
         ]
-    
+
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
     def test_more_interfaces(self):

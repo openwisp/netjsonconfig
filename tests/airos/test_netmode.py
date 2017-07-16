@@ -1,4 +1,3 @@
-from unittest import skip
 from .dummy import NetmodeAirOS, ConverterTest
 
 
@@ -47,6 +46,5 @@ class TestNetmodeConverter(ConverterTest):
                     'status': 'router',
                 },
         ]
-
 
         self.assertEqualConfig(o.intermediate_data['netmode'], expected)

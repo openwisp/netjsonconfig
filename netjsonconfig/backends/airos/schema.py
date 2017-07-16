@@ -5,6 +5,14 @@ from ...schema import schema as default_schema
 from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
 
+
+def merge_list(schema_list):
+    schema = default_schema
+    for s in schema_list:
+        schema = merge_config(schema, s)
+    return schema
+
+
 """
 This defines a new property in the ``Interface``.
 
@@ -30,13 +38,13 @@ netconf_schema = {
         }
     }
 
+
 """
 This schema defines a new property for netjson
 
 As the antenna can be in ``bridge`` or ``router`` mode
 this mode can be selected from this property
 """
-
 netmode_schema = {
         "type": "object",
         "properties": {
@@ -50,6 +58,7 @@ netmode_schema = {
             },
         },
     }
+
 
 """
 This schema override the possible encryption for AirOS from the default schema
@@ -88,9 +97,11 @@ wpasupplicant_schema = {
 }
 
 
-schema = merge_config(
+schema = merge_list([
         default_schema,
         netconf_schema,
         netmode_schema,
         wpasupplicant_schema,
-    )
+        ])
+
+__all__ = [schema]

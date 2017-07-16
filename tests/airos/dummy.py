@@ -1,6 +1,9 @@
 from netjsonconfig import AirOS
 
-from netjsonconfig.backends.airos.converters import *
+from netjsoncongig.backends.airos.converters import Aaa, Bridge, Discovery, Dyndns, Ebtables, Gui, \
+        Httpd, Igmpproxy, Iptables, Netconf, Netmode, Ntpclient, \
+        Pwdog, Radio, Resolv, Route, Snmp, Sshd, Syslog, System, \
+        Telnetd, Update, Users, Vlan, Wireless, Wpasupplicant
 
 from unittest import TestCase
 
@@ -66,6 +69,15 @@ class DyndnsAirOS(AirOS):
     ]
 
 
+class EbtablesAirOS(AirOS):
+    """
+    Mock backend with converter for ebtables
+    """
+    converters = [
+            Ebtables,
+    ]
+
+
 class GuiAirOS(AirOS):
     """
     Mock backend with converter for web interface settings
@@ -81,6 +93,24 @@ class HttpdAirOS(AirOS):
     """
     converters = [
             Httpd,
+    ]
+
+
+class Igmpproxy(AirOS):
+    """
+    Mock backend with converter for igmpproxy
+    """
+    converters = [
+            Igmpproxy,
+    ]
+
+
+class IptablesAirOS(AirOS):
+    """
+    Mock backend with converter for iptables
+    """
+    converters = [
+            Iptables,
     ]
 
 

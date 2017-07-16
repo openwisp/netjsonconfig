@@ -1,11 +1,13 @@
-import re
-
 from six import string_types
 
-from .converters import *
+from .converters import Aaa, Bridge, Discovery, Dyndns, Ebtables, Gui, \
+        Httpd, Igmpproxy, Iptables, Netconf, Netmode, Ntpclient, \
+        Pwdog, Radio, Resolv, Route, Snmp, Sshd, Syslog, System, \
+        Telnetd, Update, Users, Vlan, Wireless, Wpasupplicant
 from .renderers import AirOS
 from ..base.backend import BaseBackend
 from .schema import schema
+
 
 class AirOS(BaseBackend):
     """
@@ -55,7 +57,8 @@ class AirOS(BaseBackend):
     def to_intermediate(self):
         super(AirOS, self).to_intermediate()
         for k, v in self.intermediate_data.items():
-            self.intermediate_data[k] = [ x for x in flatten(intermediate_to_list(v)) if x != {}]
+            self.intermediate_data[k] = [x for x in flatten(intermediate_to_list(v)) if x != {}]
+
 
 def flatten(xs):
     """
@@ -64,7 +67,8 @@ def flatten(xs):
     if xs is not list:
         return xs
     else:
-        return reduce(lambda x,y: x + flatten(y), xs, [])
+        return reduce(lambda x, y: x + flatten(y), xs, [])
+
 
 def intermediate_to_list(configuration):
     """
@@ -153,7 +157,7 @@ def intermediate_to_list(configuration):
                             nested_key = '{key}.{subkey}'.format(key=k, subkey=sk)
                             temp[nested_key] = sv
 
-            # now it is atomic, append it to 
+            # now it is atomic, append it to
             result.append(temp)
 
         else:

@@ -1,5 +1,3 @@
-from netjsonconfig.backends.airos.converters import *
-
 from .dummy import BridgeAirOS, ConverterTest
 
 

@@ -19,5 +19,4 @@ class TestDiscoveryConverter(ConverterTest):
                 },
         ]
 
-
         self.assertEqualConfig(o.intermediate_data['discovery'], expected)
