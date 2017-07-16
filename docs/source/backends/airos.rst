@@ -111,6 +111,17 @@ The default values for this key are as reported below
         }
     }
 
+Netmode
+-------
+
+AirOS v8.3 can operate in ``bridge`` and ``router`` mode (but defaults to ``bridge``) and this can be specified with the ``netmode`` property
+
+.. code-block:: json
+
+    {
+        "netmode": "bridge"
+    }
+
 NTP servers
 -----------
 
