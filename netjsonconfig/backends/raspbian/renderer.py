@@ -2,6 +2,9 @@ from ..base.renderer import BaseRenderer
 
 
 class RaspbianRenderer(BaseRenderer):
+    def cleanup(self, output):
+        output = output.replace('    ', '')
+        return output
     pass
 
 

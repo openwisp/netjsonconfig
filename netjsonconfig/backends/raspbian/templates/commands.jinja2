@@ -1,11 +1,11 @@
 {% for i, j  in data.items() %}
-{% if i|string() == 'general' %}
-{% for general in j %}
-{% if general.get('timezone') %}
-run commands:
-$ timedatectl set-timezone {{ general.get('timezone') }}
+    {% if i|string() == 'general' %}
+        {% for general in j %}
+            {% if general.get('timezone') %}
+                run commands:
+                $ timedatectl set-timezone {{ general.get('timezone') }}
 
-{% endif %}
-{% endfor %}
-{% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endfor%}
