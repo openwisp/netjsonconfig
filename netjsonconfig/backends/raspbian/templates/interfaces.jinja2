@@ -4,6 +4,7 @@
             {% if interface.get('iftype') == 'wireless' %}
                 {% if interface.get('mode') == 'adhoc' %}
                     # config: /etc/network/interfaces
+
                     auto {{ interface.get('iftype') }}
                     iface {{ interface.get('iftype') }} inet static
                     address 172.128.1.1
@@ -14,6 +15,7 @@
                 {% endif %}
             {% elif interface.get('iftype') in ['ethernet', 'bridge', 'loopback'] %}
                 # config: /etc/network/interfaces
+                
                 auto {{ interface.get('ifname') }}
                 {% if interface.get('address') != None %}
                     {% for address in interface.get('address') %}

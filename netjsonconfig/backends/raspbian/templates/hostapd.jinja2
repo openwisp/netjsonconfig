@@ -2,6 +2,7 @@
     {% if i|string() == 'wireless' %}
         {% for wireless in j %}
             # config: /etc/hostapd/hostapd.conf
+            
             interface={{ wireless.get('ifname') }}
             driver=nl80211
             {% if wireless.get('protocol') == 'a' or 'b' or 'g' %}

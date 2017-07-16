@@ -38,6 +38,7 @@ class TestHostapdRenderer(unittest.TestCase, _TabsMixin):
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=g
@@ -85,6 +86,7 @@ wpa_pairwise=TKIP CCMP
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=g
@@ -200,6 +202,7 @@ wpa_passphrase=passphrase012345
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=g
@@ -238,6 +241,7 @@ ssid=MyNetwork
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=g

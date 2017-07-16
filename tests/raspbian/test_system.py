@@ -18,6 +18,7 @@ class TestSystemRender(unittest.TestCase, _TabsMixin):
         })
 
         expected = '''# config: /etc/hostname
+
 test-system
 
 run commands:
@@ -41,6 +42,7 @@ $ timedatectl set-timezone Europe/Rome
         })
 
         expected = '''# config: /etc/ntp.conf
+
 server 0.openwrt.pool.ntp.org
 server 1.openwrt.pool.ntp.org
 server 2.openwrt.pool.ntp.org

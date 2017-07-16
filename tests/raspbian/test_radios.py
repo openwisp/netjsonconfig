@@ -44,6 +44,7 @@ class TestRadio(unittest.TestCase, _TabsMixin):
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=g
@@ -81,6 +82,7 @@ ssid=myWiFi
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=g
@@ -118,6 +120,7 @@ ssid=myWiFi
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=a
@@ -154,6 +157,7 @@ ssid=myWiFi
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=a
@@ -190,6 +194,7 @@ ssid=myWiFi
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=a
@@ -225,6 +230,7 @@ ssid=myWiFi
         })
 
         expected = '''# config: /etc/hostapd/hostapd.conf
+
 interface=wlan0
 driver=nl80211
 hw_mode=g

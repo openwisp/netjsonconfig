@@ -3,6 +3,7 @@
         {% for general in j %}
             {% if general.get('hostname') %}
                 # config: /etc/hostname
+                
                 {{ general.get('hostname') }}
 
             {% endif %}
