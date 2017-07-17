@@ -170,7 +170,7 @@ backends = {
     'openwrt': netjsonconfig.OpenWrt,
     'openwisp': netjsonconfig.OpenWisp,
     'openvpn': netjsonconfig.OpenVpn,
-    'airos': netjsonconfig.AirOS,
+    'airos': netjsonconfig.AirOs,
 }
 
 backend_class = backends[args.backend]

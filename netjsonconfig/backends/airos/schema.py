@@ -2,9 +2,7 @@
 AirOS specific JSON-Schema definition
 """
 from ...schema import schema as default_schema
-from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
-
 
 """
 This defines a new property in the ``Interface``.
@@ -33,7 +31,9 @@ override_schema = {
                     "encryption": {
                         "type": "object",
                         "title": "Encryption",
-                        "required": "protocol",
+                        "required": [
+                            "protocol",
+                        ],
                         "propertyOrder": 20,
                         "oneOf": [
                             {"$ref": "#/definitions/encryption_none"},
@@ -48,7 +48,9 @@ override_schema = {
                     "encryption": {
                         "type": "object",
                         "title": "Encryption",
-                        "required": "protocol",
+                        "required": [
+                            "protocol",
+                        ],
                         "propertyOrder": 20,
                         "oneOf": [
                             {"$ref": "#/definitions/encryption_none"},
@@ -67,6 +69,22 @@ override_schema = {
                 ],
                 "default": "bridge",
                 "type": "string",
+            },
+            "user": {
+                "additionalProperties": True,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                    },
+                    "salt": {
+                        "type": "string",
+                    },
+                },
+                "required": [
+                    "name",
+                    "password",
+                    "salt",
+                ],
             },
         },
     }

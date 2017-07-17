@@ -10,12 +10,12 @@ Intermediate representation
 
 The intermediate representation is the output of the a :ref:`converter`,
 it is backend specific and is built as a tree structure made from python
-builtins values
+builtins values.
 
 A tree is a *acyclic, directional graph* with an element called *root*.
 
 The root of our tree is stored in the first element of a tuple, along with
-the root's direct sons as a list
+the root's direct sons as a list:
 
 .. code-block:: python
 
@@ -30,9 +30,9 @@ As an example here we present the tree `('spam', ['eggs', 'snakes'])`
    }
 
 As a son may be a carrier of a value so we store it in a dictionary instead of adding a *leaf*
-with another level of recursion
+with another level of recursion.
 
-As an example here we present the tree `('spam', [ { 'eggs': 2 }, { 'snakes' : { 'loved' : 'python' }}])`
+As an example here we present the tree `('spam', [ { 'eggs': 2 }, { 'snakes' : { 'loved' : 'python' }}])`:
 
 .. graphviz::
 
@@ -46,7 +46,7 @@ As an example here we present the tree `('spam', [ { 'eggs': 2 }, { 'snakes' : {
 
    }
 
-This tree could be tranlated to a configuration file for AirOS that looks like this
+This tree could be tranlated to a configuration file for AirOS that looks like this:
 
 .. code-block:: ini
 
@@ -55,7 +55,7 @@ This tree could be tranlated to a configuration file for AirOS that looks like t
 
 
 So our tree representation is based on the simple assumption that a *leaf* is a dictionary
-without nested values and nested values in a dictionary creates a father-son relationship
+without nested values and nested values in a dictionary creates a father-son relationship.
 
 Instead when the configuration requires that the son values must be prefixed from a number,
 e.g. `vlan.1.devname=eth0` we store a list of dictionaries.
@@ -65,27 +65,27 @@ e.g. `vlan.1.devname=eth0` we store a list of dictionaries.
    (
         'spam',
         [
-                {
-                        'eggs' : 2,
+            {
+                'eggs' : 2,
+            },
+            {
+                'snakes' : {
+                    'loved' : [
+                        {
+                            'python2' : True,
+                        },
+                        {
+                            'python3' : True,
+                        },
+                        {
+                            'ipython' : True,
+                        }
+                    ],
                 },
-                {
-                        'snakes' : {
-                                'loved' : [
-                                        {
-                                                'python2' : True,
-                                        },
-                                        {
-                                                'python3' : True,
-                                        },
-                                        {
-                                                'ipython' : True,
-                                        }
-                                 ],
-                         },
-                }
-        ]
+            }
+        ])
 
-And the resulting tree is this
+And the resulting tree is:
 
 .. graphviz::
 
@@ -109,7 +109,7 @@ And the resulting tree is this
 
    }
 
-And the configuration is 
+And the configuration is:
 
 .. code-block:: ini
 
@@ -119,15 +119,15 @@ And the configuration is
     spam.snakes.loved.2.ipython=true
 
 The process by which we can go from the intermediate representation from
-the output configuration is called flattening
+the output configuration is called flattening, you can find more in the next section.
 
 Flattening
 ----------
 
 To avoid at all cost a recursive logic in the template we flatten the intermediate
-representation to something that has a *namespace* a *key* and a *value*
+representation to something that has a *namespace* a *key* and a *value*.
 
-This input NetJSON will be converted to a python :ref:`configuration_dictionary`
+This input NetJSON will be converted to a python :ref:`configuration_dictionary`:
 
 .. code-block:: json
 
@@ -135,16 +135,16 @@ This input NetJSON will be converted to a python :ref:`configuration_dictionary`
    {
         "type" : "DeviceConfiguration",
         "interfaces" : [
-                {
-                        "name" : "eth0.1",
-                        "type" : "ethernet",
-                        "comment" : "management vlan"
-                },
-                {
-                        "name" : "eth0.2",
-                        "type" : "ethernet",
-                        "comment" : "traffic vlan"
-                }
+            {
+                "name" : "eth0.1",
+                "type" : "ethernet",
+                "comment" : "management vlan"
+            },
+            {
+                "name" : "eth0.2",
+                "type" : "ethernet",
+                "comment" : "traffic vlan"
+            }
         ]
    }
 
@@ -153,21 +153,21 @@ This input NetJSON will be converted to a python :ref:`configuration_dictionary`
    #python
    {
         'interfaces' : [
-                {
-                        'name' : 'eth0.1',
-                        'type' : 'ethernet',
-                        'comment' : 'management'
-                },
-                {
-                        'name' : 'eth0.2',
-                        'type' : 'ethernet',
-                        'comment' : 'traffic'
-                }
+            {
+                'name' : 'eth0.1',
+                'type' : 'ethernet',
+                'comment' : 'management vlan'
+            },
+            {
+                'name' : 'eth0.2',
+                'type' : 'ethernet',
+                'comment' : 'traffic vlan'
+            }
         ]
    }
 
 
-And this must be converted to an appropiate AirOS configuration which looks like this
+And this must be converted to an appropiate AirOS configuration which looks like this:
 
 .. code-block:: ini
 
@@ -182,7 +182,7 @@ And this must be converted to an appropiate AirOS configuration which looks like
    vlan.status=enabled
 
 To do this we must convert the :ref:`configuration_dictionary` into something that
-resemble the target text, the output configuration
+resembles the target text, the output configuration.
 
 .. code-block:: python
 
@@ -208,9 +208,9 @@ resemble the target text, the output configuration
 
    )
 
-And to do that we get rid of the multiple indentation levels by flattening the tree structure
+And to do that we get rid of the multiple indentation levels by flattening the tree structure.
 
-The tree associated with the previous NetJSON example is this
+The tree associated with the previous NetJSON example is this:
 
 .. graphviz::
 

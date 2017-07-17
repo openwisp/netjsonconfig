@@ -1,11 +1,16 @@
-from netjsonconfig import AirOS
-
-from netjsoncongig.backends.airos.converters import Aaa, Bridge, Discovery, Dyndns, Ebtables, Gui, \
-        Httpd, Igmpproxy, Iptables, Netconf, Netmode, Ntpclient, \
-        Pwdog, Radio, Resolv, Route, Snmp, Sshd, Syslog, System, \
-        Telnetd, Update, Users, Vlan, Wireless, Wpasupplicant
-
 from unittest import TestCase
+
+from netjsonconfig import AirOs
+from netjsonconfig.backends.airos.converters import (Aaa, Bridge, Discovery,
+                                                     Dyndns, Ebtables, Gui,
+                                                     Httpd, Igmpproxy,
+                                                     Iptables, Netconf,
+                                                     Netmode, Ntpclient, Pwdog,
+                                                     Radio, Resolv, Route,
+                                                     Snmp, Sshd, Syslog,
+                                                     System, Telnetd, Update,
+                                                     Users, Vlan, Wireless,
+                                                     Wpasupplicant)
 
 
 class ConverterTest(TestCase):
@@ -33,236 +38,235 @@ class ConverterTest(TestCase):
             self.assertEqual(a, b)
 
 
-class AaaAirOS(AirOS):
+class AaaAirOs(AirOs):
     """
     Mock backend with converter for radius authentication
     """
     converters = [
-            Aaa,
+        Aaa,
     ]
 
 
-class BridgeAirOS(AirOS):
+class BridgeAirOs(AirOs):
     """
     Mock backend with converter for bridge interface
     """
     converters = [
-            Bridge,
+        Bridge,
     ]
 
 
-class DiscoveryAirOS(AirOS):
+class DiscoveryAirOs(AirOs):
     """
     Mock backend with converter for network hardware discovery
     """
     converters = [
-            Discovery,
+        Discovery,
     ]
 
 
-class DyndnsAirOS(AirOS):
+class DyndnsAirOs(AirOs):
     """
     Mock backend with converter for dynamic dns capabilities
     """
     converters = [
-            Dyndns,
+        Dyndns,
     ]
 
 
-class EbtablesAirOS(AirOS):
+class EbtablesAirOs(AirOs):
     """
     Mock backend with converter for ebtables
     """
     converters = [
-            Ebtables,
+        Ebtables,
     ]
 
 
-class GuiAirOS(AirOS):
+class GuiAirOs(AirOs):
     """
     Mock backend with converter for web interface settings
     """
     converters = [
-            Gui,
+        Gui,
     ]
 
 
-class HttpdAirOS(AirOS):
+class HttpdAirOs(AirOs):
     """
     Mock backend with converter for web server
     """
     converters = [
-            Httpd,
+        Httpd,
     ]
 
 
-class Igmpproxy(AirOS):
+class Igmpproxy(AirOs):
     """
     Mock backend with converter for igmpproxy
     """
     converters = [
-            Igmpproxy,
+        Igmpproxy,
     ]
 
 
-class IptablesAirOS(AirOS):
+class IptablesAirOs(AirOs):
     """
     Mock backend with converter for iptables
     """
     converters = [
-            Iptables,
+        Iptables,
     ]
 
 
-class NetconfAirOS(AirOS):
+class NetconfAirOs(AirOs):
     """
     Mock backend with converter for network configuration
     """
     converters = [
-            Netconf,
+        Netconf,
     ]
 
 
-class NetmodeAirOS(AirOS):
+class NetmodeAirOs(AirOs):
     """
     Mock backend with converter for network mode
     """
     converters = [
-            Netmode,
+        Netmode,
     ]
 
 
-class NtpclientAirOS(AirOS):
+class NtpclientAirOs(AirOs):
     """
     Mock backend with converter for ntp settings
     """
     converters = [
-            Ntpclient,
+        Ntpclient,
     ]
 
 
-class PwdogAirOS(AirOS):
+class PwdogAirOs(AirOs):
     """
     Mock backend with converter for ping watchdog settings
     """
     converters = [
-            Pwdog,
+        Pwdog,
     ]
 
 
-class RadioAirOS(AirOS):
+class RadioAirOs(AirOs):
     """
     Mock backend with converter for radio settings
     """
     converters = [
-            Radio,
+        Radio,
     ]
 
 
-class ResolvAirOS(AirOS):
+class ResolvAirOs(AirOs):
     """
     Mock backend with converter for network resolver
     """
     converters = [
-            Resolv,
+        Resolv,
     ]
 
 
-class RouteAirOS(AirOS):
+class RouteAirOs(AirOs):
     """
     Mock backend with converter for static routes
     """
     converters = [
-            Route,
+        Route,
     ]
 
 
-class SnmpAirOS(AirOS):
+class SnmpAirOs(AirOs):
     """
     Mock backend with converter for simple network management protocol
     """
     converters = [
-            Snmp,
+        Snmp,
     ]
 
 
-
-class SshdAirOS(AirOS):
+class SshdAirOs(AirOs):
     """
     Mock backend with converter for ssh daemon settings
     """
     converters = [
-            Sshd,
+        Sshd,
     ]
 
 
-class SyslogAirOS(AirOS):
+class SyslogAirOs(AirOs):
     """
     Mock backend with converter for remote logging
     """
     converters = [
-            Syslog,
+        Syslog,
     ]
 
 
-class SystemAirOS(AirOS):
+class SystemAirOs(AirOs):
     """
     Mock backend with converter for system settings
     """
     converters = [
-            System,
+        System,
     ]
 
 
-class TelnetdAirOS(AirOS):
+class TelnetdAirOs(AirOs):
     """
     Mock backend with converter for telnet daemon settings
     """
     converters = [
-            Telnetd,
+        Telnetd,
     ]
 
 
-class UpdateAirOS(AirOS):
+class UpdateAirOs(AirOs):
     """
     Mock backend with converter for update
     """
     converters = [
-            Update,
+        Update,
     ]
 
 
-class UsersAirOS(AirOS):
+class UsersAirOs(AirOs):
     """
     Mock backend with converter for users settings
     """
     converters = [
-            Users,
+        Users,
     ]
 
 
-class VlanAirOS(AirOS):
+class VlanAirOs(AirOs):
     """
     Mock backend with converter for vlan settings
     """
     converters = [
-            Vlan,
+        Vlan,
     ]
 
 
-class WirelessAirOS(AirOS):
+class WirelessAirOs(AirOs):
     """
     Mock backend with converter for wireless settings
     """
     converters = [
-            Wireless,
+        Wireless,
     ]
 
 
-class WpasupplicantAirOS(AirOS):
+class WpasupplicantAirOs(AirOs):
     """
     Mock backend with converter for wpasupplicant settings
     """
     converters = [
-            Wpasupplicant,
+        Wpasupplicant,
     ]

@@ -1,20 +1,18 @@
-from .dummy import NetmodeAirOS, ConverterTest
+from .mock import ConverterTest, NetmodeAirOs
 
 
 class TestNetmodeConverter(ConverterTest):
 
-    backend = NetmodeAirOS
+    backend = NetmodeAirOs
 
     def test_netconf_key(self):
         o = self.backend({
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    'status': 'bridge',
-                },
+            {
+                'status': 'bridge',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['netmode'], expected)
@@ -23,13 +21,11 @@ class TestNetmodeConverter(ConverterTest):
         o = self.backend({
             'netmode': 'bridge',
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    'status': 'bridge',
-                },
+            {
+                'status': 'bridge',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['netmode'], expected)
@@ -38,13 +34,11 @@ class TestNetmodeConverter(ConverterTest):
         o = self.backend({
             'netmode': 'router',
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    'status': 'router',
-                },
+            {
+                'status': 'router',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['netmode'], expected)

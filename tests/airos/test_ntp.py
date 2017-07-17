@@ -1,21 +1,19 @@
-from .dummy import NtpclientAirOS, ConverterTest
+from .mock import ConverterTest, NtpclientAirOs
 
 
 class TestResolvConverter(ConverterTest):
 
-    backend = NtpclientAirOS
+    backend = NtpclientAirOs
 
     def test_ntp_key(self):
         o = self.backend({
             "ntp_servers": [],
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    'status': 'disabled',
-                },
+            {
+                'status': 'disabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
@@ -24,13 +22,11 @@ class TestResolvConverter(ConverterTest):
         o = self.backend({
             "ntp_servers": [],
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    'status': 'disabled',
-                },
+            {
+                'status': 'disabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
@@ -41,17 +37,15 @@ class TestResolvConverter(ConverterTest):
                 '0.openwrt.pool.ntp.org',
             ],
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    '1.server': '0.openwrt.pool.ntp.org',
-                    '1.status': 'enabled',
-                },
-                {
-                    'status': 'enabled',
-                },
+            {
+                '1.server': '0.openwrt.pool.ntp.org',
+                '1.status': 'enabled',
+            },
+            {
+                'status': 'enabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
@@ -63,21 +57,19 @@ class TestResolvConverter(ConverterTest):
                 '1.openwrt.pool.ntp.org',
             ],
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    '1.server': '0.openwrt.pool.ntp.org',
-                    '1.status': 'enabled',
-                },
-                {
-                    '2.server': '1.openwrt.pool.ntp.org',
-                    '2.status': 'enabled',
-                },
-                {
-                    'status': 'enabled',
-                },
+            {
+                '1.server': '0.openwrt.pool.ntp.org',
+                '1.status': 'enabled',
+            },
+            {
+                '2.server': '1.openwrt.pool.ntp.org',
+                '2.status': 'enabled',
+            },
+            {
+                'status': 'enabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)

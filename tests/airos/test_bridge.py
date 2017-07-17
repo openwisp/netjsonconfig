@@ -1,11 +1,11 @@
-from .dummy import BridgeAirOS, ConverterTest
+from .mock import BridgeAirOs, ConverterTest
 
 
 class TestBridgeConverter(ConverterTest):
     """
     tests for backends.airos.renderers.SystemRenderer
     """
-    backend = BridgeAirOS
+    backend = BridgeAirOs
 
     def test_active_bridge(self):
 
@@ -32,24 +32,22 @@ class TestBridgeConverter(ConverterTest):
                 }
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                    {
-                        '1.comment': '',
-                        '1.devname': 'br0',
-                        '1.port.1.devname': 'eth0',
-                        '1.port.1.status': 'enabled',
-                        '1.port.2.devname': 'eth1',
-                        '1.port.2.status': 'enabled',
-                        '1.status': 'enabled',
-                        '1.stp.status': 'enabled'
-                    },
-                    {
-                        'status': 'enabled',
-                    }
-                ]
+            {
+                '1.comment': '',
+                '1.devname': 'br0',
+                '1.port.1.devname': 'eth0',
+                '1.port.1.status': 'enabled',
+                '1.port.2.devname': 'eth1',
+                '1.port.2.status': 'enabled',
+                '1.status': 'enabled',
+                '1.stp.status': 'enabled'
+            },
+            {
+                'status': 'enabled',
+            }
+        ]
 
         self.assertEqualConfig(o.intermediate_data['bridge'], expected)
 
@@ -77,24 +75,22 @@ class TestBridgeConverter(ConverterTest):
                 }
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                    {
-                        '1.comment': '',
-                        '1.devname': 'br0',
-                        '1.port.1.devname': 'eth0',
-                        '1.port.1.status': 'enabled',
-                        '1.port.2.devname': 'eth1',
-                        '1.port.2.status': 'enabled',
-                        '1.status': 'disabled',
-                        '1.stp.status': 'enabled'
-                    },
-                    {
-                        'status': 'enabled',
-                    }
-                ]
+            {
+                '1.comment': '',
+                '1.devname': 'br0',
+                '1.port.1.devname': 'eth0',
+                '1.port.1.status': 'enabled',
+                '1.port.2.devname': 'eth1',
+                '1.port.2.status': 'enabled',
+                '1.status': 'disabled',
+                '1.stp.status': 'enabled'
+            },
+            {
+                'status': 'enabled',
+            }
+        ]
 
         self.assertEqualConfig(o.intermediate_data['bridge'], expected)
 
@@ -141,34 +137,32 @@ class TestBridgeConverter(ConverterTest):
                 }
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                    {
-                        '1.comment': '',
-                        '1.devname': 'br0',
-                        '1.port.1.devname': 'eth0',
-                        '1.port.1.status': 'enabled',
-                        '1.port.2.devname': 'eth1',
-                        '1.port.2.status': 'enabled',
-                        '1.status': 'disabled',
-                        '1.stp.status': 'enabled'
-                    },
-                    {
-                        '2.comment': '',
-                        '2.devname': 'br1',
-                        '2.port.1.devname': 'eth2',
-                        '2.port.1.status': 'enabled',
-                        '2.port.2.devname': 'eth3',
-                        '2.port.2.status': 'enabled',
-                        '2.status': 'enabled',
-                        '2.stp.status': 'enabled'
-                    },
-                    {
-                        'status': 'enabled',
-                    }
-                ]
+            {
+                '1.comment': '',
+                '1.devname': 'br0',
+                '1.port.1.devname': 'eth0',
+                '1.port.1.status': 'enabled',
+                '1.port.2.devname': 'eth1',
+                '1.port.2.status': 'enabled',
+                '1.status': 'disabled',
+                '1.stp.status': 'enabled'
+            },
+            {
+                '2.comment': '',
+                '2.devname': 'br1',
+                '2.port.1.devname': 'eth2',
+                '2.port.1.status': 'enabled',
+                '2.port.2.devname': 'eth3',
+                '2.port.2.status': 'enabled',
+                '2.status': 'enabled',
+                '2.stp.status': 'enabled'
+            },
+            {
+                'status': 'enabled',
+            }
+        ]
 
         self.assertEqualConfig(o.intermediate_data['bridge'], expected)
 
@@ -187,13 +181,11 @@ class TestBridgeConverter(ConverterTest):
                 },
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                    {
-                        'status': 'enabled',
-                    }
-                ]
+            {
+                'status': 'enabled',
+            }
+        ]
 
         self.assertEqualConfig(o.intermediate_data['bridge'], expected)

@@ -1,21 +1,19 @@
-from .dummy import RadioAirOS, ConverterTest
+from .mock import ConverterTest, RadioAirOs
 
 
 class TestRadioConverter(ConverterTest):
 
-    backend = RadioAirOS
+    backend = RadioAirOs
 
     def test_no_radio(self):
         o = self.backend({
             "radios": []
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    'status': 'enabled',
-                },
+            {
+                'status': 'enabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['radio'], expected)
@@ -32,19 +30,17 @@ class TestRadioConverter(ConverterTest):
                 }
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    '1.chanbw': 20,
-                    '1.devname': 'ath0',
-                    '1.status': 'enabled',
-                    '1.txpower': '',
-                },
-                {
-                    'status': 'enabled',
-                },
+            {
+                '1.chanbw': 20,
+                '1.devname': 'ath0',
+                '1.status': 'enabled',
+                '1.txpower': '',
+            },
+            {
+                'status': 'enabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['radio'], expected)
@@ -61,19 +57,17 @@ class TestRadioConverter(ConverterTest):
                 }
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    '1.chanbw': 20,
-                    '1.devname': 'ath0',
-                    '1.status': 'disabled',
-                    '1.txpower': '',
-                },
-                {
-                    'status': 'enabled',
-                },
+            {
+                '1.chanbw': 20,
+                '1.devname': 'ath0',
+                '1.status': 'disabled',
+                '1.txpower': '',
+            },
+            {
+                'status': 'enabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['radio'], expected)

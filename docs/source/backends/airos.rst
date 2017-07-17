@@ -139,6 +139,36 @@ By setting the key ``ntp_servers`` in your input you can provide a list of ntp s
         ]
     }
 
+Users
+-----
+
+We can specify the user password as a blob divided into ``salt`` and ``hash``.
+
+From the antenna configuration take the user section.
+
+.. code-block:: ini
+
+    users.status=enabled
+    users.1.status=enabled
+    users.1.name=ubnt
+    users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1
+
+I the line ``users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1`` there are both the salt and the password hash in the format ``$ algorithm $ salt $ hash $``, e.g in the previous block ``algorithm=1``, ``salt=yRo1tmtC`` and ``hash=EcdoRX.JnD4VaEYgghgWg1``.
+
+To specify the password in NetJSON use the ``user`` property.
+
+.. code-block:: json
+
+    {
+        "type": "DeviceConfiguration",
+        "user": {
+            "name": "ubnt",
+            "passsword": "EcdoRX.JnD4VaEYgghgWg1",
+            "salt": "yRo1tmtC"
+        }
+    }
+
+
 WPA2
 ----
 
@@ -180,4 +210,4 @@ And another that set the authentication protocol to WPA2 enterprise, but this is
         ]
     }
 
-Leaving the `NetJSON Encryption object <http://netjson.org/rfc.html#rfc.section.5.4.2.1>` empty defaults to no encryption at all
+Leaving the `NetJSON Encryption object <http://netjson.org/rfc.html#rfc.section.5.4.2.1>` empty defaults to no encryption at all.

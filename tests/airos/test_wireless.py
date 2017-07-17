@@ -1,9 +1,9 @@
-from .dummy import WirelessAirOS, ConverterTest
+from .mock import ConverterTest, WirelessAirOs
 
 
 class TestWirelessConverter(ConverterTest):
 
-    backend = WirelessAirOS
+    backend = WirelessAirOs
 
     def test_active_wireless(self):
 
@@ -32,35 +32,33 @@ class TestWirelessConverter(ConverterTest):
                 }
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                    {
-                        '1.addmtikie': 'enabled',
-                        '1.devname': 'radio0',
-                        '1.hide_ssid': 'disabled',
-                        '1.l2_isolation': 'disabled',
-                        '1.mac_acl.policy': 'allow',
-                        '1.mac_acl.status': 'disabled',
-                        '1.mcast.enhance': 0,
-                        '1.rate.auto': 'enabled',
-                        '1.rate.mcs': -1,
-                        '1.security.type': 'none',
-                        '1.signal_led1': 75,
-                        '1.signal_led2': 50,
-                        '1.signal_led3': 25,
-                        '1.signal_led4': 15,
-                        '1.signal_led_status': 'enabled',
-                        '1.ssid': 'ap-ssid-example',
-                        '1.status': 'enabled',
-                        '1.wds.status': 'enabled',
+            {
+                '1.addmtikie': 'enabled',
+                '1.devname': 'radio0',
+                '1.hide_ssid': 'disabled',
+                '1.l2_isolation': 'disabled',
+                '1.mac_acl.policy': 'allow',
+                '1.mac_acl.status': 'disabled',
+                '1.mcast.enhance': 0,
+                '1.rate.auto': 'enabled',
+                '1.rate.mcs': -1,
+                '1.security.type': 'none',
+                '1.signal_led1': 75,
+                '1.signal_led2': 50,
+                '1.signal_led3': 25,
+                '1.signal_led4': 15,
+                '1.signal_led_status': 'enabled',
+                '1.ssid': 'ap-ssid-example',
+                '1.status': 'enabled',
+                '1.wds.status': 'enabled',
 
-                    },
-                    {
-                        'status': 'enabled',
-                    }
-                ]
+            },
+            {
+                'status': 'enabled',
+            }
+        ]
 
         self.assertEqualConfig(o.intermediate_data['wireless'], expected)
 
@@ -92,33 +90,31 @@ class TestWirelessConverter(ConverterTest):
                 }
             ]
         })
-
         o.to_intermediate()
-
         expected = [
-                    {
-                        '1.addmtikie': 'enabled',
-                        '1.devname': 'radio0',
-                        '1.hide_ssid': 'disabled',
-                        '1.l2_isolation': 'disabled',
-                        '1.mac_acl.policy': 'allow',
-                        '1.mac_acl.status': 'disabled',
-                        '1.mcast.enhance': 0,
-                        '1.rate.auto': 'enabled',
-                        '1.rate.mcs': -1,
-                        '1.security.type': 'none',
-                        '1.signal_led1': 75,
-                        '1.signal_led2': 50,
-                        '1.signal_led3': 25,
-                        '1.signal_led4': 15,
-                        '1.signal_led_status': 'enabled',
-                        '1.ssid': 'ap-ssid-example',
-                        '1.status': 'disabled',
-                        '1.wds.status': 'enabled',
-                    },
-                    {
-                        'status': 'enabled',
-                    }
-                ]
+            {
+                '1.addmtikie': 'enabled',
+                '1.devname': 'radio0',
+                '1.hide_ssid': 'disabled',
+                '1.l2_isolation': 'disabled',
+                '1.mac_acl.policy': 'allow',
+                '1.mac_acl.status': 'disabled',
+                '1.mcast.enhance': 0,
+                '1.rate.auto': 'enabled',
+                '1.rate.mcs': -1,
+                '1.security.type': 'none',
+                '1.signal_led1': 75,
+                '1.signal_led2': 50,
+                '1.signal_led3': 25,
+                '1.signal_led4': 15,
+                '1.signal_led_status': 'enabled',
+                '1.ssid': 'ap-ssid-example',
+                '1.status': 'disabled',
+                '1.wds.status': 'enabled',
+            },
+            {
+                'status': 'enabled',
+            }
+        ]
 
         self.assertEqualConfig(o.intermediate_data['wireless'], expected)

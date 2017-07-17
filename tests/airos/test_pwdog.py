@@ -1,24 +1,22 @@
-from .dummy import PwdogAirOS, ConverterTest
+from .mock import ConverterTest, PwdogAirOs
 
 
 class TestPwdogConverter(ConverterTest):
 
-    backend = PwdogAirOS
+    backend = PwdogAirOs
 
     def test_ntp_key(self):
         o = self.backend({
             "general": {}
         })
-
         o.to_intermediate()
-
         expected = [
-                {
-                    'delay': 300,
-                    'period': 300,
-                    'retry': 3,
-                    'status': 'enabled',
-                },
+            {
+                'delay': 300,
+                'period': 300,
+                'retry': 3,
+                'status': 'enabled',
+            },
         ]
 
         self.assertEqualConfig(o.intermediate_data['pwdog'], expected)

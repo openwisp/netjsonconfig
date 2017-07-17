@@ -1,7 +1,7 @@
 from ..base.renderer import BaseRenderer
 
 
-class AirOS(BaseRenderer):
+class AirOsRenderer(BaseRenderer):
 
     def cleanup(self, output):
         stripped = [
