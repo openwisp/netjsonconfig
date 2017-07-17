@@ -67,6 +67,72 @@ Will return the following output::
       address fd87::1
       netmask 128
 
+Generate method
+---------------
+
+.. automethod:: netjsonconfig.Raspbian.generate
+
+Code example:
+
+.. code-block:: python
+
+    >>> import tarfile
+    >>> from netjsonconfig import Raspbian
+    >>>
+    >>> o = Raspbian({
+    ...    "interfaces": [
+    ...      {
+    ...        "name": "eth0",
+    ...        "type": "ethernet",
+    ...        "addresses": [
+    ...          {
+    ...            "proto": "dhcp",
+    ...            "family": "ipv4"
+    ...          }
+    ...        ]
+    ...      }
+    ...    ]
+    ... })
+    >>> stream = o.generate()
+    >>> print(stream)
+    <_io.BytesIO object at 0x7f8bc6efb620>
+    >>> tar = tarfile.open(fileobj=stream, mode='r:gz')
+    >>> print(tar.getmembers())
+    [<TarInfo '/etc/network/interfaces' at 0x7f8bc6f08048>]
+
+The ``generate`` method does not write to disk but instead returns a instance of
+``io.BytesIO`` which contains a tar.gz file object.
+
+Write method
+------------
+
+.. automethod:: netjsonconfig.OpenWrt.write
+
+Example:
+
+.. code-block:: python
+
+    >>> import tarfile
+    >>> from netjsonconfig import Raspbian
+    >>>
+    >>> o = Raspbian({
+    ...    "interfaces": [
+    ...      {
+    ...        "name": "eth0",
+    ...        "type": "ethernet",
+    ...        "addresses": [
+    ...          {
+    ...            "proto": "dhcp",
+    ...            "family": "ipv4"
+    ...          }
+    ...        ]
+    ...      }
+    ...    ]
+    ... })
+    >>> o.write('dhcp-router', path='/tmp/')
+
+Writes the configuration archive in ``/tmp/dhcp-router.tar.gz``
+
 General settings
 ----------------
 
@@ -352,6 +418,7 @@ Configure your interface
 Let us say that ``wlan0`` is our wireless interface which we will be using.
 First we need to setup a static IP for our wireless interface. Edit the
 ``wlan0`` section in interface configuration file ``/etc/network/interfaces``::
+
     auto wlan0
     iface wlan0 inet static
         address 172.128.1.1
@@ -372,6 +439,7 @@ At this point you should be able to see your wireless network. If you try to con
 to this network, it will authenticate but will not recieve any IP address until
 dnsmasq is setup. Use **Ctrl+C** to stop it.
 If you want the wireless service to start automatically at boot, find the line::
+
     #DAEMON_CONF=""
 
 in ``/etc/default/hostapd`` and replace it with::
@@ -385,6 +453,7 @@ By default ``/etc/dnsmasq.conf`` contains the complete documentation for how the
 file needs to be used. It is advisable to create a copy of the original ``dnsmasq.conf``.
 After creating the backup, delete the original file and create a new file ``/etc/dnsmasq.conf``
 Setup your DNS and DHCP server. Below is an example configuration file::
+
     # User interface wlan0
     interface=wlan0
     # Specify the address to listen on
