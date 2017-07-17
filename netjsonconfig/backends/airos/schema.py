@@ -6,13 +6,6 @@ from ...schema import DEFAULT_FILE_MODE  # noqa - backward compatibility
 from ...utils import merge_config
 
 
-def merge_list(schema_list):
-    schema = default_schema
-    for s in schema_list:
-        schema = merge_config(schema, s)
-    return schema
-
-
 """
 This defines a new property in the ``Interface``.
 
@@ -23,7 +16,7 @@ It can be used on a single interface (ethernet, vlan) or
 on a bridge
 """
 
-netconf_schema = {
+override_schema = {
         "type": "object",
         "addtionalProperties": True,
         "definitions": {
@@ -34,19 +27,38 @@ netconf_schema = {
                         "default": False,
                     }
                 }
-            }
-        }
-    }
-
-
-"""
-This schema defines a new property for netjson
-
-As the antenna can be in ``bridge`` or ``router`` mode
-this mode can be selected from this property
-"""
-netmode_schema = {
-        "type": "object",
+            },
+            "encryption_wireless_property_ap": {
+                "properties": {
+                    "encryption": {
+                        "type": "object",
+                        "title": "Encryption",
+                        "required": "protocol",
+                        "propertyOrder": 20,
+                        "oneOf": [
+                            {"$ref": "#/definitions/encryption_none"},
+                            {"$ref": "#/definitions/encryption_wpa_personal"},
+                            {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
+                        ],
+                    },
+                },
+            },
+            "encryption_wireless_property_sta": {
+                "properties": {
+                    "encryption": {
+                        "type": "object",
+                        "title": "Encryption",
+                        "required": "protocol",
+                        "propertyOrder": 20,
+                        "oneOf": [
+                            {"$ref": "#/definitions/encryption_none"},
+                            {"$ref": "#/definitions/encryption_wpa_personal"},
+                            {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
+                        ],
+                    },
+                },
+            },
+        },
         "properties": {
             "netmode": {
                 "enum": [
@@ -59,49 +71,9 @@ netmode_schema = {
         },
     }
 
-
-"""
-This schema override the possible encryption for AirOS from the default schema
-"""
-wpasupplicant_schema = {
-    "encryption_wireless_property_sta": {
-        "properties": {
-            "encryption": {
-                "type": "object",
-                "title": "Encryption",
-                "required": "protocol",
-                "propertyOrder": 20,
-                "oneOf": [
-                    {"$ref": "#/definitions/encryption_none"},
-                    {"$ref": "#/definitions/encryption_wpa_personal"},
-                    {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
-                ],
-            },
-        },
-    },
-    "encryption_wireless_property_ap": {
-        "properties": {
-            "encryption": {
-                "type": "object",
-                "title": "Encryption",
-                "required": "protocol",
-                "propertyOrder": 20,
-                "oneOf": [
-                    {"$ref": "#/definitions/encryption_none"},
-                    {"$ref": "#/definitions/encryption_wpa_personal"},
-                    {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
-                ],
-            },
-        },
-    },
-}
-
-
-schema = merge_list([
+schema = merge_config(
         default_schema,
-        netconf_schema,
-        netmode_schema,
-        wpasupplicant_schema,
-        ])
+        override_schema
+        )
 
 __all__ = [schema]
