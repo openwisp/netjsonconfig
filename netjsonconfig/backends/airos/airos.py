@@ -122,25 +122,14 @@ def intermediate_to_list(configuration):
     result = []
 
     for element in configuration:
+        temp = {}
         if isinstance(element, list):
-            result = result + intermediate_to_list(list(enumerate(element)))
-
-        elif isinstance(element, tuple):
-            (index, config) = element
-            # update the keys to prefix the index
-            temp = {}
-            for key, value in config.items():
-                # write the new key
-                temp['{i}.{key}'.format(i=index + 1, key=key)] = value
-            config = temp
-            # now the keys are updated with the index
-            # reduce to atoms the new config
-            # by recursively calling yourself
-            # on a list containing the new atom
-            result = result + intermediate_to_list([config])
+            for index, el in enumerate(element):
+                for key, value in el.items():
+                    temp['{i}.{key}'.format(i=index + 1, key=key)] = value
+            result = result + intermediate_to_list([temp])
 
         elif isinstance(element, dict):
-            temp = {}
             for key, value in element.items():
                 if isinstance(value, string_types) or isinstance(value, int):
                     temp[key] = value
