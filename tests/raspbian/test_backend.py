@@ -5,6 +5,7 @@ import unittest
 from netjsonconfig import Raspbian
 from netjsonconfig.utils import _TabsMixin
 
+
 class TestBackend(unittest.TestCase, _TabsMixin):
 
     def test_generate(self):
