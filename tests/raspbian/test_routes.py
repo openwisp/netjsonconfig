@@ -71,3 +71,70 @@ pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 
 '''
         self.assertEqual(o.render(), expected)
+
+    def test_ipv6_manual_route(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet"
+                }
+            ],
+            "routes": [
+                {
+                    "device": "eth0",
+                    "destination": "fd89::1/128",
+                    "next": "fd88::1",
+                    "cost": 0,
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/network/interfaces
+
+auto eth0
+iface eth0 inet manual
+up ip -6 route add fd89::1/128 via fd88::1 dev eth0
+down ip -6 route del fd89::1/128 via fd88::1 dev eth0
+
+'''
+
+        self.assertEqual(o.render(), expected)
+
+    def test_ipv6_static_route(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "family": "ipv6",
+                            "proto": "static",
+                            "address": "fe80::ba27:ebff:fe1c:5477",
+                            "mask": 64
+                        }
+                    ]
+                }
+            ],
+            "routes": [
+                {
+                    "device": "eth0",
+                    "destination": "fd89::1/128",
+                    "next": "fd88::1",
+                    "cost": 0,
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/network/interfaces
+
+auto eth0
+iface eth0 inet6 static
+address fe80::ba27:ebff:fe1c:5477
+netmask 64
+up ip -6 route add fd89::1/128 via fd88::1 dev eth0
+down ip -6 route del fd89::1/128 via fd88::1 dev eth0
+
+'''
+        self.assertEqual(o.render(), expected)
