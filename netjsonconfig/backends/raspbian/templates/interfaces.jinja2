@@ -15,6 +15,11 @@
                                     {% if address.get('gateway', None) != None %}
                                     gateway {{ address.get('gateway')}}
                                     {% endif %}
+                                    {% if address.get('route') != None %}
+                                    {% set route = address.get('route')%}
+                                    post-up route add -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                                    pre-up route del -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                                    {% endif %}
                                     {% if interface.get('mtu', None) != None %}
                                     mtu {{ interface.get('mtu') }}
                                     {% endif %}

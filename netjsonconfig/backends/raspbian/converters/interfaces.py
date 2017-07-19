@@ -1,4 +1,4 @@
-from ipaddress import IPv4Interface
+from ipaddress import IPv4Interface, ip_network
 
 from ....utils import get_copy
 from .base import RaspbianConverter
@@ -10,6 +10,7 @@ class Interfaces(RaspbianConverter):
     def to_intermediate(self):
         result = []
         interfaces = get_copy(self.netjson, self.netjson_key)
+        routes = get_copy(self.netjson, 'routes')
         for interface in interfaces:
             new_interface = {}
             ifname = interface.get('name')
@@ -19,7 +20,7 @@ class Interfaces(RaspbianConverter):
                 'iftype': iftype
             })
             if iftype in ['ethernet', 'bridge', 'loopback', 'wireless']:
-                addresses = self._get_address(interface)
+                addresses = self._get_address(interface, routes)
                 new_interface.update({
                     'address': addresses
                 })
@@ -48,15 +49,25 @@ class Interfaces(RaspbianConverter):
             result.append(new_interface)
         return (('interfaces', result),)
 
-    def _get_address(self, interface):
+    def _get_address(self, interface, routes):
         addresses = interface.get('addresses', False)
         if addresses:
             for address in addresses:
                 if address.get('proto') == 'static':
                     if address.get('family') == 'ipv4':
+
                         address_mask = str(address.get('address')) + '/' + str(address.get('mask'))
                         address['netmask'] = IPv4Interface(address_mask).with_netmask.split('/')[1]
                         del address['mask']
+                        if routes:
+                            for route in routes:
+                                if ip_network(route.get('next')).version == 4:
+                                    destination = IPv4Interface(route['destination']).with_netmask
+                                    dest, dest_mask = destination.split('/')
+                                    route['dest'] = dest
+                                    route['dest_mask'] = dest_mask
+                                    del route['destination']
+                                    address['route'] = route
                     if address.get('family') == 'ipv6':
                         address['netmask'] = address['mask']
                         del address['mask']
