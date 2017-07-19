@@ -33,7 +33,9 @@ class Interfaces(RaspbianConverter):
                         route['dest'] = dest
                         route['dest_mask'] = dest_mask
                         del route['destination']
-                        new_interface.update({'route': route})
+                    elif ip_network(route.get('next')).version == 6:
+                        route['version'] = 6
+                    new_interface.update({'route': route})
             mac = interface.get('mac', False)
             if mac:
                 new_interface.update({'mac': mac})
