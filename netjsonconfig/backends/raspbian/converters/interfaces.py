@@ -24,6 +24,16 @@ class Interfaces(RaspbianConverter):
                 new_interface.update({
                     'address': addresses
                 })
+            if routes:
+                for route in routes:
+                    if ip_network(route.get('next')).version == 4:
+                        route['version'] = 4
+                        destination = IPv4Interface(route['destination']).with_netmask
+                        dest, dest_mask = destination.split('/')
+                        route['dest'] = dest
+                        route['dest_mask'] = dest_mask
+                        del route['destination']
+                        new_interface.update({'route': route})
             mac = interface.get('mac', False)
             if mac:
                 new_interface.update({'mac': mac})
@@ -59,15 +69,6 @@ class Interfaces(RaspbianConverter):
                         address_mask = str(address.get('address')) + '/' + str(address.get('mask'))
                         address['netmask'] = IPv4Interface(address_mask).with_netmask.split('/')[1]
                         del address['mask']
-                        if routes:
-                            for route in routes:
-                                if ip_network(route.get('next')).version == 4:
-                                    destination = IPv4Interface(route['destination']).with_netmask
-                                    dest, dest_mask = destination.split('/')
-                                    route['dest'] = dest
-                                    route['dest_mask'] = dest_mask
-                                    del route['destination']
-                                    address['route'] = route
                     if address.get('family') == 'ipv6':
                         address['netmask'] = address['mask']
                         del address['mask']

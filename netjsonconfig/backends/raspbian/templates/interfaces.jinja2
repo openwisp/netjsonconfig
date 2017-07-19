@@ -15,8 +15,8 @@
                                     {% if address.get('gateway', None) != None %}
                                     gateway {{ address.get('gateway')}}
                                     {% endif %}
-                                    {% if address.get('route') != None %}
-                                    {% set route = address.get('route')%}
+                                    {% if interface.get('route') != None %}
+                                    {% set route = interface.get('route')%}
                                     post-up route add -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
                                     pre-up route del -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
                                     {% endif %}
@@ -34,7 +34,7 @@
                                     address {{ address.get('address') }}
                                     netmask {{ address.get('netmask') }}
                                     {% if address.get('gateway', None) != None %}
-                                    gateway {{ address.get('ipv6gateway') }}
+                                    gateway {{ address.get('gateway') }}
                                     {% endif %}
                                     {% if interface.get('mtu', None) != None %}
                                     mtu {{ interface.get('mtu') }}
@@ -49,6 +49,11 @@
                         {% elif address.get('proto') == 'dhcp' %}
                             {% if address.get('family') == 'ipv4'%}
                                 iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
+                                    {% if interface.get('route') != None %}
+                                    {% set route = interface.get('route')%}
+                                    post-up route add -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                                    pre-up route del -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                                    {% endif %}
                                     {% if interface.get('mtu', None) != None %}
                                     pre-up /sbin/ifconfig $IFACE mtu {{ interface.get('mtu') }}
                                     {% endif %}
@@ -69,8 +74,13 @@
                 {% else %}
 
                     auto {{ interface.get('ifname') }}
-                    {% if interface.get('iftype') == 'wireless' and interface.get('mode') != 'adhoc' %}
+                    {% if interface.get('iftype') in ['ethernet', 'wireless'] and interface.get('mode') != 'adhoc' %}
                     iface {{ interface.get('ifname') }} inet manual
+                    {% if interface.get('route') != None %}
+                    {% set route = interface.get('route')%}
+                    post-up route add -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                    pre-up route del -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                    {% endif %}
                     {% endif %}
                     {% if interface.get('iftype') == 'bridge' %}
                     bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
