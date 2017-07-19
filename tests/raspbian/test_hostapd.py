@@ -50,6 +50,10 @@ wpa=2
 wpa_key_mgmt=WPA-PSK
 wpa_passphrase=passphrase012345
 wpa_pairwise=TKIP CCMP
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -97,6 +101,10 @@ auth_algs=1
 wpa=1
 wpa_key_mgmt=WPA-PSK
 wpa_passphrase=passphrase012345
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -209,6 +217,10 @@ hw_mode=g
 channel=3
 ieee80211n=1
 ssid=MyNetwork
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -248,6 +260,10 @@ hw_mode=g
 channel=3
 ieee80211n=1
 ssid=open
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)

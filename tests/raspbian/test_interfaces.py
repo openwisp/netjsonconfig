@@ -401,8 +401,8 @@ netmask 255.0.0.0
 
         expected = '''# config: /etc/network/interfaces
 
-auto wireless
-iface wireless inet static
+auto wlan0
+iface wlan0 inet static
 address 172.128.1.1
 netmask 255.255.255.0
 wireless-channel 1

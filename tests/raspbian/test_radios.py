@@ -51,6 +51,10 @@ hw_mode=g
 channel=11
 ieee80211n=1
 ssid=myWiFi
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -89,6 +93,10 @@ hw_mode=g
 channel=3
 ieee80211n=1
 ssid=myWiFi
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -127,6 +135,10 @@ hw_mode=a
 channel=36
 ieee80211n=1
 ssid=myWiFi
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -164,6 +176,10 @@ hw_mode=a
 channel=132
 ieee80211ac=1
 ssid=myWiFi
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -200,6 +216,10 @@ driver=nl80211
 hw_mode=a
 channel=0
 ssid=myWiFi
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
@@ -236,6 +256,10 @@ driver=nl80211
 hw_mode=g
 channel=0
 ssid=myWiFi
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
