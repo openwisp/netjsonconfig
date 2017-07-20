@@ -3,106 +3,106 @@
 
 {% endif%}
 {% for interface in data.interfaces %}
-    {% if interface.get('iftype') in ['ethernet', 'bridge', 'loopback', 'wireless'] %}
-        {% if interface.get('address') != None %}
-        auto {{ interface.get('ifname') }}
-            {% for address in interface.get('address') %}
-                {% if address.get('proto') == 'static' %}
-                    {% if address.get('family') == 'ipv4' %}
-                        iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
-                            address {{ address.get('address') }}
-                            netmask {{ address.get('netmask') }}
-                            {% if address.get('gateway', None) != None %}
-                            gateway {{ address.get('gateway')}}
+    {% if interface.iftype in ['ethernet', 'bridge', 'loopback', 'wireless'] %}
+        {% if interface.address %}
+        auto {{ interface.ifname }}
+            {% for address in interface.address %}
+                {% if address.proto == 'static' %}
+                    {% if address.family == 'ipv4' %}
+                        iface {{ interface.ifname }} inet {{ address.proto }}
+                            address {{ address.address }}
+                            netmask {{ address.netmask }}
+                            {% if address.gateway %}
+                            gateway {{ address.gateway }}
                             {% endif %}
-                            {% if interface.get('route') != None %}
-                            {% set route = interface.get('route')%}
-                            post-up route add -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
-                            pre-up route del -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                            {% if interface.route %}
+                            {% set route = interface.route %}
+                            post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                            pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
                             {% endif %}
-                            {% if interface.get('mtu', None) != None %}
-                            mtu {{ interface.get('mtu') }}
+                            {% if interface.mtu %}
+                            mtu {{ interface.mtu }}
                             {% endif %}
-                            {% if interface.get('mac', None) != None %}
-                            hwaddress {{ interface.get('mac') }}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
                             {% endif %}
-                            {% if interface.get('iftype') == 'bridge' %}
-                            bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
+                            {% if interface.iftype == 'bridge' %}
+                            bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
                             {% endif %}
-                    {% elif address.get('family') == 'ipv6' %}
-                        iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
-                            address {{ address.get('address') }}
-                            netmask {{ address.get('netmask') }}
-                            {% if address.get('gateway', None) != None %}
-                            gateway {{ address.get('gateway') }}
+                    {% elif address.family == 'ipv6' %}
+                        iface {{ interface.ifname }} inet6 {{ address.proto }}
+                            address {{ address.address }}
+                            netmask {{ address.netmask }}
+                            {% if address.gateway %}
+                            gateway {{ address.gateway }}
                             {% endif %}
-                            {% if interface.get('route') != None %}
-                            {% set route = interface.get('route')%}
-                            up ip -6 route add {{ route.get('destination') }} via {{ route.get('next')}} dev eth0
-                            down ip -6 route del {{ route.get('destination') }} via {{ route.get('next')}} dev eth0
+                            {% if interface.route %}
+                            {% set route = interface.route %}
+                            up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
+                            down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
                             {% endif %}
-                            {% if interface.get('mtu', None) != None %}
-                            mtu {{ interface.get('mtu') }}
+                            {% if interface.mtu %}
+                            mtu {{ interface.mtu }}
                             {% endif %}
-                            {% if interface.get('mac', None) != None %}
-                            hwaddress {{ interface.get('mac') }}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
                             {% endif %}
-                            {% if interface.get('iftype') == 'bridge' %}
-                            bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
+                            {% if interface.iftype == 'bridge' %}
+                            bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
                             {% endif %}
                     {% endif %}
-                {% elif address.get('proto') == 'dhcp' %}
-                    {% if address.get('family') == 'ipv4'%}
-                        iface {{ interface.get('ifname') }} inet {{ address.get('proto') }}
-                            {% if interface.get('route') != None %}
-                            {% set route = interface.get('route')%}
-                            post-up route add -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
-                            pre-up route del -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
+                {% elif address.proto == 'dhcp' %}
+                    {% if address.family == 'ipv4'%}
+                        iface {{ interface.ifname }} inet {{ address.proto }}
+                            {% if interface.route %}
+                            {% set route = interface.route %}
+                            post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                            pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
                             {% endif %}
-                            {% if interface.get('mtu', None) != None %}
-                            pre-up /sbin/ifconfig $IFACE mtu {{ interface.get('mtu') }}
+                            {% if interface.mtu  %}
+                            pre-up /sbin/ifconfig $IFACE mtu {{ interface.mtu }}
                             {% endif %}
-                            {% if interface.get('mac', None) != None %}
-                            hwaddress {{ interface.get('mac') }}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
                             {% endif %}
-                    {% elif address.get('family') == 'ipv6' %}
-                        iface {{ interface.get('ifname') }} inet6 {{ address.get('proto') }}
-                            {% if interface.get('route') != None %}
-                            {% set route = interface.get('route') %}
-                            up ip -6 route add {{ route.get('destination') }} via {{ route.get('next')}} dev eth0
-                            down ip -6 route del {{ route.get('destination') }} via {{ route.get('next')}} dev eth0
+                    {% elif address.family == 'ipv6' %}
+                        iface {{ interface.ifname }} inet6 {{ address.proto }}
+                            {% if interface.route %}
+                            {% set route = interface.route %}
+                            up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
+                            down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
                             {% endif %}
-                            {% if interface.get('mtu', None) != None %}
-                            pre-up /sbin/ifconfig $IFACE mtu {{ interface.get('mtu') }}
+                            {% if interface.mtu %}
+                            pre-up /sbin/ifconfig $IFACE mtu {{ interface.mtu }}
                             {% endif %}
-                            {% if interface.get('mac', None) != None %}
-                            hwaddress {{ interface.get('mac') }}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
                             {% endif %}
                     {% endif %}
                 {% endif%}
             {% endfor %}
         {% else %}
-            auto {{ interface.get('ifname') }}
-            {% if interface.get('iftype') in ['ethernet', 'wireless'] and interface.get('mode') != 'adhoc' %}
-            iface {{ interface.get('ifname') }} inet manual
-            {% set route = interface.get('route')%}
-            {% if interface.get('route') != None and route.get('version') == 4 %}
-            post-up route add -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
-            pre-up route del -net {{ route.get('dest') }} netmask {{ route.get('dest_mask') }} gw {{ route.get('next') }}
-            {% elif interface.get('route') != None and route.get('version') == 6 %}
-            up ip -6 route add {{ route.get('destination') }} via {{ route.get('next')}} dev eth0
-            down ip -6 route del {{ route.get('destination') }} via {{ route.get('next')}} dev eth0
+            auto {{ interface.ifname }}
+            {% if interface.iftype in ['ethernet', 'wireless'] and interface.mode != 'adhoc' %}
+            iface {{ interface.ifname }} inet manual
+            {% set route = interface.route %}
+            {% if interface.route and route.version == 4 %}
+            post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+            pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+            {% elif interface.route and route.version == 6 %}
+            up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
+            down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
             {% endif %}
             {% endif %}
-            {% if interface.get('iftype') == 'bridge' %}
-            bridge_ports {{ interface.get('bridge_members')[0] }} {{ interface.get('bridge_members')[1] }}
+            {% if interface.iftype == 'bridge' %}
+            bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
             {% endif %}
-            {% if interface.get('mode') == 'adhoc' %}
-                iface {{ interface.get('ifname') }} inet static
+            {% if interface.mode == 'adhoc' %}
+                iface {{ interface.ifname }} inet static
                 address 172.128.1.1
                     netmask 255.255.255.0
                     wireless-channel 1
-                    wireless-essid {{ interface.get('essid') }}
+                    wireless-essid {{ interface.essid }}
                     wireless-mode ad-hoc
             {% endif %}
         {% endif %}

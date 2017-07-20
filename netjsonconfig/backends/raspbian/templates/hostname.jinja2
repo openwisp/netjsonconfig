@@ -1,8 +1,6 @@
-{% for general in data.general %}
-    {% if general.get('hostname') %}
-        # config: /etc/hostname
+{% if data.general and data.general[0].hostname %}
+    # config: /etc/hostname
 
-        {{ general.get('hostname') }}
-
-    {% endif %}
-{% endfor %}
+    {{ data.general[0].hostname }}
+    
+{% endif %}
