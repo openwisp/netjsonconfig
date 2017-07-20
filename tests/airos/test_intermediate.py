@@ -18,3 +18,16 @@ class TestIntermediateConversion(unittest.TestCase):
         o = [{'kings.1.henry': 'the first', 'kings.2.jacob': 'the second'}]
 
         self.assertEqual(intermediate_to_list(i), o)
+
+    def test_multiple_conversion(self):
+        i = [
+                {'snakes': {'loved': 'yes'}},
+                {'dogs': {'loved': 'yes'}},
+            ]
+
+        o = [
+                {'snakes.loved': 'yes'},
+                {'dogs.loved': 'yes'},
+            ]
+
+        self.assertEqual(intermediate_to_list(i), o)
