@@ -10,56 +10,50 @@ class Interfaces(RaspbianConverter):
     def to_intermediate(self):
         result = []
         interfaces = get_copy(self.netjson, self.netjson_key)
-        routes = get_copy(self.netjson, 'routes')
         for interface in interfaces:
-            new_interface = {}
-            ifname = interface.get('name')
-            iftype = interface.get('type')
-            new_interface.update({
-                'ifname': ifname,
-                'iftype': iftype
-            })
-            if iftype in ['ethernet', 'bridge', 'loopback', 'wireless']:
-                addresses = self._get_address(interface)
-                new_interface.update({
-                    'address': addresses
-                })
-            if routes:
-                for route in routes:
-                    if ip_network(route.get('next')).version == 4:
-                        route['version'] = 4
-                        destination = IPv4Interface(route['destination']).with_netmask
-                        dest, dest_mask = destination.split('/')
-                        route['dest'] = dest
-                        route['dest_mask'] = dest_mask
-                        del route['destination']
-                    elif ip_network(route.get('next')).version == 6:
-                        route['version'] = 6
-                    new_interface.update({'route': route})
-            mac = interface.get('mac', False)
-            if mac:
-                new_interface.update({'mac': mac})
-            mtu = interface.get('mtu', False)
-            if mtu:
-                new_interface.update({'mtu': mtu})
-            txqueuelen = interface.get('txqueuelen', False)
-            if txqueuelen:
-                new_interface.update({'txqueuelen': txqueuelen})
-            autostart = interface.get('autostart', False)
-            if autostart:
-                new_interface.update({'autostart': autostart})
-            if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
-                wireless = interface.get('wireless')
-                new_interface.update({
-                    'essid': wireless.get('ssid'),
-                    'mode': wireless.get('mode')
-                })
-            if iftype == 'bridge':
-                new_interface.update({
-                    'bridge_members': interface.get('bridge_members')
-                })
-            result.append(new_interface)
+            result.append(self._get_interface(interface))
         return (('interfaces', result),)
+
+    def _get_interface(self, interface):
+        new_interface = {}
+        ifname = interface.get('name')
+        iftype = interface.get('type')
+        new_interface.update({
+            'ifname': ifname,
+            'iftype': iftype
+        })
+        if iftype in ['ethernet', 'bridge', 'loopback', 'wireless']:
+            addresses = self._get_address(interface)
+            new_interface.update({
+                'address': addresses
+            })
+        routes = get_copy(self.netjson, 'routes')
+        if routes:
+            route = self._get_route(routes)
+            new_interface.update({'route': route})
+        mac = interface.get('mac', False)
+        if mac:
+            new_interface.update({'mac': mac})
+        mtu = interface.get('mtu', False)
+        if mtu:
+            new_interface.update({'mtu': mtu})
+        txqueuelen = interface.get('txqueuelen', False)
+        if txqueuelen:
+            new_interface.update({'txqueuelen': txqueuelen})
+        autostart = interface.get('autostart', False)
+        if autostart:
+            new_interface.update({'autostart': autostart})
+        if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
+            wireless = interface.get('wireless')
+            new_interface.update({
+                'essid': wireless.get('ssid'),
+                'mode': wireless.get('mode')
+            })
+        if iftype == 'bridge':
+            new_interface.update({
+                'bridge_members': interface.get('bridge_members')
+            })
+        return new_interface
 
     def _get_address(self, interface):
         addresses = interface.get('addresses', False)
@@ -75,3 +69,16 @@ class Interfaces(RaspbianConverter):
                         address['netmask'] = address['mask']
                         del address['mask']
             return addresses
+
+    def _get_route(self, routes):
+        for route in routes:
+            if ip_network(route.get('next')).version == 4:
+                route['version'] = 4
+                destination = IPv4Interface(route['destination']).with_netmask
+                dest, dest_mask = destination.split('/')
+                route['dest'] = dest
+                route['dest_mask'] = dest_mask
+                del route['destination']
+            elif ip_network(route.get('next')).version == 6:
+                route['version'] = 6
+            return route
