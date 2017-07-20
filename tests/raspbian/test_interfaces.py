@@ -152,7 +152,7 @@ netmask 64
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_ipv6_static(self):
+    def test_multi_ipv6_static(self):
         o = Raspbian({
             "interfaces": [
                 {
@@ -319,7 +319,7 @@ iface eth0 inet6 dhcp
 '''
         self.assertEqual(o.render(), expected)
 
-    def test_ipv6_dhcp(self):
+    def test_multi_ipv6_dhcp(self):
         o = Raspbian({
                 "interfaces": [
                     {
