@@ -88,14 +88,15 @@ def intermediate_to_list(configuration):
     result = []
 
     for element in configuration:
-        temp = {}
         if isinstance(element, list):
             for index, el in enumerate(element):
+                temp = {}
                 for key, value in el.items():
                     temp['{i}.{key}'.format(i=index + 1, key=key)] = value
-            result = result + intermediate_to_list([temp])
+                result = result + intermediate_to_list([temp])
 
         elif isinstance(element, dict):
+            temp = {}
             temp.update(shrink(element))
             result.append(temp)
 
