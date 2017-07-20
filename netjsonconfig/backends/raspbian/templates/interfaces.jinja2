@@ -1,8 +1,10 @@
+{% if data.interfaces %}
+# config: /etc/network/interfaces
+
+{% endif%}
 {% for interface in data.interfaces %}
     {% if interface.get('iftype') in ['ethernet', 'bridge', 'loopback', 'wireless'] %}
-        # config: /etc/network/interfaces
         {% if interface.get('address') != None %}
-
         auto {{ interface.get('ifname') }}
             {% for address in interface.get('address') %}
                 {% if address.get('proto') == 'static' %}
@@ -80,7 +82,6 @@
                 {% endif%}
             {% endfor %}
         {% else %}
-
             auto {{ interface.get('ifname') }}
             {% if interface.get('iftype') in ['ethernet', 'wireless'] and interface.get('mode') != 'adhoc' %}
             iface {{ interface.get('ifname') }} inet manual
