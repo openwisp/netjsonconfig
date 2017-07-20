@@ -267,39 +267,3 @@ iface wlan0 inet manual
 
 '''
         self.assertEqual(o.render(), expected)
-
-    @unittest.skip('Test skipping')
-    def test_wps(self):
-        o = Raspbian({
-            "radios": [
-                {
-                    "name": "radio0",
-                    "phy": "phy0",
-                    "driver": "mac80211",
-                    "protocol": "802.11n",
-                    "channel": 3,
-                    "channel_width": 20,
-                    "tx_power": 3
-                },
-            ],
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "wps-ssid",
-                        "encryption": {
-                            "protocol": "wps",
-                            "wps_label": False,
-                            "wps_pushbutton": True,
-                            "wps_pin": ""
-                        }
-                    }
-                }
-            ]
-        })
-
-        expected = ''''''
-        self.assertEqual(o.render(), expected)
