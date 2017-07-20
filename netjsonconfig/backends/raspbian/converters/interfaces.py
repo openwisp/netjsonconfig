@@ -20,7 +20,7 @@ class Interfaces(RaspbianConverter):
                 'iftype': iftype
             })
             if iftype in ['ethernet', 'bridge', 'loopback', 'wireless']:
-                addresses = self._get_address(interface, routes)
+                addresses = self._get_address(interface)
                 new_interface.update({
                     'address': addresses
                 })
@@ -61,7 +61,7 @@ class Interfaces(RaspbianConverter):
             result.append(new_interface)
         return (('interfaces', result),)
 
-    def _get_address(self, interface, routes):
+    def _get_address(self, interface):
         addresses = interface.get('addresses', False)
         if addresses:
             for address in addresses:
