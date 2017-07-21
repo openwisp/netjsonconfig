@@ -420,6 +420,36 @@ class TestNetconfConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['netconf'], expected)
 
+    def test_dhcp(self):
+        o = self.backend({
+            'interfaces': [
+                {
+                    'name': 'eth0',
+                    'type': 'ethernet',
+                    'addresses': [
+                        {
+                            'proto': 'dhcp',
+                            'family': 'ipv4',
+                        },
+                    ]
+                },
+            ],
+        })
+        o.to_intermediate()
+        expected = [
+            {
+                '1.autoip.status': 'enabled',
+                '1.autoneg': 'enabled',
+                '1.devname': 'eth0',
+                '1.flowcontrol.rx.status': 'enabled',
+                '1.flowcontrol.tx.status': 'enabled',
+                '1.mtu': 1500,
+                '1.status': 'enabled',
+                '1.up': 'enabled',
+            },
+        ]
+        self.assertEqualConfig(o.intermediate_data['netconf'], expected)
+
     def test_more_interfaces(self):
         o = self.backend({
             'interfaces': [
