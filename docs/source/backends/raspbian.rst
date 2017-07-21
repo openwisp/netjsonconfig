@@ -11,7 +11,6 @@ Initialization
 
 .. automethod:: netjsonconfig.Raspbian.__init__
 
-
 Render method
 -------------
 
@@ -55,17 +54,18 @@ Code example:
 
 Will return the following output::
 
-    config: /etc/network/interfaces
+    # config: /etc/network/interfaces
+
     auto eth0.1
     iface eth0.1 inet static
-      address 192.168.1.1
-      netmask 255.255.255.0
+    address 192.168.1.1
+    netmask 255.255.255.0
     iface eth0.1 inet static
-      address 192.168.2.1
-      netmask 255.255.255.0
+    address 192.168.2.1
+    netmask 255.255.255.0
     iface eth0.1 inet6 static
-      address fd87::1
-      netmask 128
+    address fd87::1
+    netmask 128
 
 Generate method
 ---------------
@@ -80,18 +80,18 @@ Code example:
     >>> from netjsonconfig import Raspbian
     >>>
     >>> o = Raspbian({
-    ...    "interfaces": [
-    ...      {
-    ...        "name": "eth0",
-    ...        "type": "ethernet",
-    ...        "addresses": [
-    ...          {
-    ...            "proto": "dhcp",
-    ...            "family": "ipv4"
-    ...          }
-    ...        ]
-    ...      }
-    ...    ]
+    ...     "interfaces": [
+    ...     {
+    ...         "name": "eth0",
+    ...         "type": "ethernet",
+    ...         "addresses": [
+    ...             {
+    ...                 "proto": "dhcp",
+    ...                 "family": "ipv4"
+    ...             }
+    ...         ]
+    ...     }
+    ...     ]
     ... })
     >>> stream = o.generate()
     >>> print(stream)
@@ -116,18 +116,18 @@ Example:
     >>> from netjsonconfig import Raspbian
     >>>
     >>> o = Raspbian({
-    ...    "interfaces": [
-    ...      {
-    ...        "name": "eth0",
-    ...        "type": "ethernet",
-    ...        "addresses": [
-    ...          {
-    ...            "proto": "dhcp",
-    ...            "family": "ipv4"
-    ...          }
-    ...        ]
-    ...      }
-    ...    ]
+    ...     "interfaces": [
+    ...     {
+    ...         "name": "eth0",
+    ...         "type": "ethernet",
+    ...         "addresses": [
+    ...             {
+    ...                 "proto": "dhcp",
+    ...                 "family": "ipv4"
+    ...             }
+    ...         ]
+    ...     }
+    ...     ]
     ... })
     >>> o.write('dhcp-router', path='/tmp/')
 
@@ -158,10 +158,12 @@ The following *configuration dictionary*:
 
 Will be rendered as follows::
 
-    config: /etc/hostname
+    # config: /etc/hostname
+
     routerA
 
     run commands:
+
     $ timedatectl set-timezone UTC
 
 After modifying the config files run the following command to change the
@@ -209,11 +211,12 @@ The following *configuration dictionary*:
 
 Will be rendered as follows::
 
-    config: /etc/network/interfaces
+    # config: /etc/network/interfaces
+
     auto lo
     iface lo inet static
-        address 127.0.0.1
-        netmask 255.0.0.0
+    address 127.0.0.1
+    netmask 255.0.0.0
 
 Dualstack (IPv4 & IPv6)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,14 +250,15 @@ The following *configuration dictionary*:
 
 Will be rendered as follows::
 
-    config: /etc/network/interfaces
+    # config: /etc/network/interfaces
+
     auto eth0
     iface eth0 inet static
-        address 10.27.251.1
-        netmask 255.255.255.0
+    address 10.27.251.1
+    netmask 255.255.255.0
     iface eth0 inet6 static
-        address fdb4:5f35:e8fd::1
-        netmask 48
+    address fdb4:5f35:e8fd::1
+    netmask 48
 
 DNS Servers and Search Domains
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -299,7 +303,8 @@ dynamic ip address configuration won't get the ``dns`` option in the UCI output,
 
 Will return the following UCI output::
 
-    config: /etc/network/interfaces
+    # config: /etc/network/interfaces
+
     auto eth0
     iface eth0 inet static
         address 192.168.1.1
@@ -309,6 +314,7 @@ Will return the following UCI output::
     iface eth1 inet dhcp
 
     config: /etc/resolv.conf
+
     nameserver 10.11.12.13
     nameserver 8.8.8.8
     search openwisp.org
@@ -338,7 +344,8 @@ The following *configuration dictionary*:
 
 Will be rendered as follows::
 
-    config: /etc/network/interfaces
+    # config: /etc/network/interfaces
+
     auto eth0
     iface eth0 inet6 dhcp
 
@@ -360,7 +367,6 @@ is included in `bridge-utils <https://packages.debian.org/search?keywords=bridge
 You can install it using this command::
 
     $ aptitude install bridge-utils
-
 
 Bridge Interface Example
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -392,7 +398,8 @@ The following *configuration dictionary*:
 
 Will be rendered as follows::
 
-    config: /etc/network/interfaces
+    # config: /etc/network/interfaces
+
     auto lan_bridge
     iface lan_bridge inet static
         address 172.17.0.2
@@ -421,10 +428,10 @@ First we need to setup a static IP for our wireless interface. Edit the
 
     auto wlan0
     iface wlan0 inet static
-        address 172.128.1.1
-        netmask 255.255.255.0
-        network 172.128.1.0
-        broadcast 172.128.1.255
+    address 172.128.1.1
+    netmask 255.255.255.0
+    network 172.128.1.0
+    broadcast 172.128.1.255
 
 Reload ``wlan0`` interface with ``sudo ifdown wlan0; sudo ifup wlan0``
 
@@ -539,7 +546,8 @@ common wireless access point configuration:
 
 Will be rendered as follows::
 
-    config: /etc/hostapd/hostapd.conf
+    # config: /etc/hostapd/hostapd.conf
+
     interface=wlan0
     driver=nl80211
     hw_mode=g
@@ -573,14 +581,15 @@ The following example:
 
 Will result in::
 
-    config: /etc/network/interfaces
+    # config: /etc/network/interfaces
+
     auto wireless
     iface wireless inet static
-        address 172.128.1.1
-        netmask 255.255.255.0
-        wireless-channel 1
-        wireless-essid freifunk
-        wireless-mode ad-hoc
+    address 172.128.1.1
+    netmask 255.255.255.0
+    wireless-channel 1
+    wireless-essid freifunk
+    wireless-mode ad-hoc
 
 
 WPA2 Personal (Pre-Shared Key)
@@ -623,7 +632,8 @@ point using *WPA2 Personal (Pre-Shared Key)* encryption:
 
 Will be rendered as follows::
 
-    config: /etc/hostapd/hostapd.conf
+    # config: /etc/hostapd/hostapd.conf
+
     interface=wlan0
     driver=nl80211
     hw_mode=g
@@ -667,17 +677,16 @@ The following *configuration dictionary* :
         "enabled": True,
         "enable_server": False,
         "server": [
-            "0.openwrt.pool.ntp.org",
-            "1.openwrt.pool.ntp.org",
-            "2.openwrt.pool.ntp.org",
-            "3.openwrt.pool.ntp.org"
+            "0.pool.ntp.org",
+            "1.pool.ntp.org",
+            "2.pool.ntp.org"
         ]
     }
 
 Will be rendered as follows::
 
-    config: /etc/ntp.conf
-    server 0.openwrt.pool.ntp.org
-    server 1.openwrt.pool.ntp.org
-    server 2.openwrt.pool.ntp.org
-    server 3.openwrt.pool.ntp.org
+    # config: /etc/ntp.conf
+
+    server 0.pool.ntp.org
+    server 1.pool.ntp.org
+    server 2.pool.ntp.org
