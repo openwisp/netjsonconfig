@@ -1,7 +1,7 @@
 from .mock import AaaAirOs, ConverterTest
 
 
-class TestResolvConverter(ConverterTest):
+class TestAaaConverter(ConverterTest):
 
     backend = AaaAirOs
 
