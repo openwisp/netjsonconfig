@@ -101,7 +101,7 @@ class HttpdAirOs(AirOs):
     ]
 
 
-class Igmpproxy(AirOs):
+class IgmpproxyAirOs(AirOs):
     """
     Mock backend with converter for igmpproxy
     """
