@@ -20,6 +20,9 @@ before_install:
 install:
   - python setup.py -q develop
 
+before_script:
+  - sphinx-build -W -b html docs/source docs/_build
+
 script:
   - nosetests --with-coverage --cover-package=netjsonconfig
 

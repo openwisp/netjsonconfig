@@ -45,7 +45,7 @@ def merge_list(list1, list2, identifiers=None):
     which contains elements of both lists.
 
     :param list1: ``list`` from template
-    :param list2: ``list from config
+    :param list2: ``list`` from config
     :param identifiers: ``list`` or ``None``
     :returns: merged ``list``
     """
