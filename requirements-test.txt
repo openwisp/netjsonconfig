@@ -4,3 +4,4 @@ coveralls
 isort
 flake8
 sphinx
+sphinx_rtd_theme
