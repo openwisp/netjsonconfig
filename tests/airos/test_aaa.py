@@ -58,7 +58,7 @@ class TestResolvConverter(ConverterTest):
                         "radio": "ath0",
                         "ssid": "i-like-pasta",
                         "encryption": {
-                            "proto": "wpa2_personal",
+                            "protocol": "wpa2_personal",
                             "key": "and-pizza-too",
                         },
                     },
@@ -100,6 +100,7 @@ class TestResolvConverter(ConverterTest):
                         "mode": "station",
                         "radio": "ath0",
                         "ssid": "i-like-pasta",
+                        "bssid": "00:11:22:33:44:55",
                     },
                 },
             ],
@@ -129,8 +130,9 @@ class TestResolvConverter(ConverterTest):
                         "mode": "station",
                         "radio": "ath0",
                         "ssid": "i-like-pasta",
+                        "bssid": "00:11:22:33:44:55",
                         "encryption": {
-                            "proto": "wpa2_personal",
+                            "protocol": "wpa2_personal",
                             "key": "and-pizza-too",
                         },
                     },
