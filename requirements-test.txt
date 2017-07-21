@@ -3,3 +3,4 @@ coverage
 coveralls
 isort
 flake8
+sphinx
