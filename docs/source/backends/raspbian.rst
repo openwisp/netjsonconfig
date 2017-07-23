@@ -151,8 +151,7 @@ The following *configuration dictionary*:
     {
         "general": {
             "hostname": "routerA",
-            "timezone": "UTC",
-            "ula_prefix": "fd8e:f40a:6701::/48"
+            "timezone": "UTC"
         }
     }
 
@@ -162,14 +161,18 @@ Will be rendered as follows::
 
     routerA
 
-    run commands:
+    # script: /scripts/general.sh
 
-    $ timedatectl set-timezone UTC
+    /etc/init.d/hostname.sh start
+    echo "Hostname of device has been modified"
+    timedatectl set-timezone UTC
+    echo "Timezone has changed to UTC"
+
 
 After modifying the config files run the following command to change the
 hostname::
 
-    $ /etc/init.d/hostname.sh start
+    source scripts/general.sh
 
 Network interfaces
 ------------------
@@ -307,13 +310,13 @@ Will return the following UCI output::
 
     auto eth0
     iface eth0 inet static
-        address 192.168.1.1
-        netmask 255.255.255.0
+    address 192.168.1.1
+    netmask 255.255.255.0
 
     auto eth1
     iface eth1 inet dhcp
 
-    config: /etc/resolv.conf
+    # config: /etc/resolv.conf
 
     nameserver 10.11.12.13
     nameserver 8.8.8.8
@@ -402,10 +405,9 @@ Will be rendered as follows::
 
     auto lan_bridge
     iface lan_bridge inet static
-        address 172.17.0.2
-        netmask 255.255.255.0
-        bridge_ports eth0:0 eth0:1
-
+    address 172.17.0.2
+    netmask 255.255.255.0
+    bridge_ports eth0:0 eth0:1
 
 Wireless Settings
 -----------------
@@ -484,23 +486,15 @@ following line::
 
     #net.ipv4.ip_forward=1
 
-This will enable on the next reboot. Incase you want to activate it immediately::
+After enabling IPv4 Forwarding in ``/etc/sysctl.conf`` you can run the bash script
+``/scripts/ipv4_forwarding.sh`` generated in your ``tar.gz`` file::
 
-    sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+    source scripts/ipv4_forwarding.sh
 
-Let us assume we have internet connection on ``eth0``. We will need to configure
-a NAT between the ``wlan0`` and ``eth0`` interface. It can be done using the followin
-commands::
-
-    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-    sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-    sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
-
-These rules need to be applied every time the Raspberry Pi is rebooted. Run ::
-
-    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
-
-Now open the `/etc/rc.local` file and just above the line ``exit 0``, add the following line::
+This will enable IPv4 forwarding, setup a NAT between your two interfaces and save the
+iptable in ``/etc/iptables.ipv4.nat``.
+These rules must be applied everytime the Raspberry Pi is booted up. To do so open the
+`/etc/rc.local` file and just above the line ``exit 0``, add the following line::
 
     iptables-restore < /etc/iptables.ipv4.nat
 
@@ -555,6 +549,19 @@ Will be rendered as follows::
     ieee80211n=1
     ssid=myWiFi
 
+    # config: /etc/network/interfaces
+
+    auto wlan0
+    iface wlan0 inet manual
+
+    # script: /scripts/ipv4_forwarding.sh
+
+    sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
 Wireless AdHoc Mode
 ~~~~~~~~~~~~~~~~~~~
 
@@ -590,7 +597,6 @@ Will result in::
     wireless-channel 1
     wireless-essid freifunk
     wireless-mode ad-hoc
-
 
 WPA2 Personal (Pre-Shared Key)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -645,6 +651,145 @@ Will be rendered as follows::
     wpa_key_mgmt=WPA-PSK
     wpa_passphrase=passphrase012345
     wpa_pairwise=TKIP CCMP
+
+    # config: /etc/network/interfaces
+
+    auto wlan0
+    iface wlan0 inet manual
+
+    # script: /scripts/ipv4_forwarding.sh
+
+    sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+Radio settings
+--------------
+
+The radio settings reside in the ``radio`` key of the *configuration dictionary*,
+which must contain a list of `NetJSON radio objects <http://netjson.org/rfc.html#radios1>`_
+(see the link for the detailed specification).
+
+Radio object extensions
+~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the default *NetJSON Radio object options*, the ``OpenWrt`` backend
+also requires setting the following additional options for each radio in the list:
+
++--------------+---------+-----------------------------------------------+
+| key name     | type    | allowed values                                |
++==============+=========+===============================================+
+| ``protocol`` | string  | 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac  |
++--------------+---------+-----------------------------------------------+
+
+Radio example
+~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11n",
+                "channel": 11,
+                "channel_width": 20,
+                "tx_power": 5,
+                "country": "IT"
+            },
+            {
+                "name": "radio1",
+                "phy": "phy1",
+                "driver": "mac80211",
+                "protocol": "802.11n",
+                "channel": 36,
+                "channel_width": 20,
+                "tx_power": 4,
+                "country": "IT"
+            }
+        ],
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "myWiFi"
+                }
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    # config: /etc/hostapd/hostapd.conf
+
+    interface=wlan0
+    driver=nl80211
+    hw_mode=g
+    channel=11
+    ieee80211n=1
+    ssid=myWiFi
+
+    # config: /etc/network/interfaces
+
+    auto wlan0
+    iface wlan0 inet manual
+
+    # script: /scripts/ipv4_forwarding.sh
+
+    sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+Static Routes
+-------------
+
+The static routes settings reside in the ``routes`` key of the *configuration dictionary*,
+which must contain a list of `NetJSON Static Route objects <http://netjson.org/rfc.html#routes1>`_
+(see the link for the detailed specification).
+The following *configuration dictionary*:
+
+
+Static route example
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet"
+            }
+        ],
+        "routes": [
+            {
+                "device": "eth0",
+                "destination": "192.168.4.1/24",
+                "next": "192.168.2.2",
+                "cost": 2,
+            },
+        ]
+    }
+
+Will be rendered as follows::
+
+    # config: /etc/network/interfaces
+
+    auto eth0
+    iface eth0 inet manual
+    post-up route add -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
+    pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 
 NTP settings
 ------------
