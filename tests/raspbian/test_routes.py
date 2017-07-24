@@ -4,7 +4,7 @@ from netjsonconfig import Raspbian
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestStaticRoute.unittest.TestCase, _TabsMixin):
+class TestStaticRoute(unittest.TestCase, _TabsMixin):
 
     def test_ipv4_manual_route(self):
         o = Raspbian({
