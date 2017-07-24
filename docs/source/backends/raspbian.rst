@@ -14,13 +14,13 @@ Initialization
 Render method
 -------------
 
-.. automethod:: netjsonconfig.OpenWrt.render
+.. automethod:: netjsonconfig.Raspbian.render
 
 Code example:
 
 .. code-block:: python
 
-    from netjsonconfig import OpenWrt
+    from netjsonconfig import Raspbian
 
     o = Raspbian({
         "interfaces": [
@@ -106,7 +106,7 @@ The ``generate`` method does not write to disk but instead returns a instance of
 Write method
 ------------
 
-.. automethod:: netjsonconfig.OpenWrt.write
+.. automethod:: netjsonconfig.Raspbian.write
 
 Example:
 
