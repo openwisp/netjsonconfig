@@ -26,9 +26,7 @@ class TestWpasupplicantStation(ConverterTest):
                         "radio": "radio0",
                         "mode": "station",
                         "ssid": "ap-ssid-example",
-                    },
-                    "encryption": {
-                        "protocol": "wep",
+                        "encryption": {"protocol": "wep"},
                     },
                 }
             ]
@@ -89,10 +87,10 @@ class TestWpasupplicantStation(ConverterTest):
                         "mode": "station",
                         "ssid": "ap-ssid-example",
                         "bssid": "00:11:22:33:44:55",
-                    },
-                    "encryption": {
-                        "protocol": "wpa2_personal",
-                        "key": "cucumber",
+                        "encryption": {
+                            "protocol": "wpa2_personal",
+                            "key": "cucumber",
+                        },
                     },
                 }
             ]
@@ -138,10 +136,10 @@ class TestWpasupplicantStation(ConverterTest):
                         "radio": "radio0",
                         "mode": "station",
                         "ssid": "ap-ssid-example",
-                    },
-                    "encryption": {
-                        "protocol": "wpa2_enterprise",
-                        "key": "cucumber",
+                        "encryption": {
+                            "protocol": "wpa2_enterprise",
+                            "key": "cucumber",
+                        },
                     },
                 }
             ]
@@ -198,6 +196,7 @@ class TestWpasupplicantAccess(ConverterTest):
                         "radio": "radio0",
                         "mode": "access_point",
                         "ssid": "ap-ssid-example",
+                        "encryption": {"protocol": "none"},
                     },
                 },
             ]
@@ -236,10 +235,10 @@ class TestWpasupplicantAccess(ConverterTest):
                         "radio": "radio0",
                         "mode": "access_point",
                         "ssid": "ap-ssid-example",
-                    },
-                    "encryption": {
-                        "protocol": "wpa2_personal",
-                        "key": "cucumber",
+                        "encryption": {
+                            "protocol": "wpa2_personal",
+                            "key": "cucumber",
+                        },
                     },
                 }
             ]
