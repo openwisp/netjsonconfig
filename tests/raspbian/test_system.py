@@ -4,7 +4,7 @@ from netjsonconfig import Raspbian
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestSystemRender(unittest.TestCase, _TabsMixin):
+class TestSystem(unittest.TestCase, _TabsMixin):
 
     def test_general(self):
         o = Raspbian({

@@ -4,7 +4,7 @@ from netjsonconfig import Raspbian
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestHostapdRenderer(unittest.TestCase, _TabsMixin):
+class TestHostapd(unittest.TestCase, _TabsMixin):
 
     def test_wpa2_personal(self):
         o = Raspbian({

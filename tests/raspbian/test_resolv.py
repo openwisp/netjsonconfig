@@ -4,7 +4,7 @@ from netjsonconfig import Raspbian
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestResovlRenderer(unittest.TestCase, _TabsMixin):
+class TestResovl(unittest.TestCase, _TabsMixin):
 
     def test_dns_server(self):
         o = Raspbian({

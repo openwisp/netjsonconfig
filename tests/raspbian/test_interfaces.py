@@ -4,7 +4,7 @@ from netjsonconfig import Raspbian
 from netjsonconfig.utils import _TabsMixin
 
 
-class TestInterfacesRenderer(unittest.TestCase, _TabsMixin):
+class TestInterfaces(unittest.TestCase, _TabsMixin):
 
     def test_no_ip(self):
         o = Raspbian({
