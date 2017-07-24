@@ -142,9 +142,13 @@ override_schema = {
         },
     }
 
+schema['definitions']['encryption_wireless_property_ap'] = \
+    override_schema['definitions']['encryption_wireless_property_ap']
 schema = merge_config(
         default_schema,
         override_schema
         )
 
+schema['definitions']['encryption_wireless_property_sta'] = \
+    override_schema['definitions']['encryption_wireless_property_sta']
 __all__ = [schema]
