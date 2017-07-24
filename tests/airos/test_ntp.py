@@ -7,58 +7,13 @@ class TestResolvConverter(ConverterTest):
 
     def test_ntp_key(self):
         o = self.backend({
-            "ntp_servers": [],
+            'ntp_server': [],
         })
         o.to_intermediate()
         expected = [
-            {
-                'status': 'disabled',
-            },
-        ]
-
-        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
-
-    def test_no_ntp_server(self):
-        o = self.backend({
-            "ntp_servers": [],
-        })
-        o.to_intermediate()
-        expected = [
-            {
-                'status': 'disabled',
-            },
-        ]
-
-        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
-
-    def test_single_ntp_server(self):
-        o = self.backend({
-            "ntp_servers": [
-                '0.openwrt.pool.ntp.org',
-            ],
-        })
-        o.to_intermediate()
-        expected = [
-            {
-                '1.server': '0.openwrt.pool.ntp.org',
-                '1.status': 'enabled',
-            },
             {
                 'status': 'enabled',
             },
-        ]
-
-        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
-
-    def test_multiple_ntp_server(self):
-        o = self.backend({
-            "ntp_servers": [
-                '0.openwrt.pool.ntp.org',
-                '1.openwrt.pool.ntp.org',
-            ],
-        })
-        o.to_intermediate()
-        expected = [
             {
                 '1.server': '0.openwrt.pool.ntp.org',
                 '1.status': 'enabled',
@@ -68,7 +23,91 @@ class TestResolvConverter(ConverterTest):
                 '2.status': 'enabled',
             },
             {
+                '3.server': '2.openwrt.pool.ntp.org',
+                '3.status': 'enabled',
+            },
+            {
+                '4.server': '3.openwrt.pool.ntp.org',
+                '4.status': 'enabled',
+            },
+        ]
+
+        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
+
+    def test_no_ntp_server(self):
+        o = self.backend({
+            'ntp': {
+                'enabled': False,
+            }
+        })
+        o.to_intermediate()
+        expected = [
+            {
+                'status': 'disabled',
+            },
+            {
+                '1.server': '0.openwrt.pool.ntp.org',
+                '1.status': 'enabled',
+            },
+            {
+                '2.server': '1.openwrt.pool.ntp.org',
+                '2.status': 'enabled',
+            },
+            {
+                '3.server': '2.openwrt.pool.ntp.org',
+                '3.status': 'enabled',
+            },
+            {
+                '4.server': '3.openwrt.pool.ntp.org',
+                '4.status': 'enabled',
+            },
+        ]
+
+        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
+
+    def test_single_ntp_server(self):
+        o = self.backend({
+            'ntp': {
+                'enabled': True,
+                'server': [
+                    '0.openwrt.pool.ntp.org',
+                ]
+            },
+        })
+        o.to_intermediate()
+        expected = [
+            {
                 'status': 'enabled',
+            },
+            {
+                '1.server': '0.openwrt.pool.ntp.org',
+                '1.status': 'enabled',
+            },
+        ]
+
+        self.assertEqualConfig(o.intermediate_data['ntpclient'], expected)
+
+    def test_multiple_ntp_server(self):
+        o = self.backend({
+            'ntp': {
+                'server': [
+                    '0.openwrt.pool.ntp.org',
+                    '1.openwrt.pool.ntp.org',
+                ],
+            }
+        })
+        o.to_intermediate()
+        expected = [
+            {
+                'status': 'enabled',
+            },
+            {
+                '1.server': '0.openwrt.pool.ntp.org',
+                '1.status': 'enabled',
+            },
+            {
+                '2.server': '1.openwrt.pool.ntp.org',
+                '2.status': 'enabled',
             },
         ]
 
