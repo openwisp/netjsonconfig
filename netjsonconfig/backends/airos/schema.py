@@ -87,22 +87,6 @@ override_schema = {
             "default": "bridge",
             "type": "string",
         },
-        "user": {
-            "additionalProperties": True,
-            "properties": {
-                "name": {
-                    "type": "string",
-                },
-                "salt": {
-                    "type": "string",
-                },
-            },
-            "required": [
-                "name",
-                "password",
-                "salt",
-            ],
-        },
         "ntp": {
             "type": "object",
             "title": "NTP Settings",
@@ -138,6 +122,22 @@ override_schema = {
                     "default": default_ntp_servers,
                 }
             }
+        },
+        "user": {
+            "additionalProperties": True,
+            "properties": {
+                "name": {
+                    "type": "string",
+                },
+                "salt": {
+                    "type": "string",
+                },
+            },
+            "required": [
+                "name",
+                "password",
+                "salt",
+            ],
         },
     },
 }
