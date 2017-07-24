@@ -42,7 +42,7 @@ class TestBridgeConverter(ConverterTest):
                 '1.port.2.devname': 'eth1',
                 '1.port.2.status': 'enabled',
                 '1.status': 'enabled',
-                '1.stp.status': 'enabled'
+                '1.stp.status': 'disabled'
             },
             {
                 'status': 'enabled',
@@ -85,7 +85,7 @@ class TestBridgeConverter(ConverterTest):
                 '1.port.2.devname': 'eth1',
                 '1.port.2.status': 'enabled',
                 '1.status': 'disabled',
-                '1.stp.status': 'enabled'
+                '1.stp.status': 'disabled'
             },
             {
                 'status': 'enabled',
@@ -147,7 +147,7 @@ class TestBridgeConverter(ConverterTest):
                 '1.port.2.devname': 'eth1',
                 '1.port.2.status': 'enabled',
                 '1.status': 'disabled',
-                '1.stp.status': 'enabled'
+                '1.stp.status': 'disabled'
             },
             {
                 '2.comment': '',
@@ -157,7 +157,7 @@ class TestBridgeConverter(ConverterTest):
                 '2.port.2.devname': 'eth3',
                 '2.port.2.status': 'enabled',
                 '2.status': 'enabled',
-                '2.stp.status': 'enabled'
+                '2.stp.status': 'disabled'
             },
             {
                 'status': 'enabled',

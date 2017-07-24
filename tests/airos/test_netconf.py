@@ -33,10 +33,10 @@ class TestNetconfConverter(ConverterTest):
         expected = [
             {
                 '1.autoip.status': 'disabled',
-                '1.autoneg': 'enabled',
+                '1.autoneg': 'disabled',
                 '1.devname': 'eth0',
-                '1.flowcontrol.tx.status': 'enabled',
-                '1.flowcontrol.rx.status': 'enabled',
+                '1.flowcontrol.tx.status': 'disabled',
+                '1.flowcontrol.rx.status': 'disabled',
                 '1.mtu': 1500,
                 '1.status': 'enabled',
                 '1.up': 'enabled',
@@ -62,10 +62,10 @@ class TestNetconfConverter(ConverterTest):
         expected = [
             {
                 '1.autoip.status': 'disabled',
-                '1.autoneg': 'enabled',
+                '1.autoneg': 'disabled',
                 '1.devname': 'eth0',
-                '1.flowcontrol.tx.status': 'enabled',
-                '1.flowcontrol.rx.status': 'enabled',
+                '1.flowcontrol.tx.status': 'disabled',
+                '1.flowcontrol.rx.status': 'disabled',
                 '1.mtu': 1500,
                 '1.status': 'enabled',
                 '1.up': 'disabled',
@@ -439,10 +439,10 @@ class TestNetconfConverter(ConverterTest):
         expected = [
             {
                 '1.autoip.status': 'enabled',
-                '1.autoneg': 'enabled',
+                '1.autoneg': 'disabled',
                 '1.devname': 'eth0',
-                '1.flowcontrol.rx.status': 'enabled',
-                '1.flowcontrol.tx.status': 'enabled',
+                '1.flowcontrol.rx.status': 'disabled',
+                '1.flowcontrol.tx.status': 'disabled',
                 '1.mtu': 1500,
                 '1.status': 'enabled',
                 '1.up': 'enabled',
@@ -489,10 +489,10 @@ class TestNetconfConverter(ConverterTest):
         expected = [
             {
                 '1.autoip.status': 'disabled',
-                '1.autoneg': 'enabled',
+                '1.autoneg': 'disabled',
                 '1.devname': 'eth0',
-                '1.flowcontrol.rx.status': 'enabled',
-                '1.flowcontrol.tx.status': 'enabled',
+                '1.flowcontrol.rx.status': 'disabled',
+                '1.flowcontrol.tx.status': 'disabled',
                 '1.mtu': 1500,
                 '1.status': 'enabled',
                 '1.up': 'enabled',

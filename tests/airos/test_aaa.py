@@ -41,7 +41,6 @@ class TestAaaConverter(ConverterTest):
                 '1.radius.acct.1.port': 1813,
                 '1.radius.acct.1.status': 'disabled',
                 '1.radius.auth.1.port': 1812,
-                '1.radius.auth.1.status': 'disabled',
                 '1.status': 'disabled',
             },
         ]
@@ -114,7 +113,6 @@ class TestAaaConverter(ConverterTest):
                 '1.radius.acct.1.port': 1813,
                 '1.radius.acct.1.status': 'disabled',
                 '1.radius.auth.1.port': 1812,
-                '1.radius.auth.1.status': 'disabled',
                 '1.status': 'disabled',
             },
         ]
