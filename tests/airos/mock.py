@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from netjsonconfig import AirOs
+from netjsonconfig.backends.airos.airos import to_ordered_list
 from netjsonconfig.backends.airos.converters import (Aaa, Bridge, Discovery,
                                                      Dyndns, Ebtables, Gui,
                                                      Httpd, Igmpproxy,
@@ -34,7 +35,7 @@ class ConverterTest(TestCase):
 
         If an element fails the assertion will be the only one printed
         """
-        for (a, b) in zip(a, b):
+        for (a, b) in zip(a, to_ordered_list(b)):
             self.assertEqual(a, b)
 
 
