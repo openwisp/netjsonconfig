@@ -440,10 +440,35 @@ class Resolv(AirOsConverter):
 class Route(AirOsConverter):
     netjson_key = 'routes'
 
+    def default_routes(self):
+        def is_default_route(interface):
+            try:
+                t = [addr.get('gateway', '') for addr in interface['addresses']]
+                return any(t)
+            except KeyError:
+                return False
+
+        result = []
+        original = [x for x in get_copy(self.netjson, 'interfaces', []) if is_default_route(x)]
+        for interface in original:
+            for address in interface['addresses']:
+                try:
+                    result.append({
+                        'devname': interface['name'],
+                        'gateway': address['gateway'],
+                        'ip': '0.0.0.0',
+                        'netmask': 0,
+                        'status': 'enabled',
+                    })
+                except KeyError:
+                    pass
+        return result
+
     def to_intermediate(self):
         result = []
-        original = get_copy(self.netjson, self.netjson_key, [])
         routes = []
+        routes = self.default_routes()
+        original = get_copy(self.netjson, self.netjson_key, [])
         for r in original:
             network = ip_interface(r['destination'])
             temp = {}
