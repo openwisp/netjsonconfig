@@ -51,10 +51,19 @@ hw_mode=g
 channel=11
 ieee80211n=1
 ssid=myWiFi
+
 # config: /etc/network/interfaces
 
 auto wlan0
 iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 '''
         self.assertEqual(o.render(), expected)
@@ -93,10 +102,19 @@ hw_mode=g
 channel=3
 ieee80211n=1
 ssid=myWiFi
+
 # config: /etc/network/interfaces
 
 auto wlan0
 iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 '''
         self.assertEqual(o.render(), expected)
@@ -135,10 +153,19 @@ hw_mode=a
 channel=36
 ieee80211n=1
 ssid=myWiFi
+
 # config: /etc/network/interfaces
 
 auto wlan0
 iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 '''
         self.assertEqual(o.render(), expected)
@@ -176,10 +203,19 @@ hw_mode=a
 channel=132
 ieee80211ac=1
 ssid=myWiFi
+
 # config: /etc/network/interfaces
 
 auto wlan0
 iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 '''
         self.assertEqual(o.render(), expected)
@@ -216,10 +252,19 @@ driver=nl80211
 hw_mode=a
 channel=0
 ssid=myWiFi
+
 # config: /etc/network/interfaces
 
 auto wlan0
 iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 '''
         self.assertEqual(o.render(), expected)
@@ -256,10 +301,19 @@ driver=nl80211
 hw_mode=g
 channel=0
 ssid=myWiFi
+
 # config: /etc/network/interfaces
 
 auto wlan0
 iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 '''
         self.assertEqual(o.render(), expected)

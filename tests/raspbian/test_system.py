@@ -10,10 +10,7 @@ class TestSystemRender(unittest.TestCase, _TabsMixin):
         o = Raspbian({
             "general": {
                 "hostname": "test-system",
-                "timezone": "Europe/Rome",
-                "custom_setting": True,
-                "empty_setting1": None,
-                "empty_setting2": ""
+                "timezone": "Europe/Rome"
             }
         })
 
@@ -21,8 +18,12 @@ class TestSystemRender(unittest.TestCase, _TabsMixin):
 
 test-system
 
-run commands:
-$ timedatectl set-timezone Europe/Rome
+# script: /scripts/general.sh
+
+/etc/init.d/hostname.sh start
+echo "Hostname of device has been modified"
+timedatectl set-timezone Europe/Rome
+echo "Timezone has changed to Europe/Rome"
 
 '''
         self.assertEqual(o.render(), expected)
@@ -33,19 +34,17 @@ $ timedatectl set-timezone Europe/Rome
                 "enabled": True,
                 "enable_server": False,
                 "server": [
-                    "0.openwrt.pool.ntp.org",
-                    "1.openwrt.pool.ntp.org",
-                    "2.openwrt.pool.ntp.org",
-                    "3.openwrt.pool.ntp.org"
+                    "0.pool.ntp.org",
+                    "1.pool.ntp.org",
+                    "2.pool.ntp.org"
                 ]
             }
         })
 
         expected = '''# config: /etc/ntp.conf
 
-server 0.openwrt.pool.ntp.org
-server 1.openwrt.pool.ntp.org
-server 2.openwrt.pool.ntp.org
-server 3.openwrt.pool.ntp.org
+server 0.pool.ntp.org
+server 1.pool.ntp.org
+server 2.pool.ntp.org
 '''
         self.assertEqual(o.render(), expected)
