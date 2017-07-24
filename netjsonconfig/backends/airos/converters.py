@@ -349,22 +349,33 @@ class Netmode(AirOsConverter):
 
 
 class Ntpclient(AirOsConverter):
-    netjson_key = 'ntp_servers'
+    netjson_key = 'ntp'
+
+    default_servers = [
+        "0.openwrt.pool.ntp.org",
+        "1.openwrt.pool.ntp.org",
+        "2.openwrt.pool.ntp.org",
+        "3.openwrt.pool.ntp.org",
+    ]
+
+    def ntp_status(self, ntp):
+        if ntp.get('enabled', True):
+            return 'enabled'
+        else:
+            return 'disabled'
 
     def to_intermediate(self):
         result = []
-        temp = []
-        original = get_copy(self.netjson, self.netjson_key, [])
-        if original:
-            for ntp in original:
-                temp.append({
-                    'server': ntp,
-                    'status': 'enabled',
-                })
-            result.append(temp)
-            result.append({'status': 'enabled'})
-        else:
-            result.append({'status': 'disabled'})
+        servers = []
+        original = get_copy(self.netjson, self.netjson_key, {})
+        result.append({'status': self.ntp_status(original)})
+
+        for ntp in original.get('servers', self.default_servers):
+            servers.append({
+                'server': ntp,
+                'status': 'enabled',
+            })
+        result.append(servers)
         return (('ntpclient', result),)
 
 
