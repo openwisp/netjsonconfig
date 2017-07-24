@@ -3,6 +3,7 @@ from ipaddress import ip_interface
 
 from ...utils import get_copy
 from ..base.converter import BaseConverter
+from .schema import default_ntp_servers
 from .wpasupplicant import available_mode_authentication
 
 
@@ -351,12 +352,6 @@ class Netmode(AirOsConverter):
 class Ntpclient(AirOsConverter):
     netjson_key = 'ntp'
 
-    default_servers = [
-        "0.openwrt.pool.ntp.org",
-        "1.openwrt.pool.ntp.org",
-        "2.openwrt.pool.ntp.org",
-        "3.openwrt.pool.ntp.org",
-    ]
 
     def ntp_status(self, ntp):
         if ntp.get('enabled', True):
@@ -370,7 +365,7 @@ class Ntpclient(AirOsConverter):
         original = get_copy(self.netjson, self.netjson_key, {})
         result.append({'status': self.ntp_status(original)})
 
-        for ntp in original.get('servers', self.default_servers):
+        for ntp in original.get('server', default_ntp_servers):
             servers.append({
                 'server': ntp,
                 'status': 'enabled',

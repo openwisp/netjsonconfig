@@ -7,7 +7,7 @@ class TestResolvConverter(ConverterTest):
 
     def test_ntp_key(self):
         o = self.backend({
-            'ntp_server': [],
+            'ntp': {}
         })
         o.to_intermediate()
         expected = [
@@ -15,19 +15,19 @@ class TestResolvConverter(ConverterTest):
                 'status': 'enabled',
             },
             {
-                '1.server': '0.openwrt.pool.ntp.org',
+                '1.server': '0.pool.ntp.org',
                 '1.status': 'enabled',
             },
             {
-                '2.server': '1.openwrt.pool.ntp.org',
+                '2.server': '1.pool.ntp.org',
                 '2.status': 'enabled',
             },
             {
-                '3.server': '2.openwrt.pool.ntp.org',
+                '3.server': '2.pool.ntp.org',
                 '3.status': 'enabled',
             },
             {
-                '4.server': '3.openwrt.pool.ntp.org',
+                '4.server': '3.pool.ntp.org',
                 '4.status': 'enabled',
             },
         ]
@@ -46,19 +46,19 @@ class TestResolvConverter(ConverterTest):
                 'status': 'disabled',
             },
             {
-                '1.server': '0.openwrt.pool.ntp.org',
+                '1.server': '0.pool.ntp.org',
                 '1.status': 'enabled',
             },
             {
-                '2.server': '1.openwrt.pool.ntp.org',
+                '2.server': '1.pool.ntp.org',
                 '2.status': 'enabled',
             },
             {
-                '3.server': '2.openwrt.pool.ntp.org',
+                '3.server': '2.pool.ntp.org',
                 '3.status': 'enabled',
             },
             {
-                '4.server': '3.openwrt.pool.ntp.org',
+                '4.server': '3.pool.ntp.org',
                 '4.status': 'enabled',
             },
         ]

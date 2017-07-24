@@ -14,6 +14,13 @@ It can be used on a single interface (ethernet, vlan) or
 on a bridge
 """
 
+default_ntp_servers = [
+    "0.pool.ntp.org",
+    "1.pool.ntp.org",
+    "2.pool.ntp.org",
+    "3.pool.ntp.org",
+]
+
 override_schema = {
         "type": "object",
         "addtionalProperties": True,
@@ -95,6 +102,42 @@ override_schema = {
                     "password",
                     "salt",
                 ],
+            },
+            "ntp": {
+                "type": "object",
+                "title": "NTP Settings",
+                "additionalProperties": True,
+                "propertyOrder": 8,
+                "properties": {
+                    "enabled": {
+                        "type": "boolean",
+                        "title": "enable NTP client",
+                        "default": True,
+                        "format": "checkbox",
+                        "propertyOrder": 1,
+                    },
+                    "enable_server": {
+                        "type": "boolean",
+                        "title": "enable NTP server",
+                        "default": False,
+                        "format": "checkbox",
+                        "propertyOrder": 2,
+                    },
+                    "server": {
+                        "title": "NTP Servers",
+                        "description": "NTP server candidates",
+                        "type": "array",
+                        "uniqueItems": True,
+                        "additionalItems": True,
+                        "propertyOrder": 3,
+                        "items": {
+                            "title": "NTP server",
+                            "type": "string",
+                            "format": "hostname"
+                        },
+                        "default": default_ntp_servers,
+                    }
+                }
             },
         },
     }
