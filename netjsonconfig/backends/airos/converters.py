@@ -120,6 +120,12 @@ class Aaa(AirOsConverter):
 class Bridge(AirOsConverter):
     netjson_key = 'interfaces'
 
+    def stp_status(self, interface):
+        if interface.get('stp', False):
+            return 'enabled'
+        else:
+            return 'disabled'
+
     def to_intermediate(self):
         result = []
         original = [
@@ -138,9 +144,7 @@ class Bridge(AirOsConverter):
                 'devname': interface['name'],
                 'port': bridge_ports,
                 'status': status(interface),
-                'stp': {
-                    'status': 'enabled',
-                }
+                'stp': {'status': self.stp_status(interface)}
             })
 
         result.append(bridges)
