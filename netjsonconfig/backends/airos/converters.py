@@ -501,14 +501,21 @@ class Snmp(AirOsConverter):
 
 
 class Sshd(AirOsConverter):
-    netjson_key = 'general'
+    netjson_key = 'sshd'
 
     def to_intermediate(self):
+        def status(original, key='enabled'):
+            if original.get(key, True):
+                return 'enabled'
+            else:
+                return 'disabled'
+
         result = []
+        original = get_copy(self.netjson, self.netjson_key)
         result.append({
-            'auth': {'passwd': 'enabled'},
-            'port': 22,
-            'status': 'enabled',
+            'auth': {'passwd': status(original, 'password_auth')},
+            'port': original.get('port', 22),
+            'status': status(original, 'enabled'),
         })
         return (('sshd', result),)
 

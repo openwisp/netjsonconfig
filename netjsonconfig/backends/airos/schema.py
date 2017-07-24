@@ -123,6 +123,45 @@ override_schema = {
                 }
             }
         },
+        "sshd": {
+            "type": "object",
+            "title": "SSHd settings",
+            "additionalProperties": True,
+            "properties": {
+                "port": {
+                    "type": "integer",
+                    "default": 22,
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "default": True,
+                },
+                "password_auth": {
+                    "type": "boolean",
+                    "default": True,
+                },
+                "keys": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                            },
+                            "key": {
+                                "type": "string",
+                            },
+                            "comment": {
+                                "type": "string",
+                            },
+                            "enabled": {
+                                "type": "boolean",
+                            },
+                        }
+                    }
+                },
+            },
+        },
         "user": {
             "additionalProperties": True,
             "properties": {
