@@ -60,6 +60,16 @@ override_schema = {
                     },
                 },
             },
+            "interface_settings": {
+                "properties": {
+                    "authoneg": {
+                        "type": "boolean",
+                    },
+                    "flowcontrol": {
+                        "type": "boolean",
+                    }
+                }
+            }
         },
         "properties": {
             "netmode": {

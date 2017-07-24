@@ -268,6 +268,26 @@ class Netconf(AirOsConverter):
         }
         return roles.get(typestr, '')
 
+    def autoneg_status(self, interface):
+        if interface.get('autoneg'):
+            return 'enabled'
+        else:
+            return 'disabled'
+
+    def flowcontrol_status(self, interface):
+        if interface.get('flowcontrol'):
+            status = 'enabled'
+        else:
+            status = 'disabled'
+        return {
+            'rx': {
+                'status': status,
+            },
+            'tx': {
+                'status': status,
+            },
+        }
+
     def to_intermediate(self):
         result = []
         interfaces = []
@@ -282,15 +302,9 @@ class Netconf(AirOsConverter):
             }
             # handle interface type quirks
             if interface['type'] == 'ethernet' and '.' not in interface['name']:
-                base['autoneg'] = 'enabled'
-                base['flowcontrol'] = {
-                    'rx': {
-                        'status': 'enabled',
-                    },
-                    'tx': {
-                        'status': 'enabled',
-                    },
-                }
+                base['autoneg'] = self.autoneg_status(interface)
+
+                base['flowcontrol'] = self.flowcontrol_status(interface)
 
             if interface['type'] == 'wireless':
                 base['devname'] = interface['wireless']['radio']

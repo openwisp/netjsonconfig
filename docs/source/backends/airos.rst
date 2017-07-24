@@ -91,6 +91,27 @@ As an example here is a snippet that set the vlan ``eth0.2`` to be the managemen
        ]
    }
 
+Ethernet
+========
+
+The ``ethernet`` interface can be configured to allow auto-negotiation and flow control with the properties ``autoneg`` and ``flowcontrol``
+
+As an example here is a snippet that enables both auto-negotiation and flow control
+
+.. code-block:: json
+
+    {
+        "interfaces": [
+            {
+                "type": "ethernet",
+                "name": "eth0",
+                "autoneg": true,
+                "flowcontrol": true
+           }
+       ]
+   }
+
+
 DNS servers
 -----------
 
