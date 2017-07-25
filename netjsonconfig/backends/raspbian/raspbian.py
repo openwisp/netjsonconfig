@@ -30,7 +30,7 @@ class Raspbian(BaseBackend):
 
     def _generate_contents(self, tar):
         text = self.render(files=False)
-        config_files_pattern = re.compile('^# config:\s', flags=re.MULTILINE)
+        config_files_pattern = re.compile('^# config:\s|^# script:\s', flags=re.MULTILINE)
         config_files = config_files_pattern.split(text)
         if '' in config_files:
             config_files.remove('')
