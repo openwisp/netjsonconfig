@@ -8,7 +8,7 @@ class RaspbianRenderer(BaseRenderer):
     pass
 
 
-class Commands(RaspbianRenderer):
+class Scripts(RaspbianRenderer):
     pass
 
 

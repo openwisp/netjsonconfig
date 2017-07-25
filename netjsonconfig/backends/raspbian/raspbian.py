@@ -2,7 +2,7 @@ import re
 
 from . import converters
 from ..base.backend import BaseBackend
-from .renderer import Commands, Hostapd, Hostname, Interfaces, Ntp, Resolv
+from .renderer import Scripts, Hostapd, Hostname, Interfaces, Ntp, Resolv
 from .schema import schema
 
 
@@ -25,7 +25,7 @@ class Raspbian(BaseBackend):
         Interfaces,
         Resolv,
         Ntp,
-        Commands
+        Scripts
     ]
 
     def _generate_contents(self, tar):
