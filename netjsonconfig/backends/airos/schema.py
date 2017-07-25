@@ -173,9 +173,15 @@ override_schema = {
             "additionalProperties": True,
             "properties": {
                 "name": {
+                    "title": "User name",
+                    "type": "string",
+                },
+                "password": {
+                    "title": "Hashed password for user",
                     "type": "string",
                 },
                 "salt": {
+                    "title": "Salt for hashing algorithm",
                     "type": "string",
                 },
             },
