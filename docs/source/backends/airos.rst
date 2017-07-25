@@ -4,20 +4,20 @@ AirOS Backend
 
 .. include:: ../_github.rst
 
-The ``AirOS`` backend allows to generate AirOS v8.3 compatible configurations.
+The ``AirOs`` backend allows to generate AirOS v8.3 compatible configurations.
 
 Initialization
 --------------
 
-.. automethod:: netjsonconfig.AirOS.__init__
+.. automethod:: netjsonconfig.AirOs.__init__
 
 Initialization example:
 
 .. code-block:: python
 
-    from netjsonconfig import AirOS
+    from netjsonconfig import AirOs
 
-    router = AirOS({
+    router = AirOs({
         "general": {
             "hostname": "MasterAntenna"
         }
@@ -33,24 +33,24 @@ read about the following basic concepts:
 Render method
 -------------
 
-.. automethod:: netjsonconfig.AirOS.render
+.. automethod:: netjsonconfig.AirOs.render
 
 Generate method
 ---------------
 
-.. automethod:: netjsonconfig.AirOS.generate
+.. automethod:: netjsonconfig.AirOs.generate
 
 
 Write method
 ------------
 
-.. automethod:: netjsonconfig.AirOS.write
+.. automethod:: netjsonconfig.AirOs.write
 
 
 JSON method
 -----------
 
-.. automethod:: netjsonconfig.AirOS.json
+.. automethod:: netjsonconfig.AirOs.json
 
 
 General settings
