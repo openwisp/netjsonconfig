@@ -80,10 +80,11 @@ e.g. `vlan.1.devname=eth0` we store a list of dictionaries.
                         {
                             'ipython' : True,
                         }
-                    ],
-                },
+                     ],
+                 },
             }
-        ])
+        ]
+   )
 
 And the resulting tree is:
 
@@ -127,26 +128,10 @@ Flattening
 To avoid at all cost a recursive logic in the template we flatten the intermediate
 representation to something that has a *namespace* a *key* and a *value*.
 
-This input NetJSON will be converted to a python :ref:`configuration_dictionary`:
+The objective is to go from a python :ref:`configuration_dictionary` that we get from loading a NetJSON to the AirOS configuration.
 
-.. code-block:: json
+An input :ref:`configuration_dictionary` is just a python dictionary, e.g.:
 
-   //netjson
-   {
-        "type" : "DeviceConfiguration",
-        "interfaces" : [
-            {
-                "name" : "eth0.1",
-                "type" : "ethernet",
-                "comment" : "management vlan"
-            },
-            {
-                "name" : "eth0.2",
-                "type" : "ethernet",
-                "comment" : "traffic vlan"
-            }
-        ]
-   }
 
 .. code-block:: python
 
@@ -157,11 +142,12 @@ This input NetJSON will be converted to a python :ref:`configuration_dictionary`
                 'name' : 'eth0.1',
                 'type' : 'ethernet',
                 'comment' : 'management vlan'
+                'comment' : 'management'
             },
             {
                 'name' : 'eth0.2',
                 'type' : 'ethernet',
-                'comment' : 'traffic vlan'
+                'comment' : 'traffic'
             }
         ]
    }
@@ -191,21 +177,20 @@ resembles the target text, the output configuration.
         'vlan',
         #options
         [
-                {
-                        # key : value
-                        '1.devname' : 'eth0',
-                        '1.id' : '1'
-                        '1.status' : 'enabled',
-                        '1.comment' : 'management'
-                },
-                {
-                        '2.devname' : 'eth0',
-                        '2.id' : '2'
-                        '2.status' : 'enabled',
-                        '2.comment' : 'traffic'
-                }
+            {
+                # key : value
+                '1.devname' : 'eth0',
+                '1.id' : '1'
+                '1.status' : 'enabled',
+                '1.comment' : 'management'
+            },
+            {
+                '2.devname' : 'eth0',
+                '2.id' : '2'
+                '2.status' : 'enabled',
+                '2.comment' : 'traffic'
+            }
         ]
-
    )
 
 And to do that we get rid of the multiple indentation levels by flattening the tree structure.

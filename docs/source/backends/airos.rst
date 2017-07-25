@@ -149,11 +149,12 @@ The default values for this key are as reported below
 Netmode
 -------
 
-AirOS v8.3 can operate in ``bridge`` and ``router`` mode (but defaults to ``bridge``) and this can be specified with the ``netmode`` property
+AirOS v8.3 can operate in ``bridge`` and ``router`` mode (but defaults to ``bridge``) and this can be specified with the ``netmode`` property.
 
 .. code-block:: json
 
     {
+        "type": "DeviceConfiguration",
         "netmode": "bridge"
     }
 
@@ -162,16 +163,35 @@ NTP servers
 
 This is an extension to the `NetJSON` specification.
 
-By setting the key ``ntp_servers`` in your input you can provide a list of ntp servers to use.
+By setting the key ``ntp`` property in your input you can provide the configuration for the ntp client running on the device.
 
 .. code-block:: json
 
     {
         "type": "DeviceConfiguration",
-        ...
-        "ntp_servers": [
-            "0.ubnt.pool.ntp.org"
-        ]
+        "ntp": {
+            "enabled": true,
+            "server": [
+                "0.ubnt.pool.ntp.org"
+            ]
+        }
+    }
+
+For the lazy one we provide these defaults
+
+.. code-block:: json
+
+    {
+        "type": "DeviceConfiguration",
+        "ntp": {
+            "enabled": true,
+            "server": [
+                "0.pool.ntp.org",
+                "1.pool.ntp.org",
+                "2.pool.ntp.org",
+                "3.pool.ntp.org"
+            ]
+        }
     }
 
 Users
@@ -188,7 +208,7 @@ From the antenna configuration take the user section.
     users.1.name=ubnt
     users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1
 
-I the line ``users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1`` there are both the salt and the password hash in the format ``$ algorithm $ salt $ hash $``, e.g in the previous block ``algorithm=1``, ``salt=yRo1tmtC`` and ``hash=EcdoRX.JnD4VaEYgghgWg1``.
+In the line ``users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1`` there are both the salt and the password hash in the format ``$ algorithm $ salt $ hash $``, e.g in the previous block ``algorithm=1``, ``salt=yRo1tmtC`` and ``hash=EcdoRX.JnD4VaEYgghgWg1``.
 
 To specify the password in NetJSON use the ``user`` property.
 
@@ -220,9 +240,11 @@ As an example here is a snippet that set the authentication protocol to WPA2 per
             {
                 "name": "wlan0",
                 "type": "wireless",
-                "encryption": {
-                    "protocol": "wpa2_personal",
-                    "key": "changeme"
+                "wireless": {
+                    "encryption": {
+                        "protocol": "wpa2_personal",
+                        "key": "changeme"
+                    }
                 }
             }
         ]
@@ -237,12 +259,31 @@ And another that set the authentication protocol to WPA2 enterprise, but this is
             {
                 "name": "wlan0",
                 "type": "wireless",
-                "encryption": {
-                    "protocol": "wpa2_enterprise",
-                    "key": "changeme"
+                "wireless": {
+                    "encryption": {
+                        "protocol": "wpa2_enterprise",
+                        "key": "changeme"
+                    }
                 }
             }
         ]
     }
 
+The ``encryption`` property **must** be specified otherwise you will experience a ``ValidationError``, if you are not sure on what you want
+use this snippet to set to no encryption
+
+.. code-block:: json
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "encryption": {
+                        "protocol": "none"
+                     }
+                 }
+            }
+    }
 Leaving the `NetJSON Encryption object <http://netjson.org/rfc.html#rfc.section.5.4.2.1>` empty defaults to no encryption at all.
