@@ -30,12 +30,12 @@ class Raspbian(BaseBackend):
 
     def _generate_contents(self, tar):
         text = self.render(files=False)
-        config_files_pattern = re.compile('^# config:\s|^# script:\s', flags=re.MULTILINE)
-        config_files = config_files_pattern.split(text)
-        if '' in config_files:
-            config_files.remove('')
-        for config_file in config_files:
-            lines = config_file.split('\n')
+        files_pattern = re.compile('^# config:\s|^# script:\s', flags=re.MULTILINE)
+        files = files_pattern.split(text)
+        if '' in files:
+            files.remove('')
+        for file in files:
+            lines = file.split('\n')
             file_name = lines[0]
             text_contents = '\n'.join(lines[2:])
             self._add_file(tar=tar,
