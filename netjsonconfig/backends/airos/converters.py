@@ -320,8 +320,7 @@ class Netconf(AirOsConverter):
                         temp['role'] = self.type_to_role(interface['type'])
                     # handle explicit address policy
                     if addr['proto'] == 'dhcp':
-                        temp['autoip'] = {}
-                        temp['autoip']['status'] = 'enabled'
+                        temp['autoip'] = {'status': 'enabled'}
                     else:
                         ip_and_mask = '%s/%d' % (addr['address'], addr['mask'])
                         network = ip_interface(ip_and_mask)
