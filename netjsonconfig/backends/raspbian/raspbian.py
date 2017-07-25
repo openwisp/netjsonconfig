@@ -2,7 +2,7 @@ import re
 
 from . import converters
 from ..base.backend import BaseBackend
-from .renderer import Scripts, Hostapd, Hostname, Interfaces, Ntp, Resolv
+from .renderer import Hostapd, Hostname, Interfaces, Ntp, Resolv, Scripts
 from .schema import schema
 
 
