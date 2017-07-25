@@ -43,6 +43,8 @@ class Interfaces(RaspbianConverter):
         autostart = interface.get('autostart', False)
         if autostart:
             new_interface.update({'autostart': autostart})
+        else:
+            new_interface.update({'autostart': True})
         if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
             wireless = interface.get('wireless')
             new_interface.update({
