@@ -514,7 +514,7 @@ class Sshd(AirOsConverter):
                 return 'disabled'
 
         result = []
-        original = get_copy(self.netjson, self.netjson_key)
+        original = get_copy(self.netjson, self.netjson_key, {})
         result.append({
             'auth': {'passwd': status(original, 'password_auth')},
             'port': original.get('port', 22),
