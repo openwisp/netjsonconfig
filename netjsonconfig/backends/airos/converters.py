@@ -68,10 +68,13 @@ class Aaa(AirOsConverter):
         The aaa.status value is enabled when the interface is in access_point mode
         with wpa2_personal authentication
         """
-        t = self.wireless()[0]['wireless']
-        if t['mode'] == 'access_point'  and t['encryption']['protocol'] == 'wpa2_personal':
-            return 'enabled'
-        else:
+        try:
+            t = self.wireless()[0]['wireless']
+            if t['mode'] == 'access_point'  and t['encryption']['protocol'] == 'wpa2_personal':
+                return 'enabled'
+            else:
+                return 'disabled'
+        except IndexError:
             return 'disabled'
 
     def ap_psk(self):
