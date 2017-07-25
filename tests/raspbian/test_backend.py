@@ -63,6 +63,6 @@ search openwisp.org
         })
         o.write(name='test', path='/tmp')
         tar = tarfile.open('/tmp/test.tar.gz', mode='r')
-        self.assertEqual(len(tar.getmembers()), 1)
+        self.assertEqual(len(tar.getmembers()), 2)
         tar.close()
         os.remove('/tmp/test.tar.gz')
