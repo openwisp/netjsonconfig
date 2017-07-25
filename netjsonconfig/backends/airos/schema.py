@@ -69,11 +69,17 @@ override_schema = {
         },
         "interface_settings": {
             "properties": {
-                "authoneg": {
+                "autoneg": {
                     "type": "boolean",
+                    "default": False,
+                    "title": "Auto negotiation",
+                    "description": "Enable autonegotiation on interface",
                 },
                 "flowcontrol": {
                     "type": "boolean",
+                    "default": False,
+                    "title": "Flow control",
+                    "description": "Enable flow control on interface",
                 }
             }
         }
@@ -156,6 +162,7 @@ override_schema = {
                             },
                             "enabled": {
                                 "type": "boolean",
+                                "default": True,
                             },
                         }
                     }
