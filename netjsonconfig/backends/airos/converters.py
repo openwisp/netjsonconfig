@@ -489,12 +489,13 @@ class Snmp(AirOsConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
+        original = get_copy(self.netson, self.netjson_key)
         result = [
-            {
-                'community': 'public',
-                'contact': '',
-                'location': '',
-                'status': 'enabled',
+           {
+                'community':  'public',
+                'contact':  original.get('mantainer', ''),
+                'location':  original.get('location', ''),
+                'status':  'enabled',
             },
         ]
         return (('snmp', result),)

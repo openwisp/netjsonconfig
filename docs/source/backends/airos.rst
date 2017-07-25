@@ -56,6 +56,20 @@ JSON method
 General settings
 ----------------
 
+From the ``general`` key we can configure the contact and the location for a device using the ``contact`` and ``location`` properties.
+
+The following snippet specify both contact and location:
+
+.. code-block:: json
+
+    {
+        "type": "DeviceConfiguration",
+        "general": {
+            "contact": "user@example.com",
+            "location": "Up in the roof"
+        }
+    }
+
 Network interface
 -----------------
 
