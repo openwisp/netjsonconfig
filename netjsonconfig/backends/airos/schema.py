@@ -88,6 +88,28 @@ override_schema = {
                     "propertyOrder": 0,
                 }
             }
+        },
+        "wireless_interface": {
+            "allOf": [
+                {
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["wireless"],
+                            "default": "wireless",
+                            "propertyOrder": 1,
+                        },
+                        "wireless": {
+                            "type": "object",
+                            "propertyOrder": 10,
+                            "oneOf": [
+                                {"$ref": "#/definitions/ap_wireless_settings"},
+                                {"$ref": "#/definitions/sta_wireless_settings"},
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "properties": {
