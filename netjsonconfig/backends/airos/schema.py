@@ -85,7 +85,7 @@ override_schema = {
                     "default": False,
                     "title": "Flow control",
                     "description": "Enable flow control on interface",
-                    "propertyOrder": 1,
+                    "propertyOrder": 0,
                 }
             }
         }
