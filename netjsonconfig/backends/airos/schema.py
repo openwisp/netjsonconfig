@@ -180,6 +180,10 @@ override_schema = {
                     "description": "User keys",
                     "items": {
                         "type": "object",
+                        "required": [
+                            "type",
+                            "key",
+                        ],
                         "properties": {
                             "type": {
                                 "type": "string",
