@@ -204,14 +204,15 @@ class Gui(AirOsConverter):
     netjson_key = 'gui'
 
     def to_intermediate(self):
+        original = get_copy(self.netjson, self.netjson_key, {})
         result = [
             {
-                'language': 'en_US',
+                'language': original.get('language', 'en_US'),
             },
             {
                 'network': {
                     'advanced': {
-                        'status': 'enabled'
+                        'status': 'enabled',
                     }
                 }
             }

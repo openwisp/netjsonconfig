@@ -91,6 +91,17 @@ override_schema = {
         }
     },
     "properties": {
+        "gui": {
+            "type": "object",
+            "properties": {
+                "language": {
+                    "type": "string",
+                    "default": "en_US",
+                    "title": "Language",
+                    "description": "Web interface language"
+                }
+            }
+        },
         "netmode": {
             "enum": [
                 "bridge",
