@@ -92,6 +92,7 @@ override_schema = {
             ],
             "default": "bridge",
             "type": "string",
+            "title": "Network mode for device",
         },
         "ntp": {
             "type": "object",
@@ -137,14 +138,19 @@ override_schema = {
                 "port": {
                     "type": "integer",
                     "default": 22,
+                    "title": "Port for sshd to listen on",
                 },
                 "enabled": {
                     "type": "boolean",
                     "default": True,
+                    "title": "Enable ssh server",
+                    "format": "checkbox",
                 },
                 "password_auth": {
                     "type": "boolean",
                     "default": True,
+                    "title": "Enable password authentication",
+                    "format": "checkbox",
                 },
                 "keys": {
                     "type": "array",
@@ -153,16 +159,22 @@ override_schema = {
                         "properties": {
                             "type": {
                                 "type": "string",
+                                "title": "Key algorithm",
                             },
                             "key": {
                                 "type": "string",
+                                "title": "Key file content",
                             },
                             "comment": {
                                 "type": "string",
+                                "default": "",
+                                "title": "comment",
                             },
                             "enabled": {
                                 "type": "boolean",
                                 "default": True,
+                                "title": "Enable key",
+                                "format": "checkbox",
                             },
                         }
                     }
