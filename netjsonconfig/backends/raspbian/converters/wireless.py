@@ -28,6 +28,12 @@ class Wireless(RaspbianConverter):
                         'channel': channel,
                         'protocol': protocol
                     })
+                hidden = wireless.get('hidden', False)
+                new_interface.update({'hidden': hidden})
+                rts_threshold = wireless.get('rts_threshold', -1)
+                new_interface.update({'rts_threshold': rts_threshold})
+                frag_threshold = wireless.get('frag_threshold', -1)
+                new_interface.update({'frag_threshold': frag_threshold})
                 new_interface.update({'encryption': self._get_encryption(wireless)})
                 result.append(new_interface)
         return (('wireless', result),)
