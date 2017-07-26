@@ -133,16 +133,16 @@ DNS servers
 GUI
 ---
 
-As an extension to `NetJSON <http://netjson.org/rfc.html>` you can use the ``gui`` key to set the language of the interface and show the advanced network configuration option.
+As an extension to `NetJSON <http://netjson.org/rfc.html>` you can use the ``gui`` key to set the language of the interface 
 
 The default values for this key are as reported below
 
 .. code-block:: json
 
     {
+        "type": "DeviceConfiguration",
         "gui": {
             "language": "en_US",
-            "advanced": true
         }
     }
 
@@ -286,4 +286,3 @@ use this snippet to set to no encryption
                  }
             }
     }
-Leaving the `NetJSON Encryption object <http://netjson.org/rfc.html#rfc.section.5.4.2.1>` empty defaults to no encryption at all.
