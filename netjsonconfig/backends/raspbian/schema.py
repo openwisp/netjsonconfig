@@ -6,9 +6,6 @@ from ..openwrt.timezones import timezones
 
 schema = merge_config(default_schema, {
     "definitions": {
-        "interface_settings": {
-            "additionalProperties": False,
-        },
         "network_interface": {
             "title": "Network interface",
             "allOf": [
