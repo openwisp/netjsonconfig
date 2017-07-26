@@ -73,20 +73,6 @@ schema = merge_config(default_schema, {
             "additionalProperties": True,
             "propertyOrder": 8,
             "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "title": "enable NTP client",
-                    "default": True,
-                    "format": "checkbox",
-                    "propertyOrder": 1,
-                },
-                "enable_server": {
-                    "type": "boolean",
-                    "title": "enable NTP server",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 2,
-                },
                 "server": {
                     "title": "NTP Servers",
                     "description": "NTP server candidates",
@@ -104,3 +90,8 @@ schema = merge_config(default_schema, {
         }
     }
 })
+
+del schema['properties']['general']['properties']['ula_prefix']
+del schema['properties']['general']['properties']['description']
+del schema['properties']['general']['properties']['maintainer']
+del schema['definitions']['base_wireless_settings']['properties']['ack_distance']
