@@ -30,6 +30,10 @@ override_schema = {
                 "management": {
                     "type": "boolean",
                     "default": False,
+                    "title": "Management",
+                    "description": "Management interface",
+                    "format": "checkbox",
+                    "propertyOrder": 0,
                 }
             }
         },
@@ -74,12 +78,14 @@ override_schema = {
                     "default": False,
                     "title": "Auto negotiation",
                     "description": "Enable autonegotiation on interface",
+                    "propertyOrder": 0,
                 },
                 "flowcontrol": {
                     "type": "boolean",
                     "default": False,
                     "title": "Flow control",
                     "description": "Enable flow control on interface",
+                    "propertyOrder": 1,
                 }
             }
         }
@@ -138,22 +144,29 @@ override_schema = {
                 "port": {
                     "type": "integer",
                     "default": 22,
-                    "title": "Port for sshd to listen on",
+                    "title": "Port",
+                    "description": "Port for sshd to listen on",
+                    "propertyOrder": 0,
                 },
                 "enabled": {
                     "type": "boolean",
                     "default": True,
                     "title": "Enable ssh server",
                     "format": "checkbox",
+                    "propertyOrder": 1,
                 },
                 "password_auth": {
                     "type": "boolean",
                     "default": True,
                     "title": "Enable password authentication",
                     "format": "checkbox",
+                    "propertyOrder": 2,
                 },
                 "keys": {
                     "type": "array",
+                    "propertyOrder": 3,
+                    "title": "Keys",
+                    "description": "User keys",
                     "items": {
                         "type": "object",
                         "properties": {
@@ -168,7 +181,7 @@ override_schema = {
                             "comment": {
                                 "type": "string",
                                 "default": "",
-                                "title": "comment",
+                                "title": "Comment",
                             },
                             "enabled": {
                                 "type": "boolean",
