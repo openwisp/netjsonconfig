@@ -673,7 +673,7 @@ class Wireless(AirOsConverter):
                 'signal_led4': 15,
                 'signal_led_status': 'enabled',
                 'ssid': w['wireless']['ssid'],
-                'ap': w['wireless']['bssid'],
+                'ap': w['wireless'].get('bssid',''),
                 'status': status(w),
                 'wds': {'status': 'enabled'},
             })
