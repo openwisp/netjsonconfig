@@ -53,7 +53,8 @@ class Interfaces(RaspbianConverter):
             })
         if iftype == 'bridge':
             new_interface.update({
-                'bridge_members': interface.get('bridge_members')
+                'bridge_members': interface.get('bridge_members'),
+                'stp': interface.get('stp', False)
             })
         return new_interface
 

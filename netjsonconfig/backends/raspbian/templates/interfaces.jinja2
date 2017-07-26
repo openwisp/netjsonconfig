@@ -30,6 +30,10 @@
                             {% endif %}
                             {% if interface.iftype == 'bridge' %}
                             bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
+                            {{ interface }}
+                            {% if interface.stp %}
+                            bridge_stp {{ interface.stp }}
+                            {% endif %}
                             {% endif %}
                     {% elif address.family == 'ipv6' %}
                         iface {{ interface.ifname }} inet6 {{ address.proto }}
@@ -51,6 +55,9 @@
                             {% endif %}
                             {% if interface.iftype == 'bridge' %}
                             bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
+                            {% endif %}
+                            {% if interface.stp %}
+                            bridge_stp {{ interface.stp }}
                             {% endif %}
                     {% endif %}
                 {% elif address.proto == 'dhcp' %}
@@ -98,6 +105,9 @@
             {% endif %}
             {% if interface.iftype == 'bridge' %}
             bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
+            {% endif %}
+            {% if interface.stp %}
+            bridge_stp {{ interface.stp }}
             {% endif %}
             {% if interface.mode == 'adhoc' %}
                 iface {{ interface.ifname }} inet static
