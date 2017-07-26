@@ -188,6 +188,7 @@ override_schema = {
                             "type": {
                                 "type": "string",
                                 "title": "Key algorithm",
+                                "default": "ssh-rsa",
                             },
                             "key": {
                                 "type": "string",
