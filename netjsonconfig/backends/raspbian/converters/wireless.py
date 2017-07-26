@@ -28,6 +28,9 @@ class Wireless(RaspbianConverter):
                         'channel': channel,
                         'protocol': protocol
                     })
+                    if req_radio['country']:
+                        country = req_radio['country']
+                        new_interface.update({'country': country})
                 hidden = wireless.get('hidden', False)
                 new_interface.update({'hidden': hidden})
                 rts_threshold = wireless.get('rts_threshold', -1)

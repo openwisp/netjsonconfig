@@ -3,6 +3,9 @@
 
     interface={{ wireless.ifname }}
     driver=nl80211
+    {% if wireless.country %}
+    country={{ wireless.country }}
+    {% endif %}
     {% if wireless.protocol == 'a' or 'b' or 'g' %}
     hw_mode={{ wireless.hwmode }}
     {% endif %}
