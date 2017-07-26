@@ -16,6 +16,7 @@ class Wireless(RaspbianConverter):
                     'ssid': interface['wireless'].get('ssid')
                 }
                 wireless = interface.get('wireless')
+                new_interface.update({'mode': wireless.get('mode')})
                 radio_num = interface['wireless'].get('radio')
                 radios = get_copy(self.netjson, 'radios')
                 if radios is not None:
@@ -69,7 +70,7 @@ class Wireless(RaspbianConverter):
                     'wpa_key_mgmt': wpa_key_mgmt,
                     'wpa_passphrase': wpa_passphrase
                     })
-                if encryption.get('cipher', None) is not None or 'auto':
+                if encryption.get('cipher', None) is not None:
                     wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
                     new_encryption.update({'wpa_pairwise': wpa_pairwise})
         return new_encryption

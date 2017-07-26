@@ -1,39 +1,41 @@
-{% for wireless in data.wireless %}
-    # config: /etc/hostapd/hostapd.conf
+{% if data.wireless and data.wireless[0].mode == 'access_point' %}
+    {% for wireless in data.wireless %}
+        # config: /etc/hostapd/hostapd.conf
 
-    interface={{ wireless.ifname }}
-    driver=nl80211
-    {% if wireless.country %}
-    country={{ wireless.country }}
-    {% endif %}
-    {% if wireless.protocol == 'a' or 'b' or 'g' %}
-    hw_mode={{ wireless.hwmode }}
-    {% endif %}
-    channel={{ wireless.channel }}
-    {% if wireless.protocol == '80211n' %}
-    ieee80211n=1
-    {% endif %}
-    {% if wireless.protocol == '80211ac' %}
-    ieee80211ac=1
-    {% endif %}
-    ssid={{ wireless.ssid }}
-    {% if wireless.hidden %}
-    ignore_broadcast_ssid=1
-    {% endif %}
-    {% if wireless.rts_threshold > 0 %}
-    rts_threshold={{ wireless.rts_threshold }}
-    {% endif %}
-    {% if wireless.frag_threshold > 0 %}
-    frag_threshold={{ wireless.frag_threshold }}
-    {% endif %}
-    {% if wireless.encryption %}
-        auth_algs={{ wireless.encryption.auth_algs }}
-        wpa={{ wireless.encryption.wpa }}
-        wpa_key_mgmt={{ wireless.encryption.wpa_key_mgmt }}
-        wpa_passphrase={{ wireless.encryption.wpa_passphrase }}
-        {% if wireless.encryption.wpa_pairwise != 'AUTO' %}
-        wpa_pairwise={{ wireless.encryption.wpa_pairwise }}
+        interface={{ wireless.ifname }}
+        driver=nl80211
+        {% if wireless.country %}
+        country={{ wireless.country }}
         {% endif %}
-    {% endif %}
+        {% if wireless.protocol == 'a' or 'b' or 'g' %}
+        hw_mode={{ wireless.hwmode }}
+        {% endif %}
+        channel={{ wireless.channel }}
+        {% if wireless.protocol == '80211n' %}
+        ieee80211n=1
+        {% endif %}
+        {% if wireless.protocol == '80211ac' %}
+        ieee80211ac=1
+        {% endif %}
+        ssid={{ wireless.ssid }}
+        {% if wireless.hidden %}
+        ignore_broadcast_ssid=1
+        {% endif %}
+        {% if wireless.rts_threshold > 0 %}
+        rts_threshold={{ wireless.rts_threshold }}
+        {% endif %}
+        {% if wireless.frag_threshold > 0 %}
+        frag_threshold={{ wireless.frag_threshold }}
+        {% endif %}
+        {% if wireless.encryption %}
+            auth_algs={{ wireless.encryption.auth_algs }}
+            wpa={{ wireless.encryption.wpa }}
+            wpa_key_mgmt={{ wireless.encryption.wpa_key_mgmt }}
+            wpa_passphrase={{ wireless.encryption.wpa_passphrase }}
+            {% if wireless.encryption.wpa_pairwise != 'AUTO' %}
+            wpa_pairwise={{ wireless.encryption.wpa_pairwise }}
+            {% endif %}
+        {% endif %}
 
-{% endfor %}
+    {% endfor %}
+{% endif %}
