@@ -47,6 +47,7 @@ class TestRadio(unittest.TestCase, _TabsMixin):
 
 interface=wlan0
 driver=nl80211
+country=IT
 hw_mode=g
 channel=11
 ieee80211n=1

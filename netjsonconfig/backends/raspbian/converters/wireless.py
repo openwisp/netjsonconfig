@@ -28,7 +28,7 @@ class Wireless(RaspbianConverter):
                         'channel': channel,
                         'protocol': protocol
                     })
-                    if req_radio['country']:
+                    if 'country' in req_radio:
                         country = req_radio['country']
                         new_interface.update({'country': country})
                 hidden = wireless.get('hidden', False)
