@@ -1,5 +1,3 @@
-from ...channels import channels_2and5, channels_2ghz, channels_5ghz
-from ...countries import countries
 from ...schema import schema as default_schema
 from ...utils import merge_config
 from ..openwrt.timezones import timezones
