@@ -2,7 +2,7 @@ import re
 
 from . import converters
 from ..base.backend import BaseBackend
-from .renderer import Hostapd, Hostname, Interfaces, Ntp, Resolv, Scripts
+from .renderer import Hostapd, Hostname, Interfaces, Ntp, Resolv, Scripts, WpaSupplicant
 from .schema import schema
 
 
@@ -22,10 +22,11 @@ class Raspbian(BaseBackend):
     renderers = [
         Hostname,
         Hostapd,
+        WpaSupplicant,
         Interfaces,
         Resolv,
         Ntp,
-        Scripts
+        Scripts,
     ]
 
     def _generate_contents(self, tar):

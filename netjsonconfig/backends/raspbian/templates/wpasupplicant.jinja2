@@ -1,0 +1,18 @@
+{% if data.wireless and data.wireless[0].mode == 'station' %}
+    {% for wireless in data.wireless %}
+        # config: /etc/wpa_supplicant/wpa_supplicant.conf
+
+        network={
+                ssid="{{ wireless.ssid }}"
+                {% if 'wpa' in wireless.encryption %}
+                {% if wireless.encryption %}
+                key="{{ wireless.encryption.wpa_passphrase }}"
+                {% endif %}
+                {% if wireless.encryption.wpa_key_mgmt %}
+                key_mgtmt={{ wireless.encryption.wpa_key_mgmt }}
+                {% endif  %}
+                {% endif %}
+        }
+
+    {% endfor %}
+{% endif %}

@@ -8,6 +8,10 @@ class RaspbianRenderer(BaseRenderer):
     pass
 
 
+class WpaSupplicant(RaspbianRenderer):
+    pass
+
+
 class Scripts(RaspbianRenderer):
     pass
 
