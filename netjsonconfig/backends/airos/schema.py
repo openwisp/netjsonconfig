@@ -151,6 +151,11 @@ override_schema = {
             "type": "object",
             "title": "SSHd settings",
             "additionalProperties": True,
+            "required": [
+                "port",
+                "enabled",
+                "password_auth",
+            ],
             "properties": {
                 "port": {
                     "type": "integer",
