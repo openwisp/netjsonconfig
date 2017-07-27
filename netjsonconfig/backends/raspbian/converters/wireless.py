@@ -8,69 +8,66 @@ class Wireless(RaspbianConverter):
     def to_intermediate(self):
         result = []
         interfaces = get_copy(self.netjson, self.netjson_key)
+        new_interface = {}
         for interface in interfaces:
-            if interface['type'] == 'wireless' and interface.get('wireless').get('mode') is not 'adhoc':
-                new_interface = {
+            if interface.get('type') == 'wireless' and interface.get('wireless').get('mode') is not 'adhoc':
+                new_interface.update({
                     'ifname': interface.get('name'),
                     'iftype': interface.get('type'),
-                    'ssid': interface['wireless'].get('ssid')
-                }
+                })
                 wireless = interface.get('wireless')
-                new_interface.update({'mode': wireless.get('mode')})
-                radio_num = interface['wireless'].get('radio')
+                new_interface.update({
+                    'ssid': wireless.get('ssid'),
+                    'radio': wireless.get('radio'),
+                    'mode': wireless.get('mode'),
+                    'hidden': wireless.get('hidden', False),
+                    'rts_threshold': wireless.get('rts_threshold', -1),
+                    'frag_threshold': wireless.get('frag_threshold', -1),
+                    'encryption': self._get_encryption(wireless)
+                })
                 radios = get_copy(self.netjson, 'radios')
-                if radios is not None:
-                    req_radio = [radio for radio in radios if radio['name'] == radio_num][0]
-                    hwmode = self._get_hwmode(req_radio)
-                    channel = req_radio['channel']
-                    protocol = req_radio['protocol'].replace(".", "")
+                if radios:
+                    req_radio = [radio for radio in radios if radio['name'] == wireless.get('radio')][0]
                     new_interface.update({
-                        'hwmode': hwmode,
-                        'channel': channel,
-                        'protocol': protocol
+                        'protocol': req_radio.get('protocol').replace(".", ""),
+                        'hwmode': self._get_hwmode(req_radio),
+                        'channel': req_radio.get('channel'),
+                        'channel_width': req_radio.get('channel_width')
                     })
                     if 'country' in req_radio:
-                        country = req_radio['country']
-                        new_interface.update({'country': country})
-                hidden = wireless.get('hidden', False)
-                new_interface.update({'hidden': hidden})
-                rts_threshold = wireless.get('rts_threshold', -1)
-                new_interface.update({'rts_threshold': rts_threshold})
-                frag_threshold = wireless.get('frag_threshold', -1)
-                new_interface.update({'frag_threshold': frag_threshold})
-                new_interface.update({'encryption': self._get_encryption(wireless)})
+                        new_interface.update({'country': req_radio.get('country')})
                 result.append(new_interface)
         return (('wireless', result),)
 
     def _get_hwmode(self, radio):
-        protocol = radio['protocol']
+        protocol = radio.get('protocol')
         if protocol in ['802.11a', '802.11b', '802.11g']:
             return protocol[-1:]
-        elif radio['channel'] <= 13:
+        elif radio.get('channel') <= 13:
             return 'g'
         else:
             return 'a'
 
     def _get_encryption(self, wireless):
         encryption = wireless.get('encryption', None)
-        if encryption is None:
-            return {}
-        disabled = encryption.get('disabled', False)
         new_encryption = {}
-        if encryption.get('protocol') is not 'none' and disabled is not True:
-            protocol, method = encryption.get('protocol').split("_")
-            if protocol in ['wpa', 'wpa2']:
-                auth_algs = '1'
-                wpa = '1' if protocol == 'wpa' else '2'
-                wpa_key_mgmt = 'WPA-PSK' if method == 'personal' else 'WPA-EAP'
-                wpa_passphrase = encryption.get('key')
+        if encryption is None:
+            return new_encryption
+        disabled = encryption.get('disabled', False)
+        protocol = encryption.get('protocol')
+        if disabled or protocol == 'none':
+            return new_encryption
+        protocol, method = protocol.split("_")
+        print(protocol, method)
+        if 'wpa' in protocol:
+            if 'personal' in method:
                 new_encryption.update({
-                    'auth_algs': auth_algs,
-                    'wpa': wpa,
-                    'wpa_key_mgmt': wpa_key_mgmt,
-                    'wpa_passphrase': wpa_passphrase
-                    })
-                if encryption.get('cipher', None) is not None:
+                    'auth_algs': '1',
+                    'wpa': '1' if protocol == 'wpa' else '2',
+                    'wpa_key_mgmt': 'WPA-PSK',
+                    'wpa_passphrase': encryption.get('key'),
+                })
+                if encryption.get('cipher'):
                     wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
                     new_encryption.update({'wpa_pairwise': wpa_pairwise})
         return new_encryption
