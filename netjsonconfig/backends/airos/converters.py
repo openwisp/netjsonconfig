@@ -515,10 +515,26 @@ class Sshd(AirOsConverter):
             else:
                 return 'disabled'
 
+        def to_key(x):
+            result = []
+            for y in x:
+                result.append({
+                    'status': status(y),
+                    'type': y['type'],
+                    'value': y['key'],
+                    'comment': y.get('comment', '')
+                })
+            return result
+
         result = []
         original = get_copy(self.netjson, self.netjson_key, {})
+        auth = {'passwd': status(original, 'password_auth')}
+        key = to_key(original.get('keys', []))
+        if key:
+            auth.update({'key': key})
+
         result.append({
-            'auth': {'passwd': status(original, 'password_auth')},
+            'auth': auth,
             'port': original.get('port', 22),
             'status': status(original, 'enabled'),
         })
