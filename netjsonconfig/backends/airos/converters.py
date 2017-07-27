@@ -703,25 +703,22 @@ class Wpasupplicant(AirOsConverter):
     netjson_key = 'interfaces'
 
     def _station_intermediate(self, original):
-        result = []
         station_auth_protocols = available_mode_authentication['station']
-
         temp_dev = {
             'profile': 'AUTO',
             'status': 'enabled',
             'driver': 'madwifi',
             'devname': '',
         }
+        result = []
 
         if original:
             head = original[0]
+            protocol = head['wireless']['encryption']['protocol']
             temp_dev['devname'] = head['wireless']['radio']
+            network = station_auth_protocols[protocol](head)
 
-            if 'encryption' in head['wireless']:
-                network = station_auth_protocols.get(head['wireless']['encryption']['protocol'])(head)
-
-            else:
-                network = station_auth_protocols['none'](head)
+            if protocol == 'none':
                 del temp_dev['driver']
                 del temp_dev['devname']
 
@@ -740,27 +737,27 @@ class Wpasupplicant(AirOsConverter):
     def _access_point_intermediate(self, original):
         """
         Intermediate representation for ``access_point`` mode
-
-        wpasupplicant.device is missing when using the ``access_point`` mode
-        to the temp_dev will not be generated
         """
-        result = []
         ap_auth_protocols = available_mode_authentication['access_point']
-
         temp_dev = {
             'profile': 'AUTO',
-            'status': 'disabled',
         }
+        wpasupplicant_status = {
+            'wpa2_personal': 'disabled',
+            'none': 'enabled',
+        }
+        result = []
 
         if original:
             head = original[0]
-            if 'encryption' in head:
-                network = ap_auth_protocols.get(head['encryption']['protocol'])(head)
-                result.append({'status': 'disabled'})
-            else:
-                network = ap_auth_protocols['none'](head)
-                temp_dev['status'] = 'enabled'
-                result.append({'status': 'enabled'})
+            protocol = head['wireless']['encryption']['protocol']
+            status = wpasupplicant_status[protocol]
+            result.append({
+                'status': status
+            })
+            temp_dev['status'] = status
+            network = ap_auth_protocols[protocol](head)
+
         result.append({
             'device': [temp_dev],
             'profile': [
