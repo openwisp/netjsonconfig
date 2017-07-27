@@ -17,7 +17,7 @@ def status(config, key='disabled'):
 def get_psk(interface):
     t = {
         'wpa': {
-            'psk': interface['encryption']['key'],
+            'psk': interface['wireless']['encryption']['key'],
         },
     }
     return t
@@ -29,7 +29,7 @@ def is_wpa2_personal(interface):
     authentication
     """
     try:
-        return interface['encryption']['protocol'] == 'wpa2_personal'
+        return interface['wireless']['encryption']['protocol'] == 'wpa2_personal'
     except:
         return False
 
@@ -717,8 +717,8 @@ class Wpasupplicant(AirOsConverter):
             head = original[0]
             temp_dev['devname'] = head['wireless']['radio']
 
-            if 'encryption' in head:
-                network = station_auth_protocols.get(head['encryption']['protocol'])(head)
+            if 'encryption' in head['wireless']:
+                network = station_auth_protocols.get(head['wireless']['encryption']['protocol'])(head)
 
             else:
                 network = station_auth_protocols['none'](head)

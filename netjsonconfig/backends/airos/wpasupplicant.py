@@ -21,7 +21,7 @@ def ap_wpa2_personal(interface):
     in ``access_point`` mode
     """
     return {
-        'psk': interface['encryption']['key'],
+        'psk': interface['wireless']['encryption']['key'],
         'ssid': interface['wireless']['ssid'],
         'key_mgmt': [
             {
@@ -57,7 +57,7 @@ def sta_wpa2_personal(interface):
     """
     return {
         'ssid': interface['wireless']['ssid'],
-        'psk': interface['encryption']['key'],
+        'psk': interface['wireless']['encryption']['key'],
         # no advanced authentication methods
         # with psk
         'eap': [
