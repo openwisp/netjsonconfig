@@ -20,6 +20,13 @@ class TestAaaConverter(ConverterTest):
                         }
                     },
                 },
+                {
+                    "type": "bridge",
+                    "name": "br0",
+                    "bridge_members": [
+                        "wlan0",
+                    ],
+                },
             ],
         })
         o.to_intermediate()
@@ -102,6 +109,13 @@ class TestAaaConverter(ConverterTest):
                         },
                     },
                 },
+                {
+                    "type": "bridge",
+                    "name": "br0",
+                    "bridge_members": [
+                        "wlan0",
+                    ],
+                },
             ],
         })
         o.to_intermediate()
@@ -134,6 +148,13 @@ class TestAaaConverter(ConverterTest):
                             "key": "and-pizza-too",
                         },
                     },
+                },
+                {
+                    "type": "bridge",
+                    "name": "br0",
+                    "bridge_members": [
+                        "wlan0",
+                    ],
                 },
             ],
         })
