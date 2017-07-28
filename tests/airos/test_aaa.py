@@ -80,10 +80,9 @@ class TestAaaConverter(ConverterTest):
                 '1.radius.auth.1.status': 'disabled',
                 '1.status': 'enabled',
                 '1.wpa.psk': 'and-pizza-too',
-                # here begins magic
-                '1.radius.macacl.status': 'disabled', # move to radius method
+                '1.radius.macacl.status': 'disabled',
                 '1.ssid': 'i-like-pasta',
-                '1.br.devname': 'br0', # only in bridge mode?
+                '1.br.devname': 'br0',  # only in bridge mode?
                 '1.devname': 'ath0',
                 '1.driver': 'madwifi',
                 '1.wpa.1.pairwise': 'CCMP',
