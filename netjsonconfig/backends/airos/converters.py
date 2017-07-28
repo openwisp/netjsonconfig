@@ -4,6 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .interface import bridge, wireless
+from .radius import radius_from_interface
 from .schema import default_ntp_servers
 from .wpasupplicant import available_mode_authentication
 
@@ -46,6 +47,10 @@ class Aaa(AirOsConverter):
         """
         return wireless(get_copy(self.netjson, 'interfaces', []))
 
+    @property
+    def radius(self):
+        original = get_copy(self.netjson, 'radius', {})
+        return original
 
     def to_intermediate(self):
         result = []
