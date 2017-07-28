@@ -52,6 +52,13 @@ class TestAaaConverter(ConverterTest):
                         },
                     },
                 },
+                {
+                    "type": "bridge",
+                    "name": "br0",
+                    "bridge_members": [
+                        "wlan0",
+                    ],
+                },
             ],
         })
         o.to_intermediate()
