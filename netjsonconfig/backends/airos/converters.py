@@ -3,6 +3,7 @@ from ipaddress import ip_interface
 
 from ...utils import get_copy
 from ..base.converter import BaseConverter
+from .aaa import bridge_devname, profile_from_interface, status_from_interface
 from .interface import bridge, wireless
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
@@ -53,30 +54,20 @@ class Aaa(AirOsConverter):
         return original
 
     def to_intermediate(self):
+        base = {}
         result = []
-        temp = {
-            'radius': {
-                'acct': [
-                    {
-                        'port': 1813,
-                        'status': 'disabled',
-                    },
-                ],
-                'auth': [
-                    {
-                        'port': 1812,
-                    },
-                ],
-            },
-            'status': 'disabled',
-        }
-        result.append({
-            'status': self.status(),
-        })
-        result.append([ temp, ])
-        w = self.wpa2_personal()
-        if w:
-            result.append([w])
+        try:
+            wireless = self.wireless[0]
+            bridge = self.bridge[0]
+            base.update(profile_from_interface(wireless))
+            base.update(status_from_interface(wireless))
+            base.update(radius_from_interface(wireless))
+            base.update(bridge_devname(wireless, bridge))
+        except IndexError:
+            raise Exception('input is missing a wireless or bridge interface')
+        result.append(status_from_interface(wireless))
+        result.append([base])
+
         return (('aaa', result),)
 
 
