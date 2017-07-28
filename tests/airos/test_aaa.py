@@ -15,6 +15,9 @@ class TestAaaConverter(ConverterTest):
                         "mode": "access_point",
                         "radio": "ath0",
                         "ssid": "i-like-pasta",
+                        "encryption": {
+                            "protocol": "none"
+                        }
                     },
                 },
             ],
@@ -87,6 +90,9 @@ class TestAaaConverter(ConverterTest):
                         "radio": "ath0",
                         "ssid": "i-like-pasta",
                         "bssid": "00:11:22:33:44:55",
+                        "encryption": {
+                            "protocol": "none",
+                        },
                     },
                 },
             ],
