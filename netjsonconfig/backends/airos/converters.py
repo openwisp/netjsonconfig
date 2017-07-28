@@ -4,7 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .interface import bridge, wireless
+from .interface import bridge, bssid, hidden_ssid, protocol, radio, ssid, wireless
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
 from .wpasupplicant import available_mode_authentication
@@ -624,8 +624,8 @@ class Wireless(AirOsConverter):
         for w in original:
             wireless_list.append({
                 'addmtikie': 'enabled',
-                'devname': w['wireless']['radio'],
-                'hide_ssid': 'enabled' if w['wireless'].get('hidden') else 'disabled',
+                'devname': radio(w),
+                'hide_ssid': hidden_ssid(w),
                 'l2_isolation': 'disabled',
                 'mac_acl': {
                     'policy': 'allow',
@@ -642,8 +642,8 @@ class Wireless(AirOsConverter):
                 'signal_led3': 25,
                 'signal_led4': 15,
                 'signal_led_status': 'enabled',
-                'ssid': w['wireless']['ssid'],
-                'ap': w['wireless'].get('bssid', ''),
+                'ssid': ssid(w),
+                'ap': bssid(w),
                 'status': status(w),
                 'wds': {'status': 'enabled'},
             })
@@ -667,11 +667,11 @@ class Wpasupplicant(AirOsConverter):
 
         if original:
             head = original[0]
-            protocol = head['wireless']['encryption']['protocol']
-            temp_dev['devname'] = head['wireless']['radio']
-            network = station_auth_protocols[protocol](head)
+            proto = protocol(head)
+            temp_dev['devname'] = radio(head)
+            network = station_auth_protocols[proto](head)
 
-            if protocol == 'none':
+            if proto == 'none':
                 del temp_dev['driver']
                 del temp_dev['devname']
 
