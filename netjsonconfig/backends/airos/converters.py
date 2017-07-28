@@ -615,13 +615,17 @@ class Vlan(AirOsConverter):
 class Wireless(AirOsConverter):
     netjson_key = 'interfaces'
 
+    @property
+    def wireless(self):
+        """
+        Return all the wireless interfaces
+        """
+        return wireless(get_copy(self.netjson, 'interfaces', []))
+
     def to_intermediate(self):
         result = []
-        original = [
-            i for i in get_copy(self.netjson, self.netjson_key, []) if i['type'] == 'wireless'
-        ]
         wireless_list = []
-        for w in original:
+        for w in self.wireless:
             wireless_list.append({
                 'addmtikie': 'enabled',
                 'devname': radio(w),
@@ -654,6 +658,13 @@ class Wireless(AirOsConverter):
 
 class Wpasupplicant(AirOsConverter):
     netjson_key = 'interfaces'
+
+    @property
+    def wireless(self):
+        """
+        Return all the wireless interfaces
+        """
+        return wireless(get_copy(self.netjson, 'interfaces', []))
 
     def _station_intermediate(self, original):
         station_auth_protocols = available_mode_authentication['station']
@@ -733,11 +744,10 @@ class Wpasupplicant(AirOsConverter):
         }
 
     def to_intermediate(self):
-        original = [
-            i for i in get_copy(self.netjson, self.netjson_key, []) if i['type'] == 'wireless'
-        ]
-        if original:
-            head = original[0]
+        try:
+            head = self.wireless[0]
             # call either ``_station_intermediate`` or ``_access_point_intermediate``
             # and return the result
-            return getattr(self, '_%s_intermediate' % head['wireless']['mode'])(original)
+            return getattr(self, '_%s_intermediate' % head['wireless']['mode'])(self.wireless)
+        except IndexError:
+            raise Warning('Zero wireless interface found')
