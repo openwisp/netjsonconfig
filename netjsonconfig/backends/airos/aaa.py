@@ -35,6 +35,7 @@ def sta_psk(interface):
         }
     }
 
+
 _profile = {}
 
 _profile_from_mode = {
@@ -48,12 +49,14 @@ _profile_from_mode = {
     },
 }
 
+
 def profile_from_interface(interface):
     profile = _profile.copy()
     profile.update(
             _profile_from_mode[mode(interface)][protocol(interface)](interface)
     )
     return profile
+
 
 _status = {}
 

@@ -45,12 +45,14 @@ _radius_from_mode = {
     }
 }
 
+
 def radius_from_interface(interface):
     radius = _radius.copy()
     radius.update(
             _radius_from_mode[mode(interface)][protocol(interface)]
     )
     return radius
+
 
 __all__ = [
     radius_from_interface,

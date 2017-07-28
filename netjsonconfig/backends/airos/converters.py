@@ -58,13 +58,18 @@ class Aaa(AirOsConverter):
         result = []
         try:
             wireless = self.wireless[0]
-            bridge = self.bridge[0]
             base.update(profile_from_interface(wireless))
             base.update(status_from_interface(wireless))
             base.update(radius_from_interface(wireless))
-            base.update(bridge_devname(wireless, bridge))
         except IndexError:
             raise Exception('input is missing a wireless or bridge interface')
+
+        try:
+            bridge = self.bridge[0]
+            base.update(bridge_devname(wireless, bridge))
+        except IndexError:
+            pass
+
         result.append(status_from_interface(wireless))
         result.append([base])
 
@@ -304,7 +309,6 @@ class Netmode(AirOsConverter):
 
 class Ntpclient(AirOsConverter):
     netjson_key = 'ntp'
-
 
     def ntp_status(self, ntp):
         if ntp.get('enabled', True):
@@ -639,7 +643,7 @@ class Wireless(AirOsConverter):
                 'signal_led4': 15,
                 'signal_led_status': 'enabled',
                 'ssid': w['wireless']['ssid'],
-                'ap': w['wireless'].get('bssid',''),
+                'ap': w['wireless'].get('bssid', ''),
                 'status': status(w),
                 'wds': {'status': 'enabled'},
             })
