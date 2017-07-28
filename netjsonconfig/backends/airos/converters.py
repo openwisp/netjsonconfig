@@ -28,15 +28,12 @@ class AirOsConverter(BaseConverter):
 class Aaa(AirOsConverter):
     netjson_key = 'general'
 
-    def wpa2_personal(self):
+    @property
+    def bridge(self):
         """
-        When using wpa2_personal the wifi password is written
-        in ``aaa.1.wpa.psk`` too
+        Return all the bridge interfaces
         """
-        try:
-            return [get_psk(i) for i in self.wireless() if is_wpa2_personal(i)][0]
-        except IndexError:
-            return {}
+        return bridge(get_copy(self.netjson, 'interfaces', []))
 
     @property
     def netmode(self):
