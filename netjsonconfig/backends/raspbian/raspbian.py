@@ -2,7 +2,8 @@ import re
 
 from . import converters
 from ..base.backend import BaseBackend
-from .renderer import Hostapd, Hostname, Interfaces, Ntp, Resolv, Scripts, WpaSupplicant
+from .renderer import (Hostapd, Hostname, Interfaces, Ntp, Resolv, Scripts,
+                       WpaSupplicant)
 from .schema import schema
 
 
