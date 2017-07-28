@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from ...schema import schema as default_schema
 from ...utils import merge_config
 from ..openwrt.timezones import timezones
@@ -73,7 +75,7 @@ schema = merge_config(default_schema, {
         }
     }
 })
-
+schema = deepcopy(schema)
 del schema['properties']['general']['properties']['ula_prefix']
 del schema['properties']['general']['properties']['maintainer']
 del schema['properties']['general']['properties']['description']
