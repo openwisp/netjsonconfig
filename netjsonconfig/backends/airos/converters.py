@@ -3,6 +3,7 @@ from ipaddress import ip_interface
 
 from ...utils import get_copy
 from ..base.converter import BaseConverter
+from .interface import bridge, wireless
 from .schema import default_ntp_servers
 from .wpasupplicant import available_mode_authentication
 
@@ -57,11 +58,12 @@ class Aaa(AirOsConverter):
         except IndexError:
             return {}
 
+    @property
     def wireless(self):
         """
         Return all the wireless interfaces
         """
-        return [i for i in get_copy(self.netjson, 'interfaces', []) if i['type'] == 'wireless']
+        return wireless(get_copy(self.netjson, 'interfaces', []))
 
     def status(self):
         """
