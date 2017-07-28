@@ -24,7 +24,7 @@ class TestGuiConverter(ConverterTest):
     def test_language(self):
         o = self.backend({
             'gui': {
-                'language' : 'it_IT',
+                'language': 'it_IT',
             },
         })
         o.to_intermediate()
