@@ -65,6 +65,7 @@ class TestAaaConverter(ConverterTest):
                 '1.radius.auth.1.port': 1812,
                 '1.radius.auth.1.status': 'disabled',
                 '1.status': 'enabled',
+                '1.wpa.psk': 'and-pizza-too',
                 # here begins magic
                 '1.radius.macacl.status': 'disabled', # move to radius method
                 '1.ssid': 'i-like-pasta',
@@ -74,7 +75,6 @@ class TestAaaConverter(ConverterTest):
                 '1.wpa.1.pairwise': 'CCMP',
                 '1.wpa.key.1.mgmt': 'WPA-PSK',
                 '1.wpa.mode': 2,
-                '1.wpa.psk': 'and-pizza-too',
             }
         ]
         self.assertEqualConfig(o.intermediate_data['aaa'], expected)
@@ -139,8 +139,8 @@ class TestAaaConverter(ConverterTest):
                 '1.radius.acct.1.port': 1813,
                 '1.radius.acct.1.status': 'disabled',
                 '1.radius.auth.1.port': 1812,
-                '1.radius.auth.1.status': 'disabled',
                 '1.status': 'disabled',
+                '1.wpa.psk': 'and-pizza-too',
             },
         ]
         self.assertEqualConfig(o.intermediate_data['aaa'], expected)
