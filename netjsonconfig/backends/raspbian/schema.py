@@ -4,23 +4,6 @@ from ..openwrt.timezones import timezones
 
 schema = merge_config(default_schema, {
     "definitions": {
-        "network_interface": {
-            "title": "Network interface",
-            "allOf": [
-                {
-                    "properties": {
-                        "type": {
-                            "enum": [
-                                "ethernet",
-                                "virtual",
-                                "loopback"
-                            ],
-                        }
-                    }
-                },
-                {"$ref": "#/definitions/interface_settings"}
-            ]
-        },
         "radio_hwmode_11g": {
             "properties": {
                 "hwmode": {
@@ -92,6 +75,17 @@ schema = merge_config(default_schema, {
 })
 
 del schema['properties']['general']['properties']['ula_prefix']
-del schema['properties']['general']['properties']['description']
 del schema['properties']['general']['properties']['maintainer']
+del schema['properties']['general']['properties']['description']
+del schema['properties']['routes']['items']['required'][3]
+del schema['properties']['routes']['items']['properties']['cost']
+del schema['properties']['routes']['items']['properties']['source']
+del schema['properties']['files']
+
+del schema['definitions']['wireless_interface']['allOf'][0]['properties']['wireless']['oneOf'][4]
+del schema['definitions']['wireless_interface']['allOf'][0]['properties']['wireless']['oneOf'][3]
 del schema['definitions']['base_wireless_settings']['properties']['ack_distance']
+del schema['definitions']['ap_wireless_settings']['allOf'][4]
+del schema['definitions']['sta_wireless_settings']['allOf'][4]
+del schema['definitions']['base_radio_settings']['properties']['phy']
+del schema['definitions']['base_radio_settings']['properties']['tx_power']
