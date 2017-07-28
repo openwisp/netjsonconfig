@@ -347,7 +347,19 @@ schema = {
                 }
             }
         },
-        "bssid_wireless_property": {
+        "bssid_wireless_property_sta": {
+            "properties": {
+                "bssid": {
+                    "type": "string",
+                    "title": "BSSID",
+                    "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
+                    "minLength": 17,
+                    "maxLength": 17,
+                    "propertyOrder": 4,
+                },
+            }
+        },
+        "bssid_wireless_property_adhoc": {
             "required": ["bssid"],
             "properties": {
                 "bssid": {
@@ -707,7 +719,7 @@ schema = {
                 {"properties": {"mode": {"enum": ["station"]}}},
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/ssid_wireless_property"},
-                {"$ref": "#/definitions/bssid_wireless_property"},
+                {"$ref": "#/definitions/bssid_wireless_property_sta"},
                 {"$ref": "#/definitions/wds_wireless_property"},
                 {"$ref": "#/definitions/encryption_wireless_property_sta"},
             ]
@@ -718,7 +730,7 @@ schema = {
                 {"properties": {"mode": {"enum": ["adhoc"]}}},
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/ssid_wireless_property"},
-                {"$ref": "#/definitions/bssid_wireless_property"},
+                {"$ref": "#/definitions/bssid_wireless_property_adhoc"},
                 {"$ref": "#/definitions/encryption_wireless_property_mesh"},
             ]
         },
