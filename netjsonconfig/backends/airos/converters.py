@@ -15,26 +15,6 @@ def status(config, key='disabled'):
         return 'enabled'
 
 
-def get_psk(interface):
-    t = {
-        'wpa': {
-            'psk': interface['wireless']['encryption']['key'],
-        },
-    }
-    return t
-
-
-def is_wpa2_personal(interface):
-    """
-    returns True if the interface is configured with wpa2_personal
-    authentication
-    """
-    try:
-        return interface['wireless']['encryption']['protocol'] == 'wpa2_personal'
-    except:
-        return False
-
-
 class AirOsConverter(BaseConverter):
     """
     Always run the converter from NetJSON
@@ -69,36 +49,6 @@ class Aaa(AirOsConverter):
         """
         return wireless(get_copy(self.netjson, 'interfaces', []))
 
-    def status(self):
-        """
-        The aaa.status value is enabled when the interface is in access_point mode
-        with wpa2_personal authentication
-        """
-        try:
-            t = self.wireless()[0]['wireless']
-            if t['mode'] == 'access_point' and t['encryption']['protocol'] == 'wpa2_personal':
-                return 'enabled'
-            else:
-                return 'disabled'
-        except:
-            # catch both KeyError and IndexError
-            return 'disabled'
-
-    def ap_psk(self):
-        t = self.wireless()[0]['wireless']
-        temp = {
-            'radius.macacl.status': 'disabled',
-            'ssid': t['ssid'],
-            'devname': t['radio'],
-            'driver': 'madwifi',
-            'wpa.1.pairwise': 'CCMP',
-            'wpa.key.1rmgmt': 'WPA-PSK',
-            'wpa.mode': 2,
-        }
-        if t['mode'] == 'access_point'  and t['encryption']['protocol'] == 'wpa2_personal':
-            return temp
-        else:
-            return {}
 
     def to_intermediate(self):
         result = []
