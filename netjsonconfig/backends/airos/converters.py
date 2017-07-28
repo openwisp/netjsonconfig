@@ -59,6 +59,10 @@ class Aaa(AirOsConverter):
             return {}
 
     @property
+    def netmode(self):
+        return self.netjson.get('netmode', 'bridge')
+
+    @property
     def wireless(self):
         """
         Return all the wireless interfaces
