@@ -5,6 +5,16 @@ def bridge(interfaces):
     return [i for i in interfaces if i['type'] == 'bridge']
 
 
+def hidden_ssid(interface):
+    """
+    Return wether the ssid is hidden
+    """
+    if interface['wireless'].get('hidden', False):
+        return 'enabled'
+    else:
+        return 'disabled'
+
+
 def mode(interface):
     """
     Return wireless interface mode
@@ -31,6 +41,13 @@ def radio(interface):
     Return wireless interface's radio name
     """
     return interface['wireless']['radio']
+
+
+def bssid(interface):
+    """
+    Return the interface bssid
+    """
+    return interface['wireless'].get('bssid', '')
 
 
 def ssid(interface):
