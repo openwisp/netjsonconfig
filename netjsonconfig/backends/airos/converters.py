@@ -524,7 +524,7 @@ class System(AirOsConverter):
                 'version': 0,
             },
             'date': {
-                'status': 'enabled',
+                'status': 'disabled',
             },
             'external': {
                 'reset': 'enabled',
