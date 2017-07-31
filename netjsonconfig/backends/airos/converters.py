@@ -4,7 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .interface import bridge, bssid, hidden_ssid, protocol, radio, ssid, wireless
+from .interface import bridge, bssid, hidden_ssid, protocol, radio, split_cidr, ssid, wireless
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
 from .radio import radio_device_base, radio_configuration
@@ -268,7 +268,7 @@ class Netconf(AirOsConverter):
                 base['flowcontrol'] = self.flowcontrol_status(interface)
 
             if interface['type'] == 'wireless':
-                base['devname'] = interface['wireless']['radio']
+                base['devname'] = radio(interface)
 
             addresses = interface.get('addresses')
             if addresses:
@@ -282,10 +282,7 @@ class Netconf(AirOsConverter):
                     if addr['proto'] == 'dhcp':
                         temp['autoip'] = {'status': 'enabled'}
                     else:
-                        ip_and_mask = '%s/%d' % (addr['address'], addr['mask'])
-                        network = ip_interface(ip_and_mask)
-                        temp['ip'] = str(network.ip)
-                        temp['netmask'] = str(network.netmask)
+                        temp.update(split_cidr(addr))
                     interfaces.append(temp)
             else:
                 # an interface without address
