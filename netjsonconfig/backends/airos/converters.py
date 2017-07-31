@@ -338,7 +338,7 @@ class Pwdog(AirOsConverter):
             'delay': 300,
             'period': 300,
             'retry': 3,
-            'status': 'enabled',
+            'status': 'disabled',
         })
         return (('pwdog', result),)
 
