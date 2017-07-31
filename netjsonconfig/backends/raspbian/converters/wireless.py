@@ -58,10 +58,11 @@ class Wireless(RaspbianConverter):
         if disabled or protocol == 'none':
             return new_encryption
         protocol, method = protocol.split("_")
-        print(protocol, method)
         if 'wpa' in protocol:
             if 'personal' in method:
                 new_encryption.update({
+                    'protocol': 'wpa',
+                    'method': 'personal',
                     'auth_algs': '1',
                     'wpa': '1' if protocol == 'wpa' else '2',
                     'wpa_key_mgmt': 'WPA-PSK',
@@ -70,4 +71,21 @@ class Wireless(RaspbianConverter):
                 if encryption.get('cipher'):
                     wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
                     new_encryption.update({'wpa_pairwise': wpa_pairwise})
+            elif 'enterprise' in method:
+                if encryption.get('cipher'):
+                    cipher = str(encryption.get('cipher').replace('+', ' ').upper())
+                    new_encryption.update({'cipher': cipher})
+                if encryption.get('eap_type'):
+                    eap_type = encryption.get('eap_type').upper()
+                    new_encryption.update({'eap_type': eap_type})
+                new_encryption.update({
+                    'protocol': 'wpa',
+                    'method': 'enterprise',
+                    'identity': encryption.get('identity', None),
+                    'password': encryption.get('password', None),
+                    'ca_cert': encryption.get('ca_cert', None),
+                    'client_cert': encryption.get('client_cert', None),
+                    'priv_key': encryption.get('priv_key', None),
+                    'priv_key_pwd': encryption.get('priv_key_pwd', None)
+                })
         return new_encryption

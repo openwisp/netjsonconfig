@@ -4,11 +4,36 @@
 
         network={
                 ssid="{{ wireless.ssid }}"
-                {% if 'wpa' in wireless.encryption %}
-                key="{{ wireless.encryption.wpa_passphrase }}"
-                {% if wireless.encryption.wpa_key_mgmt %}
-                key_mgmt={{ wireless.encryption.wpa_key_mgmt }}
-                {% endif  %}
+                {% if 'wpa' in wireless.encryption.protocol %}
+                    {% set encryption = wireless.encryption %}
+                    {% if encryption.method == 'personal' %}
+                        key="{{ encryption.wpa_passphrase }}"
+                        {% if encryption.wpa_key_mgmt %}
+                        key_mgmt={{ encryption.wpa_key_mgmt }}
+                        {% endif  %}
+                    {% elif wireless.encryption.method == 'enterprise' %}
+                        {% if encryption.eap_type %}
+                        eap={{ encryption.eap_type }}
+                        {% endif %}
+                        {% if encryption.identity %}
+                        identity="{{ encryption.identity }}"
+                        {% endif %}
+                        {% if encryption.password %}
+                        password="{{ encryption.password }}"
+                        {% endif %}
+                        {% if encryption.ca_cert %}
+                        ca_cert="{{ encryption.ca_cert }}"
+                        {% endif %}
+                        {% if encryption.client_cert %}
+                        client_cert="{{ encryption.client_cert }}"
+                        {% endif %}
+                        {% if encryption.priv_key %}
+                        priv_key="{{ encryption.priv_key }}"
+                        {% endif %}
+                        {% if encryption.priv_key_pwd %}
+                        priv_key_pwd="{{ encryption.priv_key_pwd }}"
+                        {% endif %}
+                    {% endif%}
                 {% else %}
                 key_mgmt=NONE
                 {% endif %}
