@@ -1,8 +1,18 @@
+from ipaddress import ip_interface
+
+
 def bridge(interfaces):
     """
     Return the bridge interfaces from the interfaces list
     """
     return [i for i in interfaces if i['type'] == 'bridge']
+
+
+def bssid(interface):
+    """
+    Return the interface bssid
+    """
+    return interface['wireless'].get('bssid', '')
 
 
 def hidden_ssid(interface):
@@ -43,11 +53,8 @@ def radio(interface):
     return interface['wireless']['radio']
 
 
-def bssid(interface):
     """
-    Return the interface bssid
     """
-    return interface['wireless'].get('bssid', '')
 
 
 def ssid(interface):
