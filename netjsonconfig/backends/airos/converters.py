@@ -7,6 +7,7 @@ from .aaa import bridge_devname, profile_from_interface, status_from_interface
 from .interface import bridge, bssid, hidden_ssid, protocol, radio, ssid, wireless
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
+from .radio import radio_device_base, radio_configuration
 from .wpasupplicant import available_mode_authentication
 
 
@@ -353,14 +354,16 @@ class Radio(BaseConverter):
         original = get_copy(self.netjson, self.netjson_key, [])
         radios = []
         for r in original:
-            radios.append({
+            base = radio_device_base.copy()
+            user_configs = {
                 'devname': r['name'],
-                'status': status(r),
-                'txpower': r.get('tx_power', ''),
-                'chanbw': r.get('channel_width', ''),
-            })
+                'txpower': r.get('tx_power', 24),
+                'chanbw': r.get('channel_width', 0),
+            }
+            base.update(user_configs)
+            radios.append(base)
         result.append(radios)
-        result.append({'status': 'enabled'})
+        result.append(radio_configuration)
         return (('radio', result),)
 
 
