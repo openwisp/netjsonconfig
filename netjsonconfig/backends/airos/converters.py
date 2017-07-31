@@ -343,7 +343,7 @@ class Pwdog(AirOsConverter):
         return (('pwdog', result),)
 
 
-class Radio(BaseConverter):
+class Radio(AirOsConverter):
     netjson_key = 'radios'
 
     def to_intermediate(self):
