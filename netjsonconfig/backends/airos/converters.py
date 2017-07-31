@@ -355,7 +355,6 @@ class Radio(AirOsConverter):
             user_configs = {
                 'devname': r['name'],
                 'txpower': r.get('tx_power', 24),
-                'chanbw': r.get('channel_width', 0),
             }
             base.update(user_configs)
             radios.append(base)
