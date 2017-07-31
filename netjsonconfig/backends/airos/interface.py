@@ -58,7 +58,7 @@ def split_cidr(address):
     Return the address in dict format
     """
     network = ip_interface('{addr}/{mask}'.format(addr=address['address'], mask=address['mask']))
-    return {'ip': network.ip, 'netmask': network.netmask}
+    return {'ip': str(network.ip), 'netmask': str(network.netmask)}
 
 
 def ssid(interface):
