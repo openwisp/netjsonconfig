@@ -42,7 +42,7 @@ class TestWpaSupplicant(unittest.TestCase, _TabsMixin):
 network={
 ssid="ap-ssid-example"
 key="cucumber"
-key_mgtmt=WPA-PSK
+key_mgmt=WPA-PSK
 }
 
 # config: /etc/network/interfaces
@@ -92,6 +92,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 network={
 ssid="ap-ssid-example"
+key_mgmt=NONE
 }
 
 # config: /etc/network/interfaces

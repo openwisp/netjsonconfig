@@ -5,12 +5,15 @@
         network={
                 ssid="{{ wireless.ssid }}"
                 {% if 'wpa' in wireless.encryption %}
-                {% if wireless.encryption %}
                 key="{{ wireless.encryption.wpa_passphrase }}"
-                {% endif %}
                 {% if wireless.encryption.wpa_key_mgmt %}
-                key_mgtmt={{ wireless.encryption.wpa_key_mgmt }}
+                key_mgmt={{ wireless.encryption.wpa_key_mgmt }}
                 {% endif  %}
+                {% else %}
+                key_mgmt=NONE
+                {% endif %}
+                {% if 'wep' in wireless.encryption %}
+                {# WEP Config Here#}
                 {% endif %}
         }
 
