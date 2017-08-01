@@ -96,6 +96,16 @@ def ssid(interface):
     return interface['wireless']['ssid']
 
 
+def stp(interface):
+    """
+    Return wether the spanning tree protocol is enabled
+    """
+    if interface.get('stp', False):
+        return 'enabled'
+    else:
+        return 'disabled'
+
+
 def vlan(interfaces):
     """
     Return the vlan interfaces from the interfaces list

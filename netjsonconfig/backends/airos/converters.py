@@ -4,7 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, protocol, radio, split_cidr, ssid, stp, wireless
+from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, protocol, radio, split_cidr, ssid, stp, vlan, wireless
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
 from .radio import radio_device_base, radio_configuration
@@ -80,11 +80,6 @@ class Aaa(AirOsConverter):
 class Bridge(AirOsConverter):
     netjson_key = 'interfaces'
 
-    def stp_status(self, interface):
-        if interface.get('stp', False):
-            return 'enabled'
-        else:
-            return 'disabled'
 
     def to_intermediate(self):
         result = []
@@ -104,7 +99,7 @@ class Bridge(AirOsConverter):
                 'devname': interface['name'],
                 'port': bridge_ports,
                 'status': status(interface),
-                'stp': {'status': self.stp_status(interface)}
+                'stp': {'status': stp(interface)}
             })
 
         result.append(bridges)
