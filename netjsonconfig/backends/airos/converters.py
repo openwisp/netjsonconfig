@@ -80,14 +80,14 @@ class Aaa(AirOsConverter):
 class Bridge(AirOsConverter):
     netjson_key = 'interfaces'
 
+    @property
+    def bridge(self):
+        return bridge(get_copy(self.netjson, self.netjson_key, []))
 
     def to_intermediate(self):
         result = []
-        original = [
-            i for i in get_copy(self.netjson, self.netjson_key, []) if i['type'] == 'bridge'
-        ]
         bridges = []
-        for interface in original:
+        for interface in self.bridge:
             bridge_ports = []
             for port in interface.get('bridge_members', []):
                 bridge_ports.append({
