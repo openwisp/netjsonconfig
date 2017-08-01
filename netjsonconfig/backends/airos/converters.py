@@ -158,7 +158,7 @@ class Ebtables(AirOsConverter):
         return [{}]
 
     def to_intermediate(self):
-        netmode = get_copy(self.netjson, 'netmode')
+        netmode = get_copy(self.netjson, 'netmode', 'bridge')
         result = getattr(self, '{netmode}_intermediate'.format(netmode=netmode))()
         return (('ebtables', result),)
 
@@ -245,7 +245,7 @@ class Iptables(AirOsConverter):
         return [base]
 
     def to_intermediate(self):
-        netmode = get_copy(self.netjson, 'netmode')
+        netmode = get_copy(self.netjson, 'netmode', 'bridge')
         result = getattr(self, '{netmode}_intermediate'.format(netmode=netmode))()
         return (('iptables', result),)
 
