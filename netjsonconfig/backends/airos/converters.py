@@ -140,18 +140,26 @@ class Dyndns(AirOsConverter):
 class Ebtables(AirOsConverter):
     netjson_key = 'general'
 
+    _base = {
+        'sys': {
+            'fw': {
+                'status': 'disabled',
+            },
+            'status': 'enabled'
+        },
+        'status': 'enabled'
+    }
+
+    def bridge_intermediate(self):
+        base = self._base.copy()
+        return [base]
+
+    def router_intermediate(self):
+        return [{}]
+
     def to_intermediate(self):
-        result = [
-            {
-                'sys': {
-                    'fw': {
-                        'status': 'disabled',
-                    },
-                    'status': 'enabled'
-                },
-                'status': 'enabled'
-            }
-        ]
+        netmode = get_copy(self.netjson, 'netmode')
+        result = getattr(self, '{netmode}_intermediate'.format(netmode=netmode))()
         return (('ebtables', result),)
 
 
