@@ -188,39 +188,6 @@ There are 3 main type of interfaces:
 * **wireless interfaces**: must be of type ``wireless``
 * **bridge interfaces**: must be of type ``bridge``
 
-Loopback Interface
-~~~~~~~~~~~~~~~~~~
-
-The following *configuration dictionary*:
-
-.. code-block:: python
-
-    {
-        "interfaces": [
-            {
-                "name": "lo",
-                "type": "loopback",
-                "addresses": [
-                    {
-                        "address": "127.0.0.1",
-                        "mask": 8,
-                        "proto": "static",
-                        "family": "ipv4"
-                    }
-                ]
-            }
-        ]
-    }
-
-Will be rendered as follows::
-
-    # config: /etc/network/interfaces
-
-    auto lo
-    iface lo inet static
-    address 127.0.0.1
-    netmask 255.0.0.0
-
 Dualstack (IPv4 & IPv6)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
