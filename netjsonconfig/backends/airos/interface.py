@@ -96,6 +96,13 @@ def ssid(interface):
     return interface['wireless']['ssid']
 
 
+def vlan(interfaces):
+    """
+    Return the vlan interfaces from the interfaces list
+    """
+    return [i for i in interfaces if '.' in i['name']]
+
+
 def wireless(interfaces):
     """
     Return the wireless interfaces from the interfaces list

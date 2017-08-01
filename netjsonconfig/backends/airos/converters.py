@@ -4,7 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, protocol, radio, split_cidr, ssid, wireless
+from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, protocol, radio, split_cidr, ssid, stp, wireless
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
 from .radio import radio_device_base, radio_configuration
@@ -604,13 +604,14 @@ class Users(AirOsConverter):
 class Vlan(AirOsConverter):
     netjson_key = 'interfaces'
 
+    @property
+    def vlan(self):
+        return vlan(get_copy(self.netjson, self.netjson_key, []))
+
     def to_intermediate(self):
         result = []
-        original = [
-            i for i in get_copy(self.netjson, self.netjson_key, []) if '.' in i['name']
-        ]
         vlans = []
-        for v in original:
+        for v in self.vlan:
             vlans.append({
                 'comment': v.get('comment', ''),
                 'devname': v['name'].split('.')[0],
