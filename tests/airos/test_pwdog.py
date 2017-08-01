@@ -15,7 +15,7 @@ class TestPwdogConverter(ConverterTest):
                 'delay': 300,
                 'period': 300,
                 'retry': 3,
-                'status': 'enabled',
+                'status': 'disabled',
             },
         ]
 
