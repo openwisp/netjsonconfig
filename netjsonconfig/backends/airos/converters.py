@@ -581,6 +581,18 @@ class Update(AirOsConverter):
         return (('update', result),)
 
 
+class Upnpd(AirOsConverter):
+    @classmethod
+    def should_run_forward(cls, config):
+        if config.get('netmode', 'bridge') == 'bridge':
+            return False
+        else:
+            return True
+
+    def to_intermediate(self):
+        return (('upnpd', [{'status': 'disabled'}]),)
+
+
 class Users(AirOsConverter):
     netjson_key = 'user'
 
