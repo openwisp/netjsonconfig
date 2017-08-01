@@ -214,16 +214,39 @@ class Igmpproxy(AirOsConverter):
 class Iptables(AirOsConverter):
     netjson_key = 'general'
 
-    def to_intermediate(self):
-        result = [
-            {
-                'sys': {
-                    'portfw': {'status': 'disabled'},
+    _base = {
+        'sys': {
+            'portfw': {'status': 'disabled'},
+            'status': 'enabled',
+        },
+        'status': 'disabled'
+    }
+
+    def bridge_intermediate(self):
+        base = self._base.copy()
+        return [base]
+
+    def router_intermediate(self):
+        base = self._base.copy()
+        base.update({
+            'status': 'enabled',
+        })
+        base['sys'].update({
+            'fw': {'status': 'disabled'},
+            'mgmt': [
+                {
+                    'devname': 'br0',
                     'status': 'enabled',
-                },
-                'status': 'disabled'
-            }
-        ]
+                }
+            ],
+            'mgmt.status': 'enabled',
+        })
+
+        return [base]
+
+    def to_intermediate(self):
+        netmode = get_copy(self.netjson, 'netmode')
+        result = getattr(self, '{netmode}_intermediate'.format(netmode=netmode))()
         return (('iptables', result),)
 
 
