@@ -4,10 +4,10 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, protocol, radio, split_cidr, ssid, stp, vlan, wireless
+from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, mode, protocol, radio, split_cidr, ssid, stp, vlan, wireless
+from .radio import radio_available_mode, radio_configuration
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
-from .radio import radio_device_base, radio_configuration
 from .wpasupplicant import available_mode_authentication
 
 
@@ -352,18 +352,24 @@ class Pwdog(AirOsConverter):
 class Radio(AirOsConverter):
     netjson_key = 'radios'
 
+    @property
+    def radio(self):
+        return get_copy(self.netjson, self.netjson_key, [])
+
+    @property
+    def wireless(self):
+        return wireless(get_copy(self.netjson, 'interfaces', []))
+
     def to_intermediate(self):
         result = []
-        original = get_copy(self.netjson, self.netjson_key, [])
         radios = []
-        for r in original:
-            base = radio_device_base.copy()
-            user_configs = {
-                'devname': r['name'],
-                'txpower': r.get('tx_power', 24),
-            }
-            base.update(user_configs)
-            radios.append(base)
+        wireless = {radio(w): w for w in self.wireless}
+        for logic in self.radio:
+            w = wireless.get(logic['name'])
+            if w:
+                user_config = radio_available_mode[mode(w)](logic)
+                radios.append(user_config)
+
         result.append(radios)
         result.append(radio_configuration)
         return (('radio', result),)

@@ -52,3 +52,42 @@ radio_configuration = {
     'status': 'enabled',
     'countrycode': 380,
 }
+
+
+def access_point(radio):
+    """
+    Return the configuration for a radio device whose wireless
+    interface is in ``access_point`` mode
+    """
+    base = _radio_device_base.copy()
+    base.update({
+        'devname': radio['name'],
+        'chanbw': 80,
+        'ieee_mode': '11acvht80',
+        'mode': 'master',
+    })
+    return base
+
+
+def station(radio):
+    """
+    Return the configuration for a radio device whose wireless
+    interface is in ``station`` mode
+    """
+    base = _radio_device_base.copy()
+    base.update({
+        'devname': radio['name'],
+        'txpower': radio.get('tx_power', 24),
+    })
+    return base
+
+
+radio_available_mode = {
+    'access_point': access_point,
+    'station': station,
+}
+
+__all__ = [
+    radio_available_mode,
+    radio_configuration,
+]
