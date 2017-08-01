@@ -25,7 +25,7 @@ Code example:
     o = Raspbian({
         "interfaces": [
             {
-                "name": "eth0.1",
+                "name": "eth0",
                 "type": "ethernet",
                 "addresses": [
                     {
@@ -56,14 +56,14 @@ Will return the following output::
 
     # config: /etc/network/interfaces
 
-    auto eth0.1
-    iface eth0.1 inet static
+    auto eth0
+    iface eth0 inet static
     address 192.168.1.1
     netmask 255.255.255.0
-    iface eth0.1 inet static
+    iface eth0 inet static
     address 192.168.2.1
     netmask 255.255.255.0
-    iface eth0.1 inet6 static
+    iface eth0 inet6 static
     address fd87::1
     netmask 128
 
