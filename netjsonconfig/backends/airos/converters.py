@@ -4,7 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .interface import bridge, bssid, hidden_ssid, protocol, radio, split_cidr, ssid, wireless
+from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, protocol, radio, split_cidr, ssid, wireless
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
 from .radio import radio_device_base, radio_configuration
@@ -260,26 +260,6 @@ class Netconf(AirOsConverter):
         }
         return roles.get(typestr, '')
 
-    def autoneg_status(self, interface):
-        if interface.get('autoneg'):
-            return 'enabled'
-        else:
-            return 'disabled'
-
-    def flowcontrol_status(self, interface):
-        if interface.get('flowcontrol'):
-            status = 'enabled'
-        else:
-            status = 'disabled'
-        return {
-            'rx': {
-                'status': status,
-            },
-            'tx': {
-                'status': status,
-            },
-        }
-
     def to_intermediate(self):
         result = []
         interfaces = []
@@ -294,9 +274,9 @@ class Netconf(AirOsConverter):
             }
             # handle interface type quirks
             if interface['type'] == 'ethernet' and '.' not in interface['name']:
-                base['autoneg'] = self.autoneg_status(interface)
+                base['autoneg'] = autonegotiation(interface)
 
-                base['flowcontrol'] = self.flowcontrol_status(interface)
+                base['flowcontrol'] = flowcontrol(interface)
 
             if interface['type'] == 'wireless':
                 base['devname'] = radio(interface)

@@ -1,6 +1,16 @@
 from ipaddress import ip_interface
 
 
+def autonegotiation(interface):
+    """
+    Return the configuration for ``autoneg`` on interface
+    """
+    if interface.get('autoneg'):
+        return 'enabled'
+    else:
+        return 'disabled'
+
+
 def bridge(interfaces):
     """
     Return the bridge interfaces from the interfaces list
@@ -13,6 +23,24 @@ def bssid(interface):
     Return the interface bssid
     """
     return interface['wireless'].get('bssid', '')
+
+
+def flowcontrol(interface):
+    """
+    Return the configuration for ``flowcontrol`` on interface
+    """
+    if interface.get('flowcontrol'):
+        status = 'enabled'
+    else:
+        status = 'disabled'
+    return {
+        'rx': {
+            'status': status,
+        },
+        'tx': {
+            'status': status,
+        },
+    }
 
 
 def hidden_ssid(interface):
