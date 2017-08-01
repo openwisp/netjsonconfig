@@ -22,7 +22,7 @@ class Interfaces(RaspbianConverter):
             'ifname': ifname,
             'iftype': iftype
         })
-        if iftype in ['ethernet', 'bridge', 'loopback', 'wireless']:
+        if iftype in ['ethernet', 'bridge', 'wireless']:
             addresses = self._get_address(interface)
             new_interface.update({
                 'address': addresses

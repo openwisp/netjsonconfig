@@ -585,9 +585,7 @@ search openwisp.org
         expected = '''# config: /etc/network/interfaces
 
 auto lo
-iface lo inet static
-address 127.0.0.1
-netmask 255.0.0.0
+iface lo inet loopback
 
 '''
         self.assertEqual(o.render(), expected)

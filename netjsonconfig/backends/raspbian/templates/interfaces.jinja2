@@ -3,7 +3,7 @@
 
 {% endif%}
 {% for interface in data.interfaces %}
-    {% if interface.iftype in ['ethernet', 'bridge', 'loopback', 'wireless'] %}
+    {% if interface.iftype in ['ethernet', 'bridge', 'wireless'] %}
         {% if interface.address %}
         {% if interface.autostart %}
         auto {{ interface.ifname }}
@@ -118,6 +118,9 @@
                     wireless-mode ad-hoc
             {% endif %}
         {% endif %}
+    {% elif interface.iftype == 'loopback'%}
+        auto {{ interface.ifname }}
+        iface {{ interface.ifname }} inet loopback
     {% endif %}
 
 {% endfor %}
