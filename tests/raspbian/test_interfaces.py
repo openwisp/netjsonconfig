@@ -433,6 +433,25 @@ netmask 128
 '''
         self.assertEqual(o.render(), expected)
 
+    def test_autostart_false(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "autostart": False
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/network/interfaces
+
+iface eth0 inet manual
+
+'''
+
+        self.assertEqual(o.render(), expected)
+
     def test_mtu(self):
         o = Raspbian({
             "interfaces": [
