@@ -37,20 +37,6 @@ class Interfaces(RaspbianConverter):
         if routes:
             route = self._get_route(routes)
             new_interface.update({'route': route})
-        # mac = interface.get('mac', False)
-        # if mac:
-        #     new_interface.update({'mac': mac})
-        # mtu = interface.get('mtu', False)
-        # if mtu:
-        #     new_interface.update({'mtu': mtu})
-        # txqueuelen = interface.get('txqueuelen', False)
-        # if txqueuelen:
-        #     new_interface.update({'txqueuelen': txqueuelen})
-        # autostart = interface.get('autostart', True)
-        # if autostart:
-        #     new_interface.update({'autostart': True})
-        # else:
-        #     new_interface.update({'autostart': False})
         if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
             wireless = interface.get('wireless')
             new_interface.update({
