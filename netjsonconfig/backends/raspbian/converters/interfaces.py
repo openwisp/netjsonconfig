@@ -28,23 +28,29 @@ class Interfaces(RaspbianConverter):
                 'address': addresses
             })
         routes = get_copy(self.netjson, 'routes')
+        new_interface.update({
+            'mac': interface.get('mac', None),
+            'mtu': interface.get('mtu', None),
+            'txqueuelen': interface.get('txqueuelen', None),
+            'autostart': interface.get('autostart', True),
+        })
         if routes:
             route = self._get_route(routes)
             new_interface.update({'route': route})
-        mac = interface.get('mac', False)
-        if mac:
-            new_interface.update({'mac': mac})
-        mtu = interface.get('mtu', False)
-        if mtu:
-            new_interface.update({'mtu': mtu})
-        txqueuelen = interface.get('txqueuelen', False)
-        if txqueuelen:
-            new_interface.update({'txqueuelen': txqueuelen})
-        autostart = interface.get('autostart', True)
-        if autostart:
-            new_interface.update({'autostart': True})
-        else:
-            new_interface.update({'autostart': False})
+        # mac = interface.get('mac', False)
+        # if mac:
+        #     new_interface.update({'mac': mac})
+        # mtu = interface.get('mtu', False)
+        # if mtu:
+        #     new_interface.update({'mtu': mtu})
+        # txqueuelen = interface.get('txqueuelen', False)
+        # if txqueuelen:
+        #     new_interface.update({'txqueuelen': txqueuelen})
+        # autostart = interface.get('autostart', True)
+        # if autostart:
+        #     new_interface.update({'autostart': True})
+        # else:
+        #     new_interface.update({'autostart': False})
         if iftype == 'wireless' and interface.get('wireless').get('mode') == 'adhoc':
             wireless = interface.get('wireless')
             new_interface.update({

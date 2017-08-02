@@ -91,7 +91,9 @@
                 {% endif%}
             {% endfor %}
         {% else %}
+            {% if interface.autostart %}
             auto {{ interface.ifname }}
+            {% endif %}
             {% if interface.iftype in ['ethernet', 'wireless'] and interface.mode != 'adhoc' %}
             iface {{ interface.ifname }} inet manual
             {% set route = interface.route %}
