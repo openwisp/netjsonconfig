@@ -8,6 +8,7 @@ from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid,
 from .radio import radio_available_mode, radio_configuration
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
+from .wireless import wireless_available_mode
 from .wpasupplicant import available_mode_authentication
 
 
@@ -650,31 +651,8 @@ class Wireless(AirOsConverter):
         result = []
         wireless_list = []
         for w in self.wireless:
-            wireless_list.append({
-                'addmtikie': 'enabled',
-                'devname': radio(w),
-                'hide_ssid': hidden_ssid(w),
-                'l2_isolation': 'disabled',
-                'mac_acl': {
-                    'policy': 'allow',
-                    'status': 'disabled',
-                },
-                'mcast': {'enhance': 0},
-                'rate': {
-                    'auto': 'enabled',
-                    'mcs': -1,
-                },
-                'security': {'type': 'none'},
-                'signal_led1': 75,
-                'signal_led2': 50,
-                'signal_led3': 25,
-                'signal_led4': 15,
-                'signal_led_status': 'enabled',
-                'ssid': ssid(w),
-                'ap': bssid(w),
-                'status': status(w),
-                'wds': {'status': 'enabled'},
-            })
+            user_config = wireless_available_mode[mode(w)](w)
+            wireless_list.append(user_config)
         result.append(wireless_list)
         result.append({'status': 'enabled'})
         return (('wireless', result),)
