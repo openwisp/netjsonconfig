@@ -99,7 +99,6 @@ class TestRadioStationConverter(ConverterTest):
 
         self.assertEqualConfig(o.intermediate_data['radio'], expected)
 
-
     def test_channel_width(self):
         """
         TODO: channel brandwidth tested only on 802.11ac

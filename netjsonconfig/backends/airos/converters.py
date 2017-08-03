@@ -4,7 +4,8 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .interface import autonegotiation, bridge, bssid, flowcontrol, hidden_ssid, mode, protocol, radio, split_cidr, ssid, stp, vlan, wireless
+from .interface import (autonegotiation, bridge, flowcontrol, mode, protocol,
+                        radio, split_cidr, stp, vlan, wireless)
 from .radio import radio_available_mode, radio_configuration
 from .radius import radius_from_interface
 from .schema import default_ntp_servers
