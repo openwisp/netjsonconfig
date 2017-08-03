@@ -54,16 +54,30 @@ radio_configuration = {
 }
 
 
+def channel_to_mode(channel):
+    """
+    Returns the ``ieee_mode`` value from the channel width
+    """
+    mapping = {
+        10: '11acvht20',
+        20: '11acvht20',
+        40: '11acvht40',
+        60: '11acvht40',
+        80: '11acvht80',
+    }
+    return mapping[channel]
+
+
 def access_point(radio):
     """
     Return the configuration for a radio device whose wireless
     interface is in ``access_point`` mode
     """
-    base = _radio_device_base.copy()
+    base = radio_device_base.copy()
     base.update({
         'devname': radio['name'],
-        'chanbw': 80,
-        'ieee_mode': '11acvht80',
+        'chanbw': radio['channel_width'],
+        'ieee_mode': channel_to_mode(radio['channel_width']),
         'mode': 'master',
     })
     return base
@@ -74,9 +88,10 @@ def station(radio):
     Return the configuration for a radio device whose wireless
     interface is in ``station`` mode
     """
-    base = _radio_device_base.copy()
+    base = radio_device_base.copy()
     base.update({
         'devname': radio['name'],
+        'chanbw': radio['channel_width'],
         'txpower': radio.get('tx_power', 24),
     })
     return base
@@ -86,6 +101,7 @@ radio_available_mode = {
     'access_point': access_point,
     'station': station,
 }
+
 
 __all__ = [
     radio_available_mode,
