@@ -6,6 +6,97 @@ from netjsonconfig.utils import _TabsMixin
 
 class TestWpaSupplicant(unittest.TestCase, _TabsMixin):
 
+    def test_wep_open(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "mode": "station",
+                        "radio": "radio0",
+                        "ssid": "wep-test",
+                        "bssid": "01:23:45:67:89:ab",
+                        "encryption": {
+                            "protocol": "wep_open",
+                            "key": "12345"
+                        }
+                    },
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/wpa_supplicant/wpa_supplicant.conf
+
+network={
+ssid="wep-test"
+key_mgmt=NONE
+wep_key0="12345"
+}
+
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+'''
+
+        self.assertEqual(o.render(), expected)
+
+    def test_wep_shared(self):
+        o = Raspbian({
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "mode": "station",
+                        "radio": "radio0",
+                        "ssid": "wep-test",
+                        "bssid": "01:23:45:67:89:ab",
+                        "encryption": {
+                            "protocol": "wep_shared",
+                            "key": "12345"
+                        }
+                    },
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/wpa_supplicant/wpa_supplicant.conf
+
+network={
+ssid="wep-test"
+key_mgmt=NONE
+wep_key0="12345"
+auth_algs=shared
+}
+
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+'''
+
+        self.assertEqual(o.render(), expected)
+
     def test_wpa2_personal_sta(self):
         o = Raspbian({
             "radios": [
