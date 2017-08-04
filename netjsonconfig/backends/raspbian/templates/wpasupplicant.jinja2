@@ -37,7 +37,7 @@
                 {% elif 'wep' in wireless.encryption.protocol %}
                 key_mgmt=NONE
                 wep_key0="{{ wireless.encryption.key }}"
-                {% if wireless.encryption.option == 'shared' %}
+                {% if wireless.encryption.method == 'shared' %}
                 auth_algs=shared
                 {% endif %}
                 {% else %}

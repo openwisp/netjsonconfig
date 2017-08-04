@@ -92,7 +92,6 @@ class Wireless(RaspbianConverter):
             new_encryption.update({
                 'protocol': 'wep',
                 'method': method,
-                'option': encryption.get('options', None).split('_')[1],
                 'key': encryption.get('key', None)
             })
         return new_encryption
