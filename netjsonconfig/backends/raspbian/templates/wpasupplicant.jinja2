@@ -34,11 +34,14 @@
                         priv_key_pwd="{{ encryption.priv_key_pwd }}"
                         {% endif %}
                     {% endif%}
+                {% elif 'wep' in wireless.encryption.protocol %}
+                key_mgmt=NONE
+                wep_key0="{{ wireless.encryption.key }}"
+                {% if wireless.encryption.option == 'shared' %}
+                auth_algs=shared
+                {% endif %}
                 {% else %}
                 key_mgmt=NONE
-                {% endif %}
-                {% if 'wep' in wireless.encryption %}
-                {# WEP Config Here#}
                 {% endif %}
         }
 
