@@ -20,8 +20,10 @@
                             {% if interface.route %}
                             {% set routes = interface.route %}
                             {% for route in routes %}
+                                {% if route.version == 4%}
                                 post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
                                 pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                                {% endif %}
                             {% endfor %}
                             {% endif %}
                             {% if interface.mtu %}
@@ -47,8 +49,10 @@
                             {% if interface.route %}
                             {% set routes = interface.route %}
                             {% for route in routes %}
+                                {% if route.version == 6 %}
                                 up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
                                 down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
+                                {% endif %}
                             {% endfor %}
                             {% endif %}
                             {% if interface.mtu %}
@@ -70,8 +74,10 @@
                             {% if interface.route %}
                             {% set routes = interface.route %}
                             {% for route in routes %}
+                                {% if route.version == 4 %}
                                 post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
                                 pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                                {% endif %}
                             {% endfor %}
                             {% endif %}
                             {% if interface.mtu  %}
@@ -85,8 +91,10 @@
                             {% if interface.route %}
                             {% set routes = interface.route %}
                             {% for route in routes %}
+                                {% if route.version == 6 %}
                                 up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
                                 down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
+                                {% endif %}
                             {% endfor %}
                             {% endif %}
                             {% if interface.mtu %}
@@ -104,17 +112,19 @@
             {% endif %}
             {% if interface.iftype in ['ethernet', 'wireless'] and interface.mode != 'adhoc' %}
             iface {{ interface.ifname }} inet manual
+            {% if interface.route %}
             {% set routes = interface.route %}
             {% for route in routes %}
-                {% if interface.route and route.version == 4 %}
+                {% if route.version == 4 %}
                 post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
                 pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
                 {% endif %}
-                {% if interface.route and route.version == 6 %}
+                {% if route.version == 6 %}
                 up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
                 down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
                 {% endif %}
             {% endfor %}
+            {% endif %}
             {% endif %}
             {% if interface.iftype == 'bridge' %}
             bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
