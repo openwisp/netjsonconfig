@@ -71,7 +71,7 @@ class Wireless(RaspbianConverter):
                 if encryption.get('cipher'):
                     wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
                     new_encryption.update({'wpa_pairwise': wpa_pairwise})
-            elif 'enterprise' in method:
+            else:
                 if encryption.get('cipher'):
                     cipher = str(encryption.get('cipher').replace('+', ' ').upper())
                     new_encryption.update({'cipher': cipher})
