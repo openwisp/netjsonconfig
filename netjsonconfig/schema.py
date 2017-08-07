@@ -7,6 +7,8 @@ from .channels import channels_2and5, channels_2ghz, channels_5ghz
 from .countries import countries
 
 DEFAULT_FILE_MODE = '0644'
+MAC_PATTERN = '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
+MAC_PATTERN_BLANK = '^({0}|)$'.format(MAC_PATTERN)
 
 schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -157,7 +159,7 @@ schema = {
                     "type": "string",
                     "title": "MAC address",
                     "description": "if specified overrides default macaddress for this interface",
-                    "pattern": "^(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|)$",  # can be empty
+                    "pattern": MAC_PATTERN_BLANK,  # can be empty
                     "maxLength": 17,
                     "propertyOrder": 3,
                 },
@@ -348,13 +350,11 @@ schema = {
             }
         },
         "bssid_wireless_property": {
-            "required": ["bssid"],
             "properties": {
                 "bssid": {
                     "type": "string",
                     "title": "BSSID",
-                    "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
-                    "minLength": 17,
+                    "pattern": MAC_PATTERN_BLANK,
                     "maxLength": 17,
                     "propertyOrder": 4,
                 },
@@ -715,7 +715,16 @@ schema = {
         "adhoc_wireless_settings": {
             "title": "Adhoc",
             "allOf": [
-                {"properties": {"mode": {"enum": ["adhoc"]}}},
+                {
+                    "required": ["bssid"],
+                    "properties": {
+                        "mode": {"enum": ["adhoc"]},
+                        "bssid": {
+                            "pattern": MAC_PATTERN,
+                            "minLength": 17,
+                        }
+                    }
+                },
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/ssid_wireless_property"},
                 {"$ref": "#/definitions/bssid_wireless_property"},

@@ -813,21 +813,23 @@ config wifi-iface 'wifi_mesh0'
         o = OpenWrt(native=self._80211s_uci)
         self.assertEqual(o.config, self._80211s_netjson)
 
-    def test_bssid_format(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio1",
-                        "mode": "adhoc",
-                        "ssid": "adhoc-ssid",
-                        "bssid": "00:11:22:33:44:55"
-                    }
+    _bssid_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "adhoc",
+                    "ssid": "bssid-test",
+                    "bssid": "00:11:22:33:44:55"
                 }
-            ]
-        })
+            }
+        ]
+    }
+
+    def test_bssid_format(self):
+        o = OpenWrt(self._bssid_netjson)
         o.validate()
         # too short
         o.config['interfaces'][0]['wireless']['bssid'] = '00:11:22:33:44'
@@ -840,10 +842,28 @@ config wifi-iface 'wifi_mesh0'
         o.config['interfaces'][0]['wireless']['bssid'] = '00:11:22:33:44:ZY'
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_bssid_adhoc(self):
+        o = OpenWrt(self._bssid_netjson)
+        # bssid is required
+        del o.config['interfaces'][0]['wireless']['bssid']
+        with self.assertRaises(ValidationError):
+            o.validate()
         # empty is not valid
         o.config['interfaces'][0]['wireless']['bssid'] = ''
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_bssid_station(self):
+        o = OpenWrt(self._bssid_netjson)
+        o.config['interfaces'][0]['wireless']['mode'] = 'station'
+        o.validate()
+        # bssid is not required
+        del o.config['interfaces'][0]['wireless']['bssid']
+        o.validate()
+        # empty is valid
+        o.config['interfaces'][0]['wireless']['bssid'] = ''
+        o.validate()
 
     _list_option_netjson = {
         "interfaces": [
