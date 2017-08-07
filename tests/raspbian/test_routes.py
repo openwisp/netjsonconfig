@@ -138,3 +138,37 @@ down ip -6 route del fd89::1/128 via fd88::1 dev eth0
 
 '''
         self.assertEqual(o.render(), expected)
+
+    def test_multiple_routes(self):
+        o = Raspbian({
+            "routes": [
+                {
+                    "destination": "192.168.4.1/24",
+                    "next": "192.168.2.2",
+                    "device": "eth1"
+                },
+                {
+                    "destination": "fd89::1/128",
+                    "next": "fd88::1",
+                    "device": "eth1"
+                }
+            ],
+            "interfaces": [
+                {
+                    "type": "ethernet",
+                    "name": "eth1"
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/network/interfaces
+
+auto eth1
+iface eth1 inet manual
+post-up route add -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
+pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
+up ip -6 route add fd89::1/128 via fd88::1 dev eth0
+down ip -6 route del fd89::1/128 via fd88::1 dev eth0
+
+'''
+        self.assertEqual(o.render(), expected)
