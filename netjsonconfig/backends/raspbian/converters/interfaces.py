@@ -66,6 +66,7 @@ class Interfaces(RaspbianConverter):
             return addresses
 
     def _get_route(self, routes):
+        result = []
         for route in routes:
             if ip_network(route.get('next')).version == 4:
                 route['version'] = 4
@@ -76,4 +77,5 @@ class Interfaces(RaspbianConverter):
                 del route['destination']
             elif ip_network(route.get('next')).version == 6:
                 route['version'] = 6
-            return route
+            result.append(route)
+        return routes
