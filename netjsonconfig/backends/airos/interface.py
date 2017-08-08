@@ -25,6 +25,13 @@ def bssid(interface):
     return interface['wireless'].get('bssid', '')
 
 
+def encryption(interface):
+    """
+    Return the encryption dict for a wireless interface
+    """
+    return interface['wireless']['encryption']
+
+
 def flowcontrol(interface):
     """
     Return the configuration for ``flowcontrol`` on interface
