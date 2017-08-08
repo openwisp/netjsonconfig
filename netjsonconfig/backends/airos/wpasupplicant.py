@@ -107,7 +107,6 @@ def sta_wpa2_enterprise(interface):
         ],
         'password': encryption(interface)['password'],
         'identity': encryption(interface)['identity'],
-        'anonymous_identity': 'TODO',
         'pairwise': [
             {
                 'name': 'CCMP',
