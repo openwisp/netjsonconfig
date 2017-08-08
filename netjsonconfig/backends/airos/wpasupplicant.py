@@ -1,4 +1,5 @@
-from interface import ssid
+from interface import encryption, ssid
+
 
 def ap_no_encryption(interface):
     """
@@ -23,7 +24,7 @@ def ap_wpa2_personal(interface):
     in ``access_point`` mode
     """
     return {
-        'psk': interface['wireless']['encryption']['key'],
+        'psk': encryption(interface)['key'],
         'ssid': ssid(interface),
         'key_mgmt': [
             {
@@ -59,7 +60,7 @@ def sta_wpa2_personal(interface):
     """
     return {
         'ssid': ssid(interface),
-        'psk': interface['wireless']['encryption']['key'],
+        'psk': encryption(interface)['key'],
         # no advanced authentication methods
         # with psk
         'eap': [
@@ -104,8 +105,8 @@ def sta_wpa2_enterprise(interface):
                 'status': 'enabled',
             },
         ],
-        'password': 'TODO',
-        'identity': 'TODO',
+        'password': encryption(interface)['password'],
+        'identity': encryption(interface)['identity'],
         'anonymous_identity': 'TODO',
         'pairwise': [
             {
