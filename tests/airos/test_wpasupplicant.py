@@ -122,7 +122,6 @@ class TestWpasupplicantStation(ConverterTest):
         ]
         self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)
 
-    @skip("target wpa2_enterprise later")
     def test_wpa2_enterprise(self):
         o = self.backend({
             "interfaces": [
@@ -132,14 +131,16 @@ class TestWpasupplicantStation(ConverterTest):
                     "mac": "de:9f:db:30:c9:c5",
                     "mtu": 1500,
                     "txqueuelen": 1000,
-                    "autostart": True,
                     "wireless": {
                         "radio": "radio0",
                         "mode": "station",
                         "ssid": "ap-ssid-example",
+                        "bssid": "00:11:22:33:44:55",
                         "encryption": {
                             "protocol": "wpa2_enterprise",
-                            "key": "cucumber",
+                            "eap_type": "tls",
+                            "identity": "definitely-fake-identity",
+                            "password": "password1234",
                         },
                     },
                 }
@@ -147,9 +148,6 @@ class TestWpasupplicantStation(ConverterTest):
         })
         o.to_intermediate()
         expected = [
-            {
-                'status': 'enabled',
-            },
             {
                 'device.1.profile': 'AUTO',
                 'device.1.status': 'enabled',
@@ -162,7 +160,6 @@ class TestWpasupplicantStation(ConverterTest):
                 'profile.1.network.1.password': 'TODO',
                 'profile.1.network.1.identity': 'TODO',
                 'profile.1.network.1.anonymous_identity': 'TODO',
-                'profile.1.network.1.psk': 'cucumber',
                 'profile.1.network.1.pairwise.1.name': 'CCMP',
                 'profile.1.network.1.proto.1.name': 'RSN',
                 'profile.1.network.1.ssid': 'ap-ssid-example',
@@ -171,6 +168,9 @@ class TestWpasupplicantStation(ConverterTest):
                 'profile.1.network.2.key_mgmt.1.name': 'NONE',
                 'profile.1.network.2.priority': 2,
                 'profile.1.network.2.status': 'disabled',
+            },
+            {
+                'status': 'enabled',
             },
         ]
         self.assertEqualConfig(o.intermediate_data['wpasupplicant'], expected)

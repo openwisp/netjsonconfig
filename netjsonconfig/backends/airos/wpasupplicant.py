@@ -132,5 +132,6 @@ available_mode_authentication = {
     'station': {
         'none': sta_no_encryption,
         'wpa2_personal': sta_wpa2_personal,
+        'wpa2_enterprise': sta_wpa2_enterprise,
     },
 }
