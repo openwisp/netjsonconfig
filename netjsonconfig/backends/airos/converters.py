@@ -711,6 +711,7 @@ class Wpasupplicant(AirOsConverter):
         }
         wpasupplicant_status = {
             'wpa2_personal': 'disabled',
+            'wpa2_enterprise': 'disabled',
             'none': 'enabled',
         }
         result = []
