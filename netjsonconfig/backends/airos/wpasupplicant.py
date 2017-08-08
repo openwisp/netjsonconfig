@@ -1,10 +1,12 @@
+from interface import ssid
+
 def ap_no_encryption(interface):
     """
     Returns the wpasupplicant.profile.1.network
     for encryption None as the intermediate dict
     """
     return {
-        'ssid': interface['wireless']['ssid'],
+        'ssid': ssid(interface),
         'priority': 100,
         'key_mgmt': [
             {
@@ -22,7 +24,7 @@ def ap_wpa2_personal(interface):
     """
     return {
         'psk': interface['wireless']['encryption']['key'],
-        'ssid': interface['wireless']['ssid'],
+        'ssid': ssid(interface),
         'key_mgmt': [
             {
                 'name': 'NONE',
@@ -39,7 +41,7 @@ def sta_no_encryption(interface):
     in ``station`` mode
     """
     return {
-        'ssid': interface['wireless']['ssid'],
+        'ssid': ssid(interface),
         'priority': 100,
         'key_mgmt': [
             {
@@ -56,7 +58,7 @@ def sta_wpa2_personal(interface):
     in ``station`` mode
     """
     return {
-        'ssid': interface['wireless']['ssid'],
+        'ssid': ssid(interface),
         'psk': interface['wireless']['encryption']['key'],
         # no advanced authentication methods
         # with psk
@@ -94,7 +96,7 @@ def sta_wpa2_enterprise(interface):
     for wpa2_enterprise as the intermediate dict
     """
     return {
-        'ssid': interface['wireless']['ssid'],
+        'ssid': ssid(interface),
         'phase2=auth': 'MSCHAPV2',
         'eap': [
             {
