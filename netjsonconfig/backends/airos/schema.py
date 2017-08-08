@@ -49,7 +49,7 @@ override_schema = {
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
-                        {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
+                        {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                     ],
                 },
             },
