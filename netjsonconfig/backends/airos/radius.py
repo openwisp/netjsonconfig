@@ -38,10 +38,12 @@ _radius_from_mode = {
             },
             'status': 'enabled',
         },
+        'wpa2_enterprise': {},
     },
     'station': {
         'none': {},
         'wpa2_personal': {},
+        'wpa2_enterprise': {},
     }
 }
 
