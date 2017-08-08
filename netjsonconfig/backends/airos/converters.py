@@ -718,13 +718,13 @@ class Wpasupplicant(AirOsConverter):
 
         if original:
             head = original[0]
-            protocol = head['wireless']['encryption']['protocol']
-            status = wpasupplicant_status[protocol]
+            proto = protocol(head)
+            status = wpasupplicant_status[proto]
             result.append({
                 'status': status
             })
             temp_dev['status'] = status
-            network = ap_auth_protocols[protocol](head)
+            network = ap_auth_protocols[proto](head)
 
         result.append({
             'device': [temp_dev],
