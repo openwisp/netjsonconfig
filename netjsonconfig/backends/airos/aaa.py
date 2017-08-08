@@ -24,6 +24,10 @@ def ap_psk(interface):
     return result
 
 
+def ap_eap(interface):
+    return {}
+
+
 def sta_none(interface):
     return {}
 
@@ -36,16 +40,22 @@ def sta_psk(interface):
     }
 
 
+def sta_eap(interface):
+    return {}
+
+
 _profile = {}
 
 _profile_from_mode = {
     'access_point': {
         'none': ap_none,
         'wpa2_personal': ap_psk,
+        'wpa2_enterprise': ap_eap,
     },
     'station': {
         'none': sta_none,
         'wpa2_personal': sta_psk,
+        'wpa2_enterprise': sta_eap,
     },
 }
 
@@ -68,6 +78,9 @@ _status_from_mode = {
         'wpa2_personal': {
             'status': 'enabled',
         },
+        'wpa2_enterprise': {
+            'status': '',
+        },
     },
     'station': {
         'none': {
@@ -75,6 +88,9 @@ _status_from_mode = {
         },
         'wpa2_personal': {
             'status': 'disabled',
+        },
+        'wpa2_enterprise': {
+            'status': '',
         },
     }
 }
