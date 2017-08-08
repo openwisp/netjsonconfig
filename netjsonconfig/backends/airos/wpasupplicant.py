@@ -26,12 +26,12 @@ def ap_wpa2_personal(interface):
     return {
         'psk': encryption(interface)['key'],
         'ssid': ssid(interface),
+        'priority': 100,
         'key_mgmt': [
             {
                 'name': 'NONE',
             },
         ],
-        'priority': 100,
     }
 
 
@@ -43,33 +43,10 @@ def ap_wpa2_enterprise(interface):
     """
     return {
         'ssid': ssid(interface),
-        'phase2=auth': 'MSCHAPV2',
-        'eap': [
-            {
-                'name': 'TTLS',
-                'status': 'enabled',
-            },
-        ],
-        'anonymous_identity': 'TODO',
-        'pairwise': [
-            {
-                'name': 'CCMP',
-            },
-        ],
-        'proto': [
-            {
-                'name': 'RSN',
-            },
-        ],
-        'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'WPA-EAP',
-            },
-        ],
     }
 
 
+# STATION
 def sta_no_encryption(interface):
     """
     Returns the wpasupplicant.profile.1.network

@@ -710,9 +710,9 @@ class Wpasupplicant(AirOsConverter):
             'profile': 'AUTO',
         }
         wpasupplicant_status = {
+            'none': 'enabled',
             'wpa2_personal': 'disabled',
             'wpa2_enterprise': 'disabled',
-            'none': 'enabled',
         }
         result = []
 
@@ -725,15 +725,18 @@ class Wpasupplicant(AirOsConverter):
             })
             temp_dev['status'] = status
             network = ap_auth_protocols[proto](head)
+            profile = {
+                'name': 'AUTO',
+                'network': [network, self.secondary_network()],
+            }
+
+            if proto == 'wpa2_enterprise':
+                del temp_dev['profile']
+                del profile['name']
 
         result.append({
             'device': [temp_dev],
-            'profile': [
-                {
-                    'name': 'AUTO',
-                    'network': [network, self.secondary_network()],
-                },
-            ],
+            'profile': [profile],
         })
         return (('wpasupplicant', result),)
 
