@@ -35,6 +35,41 @@ def ap_wpa2_personal(interface):
     }
 
 
+def ap_wpa2_enterprise(interface):
+    """
+    Returns the wpasupplicant.profile.1.network
+    for wpa2_personal as the indernediate dict
+    in ``access_point`` mode
+    """
+    return {
+        'ssid': ssid(interface),
+        'phase2=auth': 'MSCHAPV2',
+        'eap': [
+            {
+                'name': 'TTLS',
+                'status': 'enabled',
+            },
+        ],
+        'anonymous_identity': 'TODO',
+        'pairwise': [
+            {
+                'name': 'CCMP',
+            },
+        ],
+        'proto': [
+            {
+                'name': 'RSN',
+            },
+        ],
+        'priority': 100,
+        'key_mgmt': [
+            {
+                'name': 'WPA-EAP',
+            },
+        ],
+    }
+
+
 def sta_no_encryption(interface):
     """
     Returns the wpasupplicant.profile.1.network
@@ -130,6 +165,7 @@ available_mode_authentication = {
     'access_point': {
         'none': ap_no_encryption,
         'wpa2_personal': ap_wpa2_personal,
+        'wpa2_enterprise': ap_wpa2_enterprise,
     },
     'station': {
         'none': sta_no_encryption,
