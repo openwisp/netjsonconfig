@@ -176,6 +176,30 @@ class TestWpasupplicantStation(ConverterTest):
 
     @skip("target later")
     def test_peap_wpa2_enterprise(self):
+
+        o = self.backend({
+            "interfaces": [
+                {
+                    "type": "wireless",
+                    "name": "wlan0",
+                    "mac": "de:9f:db:30:c9:c5",
+                    "mtu": 1500,
+                    "txqueuelen": 1000,
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "station",
+                        "ssid": "ap-ssid-example",
+                        "encryption": {
+                            "protocol": "wpa2_enterprise",
+                            "server": "radius.example.com",
+                            "key": "the-shared-key",
+                            "acct_server": "accounting.example.com",
+                        },
+                    },
+                }
+            ]
+        })
+        o.to_intermediate()
         expected = [
             {
                 'device.1.devname': 'radio0',
