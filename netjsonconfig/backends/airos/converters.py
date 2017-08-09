@@ -51,11 +51,6 @@ class Aaa(AirOsConverter):
         """
         return wireless(get_copy(self.netjson, 'interfaces', []))
 
-    @property
-    def radius(self):
-        original = get_copy(self.netjson, 'radius', {})
-        return original
-
     def to_intermediate(self):
         base = {}
         result = []

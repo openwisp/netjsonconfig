@@ -2,21 +2,25 @@ from .interface import mode, protocol, psk, radio, ssid
 
 
 def ap_none(interface):
+    """
+    Returns the configuration for ``aaa``
+    when in ``access_point`` mode without authentication
+    """
     return {}
 
 
 def ap_psk(interface):
+    """
+    Returns the configuration for ``aaa``
+    when in ``access_point`` mode with psk authentication
+    """
     result = {
         'devname': radio(interface),
         'driver': 'madwifi',
         'ssid': ssid(interface),
         'wpa': {
             '1.pairwise': 'CCMP',
-            'key': [
-                {
-                    'mgmt': 'WPA-PSK',
-                }
-            ],
+            'key': [{'mgmt': 'WPA-PSK'}],
             'mode': 2,
             'psk': psk(interface),
         }
@@ -25,14 +29,35 @@ def ap_psk(interface):
 
 
 def ap_eap(interface):
-    return {}
+    """
+    Return the configuration for ``aaa``
+    when in ``access_point`` mode with eap authentication
+    """
+    return {
+        'devname': radio(interface),
+        'driver': 'madwifi',
+        'ssid': ssid(interface),
+        'wpa': {
+            '1.pairwise': 'CCMP',
+            'key': [{'mgmt': 'WPA-EAP'}],
+            'mode': 2,
+        },
+    }
 
 
 def sta_none(interface):
+    """
+    Return the configuration for ``aaa``
+    when in station mode without authentication
+    """
     return {}
 
 
 def sta_psk(interface):
+    """
+    Return the configuration for ``aaa``
+    when in station mode with psk authentication
+    """
     return {
         'wpa': {
             'psk': psk(interface),
@@ -41,6 +66,10 @@ def sta_psk(interface):
 
 
 def sta_eap(interface):
+    """
+    Return the configuration for ``aaa``
+    when in station mode with eap authentication
+    """
     return {}
 
 
@@ -61,6 +90,9 @@ _profile_from_mode = {
 
 
 def profile_from_interface(interface):
+    """
+    Returns the ``aaa`` configuration for interface
+    """
     profile = _profile.copy()
     profile.update(
             _profile_from_mode[mode(interface)][protocol(interface)](interface)
@@ -79,7 +111,7 @@ _status_from_mode = {
             'status': 'enabled',
         },
         'wpa2_enterprise': {
-            'status': '',
+            'status': 'enabled',
         },
     },
     'station': {
@@ -90,13 +122,16 @@ _status_from_mode = {
             'status': 'disabled',
         },
         'wpa2_enterprise': {
-            'status': '',
+            'status': 'disabled',
         },
     }
 }
 
 
 def status_from_interface(interface):
+    """
+    Returns ``aaa.status`` from interface
+    """
     status = _status.copy()
     status.update(
             _status_from_mode[mode(interface)][protocol(interface)]
@@ -106,12 +141,12 @@ def status_from_interface(interface):
 
 def bridge_devname(wireless_interface, bridge_interface):
     """
-    when in ``access_point`` with ``wpa2_personal`` authentication set also the
+    when in ``access_point`` with authentication set also the
     bridge interface name
 
     TODO: check if in ``netmode=router`` this happens again
     """
-    if mode(wireless_interface) == 'access_point' and protocol(wireless_interface) == 'wpa2_personal':
+    if mode(wireless_interface) == 'access_point' and protocol(wireless_interface) != 'none':
         return {
             'br': {
                 'devname': bridge_interface['name'],
