@@ -34,7 +34,6 @@
                             {% endif %}
                             {% if interface.iftype == 'bridge' %}
                             bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
-                            {{ interface }}
                             {% if interface.stp %}
                             bridge_stp {{ interface.stp }}
                             {% endif %}
