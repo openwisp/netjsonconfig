@@ -23,6 +23,8 @@ class Wireless(RaspbianConverter):
                     'hidden': wireless.get('hidden', False),
                     'rts_threshold': wireless.get('rts_threshold', -1),
                     'frag_threshold': wireless.get('frag_threshold', -1),
+                    'macfilter': wireless.get('macfilter', None),
+                    'maclist': wireless.get('maclist', None),
                     'encryption': self._get_encryption(wireless)
                 })
                 radios = get_copy(self.netjson, 'radios')
