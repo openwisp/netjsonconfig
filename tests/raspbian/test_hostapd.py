@@ -303,3 +303,129 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 '''
         self.assertEqual(o.render(), expected)
+
+    def test_macaddracl_accept(self):
+        o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "macfilter": "accept",
+                        "maclist": [
+                            "E8:94:F6:33:8C:1D",
+                            "42:6c:8f:95:0f:00"
+                        ]
+                    }
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/hostapd/hostapd.conf
+
+interface=wlan0
+driver=nl80211
+hw_mode=g
+channel=3
+ieee80211n=1
+ssid=MyWifiAP
+macaddr_acl=1
+accept_mac_file=/etc/hostapd.accept
+
+# config: /etc/hostapd.accept
+
+E8:94:F6:33:8C:1D
+42:6c:8f:95:0f:00
+
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+'''
+        self.assertEqual(o.render(), expected)
+
+    def test_macaddracl_deny(self):
+        o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                    "tx_power": 3
+                },
+            ],
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "MyWifiAP",
+                        "macfilter": "deny",
+                        "maclist": [
+                            "E8:94:F6:33:8C:1D",
+                            "42:6c:8f:95:0f:00"
+                        ]
+                    }
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/hostapd/hostapd.conf
+
+interface=wlan0
+driver=nl80211
+hw_mode=g
+channel=3
+ieee80211n=1
+ssid=MyWifiAP
+macaddr_acl=0
+deny_mac_file=/etc/hostapd.deny
+
+# config: /etc/hostapd.deny
+
+E8:94:F6:33:8C:1D
+42:6c:8f:95:0f:00
+
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+'''
+        self.assertEqual(o.render(), expected)
