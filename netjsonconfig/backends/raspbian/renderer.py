@@ -24,6 +24,10 @@ class Hostapd(RaspbianRenderer):
     pass
 
 
+class MacAddrList(RaspbianRenderer):
+    pass
+
+
 class Interfaces(RaspbianRenderer):
     pass
 
