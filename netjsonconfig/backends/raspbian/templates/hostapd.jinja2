@@ -27,6 +27,15 @@
         {% if wireless.frag_threshold > 0 %}
         frag_threshold={{ wireless.frag_threshold }}
         {% endif %}
+        {% if wireless.macfilter %}
+            {% if wireless.macfilter == 'deny'%}
+            macaddr_acl=0
+            deny_mac_file=/etc/hostapd.deny
+            {% elif wireless.macfilter == 'accept' %}
+            macaddr_acl=1
+            accept_mac_file=/etc/hostapd.accept
+            {% endif %}
+        {% endif %}
         {% if wireless.encryption %}
             auth_algs={{ wireless.encryption.auth_algs }}
             wpa={{ wireless.encryption.wpa }}
