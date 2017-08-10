@@ -241,6 +241,9 @@ As an example here is a snippet that set the authentication protocol to WPA2 per
                 "name": "wlan0",
                 "type": "wireless",
                 "wireless": {
+                    "mode": "station",
+                    "radio": "ath0",
+                    "ssid": "ap-ssid-example",
                     "encryption": {
                         "protocol": "wpa2_personal",
                         "key": "changeme"
@@ -250,7 +253,7 @@ As an example here is a snippet that set the authentication protocol to WPA2 per
         ]
     }
 
-And another that set the authentication protocol to WPA2 enterprise, but this is still not supported by netjsonconfig
+And another that set the authentication protocol to WPA2 enterprise
 
 .. code-block:: json
 
@@ -260,29 +263,15 @@ And another that set the authentication protocol to WPA2 enterprise, but this is
                 "name": "wlan0",
                 "type": "wireless",
                 "wireless": {
+                    "mode": "station",
+                    "radio": "ath0",
+                    "ssid": "ap-ssid-example",
                     "encryption": {
                         "protocol": "wpa2_enterprise",
-                        "key": "changeme"
+                        "identity": "my-identity",
+                        "password": "changeme",
                     }
                 }
             }
         ]
-    }
-
-The ``encryption`` property **must** be specified otherwise you will experience a ``ValidationError``, if you are not sure on what you want
-use this snippet to set to no encryption
-
-.. code-block:: json
-
-    {
-        "interfaces": [
-            {
-                "name": "wlan0",
-                "type": "wireless",
-                "wireless": {
-                    "encryption": {
-                        "protocol": "none"
-                     }
-                 }
-            }
-    }
+    
