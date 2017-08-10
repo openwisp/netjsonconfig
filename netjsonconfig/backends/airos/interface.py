@@ -29,7 +29,7 @@ def encryption(interface):
     """
     Return the encryption dict for a wireless interface
     """
-    return interface['wireless']['encryption']
+    return interface['wireless'].get('encryption', {'protocol': 'none'})
 
 
 def flowcontrol(interface):

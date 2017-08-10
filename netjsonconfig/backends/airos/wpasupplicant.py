@@ -1,4 +1,4 @@
-from interface import encryption, ssid
+from .interface import encryption, ssid
 
 
 def ap_no_encryption(interface):

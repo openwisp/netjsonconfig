@@ -48,6 +48,9 @@ def authentication(interface):
 
 
 def ap_accounting(interface):
+    """
+    Returns the ``acct`` dict for ``access_point`` interfaces
+    """
     result = {}
     if protocol(interface) == 'wpa2_enterprise':
         enc = encryption(interface)
@@ -59,6 +62,9 @@ def ap_accounting(interface):
     return result
 
 def sta_accounting(interface):
+    """
+    Returns the ``acct`` dict for ``station`` interfaces
+    """
     return {}
 
 

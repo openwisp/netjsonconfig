@@ -28,6 +28,9 @@ _wireless_base = {
 
 
 def status(interface):
+    """
+    Return the ``wireless`` status
+    """
     if interface.get('disabled'):
         return 'disabled'
     else:
