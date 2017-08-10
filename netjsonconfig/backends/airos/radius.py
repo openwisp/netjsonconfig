@@ -1,5 +1,6 @@
 from .interface import encryption, mode, protocol
 
+
 def ap_authentication(interface):
     """
     Returns the ``radius.auth`` dict for ``access_point`` interface
@@ -15,7 +16,7 @@ def ap_authentication(interface):
         result.update({
             'ip': enc.get('server', ''),
             'port': enc.get('port', 1812),
-            'secret': enc.get('key',''),
+            'secret': enc.get('key', ''),
             'status': 'enabled',
         })
     return result
@@ -42,7 +43,6 @@ def authentication(interface):
     result = {
         'port': 1812,
     }
-    mod = mode(interface)
     result.update(_authentication_from_mode[mode(interface)](interface))
     return result
 
@@ -60,6 +60,7 @@ def ap_accounting(interface):
             'status': 'enabled',
         })
     return result
+
 
 def sta_accounting(interface):
     """
@@ -84,7 +85,6 @@ def accounting(interface):
     }
     result.update(_accounting_from_mode[mode(interface)](interface))
     return result
-
 
 
 def radius_from_interface(interface):
