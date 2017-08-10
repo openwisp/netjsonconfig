@@ -199,8 +199,10 @@ class Igmpproxy(AirOsConverter):
     netjson_key = 'general'
 
     def to_intermediate(self):
-        result = [{'status': 'disabled'}]
-        return (('igmpproxy', result),)
+        result = {'status': 'disabled'}
+        if self.netmode == 'router':
+            result.update({'upstream': {'devname': ''}})
+        return (('igmpproxy', [result]),)
 
 
 class Iptables(AirOsConverter):
