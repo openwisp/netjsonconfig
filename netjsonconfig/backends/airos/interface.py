@@ -71,7 +71,7 @@ def protocol(interface):
     """
     Return wireless interface encryption
     """
-    return interface['wireless']['encryption']['protocol']
+    return encryption(interface)['protocol']
 
 
 def psk(interface):
