@@ -29,6 +29,10 @@ class AirOsConverter(BaseConverter):
     def should_run_forward(cls, config):
         return True
 
+    @property
+    def netmode(self):
+        return self.config.get('netmode', 'bridge')
+
 
 class Aaa(AirOsConverter):
     netjson_key = 'general'
@@ -39,10 +43,6 @@ class Aaa(AirOsConverter):
         Return all the bridge interfaces
         """
         return bridge(get_copy(self.netjson, 'interfaces', []))
-
-    @property
-    def netmode(self):
-        return self.netjson.get('netmode', 'bridge')
 
     @property
     def wireless(self):
