@@ -121,6 +121,30 @@ class Discovery(AirOsConverter):
         return (('discovery', result),)
 
 
+class Dhcp(AirOsConverter):
+
+    @classmethod
+    def should_run_forward(cls, config):
+        if config.get('netmode', 'bridge') == 'bridge':
+            return False
+        else:
+            return True
+
+    def to_intermediate(self):
+        dhcp_interface = {
+            'devname': 'br0',
+            'fallback': '192.168.10.1',
+            'fallback_netmask': '255.255.255.0',
+            'status': 'enabled'
+        }
+        dchp_status = {'status': 'enabled'}
+        result = [
+            dchp_status,
+            [dhcp_interface],
+        ]
+        return (('dhcpc', result),)
+
+
 class Dyndns(AirOsConverter):
     netjson_key = 'general'
 
