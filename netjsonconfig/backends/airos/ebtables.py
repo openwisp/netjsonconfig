@@ -1,5 +1,14 @@
-from .interface import mode, protocol, radio
 import copy
+
+from .interface import mode, protocol, radio
+
+
+_base = {
+    'sys': {
+        'fw': {'status': 'disabled'},
+        'status': 'enabled',
+    },
+}
 
 
 def default(interace):
@@ -12,7 +21,8 @@ def station(interface):
     for an interface in ``station`` mode with ``wpa2_enterpise``
     or ``wpa2_personal`` authentication
     """
-    return {
+    base = copy.deepcopy(_base)
+    base['sys'].update({
         'eap': [
             {
                 'devname': radio(interface),
@@ -20,15 +30,9 @@ def station(interface):
             }
         ],
         'eap.status': 'enabled',
-    }
+    })
+    return base
 
-
-_base = {
-    'sys': {
-        'fw': {'status': 'disabled'},
-        'status': 'enabled',
-    },
-}
 
 _status = {
     'status': 'enabled',
@@ -38,7 +42,7 @@ _status = {
 _mapping = {
     'access_point': {
         'none': default,
-        'wpa2_personal': default,
+        'wpa2_personal': station,
         'wpa2_enterprise': default,
     },
     'station': {
@@ -50,7 +54,6 @@ _mapping = {
 
 
 def ebtables_from_interface(interface):
-    base = copy.deepcopy(_base)
     status = _status.copy()
-    base['sys'].update(_mapping[mode(interface)][protocol(interface)](interface))
+    base = _mapping[mode(interface)][protocol(interface)](interface)
     return [status, base]

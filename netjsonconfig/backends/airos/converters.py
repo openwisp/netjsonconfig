@@ -168,7 +168,9 @@ class Ebtables(AirOsConverter):
         return ebtables_from_interface(self.wireless[0])
 
     def router_intermediate(self):
-        return [{}]
+        result = ebtables_from_interface(self.wireless[0])
+        del result['sys']['fw']
+        return result
 
     def to_intermediate(self):
         result = getattr(self, '{netmode}_intermediate'.format(netmode=self.netmode))()
