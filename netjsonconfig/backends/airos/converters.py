@@ -4,6 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
+from .ebtables import ebtables_from_interface
 from .interface import (autonegotiation, bridge, flowcontrol, mode, protocol,
                         radio, split_cidr, stp, vlan, wireless)
 from .radio import radio_available_mode, radio_configuration
@@ -156,19 +157,15 @@ class Dyndns(AirOsConverter):
 class Ebtables(AirOsConverter):
     netjson_key = 'general'
 
-    _base = {
-        'sys': {
-            'fw': {
-                'status': 'disabled',
-            },
-            'status': 'enabled'
-        },
-        'status': 'enabled'
-    }
+    @property
+    def wireless(self):
+        """
+        Return all the wireless interfaces
+        """
+        return wireless(get_copy(self.netjson, 'interfaces', []))
 
     def bridge_intermediate(self):
-        base = self._base.copy()
-        return [base]
+        return ebtables_from_interface(self.wireless[0])
 
     def router_intermediate(self):
         return [{}]
