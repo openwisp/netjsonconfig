@@ -6,6 +6,49 @@ from ..openwrt.timezones import timezones
 
 schema = merge_config(default_schema, {
     "definitions": {
+        "ap_wireless_settings": {
+            "allOf": [
+                {
+                    "properties": {
+                        "macfilter": {
+                            "type": "string",
+                            "title": "MAC Filter",
+                            "description": "specifies the mac filter policy, \"disable\" to disable "
+                                           "the filter, \"allow\" to treat it as whitelist or "
+                                           "\"deny\" to treat it as blacklist",
+                            "enum": [
+                                None,
+                                "accept",
+                                "deny",
+                            ],
+                            "options": {
+                                "enum_titles": [
+                                    "disabled",
+                                    "accept",
+                                    "deny"
+                                ]
+                            },
+                            "default": "disable",
+                            "propertyOrder": 15,
+                        },
+                        "maclist": {
+                            "type": "array",
+                            "title": "MAC List",
+                            "description": "mac addresses that will be filtered according to the policy "
+                                           "specified in the \"macfilter\" option",
+                            "propertyOrder": 16,
+                            "items": {
+                                "type": "string",
+                                "title": "MAC address",
+                                "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
+                                "minLength": 17,
+                                "maxLength": 17,
+                            }
+                        }
+                    }
+                }
+            ]
+        },
         "radio_hwmode_11g": {
             "properties": {
                 "hwmode": {
