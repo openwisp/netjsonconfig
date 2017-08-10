@@ -27,6 +27,12 @@
         {% if wireless.frag_threshold > 0 %}
         frag_threshold={{ wireless.frag_threshold }}
         {% endif %}
+        {% if wireless.wmm %}
+        wmm_enabled=1
+        {% endif %}
+        {% if wireless.isolate %}
+        ap_isolate=1
+        {% endif %}
         {% if wireless.macfilter %}
             {% if wireless.macfilter == 'deny'%}
             macaddr_acl=0
