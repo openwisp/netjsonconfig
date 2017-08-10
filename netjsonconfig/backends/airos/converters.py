@@ -31,7 +31,7 @@ class AirOsConverter(BaseConverter):
 
     @property
     def netmode(self):
-        return self.config.get('netmode', 'bridge')
+        return self.netjson.get('netmode', 'bridge')
 
 
 class Aaa(AirOsConverter):
