@@ -158,6 +158,13 @@ class Ebtables(AirOsConverter):
     netjson_key = 'general'
 
     @property
+    def vlan(self):
+        """
+        Return all the vlan interfaces
+        """
+        return vlan(get_copy(self.netjson, self.netjson_key, []))
+
+    @property
     def wireless(self):
         """
         Return all the wireless interfaces
@@ -175,7 +182,24 @@ class Ebtables(AirOsConverter):
             base.update(encrypted(w))
             if self.netmode == 'bridge':
                 base['sys'].update({'fw': {'status': 'disabled'}})
-
+        vlans = []
+        _t = {
+            'devname': '',
+            'id': '',
+            'status': '',
+        }
+        for v in self.vlan:
+            t = _t.copy()
+            name_and_id = v['name'].split('.')
+            t.update({
+                'devname': name_and_id[0],
+                'id': name_and_id[1],
+                'status': status(v),
+            })
+            vlans.append(t)
+        if vlans:
+            base['sys']['vlan.status'] = 'enabled'
+            base['sys']['vlan'] = vlans
         return [status, base]
 
     def to_intermediate(self):
