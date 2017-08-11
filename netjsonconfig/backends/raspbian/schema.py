@@ -135,7 +135,6 @@ del schema['properties']['general']['properties']['description']
 del schema['properties']['routes']['items']['required'][3]
 del schema['properties']['routes']['items']['properties']['cost']
 del schema['properties']['routes']['items']['properties']['source']
-del schema['properties']['files']
 
 del schema['definitions']['wireless_interface']['allOf'][0]['properties']['wireless']['oneOf'][4]
 del schema['definitions']['wireless_interface']['allOf'][0]['properties']['wireless']['oneOf'][3]
