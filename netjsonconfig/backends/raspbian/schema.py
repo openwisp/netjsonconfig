@@ -35,7 +35,7 @@ schema = merge_config(default_schema, {
                                            "\"deny\" to treat it as blacklist",
                             "enum": [
                                 "disable",
-                                "allow",
+                                "accept",
                                 "deny",
                             ],
                             "default": "disable",
