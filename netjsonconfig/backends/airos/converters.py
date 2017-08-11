@@ -4,7 +4,7 @@ from ipaddress import ip_interface
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
-from .ebtables import ebtables_from_interface
+from .ebtables import encrypted, unencrypted
 from .interface import (autonegotiation, bridge, flowcontrol, mode, protocol,
                         radio, split_cidr, stp, vlan, wireless)
 from .radio import radio_available_mode, radio_configuration
@@ -164,17 +164,22 @@ class Ebtables(AirOsConverter):
         """
         return wireless(get_copy(self.netjson, 'interfaces', []))
 
-    def bridge_intermediate(self):
-        return ebtables_from_interface(self.wireless[0])
+    @property
+    def ebtables(self):
+        w = self.wireless[0]
+        status = {'status': 'enabled'}
+        base = {}
+        if protocol(w) == 'none':
+            base.update(unencrypted(w))
+        else:
+            base.update(encrypted(w))
+            if self.netmode == 'bridge':
+                base['sys'].update({'fw': {'status': 'disabled'}})
 
-    def router_intermediate(self):
-        result = ebtables_from_interface(self.wireless[0])
-        del result['sys']['fw']
-        return result
+        return [status, base]
 
     def to_intermediate(self):
-        result = getattr(self, '{netmode}_intermediate'.format(netmode=self.netmode))()
-        return (('ebtables', result),)
+        return (('ebtables', self.ebtables),)
 
 
 class Gui(AirOsConverter):
