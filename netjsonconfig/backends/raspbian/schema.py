@@ -10,6 +10,23 @@ schema = merge_config(default_schema, {
             "allOf": [
                 {
                     "properties": {
+                        "wmm": {
+                            "type": "boolean",
+                            "title": "WMM (802.11e)",
+                            "description": "enables WMM (802.11e) support; "
+                                           "required for 802.11n support",
+                            "default": True,
+                            "format": "checkbox",
+                            "propertyOrder": 8,
+                        },
+                        "isolate": {
+                            "type": "boolean",
+                            "title": "isolate clients",
+                            "description": "isolate wireless clients from one another",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 9,
+                        },
                         "macfilter": {
                             "type": "string",
                             "title": "MAC Filter",
@@ -17,17 +34,10 @@ schema = merge_config(default_schema, {
                                            "the filter, \"allow\" to treat it as whitelist or "
                                            "\"deny\" to treat it as blacklist",
                             "enum": [
-                                None,
-                                "accept",
+                                "disable",
+                                "allow",
                                 "deny",
                             ],
-                            "options": {
-                                "enum_titles": [
-                                    "disabled",
-                                    "accept",
-                                    "deny"
-                                ]
-                            },
                             "default": "disable",
                             "propertyOrder": 15,
                         },
