@@ -37,8 +37,8 @@ class Raspbian(BaseBackend):
         files = files_pattern.split(text)
         if '' in files:
             files.remove('')
-        for file in files:
-            lines = file.split('\n')
+        for file_ in files:
+            lines = file_.split('\n')
             file_name = lines[0]
             text_contents = '\n'.join(lines[2:])
             self._add_file(tar=tar,
