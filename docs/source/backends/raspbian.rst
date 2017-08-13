@@ -35,12 +35,6 @@ Code example:
                         "family": "ipv4"
                     },
                     {
-                        "address": "192.168.2.1",
-                        "mask": 24,
-                        "proto": "static",
-                        "family": "ipv4"
-                    },
-                    {
                         "address": "fd87::1",
                         "mask": 128,
                         "proto": "static",
@@ -59,9 +53,6 @@ Will return the following output::
     auto eth0
     iface eth0 inet static
     address 192.168.1.1
-    netmask 255.255.255.0
-    iface eth0 inet static
-    address 192.168.2.1
     netmask 255.255.255.0
     iface eth0 inet6 static
     address fd87::1
@@ -150,7 +141,7 @@ The following *configuration dictionary*:
 
     {
         "general": {
-            "hostname": "routerA",
+            "hostname": "RaspberryPi",
             "timezone": "UTC"
         }
     }
@@ -159,7 +150,7 @@ Will be rendered as follows::
 
     # config: /etc/hostname
 
-    routerA
+    RaspberryPi
 
     # script: /scripts/general.sh
 
@@ -236,15 +227,9 @@ DNS Servers and Search Domains
 DNS servers can be set using ``dns_servers``, while search domains can be set using
 ``dns_search``.
 
-If specified, these values will be automatically added in every interface which has
-at least one static ip address; interfaces which have no ip address configured or are using
-dynamic ip address configuration won't get the ``dns`` option in the UCI output, eg:
-
 .. code-block:: python
 
     {
-        "dns_servers": ["10.11.12.13", "8.8.8.8"],
-        "dns_search": ["openwisp.org", "netjson.org"],
         "interfaces": [
             {
                 "name": "eth0",
@@ -268,10 +253,17 @@ dynamic ip address configuration won't get the ``dns`` option in the UCI output,
                     }
                 ]
             }
-        ]
+        ],
+        "dns_servers": [
+            "10.11.12.13",
+            "8.8.8.8"
+        ],
+        "dns_search": [
+            "openwisp.org",
+            "netjson.org"],
     }
 
-Will return the following UCI output::
+Will return the following output::
 
     # config: /etc/network/interfaces
 
@@ -348,11 +340,11 @@ The following *configuration dictionary*:
     {
         "interfaces": [
             {
-                "name": "lan_bridge",
+                "name": "lan",
                 "type": "bridge",
                 "bridge_members": [
-                    "eth0:0",
-                    "eth0:1"
+                    "eth0",
+                    "eth1"
                 ],
                 "addresses": [
                     {
@@ -370,11 +362,11 @@ Will be rendered as follows::
 
     # config: /etc/network/interfaces
 
-    auto lan_bridge
-    iface lan_bridge inet static
+    auto lan
+    iface lan inet static
     address 172.17.0.2
     netmask 255.255.255.0
-    bridge_ports eth0:0 eth0:1
+    bridge_ports eth0 eth1
 
 Wireless Settings
 -----------------
