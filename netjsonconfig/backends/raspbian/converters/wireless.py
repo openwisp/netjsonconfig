@@ -75,23 +75,35 @@ class Wireless(RaspbianConverter):
                 if encryption.get('cipher'):
                     wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
                     new_encryption.update({'wpa_pairwise': wpa_pairwise})
-            else:
-                if encryption.get('cipher'):
-                    cipher = str(encryption.get('cipher').replace('+', ' ').upper())
-                    new_encryption.update({'cipher': cipher})
-                if encryption.get('eap_type'):
-                    eap_type = encryption.get('eap_type').upper()
-                    new_encryption.update({'eap_type': eap_type})
-                new_encryption.update({
-                    'protocol': 'wpa',
-                    'method': 'enterprise',
-                    'identity': encryption.get('identity', None),
-                    'password': encryption.get('password', None),
-                    'ca_cert': encryption.get('ca_cert', None),
-                    'client_cert': encryption.get('client_cert', None),
-                    'priv_key': encryption.get('priv_key', None),
-                    'priv_key_pwd': encryption.get('priv_key_pwd', None)
-                })
+            elif method == 'enterprise':
+                if wireless.get('mode') == 'access_point':
+                    new_encryption.update({
+                        'protocol': 'wpa',
+                        'method': 'enterprise',
+                        'auth_algs': '1',
+                        'wpa': '1' if protocol == 'wpa' else '2',
+                        'wpa_key_mgmt': 'WPA-EAP',
+                        'auth_server_addr': encryption.get('server'),
+                        'auth_server_port': encryption.get('port', 1812),
+                        'auth_server_shared_secret': encryption.get('key', None),
+                    })
+                elif wireless.get('mode') == 'station':
+                    if encryption.get('cipher'):
+                        cipher = str(encryption.get('cipher').replace('+', ' ').upper())
+                        new_encryption.update({'cipher': cipher})
+                    if encryption.get('eap_type'):
+                        eap_type = encryption.get('eap_type').upper()
+                        new_encryption.update({'eap_type': eap_type})
+                    new_encryption.update({
+                        'protocol': 'wpa',
+                        'method': 'enterprise',
+                        'identity': encryption.get('identity', None),
+                        'password': encryption.get('password', None),
+                        'ca_cert': encryption.get('ca_cert', None),
+                        'client_cert': encryption.get('client_cert', None),
+                        'priv_key': encryption.get('priv_key', None),
+                        'priv_key_pwd': encryption.get('priv_key_pwd', None)
+                    })
         elif 'wep' in protocol:
             new_encryption.update({
                 'protocol': 'wep',
