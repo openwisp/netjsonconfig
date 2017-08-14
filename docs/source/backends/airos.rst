@@ -6,6 +6,9 @@ AirOS Backend
 
 The ``AirOs`` backend allows to generate AirOS v8.3 compatible configurations.
 
+.. warning::
+   This backend is experimental, please read this document carefully to prevent misconfiguration problems
+
 Initialization
 --------------
 
