@@ -21,7 +21,8 @@ As an example here we present the tree `('spam', ['eggs', 'snakes'])`
 .. graphviz::
 
    digraph tree {
-        spam -> {eggs, snakes};
+        spam -> eggs;
+        spam -> snakes;
    }
 
 As a son may be a carrier of a value so we store it in a dictionary instead of adding a *leaf*
@@ -97,7 +98,9 @@ And the resulting tree is:
         spam -> eggs;
         spam -> snakes -> loved;
 
-        loved -> {1,2,3};
+        loved -> {1};
+        loved -> {2};
+        loved -> {3};
 
         1 -> python2;
         2 -> python3;
@@ -195,7 +198,8 @@ The tree associated with the previous NetJSON example is this:
 .. graphviz::
 
    digraph tree {
-        vlan -> {1,2};
+        vlan -> 1;
+        vlan -> 2;
         devname1        [label="devname=eth0"];
         devname2        [label="devname=eth0"];
 
@@ -208,8 +212,14 @@ The tree associated with the previous NetJSON example is this:
         comment1        [label="comment=management"];
         comment2        [label="comment=traffic"];
 
-        1 -> {devname1, id1, status1, comment1};
-        2 -> {devname2, id2, status2, comment2};
+        1 -> devname1;
+        1 -> id1;
+        1 -> status1;
+        1 -> comment1;
+        2 -> devname2;
+        2 -> id2;
+        2 -> status2;
+        2 -> comment2;
    }
 
 And by exploring depth first we get to read a line of the configuration at a time.
@@ -230,5 +240,7 @@ configuration `vlan.1.devname=eth0`
         comment1        [label="comment=management"];
 
         1 -> devname1 [color="blue"];
-        1 -> {id1, status1, comment1};
+        1 -> id1;
+        1 -> status1;
+        1 -> comment1;
    }
