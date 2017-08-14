@@ -264,18 +264,20 @@ class Iptables(AirOsConverter):
             'portfw': {'status': 'disabled'},
             'status': 'enabled',
         },
-        'status': 'disabled'
+    }
+
+    _status = {
+        'status': 'enabled',
     }
 
     def bridge_intermediate(self):
         base = self._base.copy()
-        return [base]
+        iptables_status = self._status.copy()
+        return [iptables_status, base]
 
     def router_intermediate(self):
         base = self._base.copy()
-        base.update({
-            'status': 'enabled',
-        })
+        iptables_status = self._status.copy()
         base['sys'].update({
             'fw': {'status': 'disabled'},
             'mgmt': [
@@ -287,7 +289,7 @@ class Iptables(AirOsConverter):
             'mgmt.status': 'enabled',
         })
 
-        return [base]
+        return [iptables_status, base]
 
     def to_intermediate(self):
         result = getattr(self, '{netmode}_intermediate'.format(netmode=self.netmode))()
