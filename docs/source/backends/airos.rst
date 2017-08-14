@@ -194,6 +194,41 @@ For the lazy one we provide these defaults
         }
     }
 
+Ssh
+---
+
+We can specify the configuration for the ssh server on the antenna using the ``sshd`` property.
+
+This snippet shows how to configure the ssh server with the default values.
+
+.. code-block:: json
+
+    {
+        "type": "DeviceConfiguration",
+        "sshd": {
+            "port": 22,
+            "enabled": true,
+            "password_auth": true
+        }
+    }
+
+And this shows how to set the authorized ssh public keys
+
+.. code-block:: json
+
+    {
+        "type": "DeviceConfiguration",
+        "sshd": {
+            "keys": [
+                {
+                    "type": "ssh-rsa",
+                    "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBEEhdDJIbHVHIXQQ8dzH3pfmIbZjlrcIV+YkZM//ezQtINTUbqolCXFsETVVwbCH6d8Pi1v1lCDgILbkOOivTIKUgG8/84yI4VLCH03CAd55IG7IFZe9e6ThT4/MryH8zXKGAq5rnQSW90ashZaOEH0wNTOhkZmQ/QhduJcarevH4iZPrq5eM/ClCXzkF0I/EWN89xKRrjMB09WmuYOT48n5Es08iJxwQ1gKfjk84Fy+hwMKVtOssfBGuYMBWByJwuvW5xCH3H6eVr1GhkBRrlTy6KAkc9kfAsSpkHIyeb/jAS2hr6kAh6cxapKENHxoAdJNvMEpdU11v6PMoOtIb edoput@hypnotoad",
+                    "comment": "my shh key",
+                    "enabled": true
+            ]
+        }
+    }
+
 Users
 -----
 
