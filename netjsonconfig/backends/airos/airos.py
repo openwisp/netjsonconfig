@@ -27,6 +27,7 @@ class AirOs(BaseBackend):
     converters = [
             Aaa,
             Bridge,
+            Dhcpc,
             Discovery,
             Dyndns,
             Ebtables,
