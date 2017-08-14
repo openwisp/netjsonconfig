@@ -3,6 +3,7 @@ from unittest import TestCase
 from netjsonconfig import AirOs
 from netjsonconfig.backends.airos.airos import to_ordered_list
 from netjsonconfig.backends.airos.converters import (Aaa, Bridge, Discovery,
+                                                     Dhcpc,
                                                      Dyndns, Ebtables, Gui,
                                                      Httpd, Igmpproxy,
                                                      Iptables, Netconf,
@@ -54,6 +55,15 @@ class BridgeAirOs(AirOs):
     """
     converters = [
         Bridge,
+    ]
+
+
+class DhcpcAirOs(AirOs):
+    """
+    Mock backend with converter for network hardware discovery
+    """
+    converters = [
+        Dhcpc,
     ]
 
 

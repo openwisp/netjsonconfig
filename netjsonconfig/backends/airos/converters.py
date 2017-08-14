@@ -122,7 +122,7 @@ class Discovery(AirOsConverter):
         return (('discovery', result),)
 
 
-class Dhcp(AirOsConverter):
+class Dhcpc(AirOsConverter):
 
     @classmethod
     def should_run_forward(cls, config):
