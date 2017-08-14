@@ -127,6 +127,72 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 '''
         self.assertEqual(o.render(), expected)
 
+    def test_wpa2_enterprise_ap(self):
+        o = Raspbian({
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 3,
+                    "channel_width": 20,
+                },
+            ],
+            "interfaces": [
+                {
+                    "type": "wireless",
+                    "name": "wlan0",
+                    "mac": "de:9f:db:30:c9:c5",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "ap-ssid-example",
+                        "encryption": {
+                            "protocol": "wpa2_enterprise",
+                            "server": "radius.example.com",
+                            "key": "the-shared-key",
+                        },
+                    },
+                }
+            ]
+        })
+
+        expected = '''# config: /etc/hostapd/hostapd.conf
+
+interface=wlan0
+driver=nl80211
+hw_mode=g
+channel=3
+ieee80211n=1
+ssid=ap-ssid-example
+auth_algs=1
+wpa=2
+wpa_key_mgmt=WPA-EAP
+ieee8021x=1
+eap_server=1
+eapol_version=1
+auth_server_addr=radius.example.com
+auth_server_port=1812
+auth_server_shared_secret=the-shared-key
+
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+'''
+
+        self.assertEqual(o.render(), expected)
+
     @unittest.skip('Test skipping')
     def test_wep_open(self):
         o = Raspbian({
