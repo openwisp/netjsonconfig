@@ -2,7 +2,6 @@ import copy
 
 from .interface import radio
 
-
 _base = {
     'sys': {
         'status': 'enabled',

@@ -1,7 +1,8 @@
 from unittest import TestCase
 
-from netjsonconfig.backends.airos.interface import (autonegotiation, bssid, encryption,
-                                                    flowcontrol, hidden_ssid, stp)
+from netjsonconfig.backends.airos.interface import (autonegotiation, bssid,
+                                                    encryption, flowcontrol,
+                                                    hidden_ssid, stp)
 
 
 class InterfaceTest(TestCase):
