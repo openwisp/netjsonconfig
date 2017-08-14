@@ -49,6 +49,7 @@ Contents:
    /general/setup
    /general/basics
    /backends/airos
+   /backends/intermediate
    /backends/openwrt
    /backends/openwisp
    /backends/openvpn

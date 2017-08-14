@@ -9,6 +9,7 @@ The ``AirOs`` backend allows to generate AirOS v8.3 compatible configurations.
 .. warning::
    This backend is experimental, please read this document carefully to prevent misconfiguration problems
 
+
 Initialization
 --------------
 
@@ -55,6 +56,11 @@ JSON method
 
 .. automethod:: netjsonconfig.AirOs.json
 
+
+Extending the backend
+---------------------
+
+Please see the :ref:`airos-intermediate-representation` page for extending converters and adding functionalities to this backend
 
 General settings
 ----------------
@@ -228,6 +234,7 @@ And this shows how to set the authorized ssh public keys
                     "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBEEhdDJIbHVHIXQQ8dzH3pfmIbZjlrcIV+YkZM//ezQtINTUbqolCXFsETVVwbCH6d8Pi1v1lCDgILbkOOivTIKUgG8/84yI4VLCH03CAd55IG7IFZe9e6ThT4/MryH8zXKGAq5rnQSW90ashZaOEH0wNTOhkZmQ/QhduJcarevH4iZPrq5eM/ClCXzkF0I/EWN89xKRrjMB09WmuYOT48n5Es08iJxwQ1gKfjk84Fy+hwMKVtOssfBGuYMBWByJwuvW5xCH3H6eVr1GhkBRrlTy6KAkc9kfAsSpkHIyeb/jAS2hr6kAh6cxapKENHxoAdJNvMEpdU11v6PMoOtIb edoput@hypnotoad",
                     "comment": "my shh key",
                     "enabled": true
+                }
             ]
         }
     }

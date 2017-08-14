@@ -1,14 +1,9 @@
-=============
-AirOS Backend
-=============
-
-.. include:: ../_github.rst
-
+.. _airos-intermediate-representation:
 
 Intermediate representation
 ---------------------------
 
-The intermediate representation is the output of the a :ref:`converter`,
+The intermediate representation is the output of the a **converter**,
 it is backend specific and is built as a tree structure made from python
 builtins values.
 
