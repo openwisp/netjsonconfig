@@ -1,10 +1,8 @@
 from unittest import TestCase
-from netjsonconfig.backends.airos.interface import (autonegotiation, bridge,
-        bssid, encryption,
-        flowcontrol, hidden_ssid,
-        mode, protocol, psk, radio,
-        split_cidr, ssid, stp, vlan,
-        wireless)
+
+from netjsonconfig.backends.airos.interface import (autonegotiation, bssid, encryption,
+                                                    flowcontrol, hidden_ssid, stp)
+
 
 class InterfaceTest(TestCase):
     def test_autonegotiation(self):
@@ -156,4 +154,3 @@ class InterfaceTest(TestCase):
         self.assertEqual(stp(enabled), 'enabled')
         self.assertEqual(stp(disabled), 'disabled')
         self.assertEqual(stp(missing), 'disabled')
-

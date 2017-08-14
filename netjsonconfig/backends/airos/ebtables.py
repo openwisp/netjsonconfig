@@ -1,6 +1,6 @@
 import copy
 
-from .interface import protocol, radio
+from .interface import radio
 
 
 _base = {
@@ -8,6 +8,7 @@ _base = {
         'status': 'enabled',
     },
 }
+
 
 def encrypted(interface):
     """

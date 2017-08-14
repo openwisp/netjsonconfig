@@ -1,5 +1,3 @@
-from unittest import skip
-
 from .mock import ConverterTest, RouteAirOs
 
 
