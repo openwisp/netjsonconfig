@@ -11,12 +11,10 @@ class Wireless(RaspbianConverter):
         new_interface = {}
         for interface in interfaces:
             if interface.get('type') == 'wireless' and interface.get('wireless').get('mode') is not 'adhoc':
+                wireless = interface.get('wireless')
                 new_interface.update({
                     'ifname': interface.get('name'),
                     'iftype': interface.get('type'),
-                })
-                wireless = interface.get('wireless')
-                new_interface.update({
                     'ssid': wireless.get('ssid'),
                     'radio': wireless.get('radio'),
                     'mode': wireless.get('mode'),
@@ -55,13 +53,9 @@ class Wireless(RaspbianConverter):
     def _get_encryption(self, wireless):
         encryption = wireless.get('encryption', None)
         new_encryption = {}
-        if encryption is None:
+        if encryption is None or encryption.get('disabled', False) or encryption.get('protocol') == 'none':
             return new_encryption
-        disabled = encryption.get('disabled', False)
-        protocol = encryption.get('protocol')
-        if disabled or protocol == 'none':
-            return new_encryption
-        protocol, method = protocol.split("_")
+        protocol, method = encryption.get('protocol').split("_")
         if 'wpa' in protocol:
             if 'personal' in method:
                 new_encryption.update({
@@ -71,10 +65,8 @@ class Wireless(RaspbianConverter):
                     'wpa': '1' if protocol == 'wpa' else '2',
                     'wpa_key_mgmt': 'WPA-PSK',
                     'wpa_passphrase': encryption.get('key'),
+                    'wpa_pairwise': self._get_cipher(encryption),
                 })
-                if encryption.get('cipher'):
-                    wpa_pairwise = str(encryption.get('cipher').replace('+', ' ')).upper()
-                    new_encryption.update({'wpa_pairwise': wpa_pairwise})
             elif method == 'enterprise':
                 if wireless.get('mode') == 'access_point':
                     new_encryption.update({
@@ -88,15 +80,13 @@ class Wireless(RaspbianConverter):
                         'auth_server_shared_secret': encryption.get('key', None),
                     })
                 elif wireless.get('mode') == 'station':
-                    if encryption.get('cipher'):
-                        cipher = str(encryption.get('cipher').replace('+', ' ').upper())
-                        new_encryption.update({'cipher': cipher})
                     if encryption.get('eap_type'):
                         eap_type = encryption.get('eap_type').upper()
                         new_encryption.update({'eap_type': eap_type})
                     new_encryption.update({
                         'protocol': 'wpa',
                         'method': 'enterprise',
+                        'wpa_pairwise': self._get_cipher(encryption),
                         'identity': encryption.get('identity', None),
                         'password': encryption.get('password', None),
                         'ca_cert': encryption.get('ca_cert', None),
@@ -111,3 +101,9 @@ class Wireless(RaspbianConverter):
                 'key': encryption.get('key', None)
             })
         return new_encryption
+
+    def _get_cipher(self, encryption):
+        if encryption.get('cipher'):
+            return str(encryption.get('cipher').replace('+', ' ')).upper()
+        else:
+            return None
