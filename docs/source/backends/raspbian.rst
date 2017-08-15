@@ -6,6 +6,10 @@ Raspbian Backend
 
 The ``Raspbian`` backend allows to Raspbian compatible configuration files.
 
+.. warning::
+   The backend is in experimental stage and may have bugs, check for updates on
+   a regular basis
+
 Initialization
 --------------
 
