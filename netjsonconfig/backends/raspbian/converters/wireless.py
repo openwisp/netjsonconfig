@@ -27,17 +27,7 @@ class Wireless(RaspbianConverter):
                     'maclist': wireless.get('maclist', None),
                     'encryption': self._get_encryption(wireless)
                 })
-                radios = get_copy(self.netjson, 'radios')
-                if radios:
-                    req_radio = [radio for radio in radios if radio['name'] == wireless.get('radio')][0]
-                    new_interface.update({
-                        'protocol': req_radio.get('protocol').replace(".", ""),
-                        'hwmode': self._get_hwmode(req_radio),
-                        'channel': req_radio.get('channel'),
-                        'channel_width': req_radio.get('channel_width')
-                    })
-                    if 'country' in req_radio:
-                        new_interface.update({'country': req_radio.get('country')})
+                self._update_radio(wireless, new_interface)
                 result.append(new_interface)
         return (('wireless', result),)
 
@@ -49,6 +39,19 @@ class Wireless(RaspbianConverter):
             return 'g'
         else:
             return 'a'
+
+    def _update_radio(self, wireless, interface):
+        radios = get_copy(self.netjson, 'radios')
+        if radios:
+            req_radio = [radio for radio in radios if radio['name'] == wireless.get('radio')][0]
+            interface.update({
+                'protocol': req_radio.get('protocol').replace(".", ""),
+                'hwmode': self._get_hwmode(req_radio),
+                'channel': req_radio.get('channel'),
+                'channel_width': req_radio.get('channel_width')
+            })
+            if 'country' in req_radio:
+                interface.update({'country': req_radio.get('country')})
 
     def _get_encryption(self, wireless):
         encryption = wireless.get('encryption', None)
