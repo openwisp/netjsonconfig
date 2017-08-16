@@ -1,4 +1,4 @@
-from .interface import encryption, ssid
+from .interface import bssid, encryption, ssid
 
 
 def ap_no_encryption(interface):
@@ -9,11 +9,7 @@ def ap_no_encryption(interface):
     return {
         'ssid': ssid(interface),
         'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'NONE',
-            },
-        ],
+        'key_mgmt': [{'name': 'NONE'}],
     }
 
 
@@ -23,16 +19,9 @@ def ap_wpa2_personal(interface):
     for wpa2_personal as the indernediate dict
     in ``access_point`` mode
     """
-    return {
-        'psk': encryption(interface)['key'],
-        'ssid': ssid(interface),
-        'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'NONE',
-            },
-        ],
-    }
+    base = ap_no_encryption(interface)
+    base.update({'psk': encryption(interface)['key']})
+    return base
 
 
 def ap_wpa2_enterprise(interface):
@@ -41,12 +30,9 @@ def ap_wpa2_enterprise(interface):
     for wpa2_personal as the indernediate dict
     in ``access_point`` mode
     """
-    return {
-        'ssid': ssid(interface),
-    }
+    return ap_no_encryption(interface)
 
 
-# STATION
 def sta_no_encryption(interface):
     """
     Returns the wpasupplicant.profile.1.network
@@ -56,11 +42,7 @@ def sta_no_encryption(interface):
     return {
         'ssid': ssid(interface),
         'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'NONE',
-            },
-        ],
+        'key_mgmt': [{'name': 'NONE'}],
     }
 
 
@@ -70,37 +52,16 @@ def sta_wpa2_personal(interface):
     for wpa2_personal as the indernediate dict
     in ``station`` mode
     """
-    return {
-        'ssid': ssid(interface),
+    base = sta_no_encryption(interface)
+    base.update({
         'psk': encryption(interface)['key'],
-        # no advanced authentication methods
-        # with psk
-        'eap': [
-            {
-                'status': 'disabled',
-            },
-        ],
-        'key_mgmt': [
-            {
-                'name': 'WPA-PSK',
-            },
-        ],
-        'pairwise': [
-            {
-                'name': 'CCMP',
-            },
-        ],
-        # this may be not necessary
-        # as further authentication is not
-        # supported
+        'eap': [{'status': 'disabled'}],
+        'key_mgmt': [{'name': 'WPA-PSK'}],
+        'pairwise': [{'name': 'CCMP'}],
         'phase2=auth': 'MSCHAPV2',
-        'priority': 100,
-        'proto': [
-            {
-                'name': 'RSN',
-            },
-        ],
-    }
+        'proto': [{'name': 'RSN'}],
+    })
+    return base
 
 
 def sta_wpa2_enterprise(interface):
@@ -108,8 +69,9 @@ def sta_wpa2_enterprise(interface):
     Returns the wpasupplicant.profile.1.network
     for wpa2_enterprise as the intermediate dict
     """
-    return {
-        'ssid': ssid(interface),
+    base = ap_no_encryption(interface)
+    base.update({
+        'bssid': bssid(interface),
         'phase2=auth': 'MSCHAPV2',
         'eap': [
             {
@@ -119,23 +81,11 @@ def sta_wpa2_enterprise(interface):
         ],
         'password': encryption(interface)['password'],
         'identity': encryption(interface)['identity'],
-        'pairwise': [
-            {
-                'name': 'CCMP',
-            },
-        ],
-        'proto': [
-            {
-                'name': 'RSN',
-            },
-        ],
-        'priority': 100,
-        'key_mgmt': [
-            {
-                'name': 'WPA-EAP',
-            },
-        ],
-    }
+        'pairwise': [{'name': 'CCMP'}],
+        'proto': [{'name': 'RSN'}],
+        'key_mgmt': [{'name': 'WPA-EAP'}],
+    })
+    return base
 
 
 available_mode_authentication = {
