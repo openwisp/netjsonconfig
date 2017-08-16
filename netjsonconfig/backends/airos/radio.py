@@ -1,3 +1,6 @@
+"""
+This configuration is for a radio in a ``station`` device without encryption
+"""
 radio_device_base = {
     'ack': {'auto': 'enabled'},
     'ackdistance': 643,
@@ -29,7 +32,7 @@ radio_device_base = {
     'freq': 0,
     'ieee_mode': 'auto',
     'low_txpower_mode': 'disabled',
-    'mode': 'managed',  # ap => master, sta => managed
+    'mode': 'managed',
     'obey': 'enabled',
     'polling': 'enabled',
     'polling_11ac_11n_compat': 0,
@@ -54,20 +57,6 @@ radio_configuration = {
 }
 
 
-def channel_to_mode(channel):
-    """
-    Returns the ``ieee_mode`` value from the channel width
-    """
-    mapping = {
-        10: '11acvht20',
-        20: '11acvht20',
-        40: '11acvht40',
-        60: '11acvht40',
-        80: '11acvht80',
-    }
-    return mapping[channel]
-
-
 def access_point(radio):
     """
     Return the configuration for a radio device whose wireless
@@ -76,8 +65,8 @@ def access_point(radio):
     base = radio_device_base.copy()
     base.update({
         'devname': radio['name'],
-        'chanbw': radio['channel_width'],
-        'ieee_mode': channel_to_mode(radio['channel_width']),
+        'chanbw': 80,
+        'ieee_mode': '11acvht80',
         'mode': 'master',
     })
     return base
@@ -91,7 +80,7 @@ def station(radio):
     base = radio_device_base.copy()
     base.update({
         'devname': radio['name'],
-        'chanbw': radio['channel_width'],
+        'chanbw': 0,
         'txpower': radio.get('tx_power', 24),
     })
     return base
