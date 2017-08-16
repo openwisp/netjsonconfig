@@ -779,10 +779,6 @@ class Wpasupplicant(AirOsConverter):
                 'network': [network, self.secondary_network()],
             }
 
-            if proto == 'wpa2_enterprise':
-                del temp_dev['profile']
-                del profile['name']
-
         result.append({
             'device': [temp_dev],
             'profile': [profile],
