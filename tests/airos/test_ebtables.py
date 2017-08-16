@@ -1,5 +1,3 @@
-from unittest import skip
-
 from .mock import ConverterTest, EbtablesAirOs
 
 
@@ -340,7 +338,6 @@ class EbtablesConverterRouter(ConverterTest):
         ]
         self.assertEqualConfig(o.intermediate_data['ebtables'], expected)
 
-    @skip
     def test_access_eap(self):
         o = self.backend({
             'interfaces': [
@@ -354,6 +351,7 @@ class EbtablesConverterRouter(ConverterTest):
                         'encryption': {
                             'protocol': 'wpa2_enterprise',
                             'server': '192.168.1.1',
+                            'key': 'radius-change-me',
                         }
                     }
                 }
