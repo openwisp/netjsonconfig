@@ -125,7 +125,7 @@ class TestAaaConverterAccess(ConverterTest):
                 'status': 'enabled',
             },
             {
-                '1.br.devname': 'br0',  # only in bridge mode?
+                '1.br.devname': 'br0',
                 '1.devname': 'ath0',
                 '1.driver': 'madwifi',
                 '1.radius.acct.1.port': 1813,
