@@ -162,7 +162,7 @@ class Ebtables(AirOsConverter):
         """
         Return all the vlan interfaces
         """
-        return vlan(get_copy(self.netjson, self.netjson_key, []))
+        return vlan(get_copy(self.netjson, 'interfaces', []))
 
     @property
     def wireless(self):
