@@ -344,7 +344,11 @@ class TestWpasupplicantAccess(ConverterTest):
                 'status': 'disabled',
             },
             {
+                'device.1.profile': 'AUTO',
                 'device.1.status': 'disabled',
+                'profile.1.name': 'AUTO',
+                'profile.1.network.1.key_mgmt.1.name': 'NONE',
+                'profile.1.network.1.priority': 100,
                 'profile.1.network.1.ssid': 'ap-ssid-example',
                 'profile.1.network.2.key_mgmt.1.name': 'NONE',
                 'profile.1.network.2.priority': 2,
