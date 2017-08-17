@@ -47,7 +47,7 @@ radio_device_base = {
     'scan_list': {'status': 'disabled'},
     'scanbw': {'status': 'disabled'},
     'status': 'enabled',  # cannot disable
-    'subsystemid': 0xe7f5,
+    'subsystemid': '0xe7f5',
     'txpower': 24,
 }
 
