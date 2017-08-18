@@ -7,7 +7,13 @@ AirOS Backend
 The ``AirOs`` backend allows to generate AirOS v8.3 compatible configurations.
 
 .. warning::
-   This backend is experimental, please read this document carefully to prevent misconfiguration problems
+
+    This backend is in experimental stage: it may have bugs and it will
+    receive backward incompatible updates in during the first 6 months
+    of development (starting from September 2017).
+    Early feedback and contributions are very welcome and will help
+    to stabilize the backend faster.
+
 
 
 Initialization
@@ -184,7 +190,7 @@ DNS servers
 GUI
 ---
 
-As an extension to `NetJSON <http://netjson.org/rfc.html>` you can use the ``gui`` key to set the language of the interface 
+As an extension to `NetJSON <http://netjson.org/rfc.html>`_ you can use the ``gui`` key to set the language of the interface 
 
 The default values for this key are reported below
 
@@ -212,7 +218,7 @@ AirOS v8.3 can operate in ``bridge`` and ``router`` mode (but defaults to ``brid
 NTP servers
 -----------
 
-This is an extension to the `NetJSON` specification.
+This is an extension to the `NetJSON <http://netjson.org/rfc.html>`_ specification.
 
 By setting the key ``ntp`` property in your input you can provide the configuration for the ntp client running on the device.
 
