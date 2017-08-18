@@ -297,7 +297,7 @@ From the antenna configuration take the user section.
     users.1.name=ubnt
     users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1
 
-In the line ``users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1`` there are both the salt and the password hash in the format ``$ algorithm $ salt $ hash $``, e.g in the previous block ``algorithm=1``, ``salt=yRo1tmtC`` and ``hash=EcdoRX.JnD4VaEYgghgWg1``.
+In the line ``users.1.password=$1$yRo1tmtC$EcdoRX.JnD4VaEYgghgWg1`` there are both the salt and the password hash in the format ``$ algorithm $ salt $ hash``, e.g in the previous block ``algorithm=1``, ``salt=yRo1tmtC`` and ``hash=EcdoRX.JnD4VaEYgghgWg1``.
 
 To specify the password in NetJSON use the ``user`` property.
 
