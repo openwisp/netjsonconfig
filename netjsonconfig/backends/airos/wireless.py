@@ -21,7 +21,6 @@ _wireless_base = {
     'signal_led4': 15,
     'signal_led_status': 'enabled',
     'ssid': '',
-    'ap': '',
     'status': '',
     'wds': {'status': 'enabled'},
 }
