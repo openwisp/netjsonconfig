@@ -260,17 +260,22 @@ class Iptables(AirOsConverter):
     }
 
     _status = {
-        'status': 'enabled',
+        'bridge': {
+            'status': 'disabled',
+        },
+        'router': {
+            'status': 'enabled',
+        }
     }
 
     def bridge_intermediate(self):
         base = self._base.copy()
-        iptables_status = self._status.copy()
+        iptables_status = self._status['bridge'].copy()
         return [iptables_status, base]
 
     def router_intermediate(self):
         base = self._base.copy()
-        iptables_status = self._status.copy()
+        iptables_status = self._status['router'].copy()
         base['sys'].update({
             'fw': {'status': 'disabled'},
             'mgmt': [
