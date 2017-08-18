@@ -171,6 +171,11 @@ As an example here is a snippet that enables both auto-negotiation and flow cont
        ]
    }
 
+Role
+^^^^
+
+Interfaces can be assigned a ``role`` to mimic the web interfaces features. As an example setting the ``management`` property of an address to ``true`` will add the role ``mlan`` to the interface configuration. If not set the management interface will be selected as the (first) one providing a gateway in one of it's addresses.
+
 
 DNS servers
 -----------
