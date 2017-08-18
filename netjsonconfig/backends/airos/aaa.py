@@ -33,16 +33,15 @@ def ap_eap(interface):
     Return the configuration for ``aaa``
     when in ``access_point`` mode with eap authentication
     """
-    return {
-        'devname': radio(interface),
-        'driver': 'madwifi',
-        'ssid': ssid(interface),
+    base = ap_psk(interface)
+    base.update({
         'wpa': {
             '1.pairwise': 'CCMP',
             'key': [{'mgmt': 'WPA-EAP'}],
             'mode': 2,
         },
-    }
+    })
+    return base
 
 
 def sta_none(interface):
