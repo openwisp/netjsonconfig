@@ -156,6 +156,7 @@ class TestWirelessStationConverter(ConverterTest):
         expected = [
             {
                 '1.addmtikie': 'enabled',
+                '1.ap': '00:11:22:33:44:55',
                 '1.devname': 'radio0',
                 '1.hide_ssid': 'disabled',
                 '1.l2_isolation': 'disabled',
@@ -215,6 +216,7 @@ class TestWirelessStationConverter(ConverterTest):
         expected = [
             {
                 '1.addmtikie': 'enabled',
+                '1.ap': '00:11:22:33:44:55',
                 '1.devname': 'radio0',
                 '1.hide_ssid': 'disabled',
                 '1.l2_isolation': 'disabled',
