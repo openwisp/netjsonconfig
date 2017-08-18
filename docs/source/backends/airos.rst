@@ -203,6 +203,13 @@ For the lazy one we provide these defaults
         }
     }
 
+Radio
+-----
+
+The following properties of a ``Radio Object`` are used during the conversion, the others have been set to safe defaults.
+
+* ``name``
+
 Ssh
 ---
 
