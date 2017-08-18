@@ -36,7 +36,6 @@ class AirOsConverter(BaseConverter):
 
 
 class Aaa(AirOsConverter):
-    netjson_key = 'general'
 
     @property
     def bridge(self):
@@ -108,7 +107,6 @@ class Bridge(AirOsConverter):
 
 
 class Discovery(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = [
@@ -147,7 +145,6 @@ class Dhcpc(AirOsConverter):
 
 
 class Dyndns(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = [{'status': 'disabled'}]
@@ -155,7 +152,6 @@ class Dyndns(AirOsConverter):
 
 
 class Ebtables(AirOsConverter):
-    netjson_key = 'general'
 
     @property
     def vlan(self):
@@ -227,7 +223,6 @@ class Gui(AirOsConverter):
 
 
 class Httpd(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = [
@@ -247,7 +242,6 @@ class Httpd(AirOsConverter):
 
 
 class Igmpproxy(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = {'status': 'disabled'}
@@ -257,7 +251,6 @@ class Igmpproxy(AirOsConverter):
 
 
 class Iptables(AirOsConverter):
-    netjson_key = 'general'
 
     _base = {
         'sys': {
@@ -387,7 +380,6 @@ class Ntpclient(AirOsConverter):
 
 
 class Pwdog(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = []
@@ -557,7 +549,6 @@ class Sshd(AirOsConverter):
 
 
 class Syslog(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = []
@@ -573,7 +564,6 @@ class Syslog(AirOsConverter):
 
 
 class System(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = []
@@ -598,7 +588,6 @@ class System(AirOsConverter):
 
 
 class Telnetd(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = []
@@ -610,21 +599,18 @@ class Telnetd(AirOsConverter):
 
 
 class Tshaper(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         return (('tshaper', [{'status': 'disabled'}]),)
 
 
 class Unms(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         return (('unms', [{'status': 'disabled'}]),)
 
 
 class Update(AirOsConverter):
-    netjson_key = 'general'
 
     def to_intermediate(self):
         result = []
