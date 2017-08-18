@@ -102,7 +102,7 @@ The list of "defaulted" converters follows:
 General settings
 ----------------
 
-From the ``general`` key we can configure the contact and the location for a device using the ``contact`` and ``location`` properties.
+From the ``general`` property we can configure the contact and the location for a device using the ``contact`` and ``location`` properties.
 
 The following snippet specify both contact and location:
 
@@ -112,7 +112,7 @@ The following snippet specify both contact and location:
         "type": "DeviceConfiguration",
         "general": {
             "contact": "user@example.com",
-            "location": "Up in the roof"
+            "location": "Up on the roof"
         }
     }
 
@@ -186,7 +186,7 @@ GUI
 
 As an extension to `NetJSON <http://netjson.org/rfc.html>` you can use the ``gui`` key to set the language of the interface 
 
-The default values for this key are as reported below
+The default values for this key are reported below
 
 .. code-block:: json
 
