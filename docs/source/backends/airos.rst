@@ -62,6 +62,43 @@ Extending the backend
 
 Please see the :ref:`airos-intermediate-representation` page for extending converters and adding functionalities to this backend
 
+Converters with defaults
+------------------------
+
+NetSJON does not map explicitly to various section of the AirOS device configuration. For those section we have provided default values that should work both in ``bridge`` and ``router`` mode.
+
+The list of "defaulted" converters follows:
+
+* Discovery
+* Dhcpc
+
+  * ``dhcpc.devname`` defaults to ``br0``
+
+* Dyndns
+* Httpd
+* Igmpproxy
+* Iptables
+
+  * ``iptables.sys.mgmt.devname`` defaults to ``br0``
+
+* Netconf
+
+  * the first interface with a ``gateway`` specified is the management interface in ``bridge`` mode
+  * the first interface with a ``gateway`` specified is the ``wan`` interface in ``router`` mode
+
+* Pwdog
+* Radio
+
+  * most of the configuration for the radio interface is taken from a PowerBeam ``PBE-5AC-400``
+
+* Syslog
+* System
+* Telnetd
+* Tshaper
+* Unms
+* Update
+* Upnpd
+
 General settings
 ----------------
 
