@@ -130,7 +130,7 @@ _status_from_mode = {
 
 def status_from_interface(interface):
     """
-    Returns ``aaa.status`` from interface
+    Returns ``aaa.status`` and ``aaa.1.status`` from interface
     """
     status = _status.copy()
     status.update(
