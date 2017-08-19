@@ -7,8 +7,11 @@ Raspbian Backend
 The ``Raspbian`` backend allows to Raspbian compatible configuration files.
 
 .. warning::
-   The backend is in experimental stage and may have bugs, check for updates on
-   a regular basis
+    This backend is in experimental stage: it may have bugs and it will
+    receive backward incompatible updates in during the first 6 months
+    of development (starting from September 2017).
+    Early feedback and contributions are very welcome and will help
+    to stabilize the backend faster.
 
 Initialization
 --------------
