@@ -49,7 +49,7 @@ auth_algs=1
 wpa=2
 wpa_key_mgmt=WPA-PSK
 wpa_passphrase=passphrase012345
-wpa_pairwise=TKIP CCMP
+rsn_pairwise=TKIP CCMP
 
 # config: /etc/network/interfaces
 
@@ -193,7 +193,6 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
         self.assertEqual(o.render(), expected)
 
-    @unittest.skip('Test skipping')
     def test_wep_open(self):
         o = Raspbian({
             "radios": [
@@ -224,10 +223,34 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = ''''''
+        expected = '''# config: /etc/hostapd/hostapd.conf
+
+interface=wlan0
+driver=nl80211
+hw_mode=g
+channel=3
+ieee80211n=1
+ssid=wep
+auth_algs=1
+wep_default_key=0
+wep_key0=wepkey1234567
+
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+'''
         self.assertEqual(o.render(), expected)
 
-    @unittest.skip('Test skipping')
     def test_wep_shared(self):
         o = Raspbian({
             "radios": [
@@ -258,7 +281,32 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = ''''''
+        expected = '''# config: /etc/hostapd/hostapd.conf
+
+interface=wlan0
+driver=nl80211
+hw_mode=g
+channel=3
+ieee80211n=1
+ssid=wep
+auth_algs=2
+wep_default_key=0
+wep_key0=wepkey1234567
+
+# config: /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet manual
+
+# script: /scripts/ipv4_forwarding.sh
+
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+'''
         self.assertEqual(o.render(), expected)
 
     def test_encryption_disabled(self):
