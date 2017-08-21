@@ -190,7 +190,11 @@ Role
 
 Interfaces can be assigned a ``role`` to mimic the web interfaces features.
 
-As an example setting the ``role`` property of an address to ``mlan`` will add the role ``mlan`` to the interface configuration.
+As an example setting the ``role`` property of an address to ``mlan`` will add the role ``mlan`` to the interface configuration and set it as the management interface.
+
+.. warning::
+
+    Not setting a management interface will lock you out from the web interface
 
 Here is the snippet to set the role to ``mlan``
 
