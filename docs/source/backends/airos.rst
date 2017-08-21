@@ -71,6 +71,11 @@ Extending the backend
 
 Please see the :ref:`airos-intermediate-representation` page for extending converters and adding functionalities to this backend
 
+The configuration upgrade process
+---------------------------------
+
+Please see the :ref:`airos-configuration-upgrade` page for information about the process and tools that upgrades the configuration on the device
+
 Converters with defaults
 ------------------------
 
