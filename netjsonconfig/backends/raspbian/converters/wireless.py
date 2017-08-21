@@ -68,7 +68,7 @@ class Wireless(RaspbianConverter):
                     'wpa': '1' if protocol == 'wpa' else '2',
                     'wpa_key_mgmt': 'WPA-PSK',
                     'wpa_passphrase': encryption.get('key'),
-                    'wpa_pairwise': self._get_cipher(encryption),
+                    'cipher': self._get_cipher(encryption),
                 })
             elif method == 'enterprise':
                 if wireless.get('mode') == 'access_point':
@@ -99,6 +99,7 @@ class Wireless(RaspbianConverter):
                     })
         elif 'wep' in protocol:
             new_encryption.update({
+                'auth_algs': 1 if method == 'open' else 2,
                 'protocol': 'wep',
                 'method': method,
                 'key': encryption.get('key', None)
