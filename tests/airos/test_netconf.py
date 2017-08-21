@@ -112,7 +112,7 @@ class TestNetconfConverter(ConverterTest):
                         {
                             'address': '192.168.1.20',
                             'family': 'ipv4',
-                            'management': True,
+                            'role': 'mlan',
                             'mask': 24,
                             'proto': 'static',
                         }
