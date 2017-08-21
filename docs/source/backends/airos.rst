@@ -14,7 +14,10 @@ The ``AirOs`` backend allows to generate AirOS v8.3 compatible configurations.
     Early feedback and contributions are very welcome and will help
     to stabilize the backend faster.
 
+.. toctree::
 
+    intermediate
+    airos-upgrade
 
 Initialization
 --------------
