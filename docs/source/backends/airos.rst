@@ -228,10 +228,6 @@ This is the list of roles available for a device in ``router`` mode:
 * ``lan`` for the lan interface
 
 
-DNS servers
------------
-
-
 GUI
 ---
 
