@@ -141,7 +141,7 @@ AirOS supports the following types of interfaces
 * **wirelesss interfaces**: must be of type ``wireless``
 * **bridge interfaces**: must be of type ``bridge``
 
-A network interface can be designed to be the management interfaces by setting the ``managed`` key to ``True`` on the address chosen.
+A network interface can be designed to be the management interfaces by setting the ``role`` key to ``mlan`` on the address chosen.
 
 As an example here is a snippet that set the vlan ``eth0.2`` to be the management interface on the address ``192.168.1.20``
 
@@ -156,7 +156,7 @@ As an example here is a snippet that set the vlan ``eth0.2`` to be the managemen
                    {
                        "address": "192.168.1.20",
                        "family": "ipv4",
-                       "managed": true,
+                       "role": "mlan",
                        "mask": 24,
                        "proto": "static"
                    }
@@ -188,7 +188,40 @@ As an example here is a snippet that enables both auto-negotiation and flow cont
 Role
 ^^^^
 
-Interfaces can be assigned a ``role`` to mimic the web interfaces features. As an example setting the ``management`` property of an address to ``true`` will add the role ``mlan`` to the interface configuration. If not set the management interface will be selected as the (first) one providing a gateway in one of it's addresses.
+Interfaces can be assigned a ``role`` to mimic the web interfaces features.
+
+As an example setting the ``role`` property of an address to ``mlan`` will add the role ``mlan`` to the interface configuration.
+
+Here is the snippet to set the role to ``mlan``
+
+.. code-block:: json
+
+    {
+        "interfaces": [
+            {
+                "type": "ethernet",
+                "name": "eth0",
+                "addresses": [
+                    {
+                        "family": "ipv4",
+                        "proto": "static",
+                        "address": "192.168.1.1",
+                        "role": "mlan"
+                    }
+                ]
+            }
+        ]
+    }
+
+
+This is the list of roles available for a device in ``bridge`` mode:
+
+* ``mlan`` for the management interface
+
+This is the list of roles available for a device in ``router`` mode:
+
+* ``wan`` for the wan interface
+* ``lan`` for the lan interface
 
 
 DNS servers

@@ -297,13 +297,6 @@ class Iptables(AirOsConverter):
 class Netconf(AirOsConverter):
     netjson_key = 'interfaces'
 
-    def type_to_role(self, typestr):
-        roles = {
-            'ethernet': 'mlan',
-            'bridge': 'mlan',
-        }
-        return roles.get(typestr, '')
-
     def to_intermediate(self):
         result = []
         interfaces = []
@@ -331,8 +324,8 @@ class Netconf(AirOsConverter):
                 # configuration
                 for addr in addresses:
                     temp = deepcopy(base)
-                    if addr.get('management'):
-                        temp['role'] = self.type_to_role(interface['type'])
+                    if 'role' in addr:
+                        temp['role'] = addr.get('role', '')
                     # handle explicit address policy
                     if addr['proto'] == 'dhcp':
                         temp['autoip'] = {'status': 'enabled'}
