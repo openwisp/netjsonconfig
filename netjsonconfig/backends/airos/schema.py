@@ -28,12 +28,25 @@ override_schema = {
     "definitions": {
         "base_address": {
             "properties": {
-                "management": {
-                    "type": "boolean",
-                    "default": False,
-                    "title": "Management",
-                    "description": "Management interface",
-                    "format": "checkbox",
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "mlan",
+                        "wan",
+                        "lan",
+                    ],
+                    "options": {
+                        "enum_titles": [
+                            "None",
+                            "Management interface (bridge mode)",
+                            "Wan interface (router mode)",
+                            "Lan interface (router mode)",
+                        ]
+                    },
+                    "default": "none",
+                    "title": "Role",
+                    "description": "Interface role",
                     "propertyOrder": 0,
                 }
             }
