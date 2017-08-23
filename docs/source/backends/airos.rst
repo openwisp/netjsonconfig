@@ -9,7 +9,7 @@ The ``AirOs`` backend allows to generate AirOS v8.3 compatible configurations.
 .. warning::
 
     This backend is in experimental stage: it may have bugs and it will
-    receive backward incompatible updates in during the first 6 months
+    receive backward incompatible updates during the first 6 months
     of development (starting from September 2017).
     Early feedback and contributions are very welcome and will help
     to stabilize the backend faster.
