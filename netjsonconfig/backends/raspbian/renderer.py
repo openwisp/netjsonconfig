@@ -5,7 +5,6 @@ class RaspbianRenderer(BaseRenderer):
     def cleanup(self, output):
         output = output.replace('    ', '')
         return output
-    pass
 
 
 class WpaSupplicant(RaspbianRenderer):
