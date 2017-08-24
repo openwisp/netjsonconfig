@@ -14,7 +14,7 @@ class TestSystem(unittest.TestCase, _TabsMixin):
             }
         })
 
-        expected = '''# config: /etc/hostname
+        expected = """# config: /etc/hostname
 
 test-system
 
@@ -25,7 +25,7 @@ echo "Hostname of device has been modified"
 timedatectl set-timezone Europe/Rome
 echo "Timezone has changed to Europe/Rome"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ntp(self):
@@ -41,10 +41,10 @@ echo "Timezone has changed to Europe/Rome"
             }
         })
 
-        expected = '''# config: /etc/ntp.conf
+        expected = """# config: /etc/ntp.conf
 
 server 0.pool.ntp.org
 server 1.pool.ntp.org
 server 2.pool.ntp.org
-'''
+"""
         self.assertEqual(o.render(), expected)

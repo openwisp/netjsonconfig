@@ -41,36 +41,36 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 
         general = tar.getmember('/etc/hostname')
         contents = tar.extractfile(general).read().decode()
-        expected = self._tabs('''test
+        expected = self._tabs("""test
 
-''')
+""")
         self.assertEqual(contents, expected)
 
         interface = tar.getmember('/etc/network/interfaces')
         contents = tar.extractfile(interface).read().decode()
-        expected = self._tabs('''auto eth0
+        expected = self._tabs("""auto eth0
 iface eth0 inet static
 address 192.168.1.1
 netmask 255.255.255.0
 
-''')
+""")
         self.assertEqual(contents, expected)
 
         resolv = tar.getmember('/etc/resolv.conf')
         contents = tar.extractfile(resolv).read().decode()
-        expected = self._tabs('''nameserver 10.11.12.13
+        expected = self._tabs("""nameserver 10.11.12.13
 nameserver 8.8.8.8
 search netjson.org
 search openwisp.org
-''')
+""")
         self.assertEqual(contents, expected)
 
         script = tar.getmember('/scripts/general.sh')
         contents = tar.extractfile(script).read().decode()
-        expected = self._tabs('''/etc/init.d/hostname.sh start
+        expected = self._tabs("""/etc/init.d/hostname.sh start
 echo "Hostname of device has been modified"
 
-''')
+""")
         self.assertEqual(contents, expected)
 
     def test_write(self):

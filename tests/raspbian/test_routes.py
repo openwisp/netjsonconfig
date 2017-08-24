@@ -23,14 +23,14 @@ class TestStaticRoute(unittest.TestCase, _TabsMixin):
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet manual
 post-up route add -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ipv4_static_route(self):
@@ -58,7 +58,7 @@ pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet static
@@ -67,7 +67,7 @@ netmask 255.255.255.240
 post-up route add -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ipv4_dchp_route(self):
@@ -93,14 +93,14 @@ pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet dhcp
 post-up route add -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ipv6_manual_route(self):
@@ -121,14 +121,14 @@ pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet manual
 up ip -6 route add fd89::1/128 via fd88::1 dev eth0
 down ip -6 route del fd89::1/128 via fd88::1 dev eth0
 
-'''
+"""
 
         self.assertEqual(o.render(), expected)
 
@@ -158,7 +158,7 @@ down ip -6 route del fd89::1/128 via fd88::1 dev eth0
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet6 static
@@ -167,7 +167,7 @@ netmask 64
 up ip -6 route add fd89::1/128 via fd88::1 dev eth0
 down ip -6 route del fd89::1/128 via fd88::1 dev eth0
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ipv6_dhcp_route(self):
@@ -193,14 +193,14 @@ down ip -6 route del fd89::1/128 via fd88::1 dev eth0
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet6 dhcp
 up ip -6 route add fd89::1/128 via fd88::1 dev eth0
 down ip -6 route del fd89::1/128 via fd88::1 dev eth0
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multiple_routes(self):
@@ -225,7 +225,7 @@ down ip -6 route del fd89::1/128 via fd88::1 dev eth0
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth1
 iface eth1 inet manual
@@ -234,5 +234,5 @@ pre-up route del -net 192.168.4.1 netmask 255.255.255.0 gw 192.168.2.2
 up ip -6 route add fd89::1/128 via fd88::1 dev eth0
 down ip -6 route del fd89::1/128 via fd88::1 dev eth0
 
-'''
+"""
         self.assertEqual(o.render(), expected)

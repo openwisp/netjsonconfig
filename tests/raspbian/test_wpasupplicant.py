@@ -26,7 +26,7 @@ class TestWpaSupplicant(unittest.TestCase, _TabsMixin):
             ]
         })
 
-        expected = '''# config: /etc/wpa_supplicant/wpa_supplicant.conf
+        expected = """# config: /etc/wpa_supplicant/wpa_supplicant.conf
 
 network={
 ssid="wep-test"
@@ -47,7 +47,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
 
         self.assertEqual(o.render(), expected)
 
@@ -71,7 +71,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/wpa_supplicant/wpa_supplicant.conf
+        expected = """# config: /etc/wpa_supplicant/wpa_supplicant.conf
 
 network={
 ssid="wep-test"
@@ -93,7 +93,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
 
         self.assertEqual(o.render(), expected)
 
@@ -128,7 +128,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/wpa_supplicant/wpa_supplicant.conf
+        expected = """# config: /etc/wpa_supplicant/wpa_supplicant.conf
 
 network={
 ssid="Test"
@@ -149,7 +149,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_wpa2_enterprise_client(self):
@@ -186,7 +186,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/wpa_supplicant/wpa_supplicant.conf
+        expected = """# config: /etc/wpa_supplicant/wpa_supplicant.conf
 
 network={
 ssid="enterprise-client"
@@ -208,7 +208,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
 
         self.assertEqual(o.render(), expected)
 
@@ -239,7 +239,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/wpa_supplicant/wpa_supplicant.conf
+        expected = """# config: /etc/wpa_supplicant/wpa_supplicant.conf
 
 network={
 ssid="ap-ssid-example"
@@ -259,5 +259,5 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)

@@ -37,7 +37,7 @@ class TestHostapd(unittest.TestCase, _TabsMixin):
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -64,7 +64,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_wpa_personal(self):
@@ -98,7 +98,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -124,7 +124,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_wpa2_enterprise_ap(self):
@@ -158,7 +158,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -189,7 +189,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
 
         self.assertEqual(o.render(), expected)
 
@@ -223,7 +223,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -248,7 +248,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_wep_shared(self):
@@ -281,7 +281,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -306,7 +306,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_encryption_disabled(self):
@@ -341,7 +341,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -363,7 +363,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_no_encryption(self):
@@ -393,7 +393,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -415,7 +415,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_macaddracl_accept(self):
@@ -449,7 +449,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -478,7 +478,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_macaddracl_deny(self):
@@ -512,7 +512,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -541,5 +541,5 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)

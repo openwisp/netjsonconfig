@@ -43,7 +43,7 @@ class TestRadio(unittest.TestCase, _TabsMixin):
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -66,7 +66,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_radio_n_24ghz(self):
@@ -95,7 +95,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -117,7 +117,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_radio_n_5ghz(self):
@@ -146,7 +146,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -168,7 +168,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_radio_ac(self):
@@ -196,7 +196,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -218,7 +218,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_radio_a(self):
@@ -246,7 +246,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -267,7 +267,7 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_radio_g(self):
@@ -295,7 +295,7 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
             ]
         })
 
-        expected = '''# config: /etc/hostapd/hostapd.conf
+        expected = """# config: /etc/hostapd/hostapd.conf
 
 interface=wlan0
 driver=nl80211
@@ -316,5 +316,5 @@ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-'''
+"""
         self.assertEqual(o.render(), expected)

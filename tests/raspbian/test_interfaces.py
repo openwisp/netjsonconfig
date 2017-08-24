@@ -69,14 +69,14 @@ iface eth1 inet manual
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet static
 address 10.0.0.1
 netmask 255.255.255.240
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multi_ipv4_static(self):
@@ -109,7 +109,7 @@ netmask 255.255.255.240
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet static
@@ -121,7 +121,7 @@ iface eth1 inet static
 address 10.0.0.2
 netmask 255.255.255.240
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ipv6_static(self):
@@ -142,14 +142,14 @@ netmask 255.255.255.240
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet6 static
 address fe80::ba27:ebff:fe1c:5477
 netmask 64
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multi_ipv6_static(self):
@@ -182,7 +182,7 @@ netmask 64
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet6 static
@@ -194,7 +194,7 @@ iface eth1 inet6 static
 address 2001:db8:0:0:0:ff00:42:8329
 netmask 64
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multiple_static(self):
@@ -221,7 +221,7 @@ netmask 64
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet static
@@ -231,7 +231,7 @@ iface eth0 inet6 static
 address fe80::ba27:ebff:fe1c:5477
 netmask 64
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ipv4_dhcp(self):
@@ -250,12 +250,12 @@ netmask 64
                 ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet dhcp
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multi_ipv4_dhcp(self):
@@ -284,7 +284,7 @@ iface eth0 inet dhcp
                 ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet dhcp
@@ -292,7 +292,7 @@ iface eth0 inet dhcp
 auto eth1
 iface eth1 inet dhcp
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_ipv6_dhcp(self):
@@ -311,12 +311,12 @@ iface eth1 inet dhcp
                 ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet6 dhcp
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multi_ipv6_dhcp(self):
@@ -345,7 +345,7 @@ iface eth0 inet6 dhcp
                 ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet6 dhcp
@@ -353,7 +353,7 @@ iface eth0 inet6 dhcp
 auto eth1
 iface eth1 inet6 dhcp
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multiple_dhcp(self):
@@ -377,13 +377,13 @@ iface eth1 inet6 dhcp
                     ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet dhcp
 iface eth0 inet6 dhcp
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_multiple_ip(self):
@@ -417,7 +417,7 @@ iface eth0 inet6 dhcp
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet static
@@ -430,7 +430,7 @@ iface eth0 inet6 static
 address fd87::1
 netmask 128
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_autostart_false(self):
@@ -444,11 +444,11 @@ netmask 128
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 iface eth0 inet manual
 
-'''
+"""
 
         self.assertEqual(o.render(), expected)
 
@@ -469,13 +469,13 @@ iface eth0 inet manual
             ],
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth1
 iface eth1 inet dhcp
 pre-up /sbin/ifconfig $IFACE mtu 1500
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_mac(self):
@@ -495,13 +495,13 @@ pre-up /sbin/ifconfig $IFACE mtu 1500
                 ],
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth1
 iface eth1 inet dhcp
 hwaddress 52:54:00:56:46:c0
 
-'''
+"""
 
         self.assertEqual(o.render(), expected)
 
@@ -533,7 +533,7 @@ hwaddress 52:54:00:56:46:c0
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet dhcp
@@ -544,7 +544,7 @@ iface eth0 inet static
 address 192.168.2.1
 netmask 255.255.255.0
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_interface_with_resolv(self):
@@ -567,7 +567,7 @@ netmask 255.255.255.0
             "dns_search": ["netjson.org", "openwisp.org"],
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto eth0
 iface eth0 inet static
@@ -580,7 +580,7 @@ nameserver 10.11.12.13
 nameserver 8.8.8.8
 search netjson.org
 search openwisp.org
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_loopback(self):
@@ -601,12 +601,12 @@ search openwisp.org
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto lo
 iface lo inet loopback
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_adhoc_wireless(self):
@@ -625,7 +625,7 @@ iface lo inet loopback
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto wlan0
 iface wlan0 inet static
@@ -635,7 +635,7 @@ wireless-channel 1
 wireless-essid freifunk
 wireless-mode ad-hoc
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_simple_bridge(self):
@@ -653,12 +653,12 @@ wireless-mode ad-hoc
                     ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto br-lan
 bridge_ports eth0 eth1
 
-'''
+"""
         self.assertEqual(o.render(), expected)
 
     def test_complex_bridge(self):
@@ -684,7 +684,7 @@ bridge_ports eth0 eth1
             ]
         })
 
-        expected = '''# config: /etc/network/interfaces
+        expected = """# config: /etc/network/interfaces
 
 auto brwifi
 iface brwifi inet6 static
@@ -693,5 +693,5 @@ netmask 64
 mtu 1500
 bridge_ports wlan0 vpn.40
 
-'''
+"""
         self.assertEqual(o.render(), expected)
