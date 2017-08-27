@@ -438,18 +438,8 @@ file needs to be used. It is advisable to create a copy of the original ``dnsmas
 After creating the backup, delete the original file and create a new file ``/etc/dnsmasq.conf``
 Setup your DNS and DHCP server. Below is an example configuration file::
 
-    # User interface wlan0
+    # Use interface wlan0
     interface=wlan0
-    # Specify the address to listen on
-    listen-address=172.128.1.1
-    # Bind only the interfaces it is listening on
-    bind-interfaces
-    # Forward DNS requests to Google DNS
-    server=8.8.8.8
-    # Never forward plain names (without a dot or domain part)
-    domain-needed
-    # Never forward addresses in the non-routed address spaces
-    bogus-priv
     # Assign IP addresses between 172.128.1.50 and 172.128.1.150 with a 12 hour lease time
     dhcp-range=172.128.1.50,172.128.1.150,12h
 
