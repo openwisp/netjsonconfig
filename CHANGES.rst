@@ -1,10 +1,15 @@
 Change log
 ==========
 
-Version 0.6.2 [unreleased]
+Version 0.6.2 [2017-08-29]
 --------------------------
 
-WIP
+- `#78 <https://github.com/openwisp/netjsonconfig/issues/78>`_
+  [base] Added support for multiple renderers
+- `#94 <https://github.com/openwisp/netjsonconfig/issues/94>`_
+  [schema] Made ``bssid`` not required for wireless stations
+- `#97 <https://github.com/openwisp/netjsonconfig/issues/97>`_
+  [python2] Fixed ``py2-ipaddress`` related unicode bug
 
 Version 0.6.1 [2017-07-05]
 --------------------------
