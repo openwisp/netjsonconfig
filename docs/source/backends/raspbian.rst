@@ -487,7 +487,6 @@ common wireless access point configuration:
                   "protocol": "802.11n",
                   "channel": 3,
                   "channel_width": 20,
-                  "tx_power": 3
               },
           ],
         "interfaces": [
@@ -580,7 +579,6 @@ point using *WPA2 Personal (Pre-Shared Key)* encryption:
                 "protocol": "802.11n",
                 "channel": 3,
                 "channel_width": 20,
-                "tx_power": 3
             }
         ],
         "interfaces": [
@@ -640,7 +638,7 @@ which must contain a list of `NetJSON radio objects <http://netjson.org/rfc.html
 Radio object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to the default *NetJSON Radio object options*, the ``OpenWrt`` backend
+In addition to the default *NetJSON Radio object options*, the ``Raspbian`` backend
 also requires setting the following additional options for each radio in the list:
 
 +--------------+---------+-----------------------------------------------+
