@@ -1,5 +1,7 @@
 from ipaddress import ip_interface
 
+from six import text_type
+
 
 def autonegotiation(interface):
     """
@@ -92,7 +94,7 @@ def split_cidr(address):
     """
     Return the address in dict format
     """
-    network = ip_interface('{addr}/{mask}'.format(addr=address['address'], mask=address['mask']))
+    network = ip_interface(text_type('{addr}/{mask}'.format(addr=address['address'], mask=address['mask'])))
     return {'ip': str(network.ip), 'netmask': str(network.netmask)}
 
 

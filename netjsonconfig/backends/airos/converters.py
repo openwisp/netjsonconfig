@@ -1,6 +1,8 @@
 from copy import deepcopy
 from ipaddress import ip_interface
 
+import six
+
 from ...utils import get_copy
 from ..base.converter import BaseConverter
 from .aaa import bridge_devname, profile_from_interface, status_from_interface
@@ -479,7 +481,7 @@ class Route(AirOsConverter):
         routes = self.default_routes()
         original = get_copy(self.netjson, self.netjson_key, [])
         for r in original:
-            network = ip_interface(r['destination'])
+            network = ip_interface(six.text_type(r['destination']))
             temp = {}
             temp['ip'] = str(network.ip)
             temp['netmask'] = str(network.netmask)
