@@ -210,6 +210,61 @@ config rule 'rule1'
         )
         self.assertEqual(o.render(), expected)
 
+    def test_render_rule_wrong(self):
+        rule = {
+            "ip_rules": [
+                {
+                    "in": "eth0",
+                    "out": "eth1",
+                    "src": "wrong",
+                    "dest": "wrong",
+                    "tos": 2,
+                    "action": "blackhole"
+                }
+            ]
+        }
+        o = OpenWrt(rule)
+        try:
+            o.validate()
+        except ValidationError as e:
+            # check error message
+            pass
+        else:
+            self.fail('ValidationError not raised')
+        # fix 'src' and expect wrong 'dest' to fail
+        rule['src'] = '192.168.1.1/24'
+        o = OpenWrt(rule)
+        try:
+            o.validate()
+        except ValidationError as e:
+            # check error message
+            pass
+        else:
+            self.fail('ValidationError not raised')
+        # fix 'dest' and expect no ValidationError raised
+        rule['src'] = '192.168.1.1/24'
+        o = OpenWrt(rule)
+        o.validate()
+
+    def test_parse_rules_zone(self):
+        o = OpenWrt(native="""package network
+
+config rule 'rule1'
+    option action 'blackhole'
+    option dest 'wrong'
+    option in 'eth0'
+    option out 'eth1'
+    option src 'wrong'
+    option tos '2'
+""")
+        try:
+            o.validate()
+        except ValidationError as e:
+            # check error message
+            pass
+        else:
+            self.fail('ValidationError not raised')
+
     _switch_netjson = {
         "switch": [
             {
