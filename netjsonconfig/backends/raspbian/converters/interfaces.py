@@ -60,7 +60,8 @@ class Interfaces(RaspbianConverter):
                     if address.get('family') == 'ipv4':
 
                         address_mask = str(address.get('address')) + '/' + str(address.get('mask'))
-                        address['netmask'] = IPv4Interface(six.text_type(address_mask)).with_netmask.split('/')[1]
+                        netmask = IPv4Interface(six.text_type(address_mask))
+                        address['netmask'] = netmask.with_netmask.split('/')[1]
                         del address['mask']
                     if address.get('family') == 'ipv6':
                         address['netmask'] = address['mask']
