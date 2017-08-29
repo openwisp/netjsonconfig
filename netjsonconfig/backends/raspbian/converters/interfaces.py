@@ -1,5 +1,7 @@
 from ipaddress import IPv4Interface, ip_network
 
+import six
+
 from ....utils import get_copy
 from .base import RaspbianConverter
 
@@ -58,7 +60,7 @@ class Interfaces(RaspbianConverter):
                     if address.get('family') == 'ipv4':
 
                         address_mask = str(address.get('address')) + '/' + str(address.get('mask'))
-                        address['netmask'] = IPv4Interface(address_mask).with_netmask.split('/')[1]
+                        address['netmask'] = IPv4Interface(six.text_type(address_mask)).with_netmask.split('/')[1]
                         del address['mask']
                     if address.get('family') == 'ipv6':
                         address['netmask'] = address['mask']
@@ -68,14 +70,14 @@ class Interfaces(RaspbianConverter):
     def _get_route(self, routes):
         result = []
         for route in routes:
-            if ip_network(route.get('next')).version == 4:
+            if ip_network(six.text_type(route.get('next'))).version == 4:
                 route['version'] = 4
-                destination = IPv4Interface(route['destination']).with_netmask
+                destination = IPv4Interface(six.text_type(route['destination'])).with_netmask
                 dest, dest_mask = destination.split('/')
                 route['dest'] = dest
                 route['dest_mask'] = dest_mask
                 del route['destination']
-            elif ip_network(route.get('next')).version == 6:
+            elif ip_network(six.text_type(route.get('next'))).version == 6:
                 route['version'] = 6
             result.append(route)
         return routes
