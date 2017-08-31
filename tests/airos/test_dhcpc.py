@@ -1,7 +1,7 @@
 from .mock import ConverterTest, DhcpcAirOs
 
 
-class TestNetmodeConverter(ConverterTest):
+class TestDhcpcConverter(ConverterTest):
 
     backend = DhcpcAirOs
 

@@ -10,7 +10,8 @@ from netjsonconfig.backends.airos.converters import (Aaa, Bridge, Dhcpc,
                                                      Ntpclient, Pwdog, Radio,
                                                      Resolv, Route, Snmp, Sshd,
                                                      Syslog, System, Telnetd,
-                                                     Update, Users, Vlan,
+                                                     Tshaper, Unms, Update,
+                                                     Upnpd, Users, Vlan,
                                                      Wireless, Wpasupplicant)
 
 
@@ -237,12 +238,39 @@ class TelnetdAirOs(AirOs):
     ]
 
 
+class TshaperAirOs(AirOs):
+    """
+    Mock backend with converter for tshaper
+    """
+    converters = [
+        Tshaper,
+    ]
+
+
+class UnmsAirOs(AirOs):
+    """
+    Mock backend with converter for unms
+    """
+    converters = [
+        Unms,
+    ]
+
+
 class UpdateAirOs(AirOs):
     """
     Mock backend with converter for update
     """
     converters = [
         Update,
+    ]
+
+
+class UpnpdAirOs(AirOs):
+    """
+    Mock backend with converter for updnd daemon
+    """
+    converters = [
+        Upnpd,
     ]
 
 
