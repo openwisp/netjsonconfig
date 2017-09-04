@@ -1,4 +1,6 @@
 from collections import OrderedDict
+from io import BytesIO
+import six
 
 from ..base.backend import BaseBackend
 from .converters import (Aaa, Bridge, Dhcpc, Discovery, Dyndns, Ebtables, Gui,
@@ -64,3 +66,22 @@ class AirOs(BaseBackend):
         super(AirOs, self).to_intermediate()
         for k, v in self.intermediate_data.items():
             self.intermediate_data[k] = to_ordered_list(v)
+
+    def generate(self):
+        """
+        Returns a ``BytesIO`` instance representing the configuration file
+
+        :returns: in-memory configuration file, instance of ``BytesIO``
+        """
+        fl = BytesIO()
+        fl.write(six.b(self.render()))
+        fl.seek(0)
+        return fl
+
+    def write(self, name, path='./'):
+        byte_object = self.generate()
+        file_name = '{0}.cfg'.format(name)
+        if not path.endswith('/'):
+            path += '/'
+        with open('{0}{1}'.format(path, file_name), 'wb') as out:
+            out.write(byte_object.getvalue())
