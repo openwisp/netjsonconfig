@@ -5,6 +5,7 @@ import sys
 import six
 import argparse
 import netjsonconfig
+import traceback
 
 description = """
 Converts a NetJSON DeviceConfiguration object to native router configurations.
@@ -197,5 +198,8 @@ except netjsonconfig.exceptions.ValidationError as e:
     print(message + info)
     sys.exit(4)
 except TypeError as e:
+    if args.verbose:
+        traceback.print_exc()
+
     print('netjsonconfig: {0}'.format(e))
     sys.exit(5)
