@@ -172,7 +172,7 @@ class Ebtables(AirOsConverter):
     @property
     def ebtables(self):
         w = self.wireless[0]
-        status = {'status': 'enabled'}
+        ebtables_status = {'status': 'enabled'}
         base = {}
         if protocol(w) == 'none':
             base.update(unencrypted(w))
@@ -198,7 +198,7 @@ class Ebtables(AirOsConverter):
         if vlans:
             base['sys']['vlan.status'] = 'enabled'
             base['sys']['vlan'] = vlans
-        return [status, base]
+        return [ebtables_status, base]
 
     def to_intermediate(self):
         return (('ebtables', self.ebtables),)
