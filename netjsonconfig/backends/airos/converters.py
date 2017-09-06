@@ -196,6 +196,7 @@ class Ebtables(AirOsConverter):
             })
             vlans.append(t)
         if vlans:
+            base.setdefault('sys', {})
             base['sys']['vlan.status'] = 'enabled'
             base['sys']['vlan'] = vlans
         return [ebtables_status, base]
