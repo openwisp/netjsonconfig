@@ -505,7 +505,7 @@ class Snmp(AirOsConverter):
         result = [
            {
                 'community':  'public',
-                'contact':  original.get('mantainer', ''),
+                'contact':  original.get('maintainer', ''),
                 'location':  original.get('location', ''),
                 'status':  'enabled',
             },
