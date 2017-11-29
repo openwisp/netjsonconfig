@@ -13,6 +13,9 @@ netjsonconfig
 
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
    :target: http://badge.fury.io/py/netjsonconfig
+   
+.. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
+   :target: https://gitter.im/openwisp/general
 
 ------------
 
