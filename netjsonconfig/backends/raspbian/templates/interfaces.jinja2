@@ -1,0 +1,148 @@
+{% if data.interfaces %}
+# config: /etc/network/interfaces
+
+{% endif%}
+{% for interface in data.interfaces %}
+    {% if interface.iftype in ['ethernet', 'bridge', 'wireless'] %}
+        {% if interface.address %}
+        {% if interface.autostart %}
+        auto {{ interface.ifname }}
+        {% endif %}
+            {% for address in interface.address %}
+                {% if address.proto == 'static' %}
+                    {% if address.family == 'ipv4' %}
+                        iface {{ interface.ifname }} inet {{ address.proto }}
+                            address {{ address.address }}
+                            netmask {{ address.netmask }}
+                            {% if address.gateway %}
+                            gateway {{ address.gateway }}
+                            {% endif %}
+                            {% if interface.route %}
+                            {% set routes = interface.route %}
+                            {% for route in routes %}
+                                {% if route.version == 4%}
+                                post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                                pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                                {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if interface.mtu %}
+                            mtu {{ interface.mtu }}
+                            {% endif %}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
+                            {% endif %}
+                            {% if interface.iftype == 'bridge' %}
+                            bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
+                            {% if interface.stp %}
+                            bridge_stp {{ interface.stp }}
+                            {% endif %}
+                            {% endif %}
+                    {% elif address.family == 'ipv6' %}
+                        iface {{ interface.ifname }} inet6 {{ address.proto }}
+                            address {{ address.address }}
+                            netmask {{ address.netmask }}
+                            {% if address.gateway %}
+                            gateway {{ address.gateway }}
+                            {% endif %}
+                            {% if interface.route %}
+                            {% set routes = interface.route %}
+                            {% for route in routes %}
+                                {% if route.version == 6 %}
+                                up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
+                                down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
+                                {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if interface.mtu %}
+                            mtu {{ interface.mtu }}
+                            {% endif %}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
+                            {% endif %}
+                            {% if interface.iftype == 'bridge' %}
+                            bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
+                            {% endif %}
+                            {% if interface.stp %}
+                            bridge_stp {{ interface.stp }}
+                            {% endif %}
+                    {% endif %}
+                {% elif address.proto == 'dhcp' %}
+                    {% if address.family == 'ipv4'%}
+                        iface {{ interface.ifname }} inet {{ address.proto }}
+                            {% if interface.route %}
+                            {% set routes = interface.route %}
+                            {% for route in routes %}
+                                {% if route.version == 4 %}
+                                post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                                pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                                {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if interface.mtu  %}
+                            pre-up /sbin/ifconfig $IFACE mtu {{ interface.mtu }}
+                            {% endif %}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
+                            {% endif %}
+                    {% elif address.family == 'ipv6' %}
+                        iface {{ interface.ifname }} inet6 {{ address.proto }}
+                            {% if interface.route %}
+                            {% set routes = interface.route %}
+                            {% for route in routes %}
+                                {% if route.version == 6 %}
+                                up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
+                                down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
+                                {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if interface.mtu %}
+                            pre-up /sbin/ifconfig $IFACE mtu {{ interface.mtu }}
+                            {% endif %}
+                            {% if interface.mac %}
+                            hwaddress {{ interface.mac }}
+                            {% endif %}
+                    {% endif %}
+                {% endif%}
+            {% endfor %}
+        {% else %}
+            {% if interface.autostart %}
+            auto {{ interface.ifname }}
+            {% endif %}
+            {% if interface.iftype in ['ethernet', 'wireless'] and interface.mode != 'adhoc' %}
+            iface {{ interface.ifname }} inet manual
+            {% if interface.route %}
+            {% set routes = interface.route %}
+            {% for route in routes %}
+                {% if route.version == 4 %}
+                post-up route add -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                pre-up route del -net {{ route.dest }} netmask {{ route.dest_mask }} gw {{ route.next }}
+                {% endif %}
+                {% if route.version == 6 %}
+                up ip -6 route add {{ route.destination }} via {{ route.next }} dev eth0
+                down ip -6 route del {{ route.destination }} via {{ route.next }} dev eth0
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endif %}
+            {% if interface.iftype == 'bridge' %}
+            bridge_ports {{ interface.bridge_members[0] }} {{ interface.bridge_members[1] }}
+            {% endif %}
+            {% if interface.stp %}
+            bridge_stp {{ interface.stp }}
+            {% endif %}
+            {% if interface.mode == 'adhoc' %}
+                iface {{ interface.ifname }} inet static
+                address 172.128.1.1
+                    netmask 255.255.255.0
+                    wireless-channel 1
+                    wireless-essid {{ interface.essid }}
+                    wireless-mode ad-hoc
+            {% endif %}
+        {% endif %}
+    {% elif interface.iftype == 'loopback'%}
+        auto {{ interface.ifname }}
+        iface {{ interface.ifname }} inet loopback
+    {% endif %}
+
+{% endfor %}

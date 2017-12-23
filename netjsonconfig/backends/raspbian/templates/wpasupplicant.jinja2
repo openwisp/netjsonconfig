@@ -1,0 +1,49 @@
+{% if data.wireless and data.wireless[0].mode == 'station' %}
+    {% for wireless in data.wireless %}
+        # config: /etc/wpa_supplicant/wpa_supplicant.conf
+
+        network={
+                ssid="{{ wireless.ssid }}"
+                {% if 'wpa' in wireless.encryption.protocol %}
+                    {% set encryption = wireless.encryption %}
+                    {% if encryption.method == 'personal' %}
+                        key="{{ encryption.wpa_passphrase }}"
+                        {% if encryption.wpa_key_mgmt %}
+                        key_mgmt={{ encryption.wpa_key_mgmt }}
+                        {% endif  %}
+                    {% elif wireless.encryption.method == 'enterprise' %}
+                        {% if encryption.eap_type %}
+                        eap={{ encryption.eap_type }}
+                        {% endif %}
+                        {% if encryption.identity %}
+                        identity="{{ encryption.identity }}"
+                        {% endif %}
+                        {% if encryption.password %}
+                        password="{{ encryption.password }}"
+                        {% endif %}
+                        {% if encryption.ca_cert %}
+                        ca_cert="{{ encryption.ca_cert }}"
+                        {% endif %}
+                        {% if encryption.client_cert %}
+                        client_cert="{{ encryption.client_cert }}"
+                        {% endif %}
+                        {% if encryption.priv_key %}
+                        priv_key="{{ encryption.priv_key }}"
+                        {% endif %}
+                        {% if encryption.priv_key_pwd %}
+                        priv_key_pwd="{{ encryption.priv_key_pwd }}"
+                        {% endif %}
+                    {% endif%}
+                {% elif 'wep' in wireless.encryption.protocol %}
+                key_mgmt=NONE
+                wep_key0="{{ wireless.encryption.key }}"
+                {% if wireless.encryption.method == 'shared' %}
+                auth_algs=shared
+                {% endif %}
+                {% else %}
+                key_mgmt=NONE
+                {% endif %}
+        }
+
+    {% endfor %}
+{% endif %}

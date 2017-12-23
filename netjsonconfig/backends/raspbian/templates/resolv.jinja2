@@ -1,0 +1,10 @@
+{% if data.dns_servers or data.dns_search %}
+# config: /etc/resolv.conf
+
+{% endif %}
+{% for ip in data.dns_servers %}
+    nameserver {{ ip }}
+{% endfor %}
+{% for domain in data.dns_search %}
+    search {{ domain }}
+{% endfor %}

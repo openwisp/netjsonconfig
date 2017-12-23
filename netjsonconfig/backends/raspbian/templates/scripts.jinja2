@@ -1,0 +1,23 @@
+{% if data.general %}
+    # script: /scripts/general.sh
+
+    {% if 'hostname' in data.general[0]%}
+    /etc/init.d/hostname.sh start
+    echo "Hostname of device has been modified"
+    {% endif %}
+    {% if 'timezone' in data.general[0] %}
+    timedatectl set-timezone {{ data.general[0].timezone }}
+    echo "Timezone has changed to {{ data.general[0].timezone }}"
+    {% endif %}
+
+{% endif %}
+{% if data.wireless %}
+    # script: /scripts/ipv4_forwarding.sh
+
+    sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    sudo iptables -A FORWARD -i eth0 -o {{ data.wireless[0].ifname }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i {{ data.wireless[0].ifname }} -o eth0 -j ACCEPT
+    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+{% endif %}

@@ -1,0 +1,81 @@
+{% if data.wireless and data.wireless[0].mode == 'access_point' %}
+    {% for wireless in data.wireless %}
+        # config: /etc/hostapd/hostapd.conf
+
+        interface={{ wireless.ifname }}
+        driver=nl80211
+        {% if wireless.country %}
+        country={{ wireless.country }}
+        {% endif %}
+        {% if wireless.protocol == 'a' or 'b' or 'g' %}
+        hw_mode={{ wireless.hwmode }}
+        {% endif %}
+        channel={{ wireless.channel }}
+        {% if wireless.protocol == '80211n' %}
+        ieee80211n=1
+        {% endif %}
+        {% if wireless.protocol == '80211ac' %}
+        ieee80211ac=1
+        {% endif %}
+        ssid={{ wireless.ssid }}
+        {% if wireless.hidden %}
+        ignore_broadcast_ssid=1
+        {% endif %}
+        {% if wireless.rts_threshold > 0 %}
+        rts_threshold={{ wireless.rts_threshold }}
+        {% endif %}
+        {% if wireless.frag_threshold > 0 %}
+        frag_threshold={{ wireless.frag_threshold }}
+        {% endif %}
+        {% if wireless.wmm %}
+        wmm_enabled=1
+        {% endif %}
+        {% if wireless.isolate %}
+        ap_isolate=1
+        {% endif %}
+        {% if wireless.macfilter %}
+            {% if wireless.macfilter == 'deny'%}
+            macaddr_acl=0
+            deny_mac_file=/etc/hostapd.deny
+            {% elif wireless.macfilter == 'accept' %}
+            macaddr_acl=1
+            accept_mac_file=/etc/hostapd.accept
+            {% endif %}
+        {% endif %}
+        {% if wireless.encryption %}
+            auth_algs={{ wireless.encryption.auth_algs }}
+            {% if wireless.encryption.protocol == 'wpa' %}
+                wpa={{ wireless.encryption.wpa }}
+                wpa_key_mgmt={{ wireless.encryption.wpa_key_mgmt }}
+                {% if wireless.encryption.method == 'personal' %}
+                    wpa_passphrase={{ wireless.encryption.wpa_passphrase }}
+                    {% if wireless.encryption.cipher != 'AUTO' %}
+                        {% if wireless.encryption.wpa == '1' %}
+                        wpa_pairwise={{ wireless.encryption.cipher }}
+                        {% endif %}
+                        {% if wireless.encryption.wpa == '2' %}
+                        rsn_pairwise={{ wireless.encryption.cipher }}
+                        {% endif %}
+                    {% endif %}
+                {% elif wireless.encryption.method == 'enterprise'%}
+                    ieee8021x=1
+                    eap_server=1
+                    eapol_version=1
+                    {% if wireless.encryption.auth_server_addr %}
+                    auth_server_addr={{ wireless.encryption.auth_server_addr }}
+                    {% endif %}
+                    {% if wireless.encryption.auth_server_port %}
+                    auth_server_port={{ wireless.encryption.auth_server_port }}
+                    {% endif %}
+                    {% if wireless.encryption.auth_server_shared_secret %}
+                    auth_server_shared_secret={{ wireless.encryption.auth_server_shared_secret }}
+                    {% endif %}
+                {% endif %}
+            {% elif wireless.encryption.protocol == 'wep' %}
+            wep_default_key=0
+            wep_key0={{ wireless.encryption.key}}
+            {% endif %}
+        {% endif %}
+
+    {% endfor %}
+{% endif %}

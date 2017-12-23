@@ -1,0 +1,6 @@
+{% if data.general and data.general[0].hostname %}
+    # config: /etc/hostname
+
+    {{ data.general[0].hostname }}
+    
+{% endif %}

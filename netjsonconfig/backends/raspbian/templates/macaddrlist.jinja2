@@ -1,0 +1,12 @@
+{% if data.wireless and data.wireless[0].mode == 'access_point' %}
+    {% for wireless in data.wireless %}
+        {% if wireless.macfilter %}
+            # config: /etc/hostapd.{{ wireless.macfilter }}
+
+            {% for mac in wireless.maclist %}
+                {{ mac }}
+            {% endfor %}
+            
+        {% endif %}
+    {% endfor %}
+{% endif %}

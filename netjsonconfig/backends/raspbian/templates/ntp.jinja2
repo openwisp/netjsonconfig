@@ -1,0 +1,7 @@
+{% if data.ntp %}
+# config: /etc/ntp.conf
+
+{% endif %}
+{% for ntp  in data.ntp %}
+    server {{ ntp }}
+{% endfor %}
