@@ -5,6 +5,7 @@ import sys
 import six
 import argparse
 import netjsonconfig
+import traceback
 
 description = """
 Converts a NetJSON DeviceConfiguration object to native router configurations.
@@ -56,10 +57,10 @@ output = parser.add_argument_group('output')
 
 output.add_argument('--backend', '-b',
                     required=True,
-                    choices=['openwrt', 'openwisp', 'openvpn'],
+                    choices=['openwrt', 'openwisp', 'openvpn', 'airos'],
                     action='store',
                     type=str,
-                    help='Configuration backend')
+                    help='Configuration backend: openwrt, openwisp or airos')
 
 output.add_argument('--method', '-m',
                     required=True,
@@ -169,7 +170,8 @@ method_arguments = parse_method_arguments(args.args)
 backends = {
     'openwrt': netjsonconfig.OpenWrt,
     'openwisp': netjsonconfig.OpenWisp,
-    'openvpn': netjsonconfig.OpenVpn
+    'openvpn': netjsonconfig.OpenVpn,
+    'airos': netjsonconfig.AirOs,
 }
 
 backend_class = backends[args.backend]
@@ -197,5 +199,8 @@ except netjsonconfig.exceptions.ValidationError as e:
     print(message + info)
     sys.exit(4)
 except TypeError as e:
+    if args.verbose:
+        traceback.print_exc()
+
     print('netjsonconfig: {0}'.format(e))
     sys.exit(5)

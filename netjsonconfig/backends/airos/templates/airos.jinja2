@@ -1,0 +1,13 @@
+{% for namespace, block in data.items() %}
+   {% if namespace != 'netmode' %}
+      {% for element in block %}
+         {% for k, v in element.items() %}
+             {{ namespace }}.{{ k }}={{ v }}
+         {% endfor %}
+      {% endfor %}
+   {% else %}
+      {% for element in block %}
+          netmode={{ element['status'] }}
+      {% endfor %}
+   {% endif %}
+{% endfor %}
