@@ -12,6 +12,18 @@ default_radio_driver = "mac80211"
 
 schema = merge_config(default_schema, {
     "definitions": {
+        "interface_settings": {
+            "properties": {
+                "network": {
+                    "type": "string",
+                    "description": "logical interface name in UCI (OpenWRT configuration format), "
+                                   "will be automatically generated if left blank",
+                    "maxLength": 15,
+                    "pattern": "^[a-zA-z0-9_\\.\\-]*$",
+                    "propertyOrder": 7
+                }
+            }
+        },
         "wireless_interface": {
             "properties": {
                 "wireless": {
