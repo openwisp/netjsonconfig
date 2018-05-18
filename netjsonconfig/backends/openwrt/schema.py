@@ -6,7 +6,6 @@ from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
 from .timezones import timezones
 
-
 default_radio_driver = "mac80211"
 
 
