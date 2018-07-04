@@ -1,5 +1,7 @@
 from ipaddress import ip_network
 
+import six
+
 from ..schema import schema
 from .base import OpenWrtConverter
 
@@ -21,9 +23,9 @@ class Rules(OpenWrtConverter):
         dest_net = None
         family = 4
         if 'src' in rule:
-            src_net = ip_network(rule['src'])
+            src_net = ip_network(six.text_type(rule['src']))
         if 'dest' in rule:
-            dest_net = ip_network(rule['dest'])
+            dest_net = ip_network(six.text_type(rule['dest']))
         if dest_net or src_net:
             family = dest_net.version if dest_net else src_net.version
         rule.update({

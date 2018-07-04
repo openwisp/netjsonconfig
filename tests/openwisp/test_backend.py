@@ -211,9 +211,9 @@ config system 'system'
         self.assertIn('tc class add dev tap0 parent 1 classid 1:1 htb rate 1024kbit burst 191k', contents)
         self.assertIn('tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit', contents)
         self.assertIn('tc qdisc add dev tap0 ingress', contents)
-        l = 'tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police '\
-            'rate 2048kbit burst 383k drop flowid :1'
-        self.assertIn(l, contents)
+        line = 'tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police '\
+               'rate 2048kbit burst 383k drop flowid :1'
+        self.assertIn(line, contents)
         tar.close()
 
     def test_cron(self):

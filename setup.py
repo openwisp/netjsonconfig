@@ -29,7 +29,7 @@ if sys.argv[-1] == 'publish':
 extras_require = {
     # used for wheel package,
     # see http://wheel.readthedocs.io/en/latest/#defining-conditional-dependencies
-    ':python_version in "2.6 2.7"' : ['py2-ipaddress']
+    ':python_version in "2.6 2.7"': ['py2-ipaddress']
 }
 
 

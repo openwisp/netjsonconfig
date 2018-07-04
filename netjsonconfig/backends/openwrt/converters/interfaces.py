@@ -68,7 +68,7 @@ class Interfaces(OpenWrtConverter):
             # do not use CIDR notation when using a single ipv4
             # see https://github.com/openwisp/netjsonconfig/issues/54
             if len(static.get('ipaddr', [])) == 1:
-                network = ip_interface(static['ipaddr'][0])
+                network = ip_interface(six.text_type(static['ipaddr'][0]))
                 static['ipaddr'] = str(network.ip)
                 static['netmask'] = str(network.netmask)
             # do not use lists when using a single ipv6 address
@@ -269,7 +269,7 @@ class Interfaces(OpenWrtConverter):
         return interface
 
     def __netjson_address(self, address, interface):
-        ip = ip_interface(address)
+        ip = ip_interface(six.text_type(address))
         family = 'ipv{0}'.format(ip.version)
         netjson = OrderedDict((
             ('address', str(ip.ip)),
@@ -279,7 +279,7 @@ class Interfaces(OpenWrtConverter):
         ))
         uci_gateway_key = 'gateway' if family == 'ipv4' else 'ip6gw'
         gateway = interface.get(uci_gateway_key, None)
-        if gateway and ip_address(gateway) in ip.network:
+        if gateway and ip_address(six.text_type(gateway)) in ip.network:
             netjson['gateway'] = gateway
             del interface[uci_gateway_key]
         return netjson

@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+import argparse
 import os
 import sys
+
 import six
-import argparse
+
 import netjsonconfig
 import traceback
 
@@ -57,7 +59,7 @@ output = parser.add_argument_group('output')
 
 output.add_argument('--backend', '-b',
                     required=True,
-                    choices=['openwrt', 'openwisp', 'openvpn'],
+                    choices=netjsonconfig.get_backends().keys(),
                     action='store',
                     type=str,
                     help='Configuration backend')
@@ -167,13 +169,8 @@ context = dict(os.environ)
 method = args.method
 method_arguments = parse_method_arguments(args.args)
 
-backends = {
-    'openwrt': netjsonconfig.OpenWrt,
-    'openwisp': netjsonconfig.OpenWisp,
-    'openvpn': netjsonconfig.OpenVpn
-}
 
-backend_class = backends[args.backend]
+backend_class = netjsonconfig.get_backends()[args.backend]
 try:
     options = dict(templates=templates, context=context)
     if args.config:

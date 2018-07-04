@@ -13,10 +13,14 @@ netjsonconfig
 
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
    :target: http://badge.fury.io/py/netjsonconfig
+   
+.. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
+   :target: https://gitter.im/openwisp/general
 
 ------------
 
-Netjsonconfig is part of the `OpenWISP project <http://openwrt.org>`_.
+Netjsonconfig is part of the `OpenWISP project <http://openwisp.org>`_ and it's the official
+configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwisp2>`_.
 
 .. image:: http://netjsonconfig.openwisp.org/en/latest/_images/openwisp.org.svg
   :target: http://openwisp.org
