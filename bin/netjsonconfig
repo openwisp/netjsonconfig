@@ -3,11 +3,11 @@
 import argparse
 import os
 import sys
+import traceback
 
 import six
 
 import netjsonconfig
-import traceback
 
 description = """
 Converts a NetJSON DeviceConfiguration object to native router configurations.
