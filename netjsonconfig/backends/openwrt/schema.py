@@ -112,6 +112,49 @@ schema = merge_config(
                     }
                 ]
             },
+            "dialup_interface": {
+                "title": "Dialup interface",
+                "required": [
+                    "proto",
+                    "username",
+                    "password"
+                ],
+                "allOf": [
+                    {
+                        "properties": {
+                            "proto": {
+                                "type": "string",
+                                "enum": [
+                                    "3g",
+                                    "6in4",
+                                    "aiccu",
+                                    "l2tp",
+                                    "ncm",
+                                    "ppp",
+                                    "pppoa",
+                                    "pppoe",
+                                    "pptp",
+                                    "qmi",
+                                    "wwan"
+                                ],
+                                "default": "pppoe",
+                                "propertyOrder": 8,
+                            },
+                            "username": {
+                                "type": "string",
+                                "description": "username for authentication in protocols like PPPoE",
+                                "propertyOrder": 9,
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "password for authentication in protocols like PPPoE",
+                                "propertyOrder": 10,
+                            }
+                        }
+                    },
+                    {"$ref": "#/definitions/interface_settings"},
+                ]
+            },
             "base_radio_settings": {
                 "properties": {
                     "driver": {
@@ -163,6 +206,19 @@ schema = merge_config(
             "general": {
                 "properties": {
                     "timezone": {"enum": list(timezones.keys()), "default": "UTC"}
+                }
+            },
+            "interfaces": {
+                "type": "array",
+                "title": "Interfaces",
+                "uniqueItems": True,
+                "additionalItems": True,
+                "propertyOrder": 2,
+                "items": {
+                    "title": "Interface",
+                    "oneOf": [
+                        {"$ref": "#/definitions/dialup_interface"}
+                    ]
                 }
             },
             "routes": {
