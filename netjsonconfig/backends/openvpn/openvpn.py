@@ -83,15 +83,21 @@ class OpenVpn(BaseBackend):
         if 'tls_server' not in server or not server['tls_server']:
             client['tls_client'] = False
         # ns_cert_type
-        if not server.get('ns_cert_type'):
-            client['ns_cert_type'] = ''
-        elif server.get('ns_cert_type') == 'client':
-            client['ns_cert_type'] = 'server'
+        ns_cert_type = {None: '',
+                        '': '',
+                        'client': 'server'}
+        client['ns_cert_type'] = ns_cert_type[server.get('ns_cert_type')]
+        # remote_cert_tls
+        remote_cert_tls = {None: '',
+                           '': '',
+                           'client': 'server'}
+        client['remote_cert_tls'] = remote_cert_tls[server.get('remote_cert_tls')]
         copy_keys = ['name', 'dev_type', 'dev', 'comp_lzo', 'auth',
-                     'cipher', 'ca', 'cert', 'key', 'mtu_disc', 'mtu_test',
+                     'cipher', 'ca', 'cert', 'key', 'pkcs12', 'mtu_disc', 'mtu_test',
                      'fragment', 'mssfix', 'keepalive', 'persist_tun', 'mute',
                      'persist_key', 'script_security', 'user', 'group', 'log',
-                     'mute_replay_warnings', 'secret', 'fast_io', 'verb']
+                     'mute_replay_warnings', 'secret', 'reneg_sec', 'tls_timeout',
+                     'tls_cipher', 'float', 'fast_io', 'verb']
         for key in copy_keys:
             if key in server:
                 client[key] = server[key]

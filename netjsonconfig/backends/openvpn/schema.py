@@ -143,6 +143,14 @@ base_openvpn_schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 16,
                 },
+                "pkcs12": {
+                    "title": "PKCS #12",
+                    "description": "Path to a PKCS #12 file containing local private key, "
+                                   "local certificate, and root CA certificate",
+                    "type": "string",
+                    "pattern": "^(\\S*)$",
+                    "propertyOrder": 17,
+                },
                 "ns_cert_type": {
                     "title": "NS cert type",
                     "type": "string",
@@ -319,6 +327,42 @@ base_openvpn_schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 38,
                 },
+                "reneg_sec": {
+                    "title": "reneg_sec",
+                    "description": "Renegotiate data channel key after n seconds",
+                    "type": "integer",
+                    "default": 3600,
+                    "propertyOrder": 39,
+                },
+                "tls_timeout": {
+                    "title": "TLS timeout",
+                    "description": "Packet retransmit timeout on TLS control channel if no "
+                                   "acknowledgment from remote within n seconds",
+                    "type": "integer",
+                    "default": 2,
+                    "propertyOrder": 40,
+                },
+                "tls_cipher": {
+                    "title": "TLS cipher",
+                    "description": "A list of allowable TLS ciphers delimited by a colon (':')",
+                    "type": "string",
+                    "propertyOrder": 41,
+                },
+                "remote_cert_tls": {
+                    "title": "Remote certificate TLS",
+                    "type": "string",
+                    "default": "",
+                    "propertyOrder": 42
+                },
+                "float": {
+                    "title": "float",
+                    "description": "Allow remote peer to change its IP address and/or port number, "
+                                   "such as due to DHCP",
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 43,
+                },
                 "fast_io": {
                     "title": "fast IO",
                     "description": "(Experimental) Optimize TUN/TAP/UDP I/O writes by avoiding a "
@@ -441,6 +485,16 @@ base_openvpn_schema = {
                             "format": "checkbox",
                             "propertyOrder": 11,
                         },
+                        "remote_random": {
+                            "title": "random remote",
+                            "description": "When multiple remote address/ports are specified, or if "
+                                           "connection profiles are being used, initially randomize "
+                                           "the order of the list as a basic load-balancing measure",
+                            "type": "boolean",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 12,
+                        },
                         "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "
                                            "nsCertType designation of \"server\"",
@@ -454,6 +508,23 @@ base_openvpn_schema = {
                             "type": "string",
                             "pattern": "^(\\S*)$",
                             "propertyOrder": 40,
+                        },
+                        "auth_retry": {
+                            "title": "auth retry",
+                            "description": "Controls how OpenVPN responds to username/password "
+                                           "verification errors such as the client-side response "
+                                           "to an AUTH_FAILED message from the server or "
+                                           "verification failure of the private key password",
+                            "type": "string",
+                            "enum": ["none", "nointeract", "interact"],
+                            "default": "none",
+                            "propertyOrder": 41,
+                        },
+                        "remote_cert_tls": {
+                            "description": "Require that peer certificate was signed with an explicit "
+                                           "key usage and extended key usage based on RFC3280 TLS rules",
+                            "enum": ["", "server"],
+                            "options": {"enum_titles": ["disabled", "server"]}
                         }
                     }
                 }
@@ -549,6 +620,12 @@ base_openvpn_schema = {
                     "type": "string",
                     "pattern": "^((\\S*) (\\S*)|)$",
                     "propertyOrder": 45,
+                },
+                "remote_cert_tls": {
+                    "description": "Require that peer certificate was signed with an explicit "
+                                   "key usage and extended key usage based on RFC3280 TLS rules",
+                    "enum": ["", "client"],
+                    "options": {"enum_titles": ["disabled", "client"]}
                 }
             }
         },
