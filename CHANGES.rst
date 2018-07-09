@@ -1,10 +1,21 @@
 Change log
 ==========
 
-Version 0.6.3 [unreleased]
+Version 0.6.3 [2018-07-09]
 --------------------------
 
-WIP
+- `#106 <https://github.com/openwisp/netjsonconfig/pull/106>`_
+  [extensions] Query backends from installed packages
+  (thanks to `@EdoPut <https://github.com/EdoPut>`_)
+- `#109 <https://github.com/openwisp/netjsonconfig/pull/109>`_
+  [doc] Added reference to plugin interface
+  (thanks to `@EdoPut <https://github.com/EdoPut>`_)
+- `#99 <https://github.com/openwisp/netjsonconfig/pull/99>`_
+  [cli] print traceback fully if the verbose flag is passed
+  (thanks to `@EdoPut <https://github.com/EdoPut>`_)
+- `#108 <https://github.com/openwisp/netjsonconfig/pull/108>`_
+  [openvpn] Added more options to the OpenVPN backend
+  (thanks to `@okraits <https://github.com/okraits>`_)
 
 Version 0.6.2 [2017-08-29]
 --------------------------
