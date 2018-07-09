@@ -328,7 +328,7 @@ base_openvpn_schema = {
                     "propertyOrder": 38,
                 },
                 "reneg_sec": {
-                    "title": "reneg_sec",
+                    "title": "reneg-sec",
                     "description": "Renegotiate data channel key after n seconds",
                     "type": "integer",
                     "default": 3600,
@@ -350,6 +350,8 @@ base_openvpn_schema = {
                 },
                 "remote_cert_tls": {
                     "title": "Remote certificate TLS",
+                    "description": "Require that peer certificate was signed with an explicit "
+                                   "key usage and extended key usage based on RFC3280 TLS rules",
                     "type": "string",
                     "default": "",
                     "propertyOrder": 42
@@ -521,8 +523,6 @@ base_openvpn_schema = {
                             "propertyOrder": 41,
                         },
                         "remote_cert_tls": {
-                            "description": "Require that peer certificate was signed with an explicit "
-                                           "key usage and extended key usage based on RFC3280 TLS rules",
                             "enum": ["", "server"],
                             "options": {"enum_titles": ["disabled", "server"]}
                         }
@@ -622,8 +622,6 @@ base_openvpn_schema = {
                     "propertyOrder": 45,
                 },
                 "remote_cert_tls": {
-                    "description": "Require that peer certificate was signed with an explicit "
-                                   "key usage and extended key usage based on RFC3280 TLS rules",
                     "enum": ["", "client"],
                     "options": {"enum_titles": ["disabled", "client"]}
                 }
