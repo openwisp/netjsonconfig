@@ -36,7 +36,11 @@ Its main features are:
     * `OpenWRT <http://openwrt.org>`_ / `LEDE <https://www.lede-project.org/>`_ support
     * `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_ support
     * `OpenVPN <https://openvpn.net>`_ support
-    * Possibility to support more firmwares via custom backends
+    * Plugin interface for external backends, support more firmwares with an external package
+
+      * :doc:`Create your backend </backends/create_your_backend>` as a plugin
+      * Experimental `AirOS support <https://github.com/edoput/netjsonconfig-airos>`_ as a plugin
+
     * Based on the `NetJSON RFC <http://netjson.org/rfc.html>`_
     * **Validation** based on `JSON-Schema <http://json-schema.org/>`_
     * **Templates**: store common configurations in templates
