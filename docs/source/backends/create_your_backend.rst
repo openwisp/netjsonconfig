@@ -28,6 +28,7 @@ project root directory.
         name='example_backend',
         version='0.0.0',
         description='an example to illustrate a netjsonconfig backend as an external module',
+        install_requires=['netjsonconfig>=0.6.3'],
         packages=find_packages(),
         entry_points={
             'netjsonconfig.backends': [
@@ -100,15 +101,16 @@ you should have a directory tree that looks like this.
 .. code-block:: bash
 
     $ tree example_backend
-    .
+    example_backend
     ├── example_backend
     │   └── __init__.py
     └── setup.py
 
-And now you can install your package using ``pip install example_backend``.
+And now you can install your package using ``pip install -e ./example_backend``
+or ``python setup.py install``.
 
-If you install both `netjsonconfig` and `example_backend` you can use your backend
-from the command line, e.g.
+As `netjsonconfig` is a dependency for `example_backend` you can use your backend
+directly from the command line, e.g.
 
 .. code-block:: bash
 
@@ -122,7 +124,6 @@ from the command line, e.g.
     netjsonconfig: error: the following arguments are required: --backend/-b, --method/-m
 
 Notice the *example* in  `{openwrt,openwisp,openvpn,example}`? That's your backend!
-
 
 The name exposed is the one chosen in the *name*, *path*, *class* triple
 from before
