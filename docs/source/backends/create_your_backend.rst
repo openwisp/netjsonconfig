@@ -105,7 +105,7 @@ you should have a directory tree that looks like this.
     │   └── __init__.py
     └── setup.py
 
-And now you can install your package using `pip install example_backend`.
+And now you can install your package using ``pip install example_backend``.
 
 If you install both `netjsonconfig` and `example_backend` you can use your backend
 from the command line, e.g.
