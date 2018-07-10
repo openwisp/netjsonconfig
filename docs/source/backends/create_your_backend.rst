@@ -21,7 +21,7 @@ project root directory.
 
 .. code-block:: python
 
-    # setup.py
+    # example_backend/setup.py
     from setuptools import setup, find_packages
     
     setup(
@@ -81,7 +81,7 @@ The previous example can be used with the following class definition
 
 .. code-block:: python
 
-        # example_backend/__init__.py
+        # example_backend/example_backend/__init__.py
         from netjsonconfig.backends.base.backend import BaseBackend
         from netjsonconfig.backends.base.renderer import BaseRenderer
         from netjsonconfig.backends.base.parser import BaseParser
@@ -93,3 +93,41 @@ The previous example can be used with the following class definition
             converter = []
             parser = BaseParser
             renderer = BaseRenderer
+
+Once you have your python package configured with the correct entry points
+you should have a directory tree that looks like this.
+
+.. code-block:: bash
+
+    $ tree example_backend
+    .
+    ├── example_backend
+    │   └── __init__.py
+    └── setup.py
+
+And now you can install your package using `pip install example_backend`.
+
+If you install both `netjsonconfig` and `example_backend` you can use your backend
+from the command line, e.g.
+
+.. code-block:: bash
+
+    $ netjsonconfig
+    usage: netjsonconfig [-h] [--config CONFIG]
+                     [--templates [TEMPLATES [TEMPLATES ...]]]
+                     [--native NATIVE] --backend
+                     {openwrt,openwisp,openvpn,example} --method
+                     {render,generate,write,validate,json}
+                     [--args [ARGS [ARGS ...]]] [--verbose] [--version]
+    netjsonconfig: error: the following arguments are required: --backend/-b, --method/-m
+
+Notice the *example* in  `{openwrt,openwisp,openvpn,example}`? That's your backend!
+
+
+The name exposed is the one chosen in the *name*, *path*, *class* triple
+from before
+
+.. code-block:: python
+
+        # name=path:class
+        'example=example_backend.__init__:ExampleBackend',
