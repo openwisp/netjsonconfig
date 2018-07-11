@@ -5,8 +5,8 @@ Create your backend
 .. include:: ../_github.rst
 
 Every backend is based on the common ground of some elements provided by the 
-netjsonconfig library. The `BaseBackend`, `BaseConverter`, `BaseParser` and
-`BaseRenderer` are a battle proven set of tools that can be extended when
+netjsonconfig library. The ``BaseBackend``, ``BaseConverter``, ``BaseParser`` and
+``BaseRenderer`` are a battle proven set of tools that can be extended when
 creating you backend.
 
 But the netjsonconfig package is not a playground to experiment, your contributions
@@ -43,7 +43,7 @@ in the python ecosystem. You can find more information about Python packaging
 and `at the hitchhikers guide to packaging <https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/>`_.
 
 The most important part is to give your package a good name, a well thought description and
-to add the `entry_points` keyword argument with the following code
+to add the ``entry_points`` keyword argument with the following code
 
 ..  code-block:: python
 
@@ -58,16 +58,16 @@ to add the `entry_points` keyword argument with the following code
 Now your package will be in the list of backends that netjsonconfig can use!
 
 But we still have to give us a name to be unique! Netjsonconfig already
-defined the names `openwisp`, `openwrt` and `openvpn` but you can choose
+defined the names ``openwisp``, ``openwrt`` and ``openvpn`` but you can choose
 whatever you like most.
 
-The name `netjsonconfig.backends` will be associated with a list of classes
+The name ``netjsonconfig.backends`` will be associated with a list of classes
 from your package that will be presented to netjconfig at runtime. To specify
-which classes you want to expose write the triple `name`, `path` and `class_name`
-using the format `name=path:class_name` as in the example below.
+which classes you want to expose write the triple ``name``, ``path`` and ``class_name``
+using the format ``name=path:class_name`` as in the example below.
 
-The `path` part is simply the path to the file that contains the class
-you want to expose and the `class_name` is the name of the class.
+The ``path`` part is simply the path to the file that contains the class
+you want to expose and the ``class_name`` is the name of the class.
 
 ..  code-block:: python
 
@@ -109,7 +109,7 @@ you should have a directory tree that looks like this.
 And now you can install your package using ``pip install -e ./example_backend``
 or ``python setup.py install``.
 
-As `netjsonconfig` is a dependency for `example_backend` you can use your backend
+As ``netjsonconfig`` is a dependency for ``example_backend`` you can use your backend
 directly from the command line, e.g.
 
 .. code-block:: bash
@@ -123,7 +123,7 @@ directly from the command line, e.g.
                      [--args [ARGS [ARGS ...]]] [--verbose] [--version]
     netjsonconfig: error: the following arguments are required: --backend/-b, --method/-m
 
-Notice the *example* in  `{openwrt,openwisp,openvpn,example}`? That's your backend!
+Notice the *example* in ``{openwrt,openwisp,openvpn,example}``? That's your backend!
 
 The name exposed is the one chosen in the *name*, *path*, *class* triple
 from before
