@@ -10,6 +10,7 @@ from .rules import Rules
 from .switch import Switch
 from .wireguard_peers import WireguardPeers
 from .wireless import Wireless
+from .ddns import Ddns
 
 __all__ = [
     'Default',
@@ -24,4 +25,5 @@ __all__ = [
     'Switch',
     'WireguardPeers',
     'Wireless',
+    'Ddns',
 ]

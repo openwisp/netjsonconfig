@@ -2446,6 +2446,141 @@ Will be rendered as follows::
             option sysfs 'tp-link:blue:wlan2g'
             option trigger 'phy0tpt'
 
+DDNS settings
+-------------
+
+The ddns settings reside in the ``ddns`` key of the *configuration dictionary*,
+which is a custom NetJSON extension not present in the original NetJSON RFC.
+
+The ``ddns`` key must contain a dictionary, the allowed keys are:
+
++---------------------+---------+
+| key name            |  type   |
++=====================+=========+
+| ``upd_privateip``   | boolean |
++---------------------+---------+
+| ``ddns_dateformat`` | string  |
++---------------------+---------+
+| ``ddns_rundir``     | string  |
++---------------------+---------+
+| ``ddns_logdir``     | string  |
++---------------------+---------+
+| ``ddns_loglines``   | integer |
++---------------------+---------+
+| ``use_curl``        | boolean |
++---------------------+---------+
+| ``providers``       |  list   |
++---------------------+---------+
+
+The ``providers`` key itself contains a list of dictionaries, the allowed keys are:
+
++---------------------+---------+
+| key name            |  type   |
++=====================+=========+
+| ``enabled``         | boolean |
++---------------------+---------+
+| ``interface``       | string  |
++---------------------+---------+
+| ``ip_source``       | string  |
++---------------------+---------+
+| ``lookup_host``     | string  |
++---------------------+---------+
+| ``domain``          | string  |
++---------------------+---------+
+| ``username``        | string  |
++---------------------+---------+
+| ``password``        | string  |
++---------------------+---------+
+| ``service_name``    | string  |
++---------------------+---------+
+| ``update_url``      | string  |
++---------------------+---------+
+| ``update_script``   | string  |
++---------------------+---------+
+| ``ip_network``      | string  |
++---------------------+---------+
+| ``ip_url``          | string  |
++---------------------+---------+
+| ``ip_interface``    | string  |
++---------------------+---------+
+| ``ip_script``       | string  |
++---------------------+---------+
+| ``use_syslog``      | integer |
++---------------------+---------+
+| ``use_logfile``     | boolean |
++---------------------+---------+
+
+The required keys are:
+
+* ``enabled``
+* ``interface``
+* ``ip_source``
+* ``lookup_host``
+* ``domain``
+* ``username``
+* ``password``
+
+For the function and meaning of each key consult the relevant
+`OpenWrt documentation about ddns directives <https://openwrt.org/docs/guide-user/base-system/ddns>`_.
+
+DDNS settings example
+~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "ddns": {
+            "ddns_logdir": "/var/log/ddns",
+            "ddns_rundir": "/var/run/ddns",
+            "use_curl": false,
+            "upd_privateip": false,
+            "ddns_dateformat": "%F %R",
+            "ddns_loglines": 250,
+            "providers": [
+                {
+                    "enabled": true,
+                    "lookup_host": "myhost.dyndns.org",
+                    "service_name": "dyndns.org",
+                    "domain": "myhost.dyndns.org",
+                    "username": "myuser",
+                    "password": "mypassword",
+                    "use_logfile": true,
+                    "ip_source": "interface",
+                    "ip_interface": "pppoe-xdsl",
+                    "use_syslog": 2,
+                    "interface": "xdsl"
+                }
+            ],
+        }
+    }
+
+Will be rendered as follows::
+
+    package ddns
+
+    config ddns 'global'
+            option ddns_logdir '/var/log/ddns'
+            option ddns_rundir '/var/run/ddns'
+            option use_curl '0'
+            option upd_privateip '0'
+            option ddns_dateformat '%F %R'
+            option ddns_loglines '250'
+
+    config service 'myhost_dyndns_org'
+            option enabled '1'
+            option lookup_host 'myhost.dyndns.org'
+            option service_name 'dyndns.org'
+            option domain 'myhost.dyndns.org'
+            option username 'myuser'
+            option password 'mypassword'
+            option use_logfile '1'
+            option ip_source 'interface'
+            option ip_interface 'pppoe-xdsl'
+            option use_syslog '2'
+            option interface 'xdsl'
+
 Including custom options
 ------------------------
 
