@@ -11,7 +11,7 @@ class OpenVpn(BaseBackend):
     OpenVPN 2.x Configuration Backend
     """
     schema = schema
-    converters = [converters.OpenVpn]
+    _converters = [converters.OpenVpn]
     parser = OpenVpnParser
     renderer = OpenVpnRenderer
     list_identifiers = ['name']

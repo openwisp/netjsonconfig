@@ -10,7 +10,7 @@ class OpenWrt(BaseBackend):
     OpenWRT / LEDE Configuration Backend
     """
     schema = schema
-    converters = [
+    _converters = [
         converters.General,
         converters.Ntp,
         converters.Led,

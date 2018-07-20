@@ -4,6 +4,7 @@ import tarfile
 from collections import OrderedDict
 from copy import deepcopy
 from io import BytesIO
+from pkg_resources import iter_entry_points
 
 import six
 from jsonschema import FormatChecker, validate
@@ -21,6 +22,7 @@ class BaseBackend(object):
     schema = None
     FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
     list_identifiers = []
+    _converters = []
 
     def __init__(self, config=None, native=None, templates=None, context=None):
         """
@@ -48,6 +50,20 @@ class BaseBackend(object):
         else:
             raise ValueError('Expecting either config or native argument to be '
                              'passed during the initialization of the backend')
+
+    @property
+    def converters(self):
+        converters = []
+        entry_key = 'netjsonconfig.{}.converter'.format(self.__class__.__name__)
+        for entry_point in iter_entry_points(entry_key):
+            try:
+                converters.append(entry_point.load())
+            except ImportError as e:  # noqa
+                # TODO: some error handling here
+                continue
+
+        return self._converters + converters
+
 
     def _load(self, config):
         """
