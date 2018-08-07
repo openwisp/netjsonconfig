@@ -466,6 +466,7 @@ package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
+    option encryption 'none'
     option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
@@ -498,6 +499,7 @@ package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
+    option encryption 'none'
     option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
