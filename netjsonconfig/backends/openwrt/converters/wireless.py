@@ -89,7 +89,7 @@ class Wireless(OpenWrtConverter):
         }
         # if encryption disabled return empty dict
         if not encryption or disabled or encryption['protocol'] == 'none':
-            return {}
+            return {'encryption': 'none'}
         # otherwise configure encryption
         uci = encryption.copy()
         for option in ['protocol', 'key', 'cipher', 'disabled']:
