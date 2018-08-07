@@ -20,42 +20,44 @@ class TestDefault(unittest.TestCase, _TabsMixin):
                     "boolean": True
                 }
             ],
-            "firewall": [
-                {
-                    "config_name": "rule",
-                    "name": "Allow-MLD",
-                    "src": "wan",
-                    "proto": "icmp",
-                    "src_ip": "fe80::/10",
-                    "family": "ipv6",
-                    "target": "ACCEPT",
-                    "icmp_type": [
-                        "130/0",
-                        "131/0",
-                        "132/0",
-                        "143/0"
-                    ]
-                },
-                {
-                    "config_name": "rule",
-                    "name": "Rule2",
-                    "src": "wan",
-                    "proto": "icmp",
-                    "src_ip": "192.168.1.1/24",
-                    "family": "ipv4",
-                    "target": "ACCEPT",
-                    "icmp_type": [
-                        "130/0",
-                        "131/0",
-                        "132/0",
-                        "143/0"
-                    ]
-                }
-            ]
+            "firewall": {
+                "rules": [
+                    {
+                        "config_name": "rule",
+                        "name": "Allow-MLD",
+                        "src": "wan",
+                        "proto": "icmp",
+                        "src_ip": "fe80::/10",
+                        "family": "ipv6",
+                        "target": "ACCEPT",
+                        "icmp_type": [
+                            "130/0",
+                            "131/0",
+                            "132/0",
+                            "143/0"
+                        ]
+                    },
+                    {
+                        "config_name": "rule",
+                        "name": "Rule2",
+                        "src": "wan",
+                        "proto": "icmp",
+                        "src_ip": "192.168.1.1/24",
+                        "family": "ipv4",
+                        "target": "ACCEPT",
+                        "icmp_type": [
+                            "130/0",
+                            "131/0",
+                            "132/0",
+                            "143/0"
+                        ]
+                    }
+                ]
+            }
         })
         expected = self._tabs("""package firewall
 
-config rule 'rule_1'
+config rule 'rule_Allow_MLD'
     option family 'ipv6'
     list icmp_type '130/0'
     list icmp_type '131/0'
@@ -67,7 +69,7 @@ config rule 'rule_1'
     option src_ip 'fe80::/10'
     option target 'ACCEPT'
 
-config rule 'rule_2'
+config rule 'rule_Rule2'
     option family 'ipv4'
     list icmp_type '130/0'
     list icmp_type '131/0'
@@ -148,18 +150,20 @@ config custom 'custom'
                     "boolean": "1"
                 }
             ],
-            "firewall": [
-                {
-                    "config_name": "rule",
-                    "name": "Allow-MLD",
-                    "src": "wan",
-                    "proto": "icmp",
-                    "src_ip": "fe80::/10",
-                    "family": "ipv6",
-                    "target": "ACCEPT",
-                    "icmp_type": ["130/0", "131/0", "132/0", "143/0"]
-                }
-            ],
+            "firewall": {
+                "rules": [
+                    {
+                        "config_name": "rule",
+                        "name": "Allow-MLD",
+                        "src": "wan",
+                        "proto": "icmp",
+                        "src_ip": "fe80::/10",
+                        "family": "ipv6",
+                        "target": "ACCEPT",
+                        "icmp_type": ["130/0", "131/0", "132/0", "143/0"]
+                    }
+                ]
+            },
             "led": [
                 {
                     "name": "USB1",
