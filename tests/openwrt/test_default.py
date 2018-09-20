@@ -238,3 +238,28 @@ config custom 'custom'
     def test_skip_nonlists(self):
         o = OpenWrt({"custom_package": {'unknown': True}})
         self.assertEqual(o.render(), '')
+
+    def test_render_invalid_uci_name(self):
+        o = OpenWrt({
+            "olsrd2": [
+                {
+                    "lan": "10.150.25.0/24 domain=0",
+                    "config_value": "lan-hna",
+                    "config_name": "olsrv2"
+                },
+                {
+                    "lan": "0.0.0.0/24 domain=1",
+                    "config_value": "internet-hna",
+                    "config_name": "olsrv2"
+                }
+            ],
+        })
+        expected = self._tabs("""package olsrd2
+
+config olsrv2 'lan_hna'
+    option lan '10.150.25.0/24 domain=0'
+
+config olsrv2 'internet_hna'
+    option lan '0.0.0.0/24 domain=1'
+""")
+        self.assertEqual(o.render(), expected)

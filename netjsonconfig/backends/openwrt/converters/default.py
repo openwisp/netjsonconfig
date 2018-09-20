@@ -39,7 +39,12 @@ class Default(OpenWrtConverter):
                           '{0}\n\n'.format(json_block))
                     continue
                 block['.type'] = block.pop('config_name')
-                block['.name'] = block.pop('config_value', '{0}_{1}'.format(block['.type'], i))
+                block['.name'] = block.pop('config_value',
+                                           # default value in case the
+                                           # UCI name is not defined
+                                           '{0}_{1}'.format(block['.type'], i))
+                # ensure UCI name is valid
+                block['.name'] = self._get_uci_name(block['.name'])
                 block_list.append(sorted_dict(block))
                 i += 1
             if block_list:
