@@ -69,7 +69,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         with self.assertRaises(TypeError):
             OpenWrt([])
         with self.assertRaises(TypeError):
-            OpenWrt('NOTJSON[]\{\}')
+            OpenWrt(r'NOTJSON[]\{\}')
 
     def test_system_invalid_timezone(self):
         o = OpenWrt({

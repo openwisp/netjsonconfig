@@ -5,9 +5,9 @@ from collections import OrderedDict
 from ...utils import sorted_dict
 from ..base.parser import BaseParser
 
-packages_pattern = re.compile('^package\s', flags=re.MULTILINE)
-block_pattern = re.compile('^config\s', flags=re.MULTILINE)
-config_pattern = re.compile('^(option|list)\s*([^\s]*)\s*(.*)')
+packages_pattern = re.compile(r'^package\s', flags=re.MULTILINE)
+block_pattern = re.compile(r'^config\s', flags=re.MULTILINE)
+config_pattern = re.compile(r'^(option|list)\s*([^\s]*)\s*(.*)')
 config_path = 'etc/config/'
 
 
