@@ -256,6 +256,12 @@ class Interfaces(OpenWrtConverter):
             netmask = interface.pop('netmask', 32)
             parsed_ip = self.__netjson_parse_ip(ipv4, netmask)
             ipv4 = [parsed_ip] if parsed_ip else []
+
+        if not isinstance(ipv6, list):
+                    netmask = interface.pop('netmask', 128)
+                    parsed_ip = self.__netjson_parse_ip(ipv6, netmask)
+                    ipv6 = [parsed_ip] if parsed_ip else []
+                    
         if proto.startswith('dhcp'):
             family = 'ipv4' if proto == 'dhcp' else 'ipv6'
             addresses.append({'proto': 'dhcp', 'family': family})
