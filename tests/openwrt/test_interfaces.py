@@ -163,6 +163,22 @@ config interface 'eth0'
             }
         ]
     }
+    _eth0_64 = {
+        "interfaces": [
+            {
+                "name": "eth0",
+                "type": "ethernet",
+                "addresses": [
+                    {
+                        "address": "2aa1:4aaa:2aaa:1d::5",
+                        "mask": 64,
+                        "proto": "static",
+                        "family": "ipv6"
+                    }
+                ]
+            }
+        ]
+    }
 
     def test_parse_missing_ipv4_mask(self):
         native = self._tabs("""package network
@@ -196,6 +212,17 @@ config interface 'eth0'
 """)
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._eth0_32)
+
+    def test_parse_missing_ipv6_mask_list(self):
+        native = self._tabs("""package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option ip6addr '2aa1:4aaa:2aaa:1d::5/64'
+    option proto 'static'
+""")
+        o = OpenWrt(native=native)
+        self.assertEqual(o.config, self._eth0_64)
 
     def test_parse_ipv4_list(self):
         native = self._tabs("""package network
