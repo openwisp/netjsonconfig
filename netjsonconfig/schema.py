@@ -1034,7 +1034,7 @@ schema = {
         "files": {
             "type": "array",
             "title": "Files",
-            "uniqueItems": True,
+            "uniqueItems": False,
             "additionalItems": True,
             "propertyOrder": 20,
             "items": {
