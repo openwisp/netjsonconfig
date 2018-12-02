@@ -5,3 +5,5 @@ isort
 flake8
 sphinx
 sphinx_rtd_theme
+# commit message style check
+openwisp-utils>=0.2.1
