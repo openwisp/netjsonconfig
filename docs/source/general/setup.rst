@@ -25,7 +25,7 @@ The first option is to install a tarball:
     pip install https://github.com/openwisp/netjsonconfig/tarball/master
 
 The second option is to install via pip using git
-(this will automatically clone the repo and store it on your hard dirve):
+(this will automatically clone the repo and store it on your hard drive):
 
 .. code-block:: shell
 
