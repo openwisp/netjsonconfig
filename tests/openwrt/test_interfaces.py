@@ -1027,6 +1027,33 @@ config interface 'eth0'
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._dns_netjson)
 
+    def test_render_dns_without_interface(self):
+        o = OpenWrt({
+            "dns_servers": ["10.11.12.13", "8.8.8.8"],
+            "dns_search": ["netjson.org", "openwisp.org"],
+        })
+        expected = self._tabs("""package network
+
+config dns 'dns'
+    option dns '10.11.12.13 8.8.8.8'
+    option dns_search 'netjson.org openwisp.org'
+""")
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_dns_without_interface(self):
+        native = self._tabs("""package network
+
+config dns 'dns'
+    option dns '8.8.8.8 4.4.4.4'
+    option dns_search 'netjson.org openwisp.org'
+""")
+        _dns_json = {
+            "dns_servers": ["8.8.8.8", "4.4.4.4"],
+            "dns_search": ["netjson.org", "openwisp.org"],
+        }
+        o = OpenWrt(native=native)
+        self.assertEqual(o.config, _dns_json)
+
     def test_dns_dhcpv4_ignored(self):
         o = OpenWrt({
             "interfaces": [

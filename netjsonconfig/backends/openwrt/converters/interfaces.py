@@ -311,3 +311,66 @@ class Interfaces(OpenWrtConverter):
                 items = items.split()
             result.setdefault(netjson_key, [])
             result[netjson_key] += items
+
+
+class DnsServer(OpenWrtConverter):
+    netjson_key = 'dns_servers'
+    intermediate_key = 'network'
+    _uci_types = ['dns']
+
+    def to_intermediate_loop(self, block, result, index=None):
+        """
+        Convert dns_servers NetJson to intermediate data structure if
+        no interface was provided.
+        """
+        if 'interfaces' not in self.backend.config:
+            if index > 1:
+                result['network'][0]['dns'] += ' ' + block
+                return result
+            options = {
+                '.type': 'dns',
+                '.name': 'dns',
+                'dns': block
+            }
+            result.setdefault('network', [])
+            result['network'].append(self.sorted_dict(options))
+            return result
+
+    def to_netjson_loop(self, block, result, index=None):
+        if 'dns' in block:
+            items = block.pop('dns')
+            if isinstance(items, six.string_types):
+                items = items.split()
+            result.setdefault('dns_servers', [])
+            result['dns_servers'] += items
+        if 'dns_search' in block:
+            items = block.pop('dns_search')
+            if isinstance(items, six.string_types):
+                items = items.split()
+            result.setdefault('dns_search', [])
+            result['dns_search'] += items
+        return result
+
+
+class DnsSearch(OpenWrtConverter):
+    netjson_key = 'dns_search'
+    intermediate_key = 'network'
+    _uci_types = ['dns']
+
+    def to_intermediate_loop(self, block, result, index=None):
+        """
+        Convert dns_search NetJson to intermediate data structure if
+        no interface was provided.
+        """
+        if 'interfaces' not in self.backend.config:
+            if index > 1:
+                result['network'][0]['dns_search'] += ' ' + block
+                return result
+            options = {
+                '.type': 'dns',
+                '.name': 'dns',
+                'dns_search': block
+            }
+            result.setdefault('network', [])
+            result['network'].append(self.sorted_dict(options))
+            return result

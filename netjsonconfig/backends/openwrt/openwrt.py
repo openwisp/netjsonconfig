@@ -15,6 +15,8 @@ class OpenWrt(BaseBackend):
         converters.Ntp,
         converters.Led,
         converters.Interfaces,
+        converters.DnsServer,
+        converters.DnsSearch,
         converters.Routes,
         converters.Rules,
         converters.Switch,
