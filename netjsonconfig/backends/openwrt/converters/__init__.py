@@ -2,6 +2,7 @@ from .default import Default
 from .general import General
 from .interfaces import Interfaces
 from .led import Led
+from .mwan3 import Mwan3
 from .ntp import Ntp
 from .openvpn import OpenVpn
 from .radios import Radios
@@ -24,4 +25,5 @@ __all__ = [
     'Switch',
     'WireguardPeers',
     'Wireless',
+    'Mwan3',
 ]
