@@ -1,10 +1,17 @@
 Change log
 ==========
 
-Version 0.6.4 [unreleased]
+Version 0.6.4 [2019-12-09]
 --------------------------
 
-WIP
+- `#106 <https://github.com/openwisp/netjsonconfig/issues/113>`_:
+  [bugfix] Made "encryption none" explicit in OpenWRT
+- `5ddc201 <https://github.com/openwisp/netjsonconfig/commit/5ddc201>`_:
+  [bugfix] Fixed invalid UCI name bug in default OpenWRT renderer
+- `#106 <https://github.com/openwisp/netjsonconfig/issues/118>`_:
+  [bugfix] Fixed ``TypeError: can only concatenate list (not "str") to list``
+- `#137 <https://github.com/openwisp/netjsonconfig/issues/137>`_:
+  [tests] Migrated tests to nose2
 
 Version 0.6.3 [2018-07-09]
 --------------------------
