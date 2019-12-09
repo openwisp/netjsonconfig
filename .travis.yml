@@ -25,7 +25,7 @@ before_script:
   - sphinx-build -W -b html docs/source docs/_build
 
 script:
-  - nosetests --with-coverage --cover-package=netjsonconfig
+  - nose2 --with-coverage --coverage=netjsonconfig
   - |
     if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
       # gets commit message of last commit before pull request merge

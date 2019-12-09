@@ -29,14 +29,14 @@ Run tests with:
 
     ./runtests.py
 
-Using nose
-----------
+Using nose2
+-----------
 
-Alternatively, you can use the ``nose`` tool (which has a ton of available options):
+Alternatively, you can use the ``nose2`` tool (which has a ton of available options):
 
 .. code-block:: shell
 
-    nosetests
+    nose2
 
 See test coverage with:
 
