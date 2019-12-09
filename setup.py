@@ -79,6 +79,6 @@ setup(
     ],
     install_requires=get_install_requires(),
     extras_require=extras_require,
-    test_suite='nose.collector',
+    test_suite='nose2.collector.collector',
     scripts=['bin/netjsonconfig'],
 )
