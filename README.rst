@@ -19,7 +19,7 @@ netjsonconfig
 
 ------------
 
-Netjsonconfig is part of the `OpenWISP project <http://openwisp.org>`_ and it's the official
+Netjsonconfig is a part of the `OpenWISP project <http://openwisp.org>`_ and it's the official
 configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwisp2>`_.
 
 .. image:: http://netjsonconfig.openwisp.org/en/latest/_images/openwisp.org.svg
@@ -30,7 +30,7 @@ configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwis
 on systems like `OpenWRT <http://openwrt.org>`_, `LEDE <https://www.lede-project.org/>`_
 or `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_.
 
-Its main features are:
+Its main features are listed below for your reference:
 
 * `OpenWRT <http://openwrt.org>`_ / `LEDE <https://www.lede-project.org/>`_ support
 * `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_ support
