@@ -10,7 +10,7 @@ class Switch(OpenWrtConverter):
     _vlan_schema = schema['properties']['switch']['items']['properties']['vlan']['items']
 
     def __init__(self, *args, **kwargs):
-        super(Switch, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # instance attributes used during backward conversion
         self._vlan_counter = 0
         self._switch_map = {}

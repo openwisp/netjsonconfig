@@ -14,7 +14,7 @@ class OpenWisp(OpenWrt):
 
     def validate(self):
         self._sanitize_radios()
-        super(OpenWisp, self).validate()
+        super().validate()
 
     def _sanitize_radios(self):
         """

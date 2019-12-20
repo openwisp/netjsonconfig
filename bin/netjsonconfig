@@ -5,8 +5,6 @@ import os
 import sys
 import traceback
 
-import six
-
 import netjsonconfig
 
 description = """
@@ -146,12 +144,8 @@ def print_output(output):
     # if file object, get bytes
     if hasattr(output, 'getvalue'):
         output = output.getvalue()
-    # python2: always print
-    # python3: if string, just print
-    if isinstance(output, six.string_types):
+    if isinstance(output, str):
         print(output)
-    # python2: never enters this block
-    # python3: writes binary data to standard output
     else:
         sys.stdout.buffer.write(output)
 

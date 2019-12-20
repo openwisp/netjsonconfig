@@ -11,7 +11,7 @@ class OpenVpn(OpenWrtConverter, BaseOpenVpn):
             '.type': 'openvpn',
             'enabled': not vpn.pop('disabled', False)
         })
-        return super(OpenVpn, self).__intermediate_vpn(vpn, remove=[''])
+        return super().__intermediate_vpn(vpn, remove=[''])
 
     def __netjson_vpn(self, vpn):
         if vpn.get('server_bridge') == '1':
@@ -20,4 +20,4 @@ class OpenVpn(OpenWrtConverter, BaseOpenVpn):
         vpn['disabled'] = vpn.pop('enabled', '0') == '0'
         vpn['name'] = vpn.pop('.name')
         del vpn['.type']
-        return super(OpenVpn, self).__netjson_vpn(vpn)
+        return super().__netjson_vpn(vpn)

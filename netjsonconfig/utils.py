@@ -2,8 +2,6 @@ import re
 from collections import OrderedDict
 from copy import deepcopy
 
-import six
-
 
 def merge_config(template, config, list_identifiers=None):
     """
@@ -93,7 +91,7 @@ def evaluate_vars(data, context=None):
             loop_items = enumerate(data)
         for key, value in loop_items:
             data[key] = evaluate_vars(value, context)
-    elif isinstance(data, six.string_types):
+    elif isinstance(data, str):
         vars_found = var_pattern.findall(data)
         for var in vars_found:
             var = var.strip()
