@@ -14,26 +14,17 @@ branches:
 before_install:
   - pip install -U pip setuptools wheel
   - pip install -r requirements-test.txt
-  - flake8
-  - isort --check-only --recursive .
 
 install:
   - python setup.py -q develop
 
 before_script:
+  - openwisp-utils-qa-checks --skip-checkmigrations
   - mkdir docs/source/_static
   - sphinx-build -W -b html docs/source docs/_build
 
 script:
   - nose2 --with-coverage --coverage=netjsonconfig
-  - |
-    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      # gets commit message of last commit before pull request merge
-      COMMIT_MESSAGE=$(git log $TRAVIS_PULL_REQUEST_SHA --format=%B -n 1)
-      printf "Checking commit message:\n\n"
-      printf "$COMMIT_MESSAGE\n\n"
-      checkcommit --message "$COMMIT_MESSAGE"
-    fi
 
 after_success:
   coveralls
