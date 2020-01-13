@@ -3,9 +3,8 @@ sudo: false
 cache: pip
 
 python:
-  - "3.5"
-  - "3.4"
-  - "2.7"
+  - "3.6"
+  - "3.7"
 
 branches:
   only:

@@ -13,9 +13,6 @@ if sys.argv[-1] == 'setup.py':
     print("To install, run 'python setup.py install'\n")
 
 if sys.argv[-1] == 'publish':
-    if sys.version_info.major < 3:
-        print('Error: do not publish release with python2!')
-        sys.exit(1)
     os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
     os.system("python setup.py sdist bdist_wheel")
     os.system("twine upload -s dist/*")
@@ -25,12 +22,6 @@ if sys.argv[-1] == 'publish':
     print("  git tag -a %(version)s -m 'version %(version)s'" % args)
     print("  git push --tags")
     sys.exit()
-
-extras_require = {
-    # used for wheel package,
-    # see http://wheel.readthedocs.io/en/latest/#defining-conditional-dependencies
-    ':python_version in "2.6 2.7"': ['py2-ipaddress']
-}
 
 
 def get_install_requires():
@@ -44,9 +35,6 @@ def get_install_requires():
             continue
         # add line to requirements
         requirements.append(line.replace('\n', ''))
-    # add py2-ipaddress if python2
-    if sys.version_info.major < 3:
-        requirements.append('py2-ipaddress')
     return requirements
 
 
@@ -78,7 +66,6 @@ setup(
         'Topic :: System :: Networking',
     ],
     install_requires=get_install_requires(),
-    extras_require=extras_require,
     test_suite='nose2.collector.collector',
     scripts=['bin/netjsonconfig'],
 )

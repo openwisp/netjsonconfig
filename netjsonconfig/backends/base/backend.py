@@ -5,7 +5,6 @@ from collections import OrderedDict
 from copy import deepcopy
 from io import BytesIO
 
-import six
 from jsonschema import FormatChecker, validate
 from jsonschema.exceptions import ValidationError as JsonSchemaError
 
@@ -53,7 +52,7 @@ class BaseBackend(object):
         """
         Loads config from string or dict
         """
-        if isinstance(config, six.string_types):
+        if isinstance(config, str):
             try:
                 config = json.loads(config)
             except ValueError:

@@ -1,7 +1,5 @@
 from ipaddress import ip_interface
 
-import six
-
 from ..schema import schema
 from .base import OpenWrtConverter
 
@@ -18,7 +16,7 @@ class Routes(OpenWrtConverter):
         return result
 
     def __intermediate_route(self, route, index):
-        network = ip_interface(six.text_type(route.pop('destination')))
+        network = ip_interface(route.pop('destination'))
         target = network.ip if network.version == 4 else network.network
         route.update({
             '.type': 'route{0}'.format('6' if network.version == 6 else ''),
@@ -52,7 +50,7 @@ class Routes(OpenWrtConverter):
             network = '{0}/{1}'.format(network, route.pop('netmask'))
         route.update({
             "device": route.pop('interface'),
-            "destination": str(ip_interface(six.text_type(network))),
+            "destination": str(ip_interface(network)),
             "next": route.pop('gateway'),
             "cost": route.pop('metric', self._schema['properties']['cost']['default'])
         })
