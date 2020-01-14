@@ -1,6 +1,6 @@
 import unittest
 
-from jsonschema import ValidationError, validate
+from jsonschema import Draft4Validator, ValidationError
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import _list_errors
@@ -43,6 +43,9 @@ schema = {
         }
     }
 }
+
+
+validate = Draft4Validator(schema).validate
 
 
 class TestJsonSchema(unittest.TestCase):

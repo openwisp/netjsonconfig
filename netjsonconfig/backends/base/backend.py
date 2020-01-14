@@ -5,7 +5,7 @@ from collections import OrderedDict
 from copy import deepcopy
 from io import BytesIO
 
-from jsonschema import FormatChecker, validate
+from jsonschema import Draft4Validator, draft4_format_checker
 from jsonschema.exceptions import ValidationError as JsonSchemaError
 
 from ...exceptions import ValidationError
@@ -109,7 +109,7 @@ class BaseBackend(object):
 
     def validate(self):
         try:
-            validate(self.config, self.schema, format_checker=FormatChecker())
+            Draft4Validator(self.schema, format_checker=draft4_format_checker).validate(self.config)
         except JsonSchemaError as e:
             raise ValidationError(e)
 
