@@ -1,10 +1,12 @@
 Change log
 ==========
 
-Version 0.7.0 [unreleased]
+Version 0.7.0 [2020-01-14]
 --------------------------
 
-WIP
+- Dropped support for python 2.7
+- Updated github buttons in documentation which were causing an unintended redirect
+- Updated the jsonschema library to version 3.x
 
 Version 0.6.4 [2019-12-09]
 --------------------------
