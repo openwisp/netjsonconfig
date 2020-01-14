@@ -1,6 +1,6 @@
-from . import converters
 from ...schema import DEFAULT_FILE_MODE
 from ..base.backend import BaseBackend
+from . import converters
 from .parser import OpenVpnParser, config_suffix, vpn_pattern
 from .renderer import OpenVpnRenderer
 from .schema import schema

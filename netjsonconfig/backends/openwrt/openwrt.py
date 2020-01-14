@@ -1,5 +1,5 @@
-from . import converters
 from ..base.backend import BaseBackend
+from . import converters
 from .parser import OpenWrtParser, config_path, packages_pattern
 from .renderer import OpenWrtRenderer
 from .schema import schema
