@@ -107,12 +107,12 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         "files": [
             {
                 "path": "/openvpn/x509/ca_1_service.pem",
-                "mode": "0644",
+                "mode": "0600",
                 "contents": "-----BEGIN CERTIFICATE-----\ntest\n-----END CERTIFICATE-----\n"  # noqa
             },
             {
                 "path": "/openvpn/x509/l2vpn_client_2693.pem",
-                "mode": "0644",
+                "mode": "0600",
                 "contents": "-----BEGIN CERTIFICATE-----\ntest==\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\ntest\n-----END RSA PRIVATE KEY-----\n"  # noqa
             }
         ]

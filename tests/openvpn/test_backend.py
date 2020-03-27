@@ -586,17 +586,17 @@ tls-client
 # ---------- files ---------- #
 
 # path: {{ca_path_1}}
-# mode: 0644
+# mode: 0600
 
 {{ca_contents_1}}
 
 # path: {{cert_path_1}}
-# mode: 0644
+# mode: 0600
 
 {{cert_contents_1}}
 
 # path: {{key_path_1}}
-# mode: 0644
+# mode: 0600
 
 {{key_contents_1}}
 
