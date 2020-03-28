@@ -1,4 +1,4 @@
-from ...schema import DEFAULT_FILE_MODE
+from ...schema import X509_FILE_MODE
 from ..base.backend import BaseBackend
 from . import converters
 from .parser import OpenVpnParser, config_suffix, vpn_pattern
@@ -121,15 +121,15 @@ class OpenVpn(BaseBackend):
             client['ca'] = ca_path
             files.append(dict(path=ca_path,
                               contents=ca_contents,
-                              mode=DEFAULT_FILE_MODE))
+                              mode=X509_FILE_MODE))
         if cert_path and cert_contents:
             client['cert'] = cert_path
             files.append(dict(path=cert_path,
                               contents=cert_contents,
-                              mode=DEFAULT_FILE_MODE))
+                              mode=X509_FILE_MODE))
         if key_path and key_contents:
             client['key'] = key_path
             files.append(dict(path=key_path,
                               contents=key_contents,
-                              mode=DEFAULT_FILE_MODE,))
+                              mode=X509_FILE_MODE,))
         return files

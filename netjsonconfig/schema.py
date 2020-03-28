@@ -7,6 +7,7 @@ from .channels import channels_2and5, channels_2ghz, channels_5ghz
 from .countries import countries
 
 DEFAULT_FILE_MODE = '0644'
+X509_FILE_MODE = '0600'
 MAC_PATTERN = '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
 MAC_PATTERN_BLANK = '^({0}|)$'.format(MAC_PATTERN)
 
