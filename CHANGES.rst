@@ -1,6 +1,12 @@
 Change log
 ==========
 
+Version 0.8.0 [2020-04-03]
+--------------------------
+
+- Changed default file mode for certificate files generated with
+  from ``0644`` to ``0600``
+
 Version 0.7.0 [2020-01-14]
 --------------------------
 
