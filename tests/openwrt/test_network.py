@@ -284,6 +284,37 @@ config switch_vlan 'v1'
     option vlan '3'
 """
 
+    _switch_uci_reorder = """package network
+
+config switch_vlan 'switch0_vlan1'
+    option device 'switch0'
+    option ports '0t 2 3 4 5'
+    option vid '1'
+    option vlan '1'
+
+config switch 'switch0'
+    option enable_vlan '1'
+    option name 'switch0'
+    option reset '1'
+"""
+
+    _switch_netjson_reorder = {
+        "switch": [
+            {
+                "name": "switch0",
+                "reset": True,
+                "enable_vlan": True,
+                "vlan": [
+                    {
+                        "device": "switch0",
+                        "vlan": 1,
+                        "ports": "0t 2 3 4 5"
+                    }
+                ]
+            }
+        ]
+    }
+
     def test_render_switch(self):
         o = OpenWrt(self._switch_netjson)
         expected = self._tabs(self._switch_uci)
@@ -292,3 +323,7 @@ config switch_vlan 'v1'
     def test_parse_switch(self):
         o = OpenWrt(native=self._switch_uci)
         self.assertEqual(o.config, self._switch_netjson)
+
+    def test_parse_switch_reorder(self):
+        o = OpenWrt(native=self._switch_uci_reorder)
+        self.assertEqual(o.config, self._switch_netjson_reorder)

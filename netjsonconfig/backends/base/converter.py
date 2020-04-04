@@ -92,8 +92,8 @@ class BaseConverter(object):
         to a NetJSON configuration dictionary (``self.config``)
         """
         result = OrderedDict()
-        # copy list
-        intermediate_data = list(self.intermediate_data[self.intermediate_key])
+        # Clean intermediate data
+        intermediate_data = self.clean_intermediate_data(list(self.intermediate_data[self.intermediate_key]))
         # iterate over copied intermediate data structure
         for index, block in enumerate(intermediate_data):
             if self.should_skip_block(block):
@@ -108,6 +108,19 @@ class BaseConverter(object):
             result = self.to_netjson_loop(block, result, index + 1)
         # return result, expects dict
         return result
+
+    def clean_intermediate_data(self, intermediate_data):
+        """
+        Utility method called to clean data for backend in ``to_netjson``
+        """
+        clean_intermediate_data, appendto_clean_intermediate_data = [], []
+        for block in intermediate_data:
+            if '.type' in block and block['.type'] == 'switch_vlan':
+                appendto_clean_intermediate_data.append(block)
+            else:
+                clean_intermediate_data.append(block)
+        clean_intermediate_data.extend(appendto_clean_intermediate_data)
+        return clean_intermediate_data
 
     def to_netjson_loop(self, block, result, index=None):  # pragma: nocover
         """
