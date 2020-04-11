@@ -21,6 +21,16 @@ class Switch(OpenWrtConverter):
         result['network'] += switch_vlan
         return result
 
+    def to_netjson_clean(self, intermediate_data):
+        reordered_data, last_items = [], []
+        for block in super().to_netjson_clean(intermediate_data):
+            if '.type' in block and block['.type'] == 'switch_vlan':
+                last_items.append(block)
+            else:
+                reordered_data.append(block)
+        reordered_data.extend(last_items)
+        return reordered_data
+
     def __intermediate_switch(self, switch):
         switch.update({
             '.type': 'switch',
