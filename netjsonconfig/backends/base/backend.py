@@ -324,3 +324,51 @@ class BaseBackend(object):
         del self.intermediate_data
         self.intermediate_data = self._intermediate_copy
         del self._intermediate_copy
+
+    def distinct_native(self, templates=None):
+        """
+        :param templates: ``list`` containing **NetJSON** configuration dictionaries
+
+        returns a dict of configuration which contains configurations
+        that do not exist in given templates.
+
+        :returns: dict
+        """
+
+        templates = self._merge_config({}, templates)
+        config_to_send = deepcopy(self.config)
+
+        for section in self.config:
+            template_section = templates.get(section, None)
+
+            if isinstance(template_section, dict):
+                for element in template_section:
+                    self._distinct_native_dict(
+                        template_section, element, section, config_to_send
+                    )
+                #  if empty, delete section dict
+                if not config_to_send[section]:
+                    del config_to_send[section]
+
+            elif isinstance(template_section, list):
+                for element in template_section:
+                    if element in self.config[section]:
+                        config_to_send[section].remove(element)
+                #  if empty, delete section list
+                if not config_to_send[section]:
+                    del config_to_send[section]
+
+        return config_to_send
+
+    def _distinct_native_dict(self, template_section, element, section, config_to_send):
+        if element in self.config[section].keys():
+            t_element = template_section[element]
+            if isinstance(t_element, list):
+                for item in t_element:
+                    if item in self.config[section][element]:
+                        config_to_send[section][element].remove(item)
+                #  if empty, delete section list
+                if not config_to_send[section][element]:
+                    del config_to_send[section][element]
+            elif t_element == self.config[section][element]:
+                del config_to_send[section][element]
