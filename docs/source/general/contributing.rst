@@ -2,7 +2,7 @@
 Contributing
 ============
 
-.. include:: ../_github.rst
+
 
 Thank you for taking the time to contribute to netjsonconfig.
 
