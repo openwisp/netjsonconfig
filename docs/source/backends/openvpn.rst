@@ -2,7 +2,7 @@
 OpenVPN 2.3 Backend
 ===================
 
-.. include:: ../_github.rst
+
 
 The ``OpenVpn`` backend allows to generate OpenVPN 2.3.x compatible configurations.
 

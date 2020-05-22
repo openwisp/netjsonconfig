@@ -1,7 +1,7 @@
 Motivations and Goals
 =====================
 
-.. include:: ../_github.rst
+
 
 In this page we explain the goals of this project and the motivations
 that led us on this path.
