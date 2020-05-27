@@ -408,3 +408,38 @@ config wifi-iface 'wifi_wlan0'
             OpenWrt(templates=[])
         with self.assertRaises(ValueError):
             OpenWrt(context=[])
+
+    def test_override_file(self):
+        o = OpenWrt({
+            "files": [
+                {
+                    "path": "/etc/crontabs/root",
+                    "mode": "0644",
+                    "contents": "*/5 * * * * /command1\n*/5 * * * * /command2"
+                }
+            ]
+        }, templates=[
+            {
+                "files": [
+                    {
+                        "path": "/etc/crontabs/root",
+                        "mode": "0644",
+                        "contents": "*/5 * * * * /command1"
+                    }
+                ]
+            }
+        ])
+        expected = """
+# ---------- files ---------- #
+
+# path: /etc/crontabs/root
+# mode: 0644
+
+*/5 * * * * /command1
+*/5 * * * * /command2
+
+"""
+        self.assertEqual(o.render(), expected)
+        # ensure the additional files are there present in the tar.gz archive
+        tar = tarfile.open(fileobj=o.generate(), mode='r')
+        self.assertEqual(len(tar.getmembers()), 1)

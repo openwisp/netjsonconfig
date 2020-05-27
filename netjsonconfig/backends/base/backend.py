@@ -107,6 +107,15 @@ class BaseBackend(object):
             output += file_output
         return output
 
+    def _deduplicate_files(self):
+        files = self.config.get('files', [])
+        if not files:
+            return
+        files_dict = OrderedDict()
+        for file in files:
+            files_dict[file['path']] = file
+        self.config['files'] = list(files_dict.values())
+
     def validate(self):
         try:
             Draft4Validator(self.schema, format_checker=draft4_format_checker).validate(self.config)
@@ -125,6 +134,7 @@ class BaseBackend(object):
         # convert NetJSON config to intermediate data structure
         if self.intermediate_data is None:
             self.to_intermediate()
+        self._deduplicate_files()
         # support multiple renderers
         renderers = getattr(self, 'renderers', None) or [self.renderer]
         # convert intermediate data structure to native configuration
