@@ -97,7 +97,7 @@ tls-server
                 "mode": "server",
                 "name": "test-1",
                 "proto": "udp",
-                "tls_server": True
+                "tls_server": True,
             },
             {
                 "ca": "ca.pem",
@@ -110,8 +110,8 @@ tls-server
                 "name": "test-2",
                 "port": 1195,
                 "proto": "udp",
-                "tls_server": True
-            }
+                "tls_server": True,
+            },
         ]
     }
     _multiple_vpn_text = """# openvpn config: test-1
@@ -146,15 +146,9 @@ tls-server
 
     def test_parse_tar_bytesio(self):
         conf = deepcopy(self._multiple_vpn)
-        conf.update({
-            "files": [
-                {
-                    "path": "/etc/dummy",
-                    "mode": "0644",
-                    "contents": "testing!"
-                }
-            ]
-        })
+        conf.update(
+            {"files": [{"path": "/etc/dummy", "mode": "0644", "contents": "testing!"}]}
+        )
         tar = OpenVpn(conf).generate()
         o = OpenVpn(native=tar)
         self.assertDictEqual(o.config, self._multiple_vpn)

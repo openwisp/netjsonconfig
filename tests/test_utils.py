@@ -1,115 +1,59 @@
 import unittest
 
-from netjsonconfig.utils import (evaluate_vars, get_copy, merge_config,
-                                 merge_list)
+from netjsonconfig.utils import evaluate_vars, get_copy, merge_config, merge_list
 
 
 class TestUtils(unittest.TestCase):
     """
     tests for netjsonconfig.utils
     """
+
     def test_merge_config(self):
         template = {"a": "a", "c": "template"}
         config = {"b": "b", "c": "config"}
         result = merge_config(template, config)
-        self.assertEqual(result, {
-            "a": "a",
-            "b": "b",
-            "c": "config"
-        })
+        self.assertEqual(result, {"a": "a", "b": "b", "c": "config"})
 
     def test_merge_config_dict(self):
         template = {
             "dict": {"a": "a"},
         }
-        config = {
-            "dict": {"b": "b"},
-            "key": "val"
-        }
+        config = {"dict": {"b": "b"}, "key": "val"}
         result = merge_config(template, config)
-        self.assertEqual(result, {
-            "dict": {
-                "a": "a",
-                "b": "b"
-            },
-            "key": "val"
-        })
+        self.assertEqual(result, {"dict": {"a": "a", "b": "b"}, "key": "val"})
 
     def test_merge_config_list(self):
-        template = {
-            "list": ["element1"]
-        }
-        config = {
-            "list": ["element2"]
-        }
+        template = {"list": ["element1"]}
+        config = {"list": ["element2"]}
         result = merge_config(template, config)
-        self.assertEqual(result, {
-            "list": [
-                "element1",
-                "element2"
-            ]
-        })
+        self.assertEqual(result, {"list": ["element1", "element2"]})
 
     def test_merge_originals_unchanged(self):
-        template = {
-            "str": "original",
-            "dict": {"a": "a"},
-            "list": ["element1"]
-        }
-        config = {
-            "str": "changed",
-            "dict": {"b": "b"},
-            "list": ["element2"]
-        }
+        template = {"str": "original", "dict": {"a": "a"}, "list": ["element1"]}
+        config = {"str": "changed", "dict": {"b": "b"}, "list": ["element2"]}
         merge_config(template, config)
         # ensure original structures not changed
-        self.assertEqual(template, {
-            "str": "original",
-            "dict": {"a": "a"},
-            "list": ["element1"]
-        })
-        self.assertEqual(config, {
-            "str": "changed",
-            "dict": {"b": "b"},
-            "list": ["element2"]
-        })
+        self.assertEqual(
+            template, {"str": "original", "dict": {"a": "a"}, "list": ["element1"]}
+        )
+        self.assertEqual(
+            config, {"str": "changed", "dict": {"b": "b"}, "list": ["element2"]}
+        )
 
     def test_merge_list_of_dicts_unchanged(self):
-        template = {
-            "list": [
-                {"a": "original"},
-                {"b": "original"}
-            ]
-        }
-        config = {
-            "list": [
-                {"c": "original"}
-            ]
-        }
+        template = {"list": [{"a": "original"}, {"b": "original"}]}
+        config = {"list": [{"c": "original"}]}
         result = merge_config(template, config)
         template['list'][0]['a'] = 'changed'
         config['list'][0]['c'] = 'changed'
         result['list'][1]['b'] = 'changed'
         # ensure originals changed
         # but not result of merge
-        self.assertEqual(template, {
-            "list": [
-                {"a": "changed"},
-                {"b": "original"}
-            ]
-        })
-        self.assertEqual(config, {
-            "list": [
-                {"c": "changed"}
-            ]
-        })
-        self.assertEqual(result, {
-            "list": [
-                {"a": "original"},
-                {"b": "changed"},
-                {"c": "original"}
-            ]
-        })
+        self.assertEqual(template, {"list": [{"a": "changed"}, {"b": "original"}]})
+        self.assertEqual(config, {"list": [{"c": "changed"}]})
+        self.assertEqual(
+            result, {"list": [{"a": "original"}, {"b": "changed"}, {"c": "original"}]}
+        )
 
     def test_evaluate_vars(self):
         self.assertEqual(evaluate_vars('{{ tz }}', {'tz': 'UTC'}), 'UTC')
@@ -160,7 +104,9 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(output, 'a,b')
 
     def test_evaluate_vars_multiple_immersed(self):
-        output = evaluate_vars('content{{a}}content{{ b }}content', {'a': 'A', 'b': 'B'})
+        output = evaluate_vars(
+            'content{{a}}content{{ b }}content', {'a': 'A', 'b': 'B'}
+        )
         self.assertEqual(output, 'contentAcontentBcontent')
 
     def test_evaluate_vars_immersed(self):
@@ -178,15 +124,11 @@ class TestUtils(unittest.TestCase):
 
     def test_merge_list_union_and_override(self):
         template = [{"id": "test1", "a": "a"}]
-        config = [
-            {"id": "test1", "a": "0", "b": "b"},
-            {"id": "test2", "c": "c"}
-        ]
+        config = [{"id": "test1", "a": "0", "b": "b"}, {"id": "test2", "c": "c"}]
         result = merge_list(template, config, ['id'])
-        self.assertEqual(result, [
-            {"id": "test1", "a": "0", "b": "b"},
-            {"id": "test2", "c": "c"}
-        ])
+        self.assertEqual(
+            result, [{"id": "test1", "a": "0", "b": "b"}, {"id": "test2", "c": "c"}]
+        )
 
     def test_merge_list_config_value(self):
         template = [{"config_value": "test1", "tx": 1}]

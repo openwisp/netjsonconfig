@@ -10,6 +10,7 @@ class OpenWisp(OpenWrt):
     """
     OpenWISP 1.x Firmware (legacy) Configuration Backend
     """
+
     schema = schema
 
     def validate(self):
@@ -26,8 +27,9 @@ class OpenWisp(OpenWrt):
             radio.setdefault('disabled', False)
 
     def _render_template(self, template, context=None):
-        openwisp_env = Environment(loader=PackageLoader(self.__module__, 'templates'),
-                                   trim_blocks=True)
+        openwisp_env = Environment(
+            loader=PackageLoader(self.__module__, 'templates'), trim_blocks=True
+        )
         template = openwisp_env.get_template(template)
         context = context or {}
         return template.render(**context)
@@ -69,11 +71,13 @@ class OpenWisp(OpenWrt):
                 cron = True
                 break
         # return context
-        return dict(hostname=config['general']['hostname'],  # hostname is required
-                    l2vpn=l2vpn,
-                    bridges=bridges,
-                    radios=config.get('radios', []),  # radios might be empty
-                    cron=cron)
+        return dict(
+            hostname=config['general']['hostname'],  # hostname is required
+            l2vpn=l2vpn,
+            bridges=bridges,
+            radios=config.get('radios', []),  # radios might be empty
+            cron=cron,
+        )
 
     def _add_install(self, context):
         """
@@ -82,11 +86,9 @@ class OpenWisp(OpenWrt):
         contents = self._render_template('install.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add install.sh to list of included files
-        self._add_unique_file({
-            "path": "/install.sh",
-            "contents": contents,
-            "mode": "755"
-        })
+        self._add_unique_file(
+            {"path": "/install.sh", "contents": contents, "mode": "755"}
+        )
 
     def _add_uninstall(self, context):
         """
@@ -95,11 +97,9 @@ class OpenWisp(OpenWrt):
         contents = self._render_template('uninstall.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add uninstall.sh to list of included files
-        self._add_unique_file({
-            "path": "/uninstall.sh",
-            "contents": contents,
-            "mode": "755"
-        })
+        self._add_unique_file(
+            {"path": "/uninstall.sh", "contents": contents, "mode": "755"}
+        )
 
     def _add_openvpn_scripts(self):
         l2vpn = []
@@ -115,17 +115,21 @@ class OpenWisp(OpenWrt):
         # add scripts
         for vpn in l2vpn:
             if vpn.get('up'):
-                self._add_unique_file({
-                    "path": "/openvpn/{0}".format(vpn['up']),
-                    "contents": self._render_template('vpn_script_up.sh'),
-                    "mode": "755"
-                })
+                self._add_unique_file(
+                    {
+                        "path": "/openvpn/{0}".format(vpn['up']),
+                        "contents": self._render_template('vpn_script_up.sh'),
+                        "mode": "755",
+                    }
+                )
             if vpn.get('down'):
-                self._add_unique_file({
-                    "path": "/openvpn/{0}".format(vpn['down']),
-                    "contents": self._render_template('vpn_script_down.sh'),
-                    "mode": "755"
-                })
+                self._add_unique_file(
+                    {
+                        "path": "/openvpn/{0}".format(vpn['down']),
+                        "contents": self._render_template('vpn_script_down.sh'),
+                        "mode": "755",
+                    }
+                )
 
     def _add_tc_script(self):
         """
@@ -137,11 +141,9 @@ class OpenWisp(OpenWrt):
         contents = self._render_template('tc_script.sh', context)
         self.config.setdefault('files', [])  # file list might be empty
         # add tc_script.sh to list of included files
-        self._add_unique_file({
-            "path": "/tc_script.sh",
-            "contents": contents,
-            "mode": "755"
-        })
+        self._add_unique_file(
+            {"path": "/tc_script.sh", "contents": contents, "mode": "755"}
+        )
 
     def _generate_contents(self, tar):
         """
@@ -161,9 +163,11 @@ class OpenWisp(OpenWrt):
             package_name = lines[0]
             text_contents = '\n'.join(lines[2:])
             text_contents = 'package {0}\n\n{1}'.format(package_name, text_contents)
-            self._add_file(tar=tar,
-                           name='uci/{0}.conf'.format(package_name),
-                           contents=text_contents)
+            self._add_file(
+                tar=tar,
+                name='uci/{0}.conf'.format(package_name),
+                contents=text_contents,
+            )
         # prepare template context for install and uninstall scripts
         template_context = self._get_install_context()
         # add install.sh to included files

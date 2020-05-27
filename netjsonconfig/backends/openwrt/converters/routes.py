@@ -18,14 +18,16 @@ class Routes(OpenWrtConverter):
     def __intermediate_route(self, route, index):
         network = ip_interface(route.pop('destination'))
         target = network.ip if network.version == 4 else network.network
-        route.update({
-            '.type': 'route{0}'.format('6' if network.version == 6 else ''),
-            '.name': route.pop('name', None) or self.__get_auto_name(index),
-            'interface': route.pop('device'),
-            'target': str(target),
-            'gateway': route.pop('next'),
-            'metric': route.pop('cost'),
-        })
+        route.update(
+            {
+                '.type': 'route{0}'.format('6' if network.version == 6 else ''),
+                '.name': route.pop('name', None) or self.__get_auto_name(index),
+                'interface': route.pop('device'),
+                'target': str(target),
+                'gateway': route.pop('next'),
+                'metric': route.pop('cost'),
+            }
+        )
         if network.version == 4:
             route['netmask'] = str(network.netmask)
         return self.sorted_dict(route)
@@ -48,11 +50,15 @@ class Routes(OpenWrtConverter):
         network = route.pop('target')
         if 'netmask' in route:
             network = '{0}/{1}'.format(network, route.pop('netmask'))
-        route.update({
-            "device": route.pop('interface'),
-            "destination": str(ip_interface(network)),
-            "next": route.pop('gateway'),
-            "cost": route.pop('metric', self._schema['properties']['cost']['default'])
-        })
+        route.update(
+            {
+                "device": route.pop('interface'),
+                "destination": str(ip_interface(network)),
+                "next": route.pop('gateway'),
+                "cost": route.pop(
+                    'metric', self._schema['properties']['cost']['default']
+                ),
+            }
+        )
         del route['.type']
         return self.type_cast(route)

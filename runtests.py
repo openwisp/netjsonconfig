@@ -14,4 +14,5 @@ if __name__ == "__main__":
     result = nose2.discover()
     if result is False:
         import sys
+
         sys.exit(1)

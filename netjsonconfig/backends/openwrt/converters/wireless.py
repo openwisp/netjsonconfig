@@ -21,11 +21,12 @@ class Wireless(OpenWrtConverter):
         wireless['disabled'] = interface.get('disabled')
         # add ifname
         wireless['ifname'] = interface['name']
-        wireless.update({
-            '.type': 'wifi-iface',
-            '.name': wireless.pop('id', None) or
-                     self.__get_auto_name(interface),
-        })
+        wireless.update(
+            {
+                '.type': 'wifi-iface',
+                '.name': wireless.pop('id', None) or self.__get_auto_name(interface),
+            }
+        )
         # rename radio to device
         wireless['device'] = wireless.pop('radio')
         # mac address override
@@ -37,14 +38,14 @@ class Wireless(OpenWrtConverter):
             'station': 'sta',
             'adhoc': 'adhoc',
             'monitor': 'monitor',
-            '802.11s': 'mesh'
+            '802.11s': 'mesh',
         }
         wireless['mode'] = modes[wireless['mode']]
         # map advanced 802.11 netjson attributes to UCI
         wifi_options = {
             'ack_distance': 'distance',
             'rts_threshold': 'rts',
-            'frag_threshold': 'frag'
+            'frag_threshold': 'frag',
         }
         for netjson_key, uci_key in wifi_options.items():
             value = wireless.pop(netjson_key, None)
@@ -64,9 +65,9 @@ class Wireless(OpenWrtConverter):
             # get network, default to ifname
             network = interface.get('network', interface['name'])
             wireless['network'] = [network]
-        wireless['network'] = ' '.join(wireless['network'])\
-                                 .replace('.', '_')\
-                                 .replace('-', '_')
+        wireless['network'] = (
+            ' '.join(wireless['network']).replace('.', '_').replace('-', '_')
+        )
         return self.sorted_dict(wireless)
 
     def __get_auto_name(self, interface):
@@ -85,7 +86,7 @@ class Wireless(OpenWrtConverter):
             'wpa_enterprise': 'wpa',
             'wpa2_enterprise': 'wpa2',
             'wpa_enterprise_mixed': 'wpa-mixed',
-            'wps': 'psk'
+            'wps': 'psk',
         }
         # if encryption disabled return empty dict
         if not encryption or disabled or encryption['protocol'] == 'none':
@@ -118,10 +119,7 @@ class Wireless(OpenWrtConverter):
         interface = self.__get_netjson_interface(block)
         if not interface:
             is_new = True
-            interface = {
-                'name': block['ifname'],
-                'type': 'wireless'
-            }
+            interface = {'name': block['ifname'], 'type': 'wireless'}
         wifi = self.__netjson_wifi(block, interface)
         interface['wireless'] = wifi
         if is_new:
@@ -141,14 +139,14 @@ class Wireless(OpenWrtConverter):
             'sta': 'station',
             'adhoc': 'adhoc',
             'monitor': 'monitor',
-            'mesh': '802.11s'
+            'mesh': '802.11s',
         }
         wifi['mode'] = modes[wifi['mode']]
         # convert 802.11 UCI attributes to NetJSON
         wifi_options = {
             'distance': 'ack_distance',
             'rts': 'rts_threshold',
-            'frag': 'frag_threshold'
+            'frag': 'frag_threshold',
         }
         for uci_key, netjson_key in wifi_options.items():
             if uci_key not in wifi:
@@ -175,17 +173,42 @@ class Wireless(OpenWrtConverter):
         if 'wds' in wifi:
             wifi['wds'] = wifi['wds'] == '1'
 
-    _encryption_keys = ['key', 'server', 'port', 'wpa_group_rekey',
-                        'auth_server', 'auth_port', 'auth_secret',
-                        'auth_cache', 'acct_port', 'acct_server',
-                        'nasid', 'ownip', 'dae_client', 'dae_port',
-                        'dae_secret', 'dynamic_vlan', 'vlan_naming',
-                        'vlan_tagged_interface', 'vlan_bridge',
-                        'eap_type', 'auth', 'identity', 'password',
-                        'ca_cert', 'client_cert', 'priv_key',
-                        'priv_key_pwd', 'wps_config', 'wps_device_name',
-                        'wps_device_type', 'wps_label', 'wps_manufacturer',
-                        'wps_pushbutton', 'wps_pin']
+    _encryption_keys = [
+        'key',
+        'server',
+        'port',
+        'wpa_group_rekey',
+        'auth_server',
+        'auth_port',
+        'auth_secret',
+        'auth_cache',
+        'acct_port',
+        'acct_server',
+        'nasid',
+        'ownip',
+        'dae_client',
+        'dae_port',
+        'dae_secret',
+        'dynamic_vlan',
+        'vlan_naming',
+        'vlan_tagged_interface',
+        'vlan_bridge',
+        'eap_type',
+        'auth',
+        'identity',
+        'password',
+        'ca_cert',
+        'client_cert',
+        'priv_key',
+        'priv_key_pwd',
+        'wps_config',
+        'wps_device_name',
+        'wps_device_type',
+        'wps_label',
+        'wps_manufacturer',
+        'wps_pushbutton',
+        'wps_pin',
+    ]
 
     def __netjson_encryption(self, wifi):
         if 'encryption' not in wifi:

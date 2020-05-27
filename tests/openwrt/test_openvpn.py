@@ -49,7 +49,7 @@ class TestOpenVpn(_TabsMixin, unittest.TestCase):
                 "up_delay": 0,
                 "user": "nobody",
                 "username_as_common_name": False,
-                "verb": 3
+                "verb": 3,
             }
         ]
     }
@@ -136,14 +136,8 @@ config openvpn 'test_server'
                 "port": 1195,
                 "proto": "tcp-client",
                 "remote": [
-                    {
-                        "host": "vpn1.test.com",
-                        "port": 1194
-                    },
-                    {
-                        "host": "vpn2.test.com",
-                        "port": 1195
-                    }
+                    {"host": "vpn1.test.com", "port": 1194},
+                    {"host": "vpn2.test.com", "port": 1195},
                 ],
                 "resolv_retry": "infinite",
                 "script_security": 1,
@@ -154,7 +148,7 @@ config openvpn 'test_server'
                 "up": "/home/user/up-command.sh",
                 "up_delay": 10,
                 "user": "nobody",
-                "verb": 1
+                "verb": 1,
             }
         ]
     }
@@ -210,24 +204,29 @@ config openvpn 'test_client'
         self.assertEqual(c.config, self._client_netjson)
 
     def test_no_status_file(self):
-        c = OpenWrt({
-            "openvpn": [{
-                "ca": "ca.pem",
-                "cert": "cert.pem",
-                "dev": "tap0",
-                "dev_type": "tap",
-                "dh": "dh.pem",
-                "disabled": False,
-                "key": "key.pem",
-                "mode": "server",
-                "name": "test-no-status",
-                "proto": "udp",
-                "status": "",
-                "status_version": 1,
-                "tls_server": True
-            }]
-        })
-        expected = self._tabs("""package openvpn
+        c = OpenWrt(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "disabled": False,
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test-no-status",
+                        "proto": "udp",
+                        "status": "",
+                        "status_version": 1,
+                        "tls_server": True,
+                    }
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package openvpn
 
 config openvpn 'test_no_status'
     option ca 'ca.pem'
@@ -240,31 +239,37 @@ config openvpn 'test_no_status'
     option mode 'server'
     option proto 'udp'
     option tls_server '1'
-""")
+"""
+        )
         self.assertEqual(c.render(), expected)
 
     def test_additional_properties(self):
-        c = OpenWrt({
-            "openvpn": [{
-                "ca": "ca.pem",
-                "cert": "cert.pem",
-                "dev": "tap0",
-                "dev_type": "tap",
-                "dh": "dh.pem",
-                "disabled": False,
-                "key": "key.pem",
-                "mode": "server",
-                "name": "test-properties",
-                "proto": "udp",
-                "tls_server": True,
-                "z_falsy": False,
-                "z_list": ["test1", "test2"],
-                "z_number": 5,
-                "z_string": "string",
-                "z_true_val": True,
-            }]
-        })
-        expected = self._tabs("""package openvpn
+        c = OpenWrt(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "disabled": False,
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test-properties",
+                        "proto": "udp",
+                        "tls_server": True,
+                        "z_falsy": False,
+                        "z_list": ["test1", "test2"],
+                        "z_number": 5,
+                        "z_string": "string",
+                        "z_true_val": True,
+                    }
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package openvpn
 
 config openvpn 'test_properties'
     option ca 'ca.pem'
@@ -283,25 +288,31 @@ config openvpn 'test_properties'
     option z_number '5'
     option z_string 'string'
     option z_true_val '1'
-""")
+"""
+        )
         self.assertEqual(c.render(), expected)
 
     def test_enabled_missing(self):
-        c = OpenWrt({
-            "openvpn": [{
-                "ca": "ca.pem",
-                "cert": "cert.pem",
-                "dev": "tap0",
-                "dev_type": "tap",
-                "dh": "dh.pem",
-                "key": "key.pem",
-                "mode": "server",
-                "name": "test-properties",
-                "proto": "udp",
-                "tls_server": True
-            }]
-        })
-        expected = self._tabs("""package openvpn
+        c = OpenWrt(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test-properties",
+                        "proto": "udp",
+                        "tls_server": True,
+                    }
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package openvpn
 
 config openvpn 'test_properties'
     option ca 'ca.pem'
@@ -314,7 +325,8 @@ config openvpn 'test_properties'
     option mode 'server'
     option proto 'udp'
     option tls_server '1'
-""")
+"""
+        )
         self.assertEqual(c.render(), expected)
 
     _server_bridge_netjson = {
@@ -331,7 +343,7 @@ config openvpn 'test_properties'
                 "name": "bridged",
                 "proto": "udp",
                 "server_bridge": "10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254",
-                "tls_server": True
+                "tls_server": True,
             }
         ]
     }
@@ -374,7 +386,7 @@ config openvpn 'bridged'
                 "name": "bridged_proxy",
                 "proto": "udp",
                 "server_bridge": "",
-                "tls_server": True
+                "tls_server": True,
             }
         ]
     }
@@ -417,7 +429,7 @@ config openvpn 'bridged_proxy'
                 "name": "routed",
                 "proto": "udp",
                 "server": "10.8.0.0 255.255.0.0",
-                "tls_server": True
+                "tls_server": True,
             }
         ]
     }
@@ -447,27 +459,30 @@ config openvpn 'routed'
         self.assertEqual(c.config, self._server_bridge_routed_netjson)
 
     def test_render_disabled(self):
-        c = OpenWrt({
-            "openvpn": [
-                {
-                    "ca": "ca.pem",
-                    "cert": "cert.pem",
-                    "dev": "tap0",
-                    "dev_type": "tap",
-                    "dh": "dh.pem",
-                    "disabled": True,
-                    "key": "key.pem",
-                    "mode": "server",
-                    "name": "test_disabled",
-                    "proto": "udp",
-                    "tls_server": True
-                }
-            ]
-        })
+        c = OpenWrt(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "disabled": True,
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test_disabled",
+                        "proto": "udp",
+                        "tls_server": True,
+                    }
+                ]
+            }
+        )
         self.assertIn("option enabled '0'", c.render())
 
     def test_parse_disabled(self):
-        c = OpenWrt(native="""package openvpn
+        c = OpenWrt(
+            native="""package openvpn
 
 config openvpn 'test_disabled'
     option ca 'ca.pem'
@@ -479,11 +494,13 @@ config openvpn 'test_disabled'
     option key 'key.pem'
     option mode 'server'
     option proto 'udp'
-    option tls_server '1'""")
+    option tls_server '1'"""
+        )
         self.assertTrue(c.config['openvpn'][0]['disabled'])
 
     def test_parse_disabled_default(self):
-        c = OpenWrt(native="""package openvpn
+        c = OpenWrt(
+            native="""package openvpn
 
 config openvpn 'test_disabled'
     option ca 'ca.pem'
@@ -494,5 +511,6 @@ config openvpn 'test_disabled'
     option key 'key.pem'
     option mode 'server'
     option proto 'udp'
-    option tls_server '1'""")
+    option tls_server '1'"""
+        )
         self.assertTrue(c.config['openvpn'][0]['disabled'])

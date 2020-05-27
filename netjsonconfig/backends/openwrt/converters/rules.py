@@ -26,11 +26,12 @@ class Rules(OpenWrtConverter):
             dest_net = ip_network(rule['dest'])
         if dest_net or src_net:
             family = dest_net.version if dest_net else src_net.version
-        rule.update({
-            '.type': 'rule{0}'.format(family).replace('4', ''),
-            '.name': rule.pop('name', None) or
-                     self.__get_auto_name(index),
-        })
+        rule.update(
+            {
+                '.type': 'rule{0}'.format(family).replace('4', ''),
+                '.name': rule.pop('name', None) or self.__get_auto_name(index),
+            }
+        )
         return self.sorted_dict(rule)
 
     def __get_auto_name(self, i):

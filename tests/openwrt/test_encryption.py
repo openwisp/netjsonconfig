@@ -19,9 +19,9 @@ class TestEncryption(unittest.TestCase, _TabsMixin):
                     "encryption": {
                         "protocol": "wpa2_personal",
                         "cipher": "tkip+ccmp",
-                        "key": "passphrase012345"
-                    }
-                }
+                        "key": "passphrase012345",
+                    },
+                },
             }
         ]
     }
@@ -64,9 +64,9 @@ config wifi-iface 'wifi_wlan0'
                     "encryption": {
                         "protocol": "wpa_personal_mixed",
                         "cipher": "ccmp",
-                        "key": "passphrase012345"
-                    }
-                }
+                        "key": "passphrase012345",
+                    },
+                },
             }
         ]
     }
@@ -109,9 +109,9 @@ config wifi-iface 'wifi_wlan0'
                     "encryption": {
                         "protocol": "wpa_personal",
                         "cipher": "auto",
-                        "key": "passphrase012345"
-                    }
-                }
+                        "key": "passphrase012345",
+                    },
+                },
             }
         ]
     }
@@ -160,9 +160,9 @@ config wifi-iface 'wifi_wlan0'
                         "acct_server": "192.168.0.2",
                         "acct_port": 1813,
                         "nasid": "2",
-                        "wpa_group_rekey": "350"
-                    }
-                }
+                        "wpa_group_rekey": "350",
+                    },
+                },
             }
         ]
     }
@@ -212,9 +212,9 @@ config wifi-iface 'wifi_wlan0'
                         "protocol": "wpa_enterprise_mixed",
                         "cipher": "auto",
                         "key": "radius_secret",
-                        "server": "192.168.0.1"
-                    }
-                }
+                        "server": "192.168.0.1",
+                    },
+                },
             }
         ]
     }
@@ -259,9 +259,9 @@ config wifi-iface 'wifi_wlan0'
                         "protocol": "wpa_enterprise",
                         "cipher": "ccmp",
                         "key": "radius_secret",
-                        "server": "192.168.0.1"
-                    }
-                }
+                        "server": "192.168.0.1",
+                    },
+                },
             }
         ]
     }
@@ -309,8 +309,8 @@ config wifi-iface 'wifi_wlan0'
                         "eap_type": "tls",
                         "identity": "test-identity",
                         "password": "test-password",
-                    }
-                }
+                    },
+                },
             }
         ]
     }
@@ -356,9 +356,9 @@ config wifi-iface 'wifi_wlan0'
                     "encryption": {
                         "protocol": "wep_open",
                         "key": "wepkey1234567",
-                        "cipher": "auto"
-                    }
-                }
+                        "cipher": "auto",
+                    },
+                },
             }
         ]
     }
@@ -402,9 +402,9 @@ config wifi-iface 'wifi_wlan0'
                     "encryption": {
                         "protocol": "wep_shared",
                         "key": "wepkey1234567",
-                        "cipher": "auto"
-                    }
-                }
+                        "cipher": "auto",
+                    },
+                },
             }
         ]
     }
@@ -437,26 +437,29 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config, self._wep_shared_netjson)
 
     def test_encryption_disabled(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "MyNetwork",
-                        "encryption": {
-                            "disabled": True,
-                            "protocol": "wpa2_personal",
-                            "cipher": "tkip+ccmp",
-                            "key": "passphrase012345"
-                        }
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "MyNetwork",
+                            "encryption": {
+                                "disabled": True,
+                                "protocol": "wpa2_personal",
+                                "cipher": "tkip+ccmp",
+                                "key": "passphrase012345",
+                            },
+                        },
                     }
-                }
-            ]
-        })
-        expected = self._tabs("""package network
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -471,25 +474,29 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyNetwork'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)
 
     def test_no_encryption(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "open",
-                        "encryption": {"protocol": "none"}
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "encryption": {"protocol": "none"},
+                        },
                     }
-                }
-            ]
-        })
-        expected = self._tabs("""package network
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -504,7 +511,8 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'open'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)
 
     _wpa2_80211s_netjson = {
@@ -519,9 +527,9 @@ config wifi-iface 'wifi_wlan0'
                     "encryption": {
                         "protocol": "wpa2_personal",
                         "cipher": "tkip+ccmp",
-                        "key": "passphrase012345"
-                    }
-                }
+                        "key": "passphrase012345",
+                    },
+                },
             }
         ]
     }
@@ -565,9 +573,9 @@ config wifi-iface 'wifi_mesh0'
                     "encryption": {
                         "protocol": "wpa2_personal",
                         "cipher": "auto",
-                        "key": "passphrase012345"
-                    }
-                }
+                        "key": "passphrase012345",
+                    },
+                },
             }
         ]
     }
@@ -612,9 +620,9 @@ config wifi-iface 'wifi_wlan0'
                         "protocol": "wps",
                         "wps_label": False,
                         "wps_pushbutton": True,
-                        "wps_pin": "pin1234"
-                    }
-                }
+                        "wps_pin": "pin1234",
+                    },
+                },
             }
         ]
     }

@@ -20,10 +20,12 @@ class OpenVpnParser(BaseParser):
         for member in tar.getmembers():
             if not member.name.endswith(config_suffix):
                 continue
-            text += '# openvpn config: {name}\n\n{contents}\n'.format(**{
-                'name': member.name.replace(config_suffix, ''),
-                'contents': tar.extractfile(member).read().decode()
-            })
+            text += '# openvpn config: {name}\n\n{contents}\n'.format(
+                **{
+                    'name': member.name.replace(config_suffix, ''),
+                    'contents': tar.extractfile(member).read().decode(),
+                }
+            )
         return self.parse_text(text)
 
     def _get_vpns(self, text):

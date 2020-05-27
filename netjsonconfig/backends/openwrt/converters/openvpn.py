@@ -6,11 +6,13 @@ class OpenVpn(OpenWrtConverter, BaseOpenVpn):
     _uci_types = ['openvpn']
 
     def __intermediate_vpn(self, vpn):
-        vpn.update({
-            '.name': self._get_uci_name(vpn.pop('name')),
-            '.type': 'openvpn',
-            'enabled': not vpn.pop('disabled', False)
-        })
+        vpn.update(
+            {
+                '.name': self._get_uci_name(vpn.pop('name')),
+                '.type': 'openvpn',
+                'enabled': not vpn.pop('disabled', False),
+            }
+        )
         return super().__intermediate_vpn(vpn, remove=[''])
 
     def __netjson_vpn(self, vpn):

@@ -19,41 +19,19 @@ schema = {
         "base_address": {
             "type": "object",
             "additionalProperties": True,
-            "required": [
-                "proto",
-                "family",
-            ],
+            "required": ["proto", "family"],
             "properties": {
-                "proto": {
-                    "title": "protocol",
-                    "type": "string",
-                    "propertyOrder": 1,
-                },
-                "family": {
-                    "type": "string",
-                    "propertyOrder": 2,
-                }
-            }
+                "proto": {"title": "protocol", "type": "string", "propertyOrder": 1},
+                "family": {"type": "string", "propertyOrder": 2},
+            },
         },
         "static_address": {
-            "required": [
-                "address",
-                "mask"
-            ],
+            "required": ["address", "mask"],
             "properties": {
-                "address": {
-                    "type": "string",
-                    "propertyOrder": 3,
-                },
-                "mask": {
-                    "type": "integer",
-                    "propertyOrder": 4,
-                },
-                "gateway": {
-                    "type": "string",
-                    "propertyOrder": 5,
-                }
-            }
+                "address": {"type": "string", "propertyOrder": 3},
+                "mask": {"type": "integer", "propertyOrder": 4},
+                "gateway": {"type": "string", "propertyOrder": 5},
+            },
         },
         "ipv4_address": {
             "title": "ipv4",
@@ -71,19 +49,15 @@ schema = {
                             "maxLength": 15,
                             "format": "ipv4",
                         },
-                        "mask": {
-                            "minimum": 8,
-                            "maxmium": 32,
-                            "default": 24,
-                        },
+                        "mask": {"minimum": 8, "maxmium": 32, "default": 24},
                         "gateway": {
                             "title": "ipv4 gateway",
                             "description": "optional ipv4 gateway",
                             "maxLength": 16,
-                        }
-                    }
-                }
-            ]
+                        },
+                    },
+                },
+            ],
         },
         "ipv6_address": {
             "title": "ipv6",
@@ -92,10 +66,7 @@ schema = {
                 {"$ref": "#/definitions/static_address"},
                 {
                     "type": "object",
-                    "required": [
-                        "address",
-                        "mask"
-                    ],
+                    "required": ["address", "mask"],
                     "properties": {
                         "proto": {"enum": ["static"]},
                         "family": {"enum": ["ipv6"]},
@@ -106,19 +77,15 @@ schema = {
                             "format": "ipv6",
                             "propertyOrder": 3,
                         },
-                        "mask": {
-                            "minimum": 4,
-                            "maxmium": 128,
-                            "default": 64,
-                        },
+                        "mask": {"minimum": 4, "maxmium": 128, "default": 64},
                         "gateway": {
                             "title": "ipv6 gateway",
                             "description": "optional ipv6 gateway",
                             "maxLength": 45,
-                        }
-                    }
-                }
-            ]
+                        },
+                    },
+                },
+            ],
         },
         "dhcp_address": {
             "title": "DHCP",
@@ -128,19 +95,16 @@ schema = {
                     "type": "object",
                     "properties": {
                         "proto": {"enum": ["dhcp"]},
-                        "family": {"enum": ["ipv4", "ipv6"]}
-                    }
-                }
-            ]
+                        "family": {"enum": ["ipv4", "ipv6"]},
+                    },
+                },
+            ],
         },
         "interface_settings": {
             "type": "object",
             "title": "Interface settings",
             "additionalProperties": True,
-            "required": [
-                "name",
-                "type"
-            ],
+            "required": ["name", "type"],
             "properties": {
                 "name": {
                     "type": "string",
@@ -191,10 +155,10 @@ schema = {
                             {"$ref": "#/definitions/dhcp_address"},
                             {"$ref": "#/definitions/ipv4_address"},
                             {"$ref": "#/definitions/ipv6_address"},
-                        ]
-                    }
-                }
-            }
+                        ],
+                    },
+                },
+            },
         },
         "network_interface": {
             "title": "Network interface",
@@ -203,18 +167,13 @@ schema = {
                     "properties": {
                         "type": {
                             "type": "string",
-                            "enum": [
-                                "ethernet",
-                                "virtual",
-                                "loopback",
-                                "other"
-                            ],
+                            "enum": ["ethernet", "virtual", "loopback", "other"],
                             "propertyOrder": 1,
                         }
                     }
                 },
-                {"$ref": "#/definitions/interface_settings"}
-            ]
+                {"$ref": "#/definitions/interface_settings"},
+            ],
         },
         "wireless_interface": {
             "title": "Wireless interface",
@@ -236,25 +195,23 @@ schema = {
                                 {"$ref": "#/definitions/adhoc_wireless_settings"},
                                 {"$ref": "#/definitions/monitor_wireless_settings"},
                                 {"$ref": "#/definitions/mesh_wireless_settings"},
-                            ]
-                        }
+                            ],
+                        },
                     }
                 },
                 {"$ref": "#/definitions/interface_settings"},
-            ]
+            ],
         },
         "bridge_interface": {
             "title": "Bridge interface",
-            "required": [
-                "bridge_members"
-            ],
+            "required": ["bridge_members"],
             "allOf": [
                 {
                     "properties": {
                         "type": {
                             "type": "string",
                             "enum": ["bridge"],
-                            "propertyOrder": 1
+                            "propertyOrder": 1,
                         },
                         "stp": {
                             "type": "boolean",
@@ -272,28 +229,22 @@ schema = {
                             "items": {
                                 "title": "bridged interface",
                                 "type": "string",
-                                "$ref": "#/definitions/interface_settings/properties/name"
-                            }
-                        }
+                                "$ref": "#/definitions/interface_settings/properties/name",
+                            },
+                        },
                     }
                 },
                 {"$ref": "#/definitions/interface_settings"},
-            ]
+            ],
         },
         "base_wireless_settings": {
             "type": "object",
             "title": "Wireless Settings",
             "additionalProperties": True,
             "propertyOrder": 8,
-            "required": [
-                "radio",
-                "mode",
-            ],
+            "required": ["radio", "mode"],
             "properties": {
-                "mode": {
-                    "type": "string",
-                    "propertyOrder": 1,
-                },
+                "mode": {"type": "string", "propertyOrder": 1},
                 "radio": {
                     "type": "string",
                     "description": "reference to one of the elements defined in the \"radios\" section",
@@ -304,7 +255,7 @@ schema = {
                     "type": "integer",
                     "title": "ACK distance",
                     "description": "distance to farthest network member in meters, "
-                                   "if set to 0 this setting will be ignored",
+                    "if set to 0 this setting will be ignored",
                     "minimum": 0,
                     "propertyOrder": 10,
                 },
@@ -312,7 +263,7 @@ schema = {
                     "type": "integer",
                     "title": "RTS threshold",
                     "description": "override RTS/CTS threshold, "
-                                   "if set to 0 this setting won't be overridden",
+                    "if set to 0 this setting won't be overridden",
                     "minimum": 0,
                     "maximum": 2346,
                     "propertyOrder": 11,
@@ -321,12 +272,12 @@ schema = {
                     "type": "integer",
                     "title": "fragmentation threshold",
                     "description": "override default fragmentation threshold, "
-                                   "if set to 0 this setting won't be overridden",
+                    "if set to 0 this setting won't be overridden",
                     "minimum": 0,
                     "maximum": 2346,
                     "propertyOrder": 12,
-                }
-            }
+                },
+            },
         },
         "ssid_wireless_property": {
             "required": ["ssid"],
@@ -337,7 +288,7 @@ schema = {
                     "maxLength": 32,
                     "propertyOrder": 3,
                 }
-            }
+            },
         },
         "hidden_wireless_property": {
             "properties": {
@@ -380,11 +331,11 @@ schema = {
                     "type": "string",
                     "title": "mesh ID",
                     "description": "802.11 mesh ID: if set, the wireless interface "
-                                   "will join this mesh network",
+                    "will join this mesh network",
                     "pattern": "^[^\\s]*$",
                     "propertyOrder": 3,
                 },
-            }
+            },
         },
         "encryption_wireless_property_ap": {
             "properties": {
@@ -399,7 +350,7 @@ schema = {
                         {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wps"},
                         {"$ref": "#/definitions/encryption_wep"},
-                    ]
+                    ],
                 }
             }
         },
@@ -415,7 +366,7 @@ schema = {
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wep"},
-                    ]
+                    ],
                 }
             }
         },
@@ -430,7 +381,7 @@ schema = {
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wep"},
-                    ]
+                    ],
                 }
             }
         },
@@ -441,9 +392,9 @@ schema = {
                     "type": "string",
                     "title": "encryption protocol",
                     "enum": ["none"],
-                    "options": {"enum_titles": ["No encryption"]}
+                    "options": {"enum_titles": ["No encryption"]},
                 }
-            }
+            },
         },
         "encryption_base_settings": {
             "required": ["key"],
@@ -454,37 +405,29 @@ schema = {
                     "title": "encryption protocol",
                     "propertyOrder": 1,
                 },
-                "key": {
-                    "type": "string",
-                    "propertyOrder": 2,
-                },
+                "key": {"type": "string", "propertyOrder": 2},
                 "disabled": {
                     "type": "boolean",
                     "default": False,
                     "format": "checkbox",
                     "propertyOrder": 20,
                 },
-            }
+            },
         },
         "encryption_cipher_property": {
             "properties": {
                 "cipher": {
                     "type": "string",
-                    "enum": [
-                        "auto",
-                        "ccmp",
-                        "tkip",
-                        "tkip+ccmp"
-                    ],
+                    "enum": ["auto", "ccmp", "tkip", "tkip+ccmp"],
                     "options": {
                         "enum_titles": [
                             "auto",
                             "Force CCMP (AES)",
                             "Force TKIP",
-                            "FORCE TKIP and CCMP (AES)"
+                            "FORCE TKIP and CCMP (AES)",
                         ]
                     },
-                    "propertyOrder": 3
+                    "propertyOrder": 3,
                 }
             }
         },
@@ -507,14 +450,12 @@ schema = {
                                     "WPA Personal Mixed Mode",
                                     "WPA Personal",
                                 ]
-                            }
+                            },
                         },
-                        "key": {
-                            "minLength": 8
-                        }
+                        "key": {"minLength": 8},
                     }
-                }
-            ]
+                },
+            ],
         },
         "encryption_wpa_enterprise_base_settings": {
             "properties": {
@@ -533,7 +474,7 @@ schema = {
                             "WPA Enterprise",
                         ]
                     },
-                    "propertyOrder": 1
+                    "propertyOrder": 1,
                 }
             }
         },
@@ -574,9 +515,9 @@ schema = {
                             "default": 1813,
                             "propertyOrder": 8,
                         },
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         },
         "encryption_wpa_enterprise_sta": {
             "title": "WPA2/WPA Enterprise (client)",
@@ -593,14 +534,8 @@ schema = {
                             "options": {"enum_titles": ["EAP-TLS", "EAP-PEAP"]},
                             "propertyOrder": 4,
                         },
-                        "identity": {
-                            "type": "string",
-                            "propertyOrder": 5,
-                        },
-                        "password": {
-                            "type": "string",
-                            "propertyOrder": 6,
-                        },
+                        "identity": {"type": "string", "propertyOrder": 5},
+                        "password": {"type": "string", "propertyOrder": 6},
                         "ca_cert": {
                             "type": "string",
                             "title": "CA certificate (path)",
@@ -620,10 +555,10 @@ schema = {
                             "type": "string",
                             "title": "private key password",
                             "propertyOrder": 10,
-                        }
+                        },
                     }
-                }
-            ]
+                },
+            ],
         },
         "encryption_wep": {
             "title": "WEP (Open System/Shared Key)",
@@ -633,24 +568,15 @@ schema = {
                 {
                     "properties": {
                         "protocol": {
-                            "enum": [
-                                "wep_open",
-                                "wep_shared"
-                            ],
+                            "enum": ["wep_open", "wep_shared"],
                             "options": {
-                                "enum_titles": [
-                                    "WEP Open System",
-                                    "WEP Shared Key"
-                                ]
-                            }
+                                "enum_titles": ["WEP Open System", "WEP Shared Key"]
+                            },
                         },
-                        "key": {
-                            "minLength": 5,
-                            "maxLength": 26
-                        }
+                        "key": {"minLength": 5, "maxLength": 26},
                     }
-                }
-            ]
+                },
+            ],
         },
         "encryption_wps": {
             "title": "WPS (Wireless Protected Setup)",
@@ -677,12 +603,8 @@ schema = {
                     "format": "checkbox",
                     "propertyOrder": 3,
                 },
-                "wps_pin": {
-                    "type": "string",
-                    "title": "PIN",
-                    "propertyOrder": 4,
-                }
-            }
+                "wps_pin": {"type": "string", "title": "PIN", "propertyOrder": 4},
+            },
         },
         "ap_wireless_settings": {
             "title": "Access Point",
@@ -691,7 +613,7 @@ schema = {
                     "properties": {
                         "mode": {
                             "enum": ["access_point"],
-                            "options": {"enum_titles": ["access point"]}
+                            "options": {"enum_titles": ["access point"]},
                         }
                     }
                 },
@@ -700,7 +622,7 @@ schema = {
                 {"$ref": "#/definitions/hidden_wireless_property"},
                 {"$ref": "#/definitions/wds_wireless_property"},
                 {"$ref": "#/definitions/encryption_wireless_property_ap"},
-            ]
+            ],
         },
         "sta_wireless_settings": {
             "title": "Station",
@@ -711,7 +633,7 @@ schema = {
                 {"$ref": "#/definitions/bssid_wireless_property"},
                 {"$ref": "#/definitions/wds_wireless_property"},
                 {"$ref": "#/definitions/encryption_wireless_property_sta"},
-            ]
+            ],
         },
         "adhoc_wireless_settings": {
             "title": "Adhoc",
@@ -720,24 +642,21 @@ schema = {
                     "required": ["bssid"],
                     "properties": {
                         "mode": {"enum": ["adhoc"]},
-                        "bssid": {
-                            "pattern": MAC_PATTERN,
-                            "minLength": 17,
-                        }
-                    }
+                        "bssid": {"pattern": MAC_PATTERN, "minLength": 17},
+                    },
                 },
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/ssid_wireless_property"},
                 {"$ref": "#/definitions/bssid_wireless_property"},
                 {"$ref": "#/definitions/encryption_wireless_property_mesh"},
-            ]
+            ],
         },
         "monitor_wireless_settings": {
             "title": "Monitor",
             "allOf": [
                 {"properties": {"mode": {"enum": ["monitor"]}}},
                 {"$ref": "#/definitions/base_wireless_settings"},
-            ]
+            ],
         },
         "mesh_wireless_settings": {
             "title": "802.11s (mesh)",
@@ -746,42 +665,24 @@ schema = {
                     "properties": {
                         "mode": {
                             "enum": ["802.11s"],
-                            "options": {"enum_titles": ["802.11s (mesh)"]}
+                            "options": {"enum_titles": ["802.11s (mesh)"]},
                         }
                     }
                 },
                 {"$ref": "#/definitions/base_wireless_settings"},
                 {"$ref": "#/definitions/mesh_id_wireless_property"},
                 {"$ref": "#/definitions/encryption_wireless_property_mesh"},
-            ]
+            ],
         },
         "base_radio_settings": {
             "type": "object",
             "additionalProperties": True,
-            "required": [
-                "protocol",
-                "name",
-                "channel",
-                "channel_width",
-            ],
+            "required": ["protocol", "name", "channel", "channel_width"],
             "properties": {
-                "name": {
-                    "type": "string",
-                    "propertyOrder": 1,
-                    "minLength": 3
-                },
-                "protocol": {
-                    "type": "string",
-                    "propertyOrder": 2,
-                },
-                "phy": {
-                    "type": "string",
-                    "propertyOrder": 3,
-                },
-                "channel": {
-                    "type": "integer",
-                    "propertyOrder": 4,
-                },
+                "name": {"type": "string", "propertyOrder": 1, "minLength": 3},
+                "protocol": {"type": "string", "propertyOrder": 2},
+                "phy": {"type": "string", "propertyOrder": 3},
+                "channel": {"type": "integer", "propertyOrder": 4},
                 "channel_width": {
                     "type": "integer",
                     "title": "channel width (mhz)",
@@ -805,39 +706,29 @@ schema = {
                     "default": False,
                     "format": "checkbox",
                     "propertyOrder": 9,
-                }
-            }
+                },
+            },
         },
         "radio_2ghz_channels": {
             "properties": {
-                "channel": {
-                    "enum": channels_2ghz,
-                    "options": {"enum_titles": ['auto']}
-                }
+                "channel": {"enum": channels_2ghz, "options": {"enum_titles": ['auto']}}
             }
         },
         "radio_5ghz_channels": {
             "properties": {
-                "channel": {
-                    "enum": channels_5ghz,
-                    "options": {"enum_titles": ['auto']}
-                }
+                "channel": {"enum": channels_5ghz, "options": {"enum_titles": ['auto']}}
             }
         },
         "radio_2and5_channels": {
             "properties": {
                 "channel": {
                     "enum": channels_2and5,
-                    "options": {"enum_titles": ['auto']}
+                    "options": {"enum_titles": ['auto']},
                 }
             }
         },
-        "radio_legacy_channel_width": {
-            "properties": {"channel_width": {"enum": [20]}}
-        },
-        "radio_n_channel_width": {
-            "properties": {"channel_width": {"enum": [20, 40]}}
-        },
+        "radio_legacy_channel_width": {"properties": {"channel_width": {"enum": [20]}}},
+        "radio_n_channel_width": {"properties": {"channel_width": {"enum": [20, 40]}}},
         "radio_ac_channel_width": {
             "properties": {"channel_width": {"enum": [20, 40, 80, 160]}}
         },
@@ -847,8 +738,8 @@ schema = {
                 {"properties": {"protocol": {"enum": ["802.11b", "802.11g"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_2ghz_channels"},
-                {"$ref": "#/definitions/radio_legacy_channel_width"}
-            ]
+                {"$ref": "#/definitions/radio_legacy_channel_width"},
+            ],
         },
         "radio_80211a_settings": {
             "title": "802.11a (5 GHz legacy)",
@@ -856,8 +747,8 @@ schema = {
                 {"properties": {"protocol": {"enum": ["802.11a"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
-                {"$ref": "#/definitions/radio_legacy_channel_width"}
-            ]
+                {"$ref": "#/definitions/radio_legacy_channel_width"},
+            ],
         },
         "radio_80211gn_settings": {
             "title": "802.11n (2.4 GHz N)",
@@ -866,7 +757,7 @@ schema = {
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_2ghz_channels"},
                 {"$ref": "#/definitions/radio_n_channel_width"},
-            ]
+            ],
         },
         "radio_80211an_settings": {
             "title": "802.11n (5 GHz N)",
@@ -875,7 +766,7 @@ schema = {
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_n_channel_width"},
-            ]
+            ],
         },
         "radio_80211ac_2ghz_settings": {
             "title": "802.11ac (2.4 GHz AC)",
@@ -884,7 +775,7 @@ schema = {
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_2ghz_channels"},
                 {"$ref": "#/definitions/radio_ac_channel_width"},
-            ]
+            ],
         },
         "radio_80211ac_5ghz_settings": {
             "title": "802.11ac (5 GHz AC)",
@@ -893,7 +784,7 @@ schema = {
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_ac_channel_width"},
-            ]
+            ],
         },
     },
     "properties": {
@@ -910,26 +801,20 @@ schema = {
                     "format": "hostname",
                     "propertyOrder": 1,
                 },
-                "timezone": {
-                    "type": "string",
-                    "propertyOrder": 1,
-                },
+                "timezone": {"type": "string", "propertyOrder": 1},
                 "ula_prefix": {
                     "type": "string",
                     "title": "ULA prefix",
                     "description": "IPv6 Unique Local Address prefix",
                     "propertyOrder": 2,
                 },
-                "maintainer": {
-                    "type": "string",
-                    "propertyOrder": 3,
-                },
+                "maintainer": {"type": "string", "propertyOrder": 3},
                 "description": {
                     "type": "string",
                     "description": "description and notes",
                     "propertyOrder": 4,
-                }
-            }
+                },
+            },
         },
         "interfaces": {
             "type": "array",
@@ -942,9 +827,9 @@ schema = {
                 "oneOf": [
                     {"$ref": "#/definitions/network_interface"},
                     {"$ref": "#/definitions/wireless_interface"},
-                    {"$ref": "#/definitions/bridge_interface"}
-                ]
-            }
+                    {"$ref": "#/definitions/bridge_interface"},
+                ],
+            },
         },
         "radios": {
             "type": "array",
@@ -961,8 +846,8 @@ schema = {
                     {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
                     {"$ref": "#/definitions/radio_80211bg_settings"},
                     {"$ref": "#/definitions/radio_80211a_settings"},
-                ]
-            }
+                ],
+            },
         },
         "dns_servers": {
             "title": "DNS Configuration",
@@ -970,10 +855,7 @@ schema = {
             "uniqueItems": True,
             "additionalItems": True,
             "propertyOrder": 4,
-            "items": {
-                "title": "DNS Server",
-                "type": "string"
-            }
+            "items": {"title": "DNS Server", "type": "string"},
         },
         "dns_search": {
             "title": "DNS Search Domains",
@@ -981,11 +863,7 @@ schema = {
             "uniqueItems": True,
             "additionalItems": True,
             "propertyOrder": 5,
-            "items": {
-                "title": "Domain",
-                "type": "string",
-                "format": "hostname"
-            }
+            "items": {"title": "Domain", "type": "string", "format": "hostname"},
         },
         "routes": {
             "type": "array",
@@ -997,40 +875,28 @@ schema = {
                 "type": "object",
                 "title": "Route",
                 "additionalProperties": True,
-                "required": [
-                    "device",
-                    "destination",
-                    "next",
-                    "cost"
-                ],
+                "required": ["device", "destination", "next", "cost"],
                 "properties": {
                     "device": {
                         "type": "string",
                         "description": "interface name of the to which the static route should apply",
                         "propertyOrder": 1,
                     },
-                    "destination": {
-                        "type": "string",
-                        "propertyOrder": 2,
-                    },
+                    "destination": {"type": "string", "propertyOrder": 2},
                     "next": {
                         "title": "next hop",
                         "type": "string",
                         "propertyOrder": 2,
                     },
-                    "cost": {
-                        "type": "integer",
-                        "propertyOrder": 4,
-                        "default": 0,
-                    },
+                    "cost": {"type": "integer", "propertyOrder": 4, "default": 0},
                     "source": {
                         "type": "string",
                         "description": "the preferred source address when sending to destinations "
-                                       "covered by the target (optional)",
+                        "covered by the target (optional)",
                         "propertyOrder": 5,
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         "files": {
             "type": "array",
@@ -1042,11 +908,7 @@ schema = {
                 "type": "object",
                 "title": "File",
                 "additionalProperties": False,
-                "required": [
-                    "path",
-                    "mode",
-                    "contents"
-                ],
+                "required": ["path", "mode", "contents"],
                 "properties": {
                     "path": {
                         "type": "string",
@@ -1068,8 +930,8 @@ schema = {
                         "format": "textarea",
                         "propertyOrder": 3,
                     },
-                }
-            }
-        }
-    }
+                },
+            },
+        },
+    },
 }

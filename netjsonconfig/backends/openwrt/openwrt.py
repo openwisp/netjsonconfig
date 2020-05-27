@@ -9,6 +9,7 @@ class OpenWrt(BaseBackend):
     """
     OpenWRT / LEDE Configuration Backend
     """
+
     schema = schema
     converters = [
         converters.General,
@@ -44,6 +45,8 @@ class OpenWrt(BaseBackend):
             lines = package.split('\n')
             package_name = lines[0]
             text_contents = '\n'.join(lines[2:])
-            self._add_file(tar=tar,
-                           name='{0}{1}'.format(config_path, package_name),
-                           contents=text_contents)
+            self._add_file(
+                tar=tar,
+                name='{0}{1}'.format(config_path, package_name),
+                contents=text_contents,
+            )

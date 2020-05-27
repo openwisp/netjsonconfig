@@ -19,11 +19,13 @@ class General(OpenWrtConverter):
     def __intermediate_system(self, general):
         if not general:
             return None
-        general.update({
-            '.type': 'system',
-            '.name': general.pop('id', 'system'),
-            'hostname': general.get('hostname', 'OpenWRT'),
-        })
+        general.update(
+            {
+                '.type': 'system',
+                '.name': general.pop('id', 'system'),
+                'hostname': general.get('hostname', 'OpenWRT'),
+            }
+        )
         if 'timezone' in general:
             general['zonename'] = general['timezone']
             general['timezone'] = timezones[general['timezone']]
@@ -34,7 +36,7 @@ class General(OpenWrtConverter):
             ula = {
                 '.type': 'globals',
                 '.name': general.pop('globals_id', 'globals'),
-                'ula_prefix': general.pop('ula_prefix')
+                'ula_prefix': general.pop('ula_prefix'),
             }
             return [self.sorted_dict(ula)]
         return None

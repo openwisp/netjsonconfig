@@ -14,10 +14,7 @@ class Radios(OpenWrtConverter):
         return result
 
     def __intermediate_radio(self, radio):
-        radio.update({
-            '.type': 'wifi-device',
-            '.name': radio.pop('name'),
-        })
+        radio.update({'.type': 'wifi-device', '.name': radio.pop('name')})
         # rename tx_power to txpower
         if 'tx_power' in radio:
             radio['txpower'] = radio.pop('tx_power')

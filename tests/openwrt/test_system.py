@@ -9,10 +9,7 @@ from netjsonconfig.utils import _TabsMixin
 class TestSystem(unittest.TestCase, _TabsMixin):
     maxDiff = None
     _system_netjson = {
-        "general": {
-            "hostname": "test-system",
-            "timezone": "Europe/Rome",
-        }
+        "general": {"hostname": "test-system", "timezone": "Europe/Rome"}
     }
     _system_uci = """package system
 
@@ -48,11 +45,7 @@ config system 'system'
         self.assertEqual(o.config, self._system_simple_netjson)
 
     _system_id_netjson = {
-        "general": {
-            "id": "arbitrary",
-            "hostname": "test-system",
-            "timezone": "UTC",
-        }
+        "general": {"id": "arbitrary", "hostname": "test-system", "timezone": "UTC"}
     }
     _system_id_uci = """package system
 
@@ -72,12 +65,14 @@ config system 'arbitrary'
         self.assertEqual(o.render(), expected)
 
     def test_parse_system_timezone(self):
-        native = self._tabs("""package system
+        native = self._tabs(
+            """package system
 
 config system 'system'
     option hostname 'test-system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
-""")
+"""
+        )
         o = OpenWrt(native=native)
         expected = {
             "general": {
@@ -95,8 +90,8 @@ config system 'system'
                 "0.openwrt.pool.ntp.org",
                 "1.openwrt.pool.ntp.org",
                 "2.openwrt.pool.ntp.org",
-                "3.openwrt.pool.ntp.org"
-            ]
+                "3.openwrt.pool.ntp.org",
+            ],
         }
     }
     _ntp_uci = """package system
@@ -120,11 +115,7 @@ config timeserver 'ntp'
         self.assertEqual(o.config, self._ntp_netjson)
 
     _ntp_id_netjson = {
-        "ntp": {
-            "id": "arbitrary_id",
-            "enabled": False,
-            "enable_server": False,
-        }
+        "ntp": {"id": "arbitrary_id", "enabled": False, "enable_server": False}
     }
     _ntp_id_uci = """package system
 
@@ -157,7 +148,7 @@ config timeserver 'arbitrary_id'
                 "trigger": "phy0tpt",
                 "default": False,
                 "delayoff": 1,
-                "delayon": 5
+                "delayon": 5,
             },
             {
                 "id": "arbitrary_id",
@@ -166,7 +157,7 @@ config timeserver 'arbitrary_id'
                 "trigger": "usbdev",
                 "dev": "1-1.2",
                 "interval": 50,
-            }
+            },
         ]
     }
     _led_uci = """package system

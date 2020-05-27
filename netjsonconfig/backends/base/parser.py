@@ -1,4 +1,3 @@
-
 from netjsonconfig.exceptions import ParseError
 
 
@@ -8,6 +7,7 @@ class BaseParser(object):
     Parsers are used to parse a string or tar.gz
     which represents the router configuration
     """
+
     def __init__(self, config):
         if isinstance(config, str):
             data = self.parse_text(config)

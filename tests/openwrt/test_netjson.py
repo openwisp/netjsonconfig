@@ -8,20 +8,20 @@ netjson_example = {
         "hostname": "DeviceNameExample",
         "maintainer": "email@example.org",
         "description": "general info here",
-        "ula_prefix": "fd8e:f40a:6701::/48"
+        "ula_prefix": "fd8e:f40a:6701::/48",
     },
     "hardware": {
         "manufacturer": "Example inc.",
         "model": "Example model",
         "version": 1,
-        "cpu": "Atheros AR2317"
+        "cpu": "Atheros AR2317",
     },
     "operating_system": {
         "name": "OpenWRT",
         "kernel": "3.10.49",
         "version": "Barrier Breaker",
         "revision": "r43321",
-        "description": "OpenWrt Barrier Breaker 14.07"
+        "description": "OpenWrt Barrier Breaker 14.07",
     },
     "radios": [
         {
@@ -46,22 +46,22 @@ netjson_example = {
             "wireless": {
                 "radio": "radio0",
                 "mode": "access_point",
-                "ssid": "ap-ssid-example"
+                "ssid": "ap-ssid-example",
             },
             "addresses": [
                 {
                     "address": "192.168.1.1",
                     "mask": 24,
                     "family": "ipv4",
-                    "proto": "static"
+                    "proto": "static",
                 },
                 {
                     "address": "fe80::216:44ff:fe60:32d2",
                     "mask": 64,
                     "family": "ipv6",
-                    "proto": "static"
-                }
-            ]
+                    "proto": "static",
+                },
+            ],
         },
         {
             "type": "wireless",
@@ -74,16 +74,11 @@ netjson_example = {
                 "radio": "radio0",
                 "mode": "adhoc",
                 "ssid": "adhoc-ssid-example",
-                "bssid": "02:CA:FF:EE:BA:BE"
+                "bssid": "02:CA:FF:EE:BA:BE",
             },
             "addresses": [
-                {
-                    "address": "10.0.1.1",
-                    "mask": 24,
-                    "family": "ipv4",
-                    "proto": "static"
-                }
-            ]
+                {"address": "10.0.1.1", "mask": 24, "family": "ipv4", "proto": "static"}
+            ],
         },
         {
             "type": "ethernet",
@@ -98,21 +93,21 @@ netjson_example = {
                     "mask": 28,
                     "gateway": "176.9.211.209",
                     "family": "ipv4",
-                    "proto": "static"
+                    "proto": "static",
                 },
                 {
                     "address": "2a01:4f8:150:8ffc::214",
                     "mask": 64,
                     "family": "ipv6",
-                    "proto": "static"
+                    "proto": "static",
                 },
                 {
                     "address": "fe80::5054:ff:fe56:46d0",
                     "mask": 64,
                     "family": "ipv6",
-                    "proto": "static"
-                }
-            ]
+                    "proto": "static",
+                },
+            ],
         },
         {
             "type": "ethernet",
@@ -122,15 +117,9 @@ netjson_example = {
             "txqueuelen": 1000,
             "autostart": True,
             "addresses": [
-                {
-                    "proto": "dhcp",
-                    "family": "ipv4"
-                },
-                {
-                    "proto": "dhcp",
-                    "family": "ipv6"
-                }
-            ]
+                {"proto": "dhcp", "family": "ipv4"},
+                {"proto": "dhcp", "family": "ipv6"},
+            ],
         },
         {
             "type": "wireless",
@@ -146,19 +135,13 @@ netjson_example = {
                 "encryption": {
                     "protocol": "wpa_personal_mixed",
                     "cipher": "tkip+ccmp",
-                    "key": "passphrase012345"
-                }
+                    "key": "passphrase012345",
+                },
             },
             "addresses": [
-                {
-                    "proto": "dhcp",
-                    "family": "ipv4"
-                },
-                {
-                    "proto": "dhcp",
-                    "family": "ipv6"
-                }
-            ]
+                {"proto": "dhcp", "family": "ipv4"},
+                {"proto": "dhcp", "family": "ipv6"},
+            ],
         },
         {
             "type": "virtual",
@@ -172,9 +155,9 @@ netjson_example = {
                     "address": "fe80::8029:23ff:fe7d:c214",
                     "mask": 64,
                     "family": "ipv6",
-                    "proto": "static"
+                    "proto": "static",
                 }
-            ]
+            ],
         },
         {
             "type": "virtual",
@@ -182,7 +165,7 @@ netjson_example = {
             "mac": "82:29:23:7d:c2:14",
             "mtu": 1500,
             "txqueuelen": 100,
-            "autostart": True
+            "autostart": True,
         },
         {
             "type": "bridge",
@@ -191,35 +174,22 @@ netjson_example = {
             "mtu": 1500,
             "txqueuelen": 0,
             "autostart": True,
-            "bridge_members": [
-                "wlan0",
-                "vpn.40"
-            ],
+            "bridge_members": ["wlan0", "vpn.40"],
             "addresses": [
                 {
                     "address": "fe80::8029:23ff:fe7d:c214",
                     "mask": 64,
                     "family": "ipv6",
-                    "proto": "static"
+                    "proto": "static",
                 }
-            ]
-        }
+            ],
+        },
     ],
     "routes": [
-        {
-            "device": "eth0",
-            "destination": "10.0.3.1",
-            "next": "10.0.2.1",
-            "cost": 1
-        }
+        {"device": "eth0", "destination": "10.0.3.1", "next": "10.0.2.1", "cost": 1}
     ],
-    "dns_servers": [
-        "10.254.0.1",
-        "10.254.0.2"
-    ],
-    "dns_search": [
-        "domain.com"
-    ]
+    "dns_servers": ["10.254.0.1", "10.254.0.2"],
+    "dns_search": ["domain.com"],
 }
 
 
@@ -228,6 +198,7 @@ class TestNetJson(unittest.TestCase):
     ensures OpenWrt backend is compatible with
     NetJSON DeviceConfiguration example
     """
+
     def test_netjson_example(self):
         o = OpenWrt(netjson_example)
         o.validate()

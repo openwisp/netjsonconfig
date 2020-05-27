@@ -17,6 +17,7 @@ class BaseBackend(object):
     """
     Base Backend class
     """
+
     schema = None
     FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
     list_identifiers = []
@@ -45,8 +46,10 @@ class BaseBackend(object):
         elif native is not None:
             self.parse(native)
         else:
-            raise ValueError('Expecting either config or native argument to be '
-                             'passed during the initialization of the backend')
+            raise ValueError(
+                'Expecting either config or native argument to be '
+                'passed during the initialization of the backend'
+            )
 
     def _load(self, config):
         """
@@ -58,8 +61,9 @@ class BaseBackend(object):
             except ValueError:
                 pass
         if not isinstance(config, dict):
-            raise TypeError('config block must be an istance '
-                            'of dict or a valid NetJSON string')
+            raise TypeError(
+                'config block must be an istance ' 'of dict or a valid NetJSON string'
+            )
         return config
 
     def _merge_config(self, config, templates):
@@ -101,9 +105,11 @@ class BaseBackend(object):
         for f in files:
             mode = f.get('mode', DEFAULT_FILE_MODE)
             # add file to output
-            file_output = '# path: {0}\n'\
-                          '# mode: {1}\n\n'\
-                          '{2}\n\n'.format(f['path'], mode, f['contents'])
+            file_output = (
+                '# path: {0}\n'
+                '# mode: {1}\n\n'
+                '{2}\n\n'.format(f['path'], mode, f['contents'])
+            )
             output += file_output
         return output
 
@@ -118,7 +124,9 @@ class BaseBackend(object):
 
     def validate(self):
         try:
-            Draft4Validator(self.schema, format_checker=draft4_format_checker).validate(self.config)
+            Draft4Validator(self.schema, format_checker=draft4_format_checker).validate(
+                self.config
+            )
         except JsonSchemaError as e:
             raise ValidationError(e)
 
@@ -227,10 +235,12 @@ class BaseBackend(object):
             # remove leading slashes from path
             if path.startswith('/'):
                 path = path[1:]
-            self._add_file(tar=tar,
-                           name=path,
-                           contents=file_item['contents'],
-                           mode=file_item.get('mode', DEFAULT_FILE_MODE))
+            self._add_file(
+                tar=tar,
+                name=path,
+                contents=file_item['contents'],
+                mode=file_item.get('mode', DEFAULT_FILE_MODE),
+            )
 
     def _add_file(self, tar, name, contents, mode=DEFAULT_FILE_MODE):
         """
@@ -272,9 +282,9 @@ class BaseBackend(object):
             if value and isinstance(value, (tuple, list)):  # pragma: nocover
                 value = OrderedDict(value)
             if value:
-                self.intermediate_data = merge_config(self.intermediate_data,
-                                                      value,
-                                                      list_identifiers=['.name'])
+                self.intermediate_data = merge_config(
+                    self.intermediate_data, value, list_identifiers=['.name']
+                )
 
     def parse(self, native):
         """
@@ -301,9 +311,9 @@ class BaseBackend(object):
             converter = converter_class(self)
             value = converter.to_netjson()
             if value:
-                self.config = merge_config(self.config,
-                                           value,
-                                           list_identifiers=self.list_identifiers)
+                self.config = merge_config(
+                    self.config, value, list_identifiers=self.list_identifiers
+                )
         self.__restore_intermediate_data()
         self.validate()
 

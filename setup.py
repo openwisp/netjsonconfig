@@ -7,6 +7,7 @@ from setuptools import find_packages, setup
 # avoid ImportError when dependencies are not installed yet
 sys.path.insert(0, 'netjsonconfig')
 from version import get_version
+
 sys.path.remove('netjsonconfig')
 
 if sys.argv[-1] == 'setup.py':
@@ -31,16 +32,23 @@ def get_install_requires():
     requirements = []
     for line in open('requirements.txt').readlines():
         # skip to next iteration if comment or empty line
-        if line.startswith('#') or line == '' or line.startswith('http') or line.startswith('git'):
+        if (
+            line.startswith('#')
+            or line == ''
+            or line.startswith('http')
+            or line.startswith('git')
+        ):
             continue
         # add line to requirements
         requirements.append(line.replace('\n', ''))
     return requirements
 
 
-description = 'Netjsonconfig is a python library that converts NetJSON DeviceConfiguration '\
-              'objects into real router configurations that can be installed on systems like '\
-              'OpenWRT or OpenWisp Firmware.'
+description = (
+    'Netjsonconfig is a python library that converts NetJSON DeviceConfiguration '
+    'objects into real router configurations that can be installed on systems like '
+    'OpenWRT or OpenWisp Firmware.'
+)
 
 setup(
     name='netjsonconfig',

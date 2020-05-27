@@ -31,11 +31,11 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                             "address": "127.0.0.1",
                             "mask": 8,
                             "proto": "static",
-                            "family": "ipv4"
+                            "family": "ipv4",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         }
         o = OpenWrt(config)
         self.assertEqual(json.loads(o.json()), config)
@@ -72,46 +72,45 @@ class TestBackend(unittest.TestCase, _TabsMixin):
             OpenWrt('NOTJSON[]\{\}')
 
     def test_system_invalid_timezone(self):
-        o = OpenWrt({
-            "general": {
-                "hostname": "test_system",
-                "timezone": "WRONG",
-            }
-        })
+        o = OpenWrt({"general": {"hostname": "test_system", "timezone": "WRONG"}})
         with self.assertRaises(ValidationError):
             o.validate()
 
     def test_schema_radio_wrong_driver(self):
-        o = OpenWrt({
-            "radios": [
-                {
-                    "name": "radio0",
-                    "phy": "phy0",
-                    "driver": "iamwrong",
-                    "protocol": "802.11ac",
-                    "channel": 132,
-                    "channel_width": 80,
-                    "tx_power": 8
-                }
-            ]
-        })
+        o = OpenWrt(
+            {
+                "radios": [
+                    {
+                        "name": "radio0",
+                        "phy": "phy0",
+                        "driver": "iamwrong",
+                        "protocol": "802.11ac",
+                        "channel": 132,
+                        "channel_width": 80,
+                        "tx_power": 8,
+                    }
+                ]
+            }
+        )
         with self.assertRaises(ValidationError):
             o.validate()
 
     def test_schema_radio_wrong_protocol(self):
-        o = OpenWrt({
-            "radios": [
-                {
-                    "name": "radio0",
-                    "phy": "phy0",
-                    "driver": "mac80211",
-                    "protocol": "802.11ad",  # ad is not supported by OpenWRT yet
-                    "channel": 132,
-                    "channel_width": 80,
-                    "tx_power": 8
-                }
-            ]
-        })
+        o = OpenWrt(
+            {
+                "radios": [
+                    {
+                        "name": "radio0",
+                        "phy": "phy0",
+                        "driver": "mac80211",
+                        "protocol": "802.11ad",  # ad is not supported by OpenWRT yet
+                        "channel": 132,
+                        "channel_width": 80,
+                        "tx_power": 8,
+                    }
+                ]
+            }
+        )
         with self.assertRaises(ValidationError):
             o.validate()
 
@@ -125,15 +124,15 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                         "address": "192.168.1.1",
                         "mask": 24,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
                 ],
                 "wireless": {
                     "radio": "radio0",
                     "mode": "access_point",
                     "ssid": "MyWifiAP",
-                    "hidden": True
-                }
+                    "hidden": True,
+                },
             }
         ],
         "radios": [
@@ -144,9 +143,9 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "protocol": "802.11n",
                 "channel": 3,
                 "channel_width": 20,
-                "tx_power": 3
+                "tx_power": 3,
             }
-        ]
+        ],
     }
 
     def test_generate(self):
@@ -156,18 +155,21 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         # network
         network = tar.getmember('etc/config/network')
         contents = tar.extractfile(network).read().decode()
-        expected = self._tabs("""config interface 'wlan0'
+        expected = self._tabs(
+            """config interface 'wlan0'
     option ifname 'wlan0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
 
-""")
+"""
+        )
         self.assertEqual(contents, expected)
         # wireless
         wireless = tar.getmember('etc/config/wireless')
         contents = tar.extractfile(wireless).read().decode()
-        expected = self._tabs("""config wifi-device 'radio0'
+        expected = self._tabs(
+            """config wifi-device 'radio0'
     option channel '3'
     option htmode 'HT20'
     option hwmode '11g'
@@ -182,7 +184,8 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyWifiAP'
-""")
+"""
+        )
         self.assertEqual(contents, expected)
         tar.close()
 
@@ -191,11 +194,7 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.render(), o.render())
 
     def test_write(self):
-        o = OpenWrt({
-            "general": {
-                "hostname": "test"
-            }
-        })
+        o = OpenWrt({"general": {"hostname": "test"}})
         o.write(name='test', path='/tmp')
         tar = tarfile.open('/tmp/test.tar.gz', mode='r')
         self.assertEqual(len(tar.getmembers()), 1)
@@ -203,20 +202,12 @@ config wifi-iface 'wifi_wlan0'
         os.remove('/tmp/test.tar.gz')
 
     def test_templates_type_error(self):
-        config = {
-            "general": {
-                "hostname": "test_templates",
-            }
-        }
+        config = {"general": {"hostname": "test_templates"}}
         with self.assertRaises(TypeError):
             OpenWrt(config, templates={'a': 'a'})
 
     def test_templates_config_error(self):
-        config = {
-            "general": {
-                "hostname": "test_templates",
-            }
-        }
+        config = {"general": {"hostname": "test_templates"}}
         with self.assertRaises(TypeError):
             OpenWrt(config, templates=['O{]O'])
 
@@ -231,9 +222,9 @@ config wifi-iface 'wifi_wlan0'
                             "address": "127.0.0.1",
                             "mask": 8,
                             "proto": "static",
-                            "family": "ipv4"
+                            "family": "ipv4",
                         }
-                    ]
+                    ],
                 }
             ]
         }
@@ -247,15 +238,15 @@ config wifi-iface 'wifi_wlan0'
                             "address": "192.168.1.1",
                             "mask": 24,
                             "proto": "static",
-                            "family": "ipv4"
+                            "family": "ipv4",
                         }
                     ],
                     "wireless": {
                         "radio": "radio0",
                         "mode": "access_point",
                         "ssid": "MyWifiAP",
-                        "hidden": True
-                    }
+                        "hidden": True,
+                    },
                 }
             ],
             "radios": [
@@ -266,15 +257,11 @@ config wifi-iface 'wifi_wlan0'
                     "protocol": "802.11n",
                     "channel": 3,
                     "channel_width": 20,
-                    "tx_power": 3
+                    "tx_power": 3,
                 }
-            ]
+            ],
         }
-        config = {
-            "general": {
-                "hostname": "test_templates",
-            }
-        }
+        config = {"general": {"hostname": "test_templates"}}
         o = OpenWrt(config, templates=[loopback_template, radio_template])
         self.assertEqual(o.config['general']['hostname'], 'test_templates')
         self.assertIn('radios', o.config)
@@ -286,21 +273,19 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config['interfaces'][1]['name'], 'wlan0')
 
     def test_file_inclusion(self):
-        o = OpenWrt({
-            "files": [
-                {
-                    "path": "/etc/crontabs/root",
-                    "mode": "0644",
-                    "contents": '* * * * * echo "test" > /etc/testfile\n'
-                                '* * * * * echo "test2" > /etc/testfile2'
-                },
-                {
-                    "path": "/etc/dummy.conf",
-                    "mode": "0644",
-                    "contents": "testing!"
-                }
-            ]
-        })
+        o = OpenWrt(
+            {
+                "files": [
+                    {
+                        "path": "/etc/crontabs/root",
+                        "mode": "0644",
+                        "contents": '* * * * * echo "test" > /etc/testfile\n'
+                        '* * * * * echo "test2" > /etc/testfile2',
+                    },
+                    {"path": "/etc/dummy.conf", "mode": "0644", "contents": "testing!"},
+                ]
+            }
+        )
         output = o.render()
         self.assertNotIn('package files', output)
         self.assertIn('* * * * * echo', output)
@@ -321,15 +306,17 @@ config wifi-iface 'wifi_wlan0'
         tar.close()
 
     def test_file_permissions(self):
-        o = OpenWrt({
-            "files": [
-                {
-                    "path": "/tmp/hello.sh",
-                    "mode": "0755",
-                    "contents": "echo 'hello world'",
-                }
-            ]
-        })
+        o = OpenWrt(
+            {
+                "files": [
+                    {
+                        "path": "/tmp/hello.sh",
+                        "mode": "0755",
+                        "contents": "echo 'hello world'",
+                    }
+                ]
+            }
+        )
         tar = tarfile.open(fileobj=o.generate(), mode='r')
         script = tar.getmember('tmp/hello.sh')
         # check permissions
@@ -342,7 +329,7 @@ config wifi-iface 'wifi_wlan0'
                 {
                     "path": "/tmp/hello.sh",
                     "mode": "0644",
-                    "contents": "echo 'hello world'"
+                    "contents": "echo 'hello world'",
                 }
             ]
         }
@@ -381,22 +368,10 @@ config wifi-iface 'wifi_wlan0'
 
     def test_override(self):
         config = {
-            "interfaces": [
-                {
-                    "name": "eth0",
-                    "type": "ethernet",
-                    "disabled": False
-                }
-            ]
+            "interfaces": [{"name": "eth0", "type": "ethernet", "disabled": False}]
         }
         template = {
-            "interfaces": [
-                {
-                    "name": "eth0",
-                    "type": "ethernet",
-                    "disabled": True
-                }
-            ]
+            "interfaces": [{"name": "eth0", "type": "ethernet", "disabled": True}]
         }
         o = OpenWrt(config, templates=[template])
         self.assertFalse(o.config['interfaces'][0]['disabled'])
@@ -410,25 +385,28 @@ config wifi-iface 'wifi_wlan0'
             OpenWrt(context=[])
 
     def test_override_file(self):
-        o = OpenWrt({
-            "files": [
-                {
-                    "path": "/etc/crontabs/root",
-                    "mode": "0644",
-                    "contents": "*/5 * * * * /command1\n*/5 * * * * /command2"
-                }
-            ]
-        }, templates=[
+        o = OpenWrt(
             {
                 "files": [
                     {
                         "path": "/etc/crontabs/root",
                         "mode": "0644",
-                        "contents": "*/5 * * * * /command1"
+                        "contents": "*/5 * * * * /command1\n*/5 * * * * /command2",
                     }
                 ]
-            }
-        ])
+            },
+            templates=[
+                {
+                    "files": [
+                        {
+                            "path": "/etc/crontabs/root",
+                            "mode": "0644",
+                            "contents": "*/5 * * * * /command1",
+                        }
+                    ]
+                }
+            ],
+        )
         expected = """
 # ---------- files ---------- #
 

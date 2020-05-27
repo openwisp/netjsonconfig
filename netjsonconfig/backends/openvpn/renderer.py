@@ -5,6 +5,7 @@ class OpenVpnRenderer(BaseRenderer):
     """
     OpenVPN Renderer
     """
+
     def cleanup(self, output):
         # remove indentations
         output = output.replace('    ', '')

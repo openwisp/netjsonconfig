@@ -11,6 +11,7 @@ class BaseConverter(object):
     can be easily rendered as the final router configuration
     and vice versa.
     """
+
     netjson_key = None
     intermediate_key = None
 
@@ -93,7 +94,9 @@ class BaseConverter(object):
         """
         result = OrderedDict()
         # clean intermediate data
-        intermediate_data = self.to_netjson_clean(self.intermediate_data[self.intermediate_key])
+        intermediate_data = self.to_netjson_clean(
+            self.intermediate_data[self.intermediate_key]
+        )
         # intermediate_data = list(self.intermediate_data[self.intermediate_key])
         # iterate over copied intermediate data structure
         for index, block in enumerate(intermediate_data):

@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+rm -rf docs/_build/
+
+openwisp-qa-check --skip-checkmigrations
+
+# test sphinx docs
+mkdir -p docs/source/_static
+sphinx-build -W -b html docs/source docs/_build

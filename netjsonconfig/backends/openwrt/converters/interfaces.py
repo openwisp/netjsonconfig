@@ -22,11 +22,15 @@ class Interfaces(OpenWrtConverter):
             # there is more than one interface
             if i > 1:
                 uci_interface['.name'] = '{name}_{i}'.format(name=uci_name, i=i)
-            uci_interface.update({
-                'dns': self.__intermediate_dns_servers(uci_interface, address),
-                'dns_search': self.__intermediate_dns_search(uci_interface, address),
-                'proto': self.__intermediate_proto(uci_interface, address),
-            })
+            uci_interface.update(
+                {
+                    'dns': self.__intermediate_dns_servers(uci_interface, address),
+                    'dns_search': self.__intermediate_dns_search(
+                        uci_interface, address
+                    ),
+                    'proto': self.__intermediate_proto(uci_interface, address),
+                }
+            )
             uci_interface = self.__intermediate_bridge(uci_interface, i)
             if address:
                 uci_interface.update(address)
@@ -83,11 +87,9 @@ class Interfaces(OpenWrtConverter):
         converts NetJSON interface to
         UCI intermediate data structure
         """
-        interface.update({
-            '.type': 'interface',
-            '.name': uci_name,
-            'ifname': interface.pop('name')
-        })
+        interface.update(
+            {'.type': 'interface', '.name': uci_name, 'ifname': interface.pop('name')}
+        )
         if 'network' in interface:
             del interface['network']
         if 'mac' in interface:
@@ -273,12 +275,14 @@ class Interfaces(OpenWrtConverter):
     def __netjson_address(self, address, interface):
         ip = ip_interface(address)
         family = 'ipv{0}'.format(ip.version)
-        netjson = OrderedDict((
-            ('address', str(ip.ip)),
-            ('mask', ip.network.prefixlen),
-            ('proto', 'static'),
-            ('family', family)
-        ))
+        netjson = OrderedDict(
+            (
+                ('address', str(ip.ip)),
+                ('mask', ip.network.prefixlen),
+                ('proto', 'static'),
+                ('family', family),
+            )
+        )
         uci_gateway_key = 'gateway' if family == 'ipv4' else 'ip6gw'
         gateway = interface.get(uci_gateway_key, None)
         if gateway and ip_address(gateway) in ip.network:
@@ -297,10 +301,7 @@ class Interfaces(OpenWrtConverter):
             None
 
     def __netjson_dns(self, interface, result):
-        key_mapping = {
-            'dns': 'dns_servers',
-            'dns_search': 'dns_search'
-        }
+        key_mapping = {'dns': 'dns_servers', 'dns_search': 'dns_search'}
         for uci_key, netjson_key in key_mapping.items():
             if uci_key not in interface:
                 continue
