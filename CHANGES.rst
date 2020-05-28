@@ -1,6 +1,13 @@
 Change log
 ==========
 
+Version 0.8.1 [2020-05-28]
+--------------------------
+
+- Fixed bug that prevented overriding the contents of a file present
+  in a template and caused the file to be duplicated instead of overwritten
+- Fixed bug affecting backward conversion of switch VLAN on OpenWRT
+
 Version 0.8.0 [2020-04-03]
 --------------------------
 
