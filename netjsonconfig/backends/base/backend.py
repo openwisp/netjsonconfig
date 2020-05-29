@@ -62,7 +62,7 @@ class BaseBackend(object):
                 pass
         if not isinstance(config, dict):
             raise TypeError(
-                'config block must be an istance ' 'of dict or a valid NetJSON string'
+                'config block must be an instance of dict or a valid NetJSON string'
             )
         return config
 
