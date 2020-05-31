@@ -11,11 +11,19 @@ netjsonconfig
    :target: https://requires.io/github/openwisp/netjsonconfig/requirements/?branch=master
    :alt: Requirements Status
 
+.. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
+   :target: https://gitter.im/openwisp/general
+
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
    :target: http://badge.fury.io/py/netjsonconfig
    
-.. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
-   :target: https://gitter.im/openwisp/general
+.. image:: https://pepy.tech/badge/netjsonconfig
+   :target: https://pepy.tech/project/netjsonconfig
+   :alt: downloads
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://pypi.org/project/black/
+   :alt: code style: black
 
 ------------
 
