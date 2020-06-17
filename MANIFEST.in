@@ -2,3 +2,4 @@ include LICENSE README.rst requirements.txt
 recursive-include netjsonconfig *
 recursive-exclude * *.pyc *.swp
 recursive-exclude * __pycache__
+recursive-exclude tests *
