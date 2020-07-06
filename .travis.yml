@@ -13,8 +13,6 @@ branches:
 before_install:
   - pip install -U pip setuptools wheel
   - pip install -r requirements-test.txt
-  # temporary: remove when openwisp-utils 0.5.0 is released
-  - pip install -U https://github.com/openwisp/openwisp-utils/tarball/master#egg=openwisp_utils[qa]
 
 install:
   - python setup.py -q develop
