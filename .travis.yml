@@ -21,7 +21,7 @@ before_script:
   - ./run-qa-checks
 
 script:
-  - nose2 --with-coverage --coverage=netjsonconfig
+  - coverage run -a --source=netjsonconfig runtests.py
 
 after_success:
   coveralls
