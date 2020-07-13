@@ -229,12 +229,14 @@ schema = merge_config(
                             "title": "source subnet",
                             "description": "(CIDR notation)",
                             "propertyOrder": 3,
+                            "format": "cidr",
                         },
                         "dest": {
                             "type": "string",
                             "title": "destination subnet",
                             "description": "(CIDR notation)",
                             "propertyOrder": 4,
+                            "format": "cidr",
                         },
                         "tos": {
                             "type": "integer",

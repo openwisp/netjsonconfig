@@ -1,4 +1,5 @@
 import gzip
+import ipaddress
 import json
 import tarfile
 from collections import OrderedDict
@@ -121,6 +122,14 @@ class BaseBackend(object):
         for file in files:
             files_dict[file['path']] = file
         self.config['files'] = list(files_dict.values())
+
+    @draft4_format_checker.checks('cidr', AssertionError)
+    def _cidr_notation(value):
+        try:
+            ipaddress.ip_network(value)
+        except ValueError as e:
+            assert False, str(e)
+        return True
 
     def validate(self):
         try:

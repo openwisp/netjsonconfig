@@ -1,6 +1,7 @@
 import unittest
 
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -217,37 +218,28 @@ config rule 'rule1'
                     "in": "eth0",
                     "out": "eth1",
                     "src": "wrong",
-                    "dest": "wrong",
+                    "dest": "wrong1",
                     "tos": 2,
-                    "action": "blackhole"
+                    "action": "blackhole",
                 }
             ]
         }
         o = OpenWrt(rule)
-        try:
+        with self.assertRaisesRegex(ValidationError, "'wrong' is not a 'cidr'"):
             o.validate()
-        except ValidationError as e:
-            # check error message
-            pass
-        else:
-            self.fail('ValidationError not raised')
-        # fix 'src' and expect wrong 'dest' to fail
-        rule['src'] = '192.168.1.1/24'
+        rule['ip_rules'][0]['src'] = '192.168.1.0/24'
         o = OpenWrt(rule)
-        try:
+        with self.assertRaisesRegexp(ValidationError, "'wrong1' is not a 'cidr'"):
             o.validate()
-        except ValidationError as e:
-            # check error message
-            pass
-        else:
-            self.fail('ValidationError not raised')
         # fix 'dest' and expect no ValidationError raised
-        rule['src'] = '192.168.1.1/24'
+        rule['ip_rules'][0]['dest'] = '192.168.1.0/24'
         o = OpenWrt(rule)
         o.validate()
 
     def test_parse_rules_zone(self):
-        o = OpenWrt(native="""package network
+        with self.assertRaisesRegexp(ValidationError, "'wrong' is not a 'cidr'"):
+            OpenWrt(
+                native="""package network
 
 config rule 'rule1'
     option action 'blackhole'
@@ -256,14 +248,8 @@ config rule 'rule1'
     option out 'eth1'
     option src 'wrong'
     option tos '2'
-""")
-        try:
-            o.validate()
-        except ValidationError as e:
-            # check error message
-            pass
-        else:
-            self.fail('ValidationError not raised')
+"""
+            )
 
     _switch_netjson = {
         "switch": [
