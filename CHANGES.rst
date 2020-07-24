@@ -1,10 +1,37 @@
 Change log
 ==========
 
-Version 0.6.4 [unreleased]
+Version 0.8.1 [2020-05-28]
 --------------------------
 
-WIP
+- Fixed bug that prevented overriding the contents of a file present
+  in a template and caused the file to be duplicated instead of overwritten
+- Fixed bug affecting backward conversion of switch VLAN on OpenWRT
+
+Version 0.8.0 [2020-04-03]
+--------------------------
+
+- Changed default file mode for certificate files generated with
+  from ``0644`` to ``0600``
+
+Version 0.7.0 [2020-01-14]
+--------------------------
+
+- Dropped support for python 2.7
+- Updated github buttons in documentation which were causing an unintended redirect
+- Updated the jsonschema library to version 3.x
+
+Version 0.6.4 [2019-12-09]
+--------------------------
+
+- `#113 <https://github.com/openwisp/netjsonconfig/issues/113>`_:
+  [bugfix] Made "encryption none" explicit in OpenWRT
+- `5ddc201 <https://github.com/openwisp/netjsonconfig/commit/5ddc201>`_:
+  [bugfix] Fixed invalid UCI name bug in default OpenWRT renderer
+- `#118 <https://github.com/openwisp/netjsonconfig/issues/118>`_:
+  [bugfix] Fixed ``TypeError: can only concatenate list (not "str") to list``
+- `#137 <https://github.com/openwisp/netjsonconfig/issues/137>`_:
+  [tests] Migrated tests to nose2
 
 Version 0.6.3 [2018-07-09]
 --------------------------

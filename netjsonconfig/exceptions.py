@@ -18,6 +18,7 @@ class NetJsonConfigException(Exception):
     """
     Root netjsonconfig exception
     """
+
     def __str__(self):
         message = "%s %s\n" % (self.__class__.__name__, self.details,)
         errors = _list_errors(self.details)
@@ -30,6 +31,7 @@ class ValidationError(NetJsonConfigException):
     """
     Error while validating schema
     """
+
     def __init__(self, e):
         """
         preserve jsonschema exception attributes
@@ -43,4 +45,5 @@ class ParseError(NetJsonConfigException):
     """
     Error while parsing native configuration
     """
+
     pass

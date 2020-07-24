@@ -10,6 +10,7 @@ class TestBase(unittest.TestCase):
     """
     tests for netjsonconfig.backends.base
     """
+
     def test_generate(self):
         b = BaseBackend({})
         with self.assertRaises(NotImplementedError):

@@ -12,6 +12,7 @@ class TestBin(unittest.TestCase, _TabsMixin):
     """
     tests for netjsonconfig command line tool
     """
+
     _test_file = 'test.tar.gz'
 
     @classmethod
@@ -64,41 +65,35 @@ class TestBin(unittest.TestCase, _TabsMixin):
             self.fail('subprocess.CalledProcessError not raised')
 
     def test_empty_netjson(self):
-        output = subprocess.check_output("netjsonconfig -c '{}' -b openwrt -m render", shell=True)
+        output = subprocess.check_output(
+            "netjsonconfig -c '{}' -b openwrt -m render", shell=True
+        )
         self.assertEqual(output.decode(), '')
 
     def test_templates(self):
-        config = json.dumps({
-            'general': {'hostname': 'template-test'}
-        })
-        template1 = json.dumps({
-            'interfaces': [
-                {
-                    "name": "eth0",
-                    "type": "ethernet",
-                    "addresses": [
-                        {
-                            "proto": "dhcp",
-                            "family": "ipv4"
-                        }
-                    ]
-                }
-            ]
-        })
-        template2 = json.dumps({
-            'interfaces': [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "addresses": [
-                        {
-                            "proto": "dhcp",
-                            "family": "ipv6"
-                        }
-                    ]
-                }
-            ]
-        })
+        config = json.dumps({'general': {'hostname': 'template-test'}})
+        template1 = json.dumps(
+            {
+                'interfaces': [
+                    {
+                        "name": "eth0",
+                        "type": "ethernet",
+                        "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                    }
+                ]
+            }
+        )
+        template2 = json.dumps(
+            {
+                'interfaces': [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "addresses": [{"proto": "dhcp", "family": "ipv6"}],
+                    }
+                ]
+            }
+        )
         command = """netjsonconfig --config '{0}' -b openwrt -m render --templates '{1}' '{2}'"""
         command = command.format(config, template1, template2)
         output = subprocess.check_output(command, shell=True).decode()
@@ -134,24 +129,30 @@ class TestBin(unittest.TestCase, _TabsMixin):
             self.fail('subprocess.CalledProcessError not raised')
 
     def test_valid_arg(self):
-        config = json.dumps({
-            'general': {'hostname': 'template-test'},
-            'files': [
-                {
-                    'path': '/etc/test.txt',
-                    'mode': '0644',
-                    'contents': 'test_valid_arg'
-                }
-            ]
-        })
-        command = "netjsonconfig --config '{0}' -b openwrt -m render -a files=False".format(config)
+        config = json.dumps(
+            {
+                'general': {'hostname': 'template-test'},
+                'files': [
+                    {
+                        'path': '/etc/test.txt',
+                        'mode': '0644',
+                        'contents': 'test_valid_arg',
+                    }
+                ],
+            }
+        )
+        command = "netjsonconfig --config '{0}' -b openwrt -m render -a files=False".format(
+            config
+        )
         output = subprocess.check_output(command, shell=True).decode()
         self.assertNotIn('test.txt', output)
         self.assertNotIn('test_valid_arg', output)
 
     def test_generate_redirection(self):
         config = """'{"general": { "hostname": "example" }}'"""
-        command = """netjsonconfig -c %s -b openwrt -m generate > test.tar.gz""" % config
+        command = (
+            """netjsonconfig -c %s -b openwrt -m generate > test.tar.gz""" % config
+        )
         subprocess.check_output(command, shell=True)
         tar = tarfile.open(self._test_file, 'r')
         self.assertEqual(len(tar.getmembers()), 1)
@@ -159,19 +160,20 @@ class TestBin(unittest.TestCase, _TabsMixin):
 
     def test_context(self):
         config = json.dumps({'general': {'description': '{{ DESC }}'}})
-        command = "export DESC=testdesc; netjsonconfig --config '{0}' -b openwrt -m render".format(config)
+        command = "export DESC=testdesc; netjsonconfig --config '{0}' -b openwrt -m render".format(
+            config
+        )
         output = subprocess.check_output(command, shell=True).decode()
         self.assertNotIn('{{ DESC }}', output)
         self.assertIn('testdesc', output)
 
     def test_parse(self):
-        o = OpenWrt({
-            "type": "DeviceConfiguration",
-            "general": {
-                "hostname": "parse-test",
-                "timezone": "UTC"
+        o = OpenWrt(
+            {
+                "type": "DeviceConfiguration",
+                "general": {"hostname": "parse-test", "timezone": "UTC"},
             }
-        })
+        )
         o.write(self._test_file.replace('.tar.gz', ''))
         command = """netjsonconfig -n %s -b openwrt -m json""" % self._test_file
         output = subprocess.check_output(command, shell=True)

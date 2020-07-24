@@ -9,11 +9,12 @@ class Led(OpenWrtConverter):
     _schema = schema['properties']['led']['items']
 
     def to_intermediate_loop(self, block, result, index=None):
-        block.update({
-            '.type': 'led',
-            '.name': block.pop('id', None) or
-                     self.__get_auto_name(block),
-        })
+        block.update(
+            {
+                '.type': 'led',
+                '.name': block.pop('id', None) or self.__get_auto_name(block),
+            }
+        )
         result.setdefault('system', [])
         result['system'].append(self.sorted_dict(block))
         return result

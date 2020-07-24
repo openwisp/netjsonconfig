@@ -35,14 +35,18 @@ class Default(OpenWrtConverter):
                 # otherwise it's skipped with a warning
                 if not isinstance(block, dict) or 'config_name' not in block:
                     json_block = json.dumps(block, indent=4)
-                    print('Unrecognized config block was skipped:\n\n'
-                          '{0}\n\n'.format(json_block))
+                    print(
+                        'Unrecognized config block was skipped:\n\n'
+                        '{0}\n\n'.format(json_block)
+                    )
                     continue
                 block['.type'] = block.pop('config_name')
-                block['.name'] = block.pop('config_value',
-                                           # default value in case the
-                                           # UCI name is not defined
-                                           '{0}_{1}'.format(block['.type'], i))
+                block['.name'] = block.pop(
+                    'config_value',
+                    # default value in case the
+                    # UCI name is not defined
+                    '{0}_{1}'.format(block['.type'], i),
+                )
                 # ensure UCI name is valid
                 block['.name'] = self._get_uci_name(block['.name'])
                 block_list.append(sorted_dict(block))

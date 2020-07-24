@@ -18,7 +18,7 @@ class TestWireless(unittest.TestCase, _TabsMixin):
                         "address": "192.168.1.1",
                         "mask": 24,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
                 ],
                 "wireless": {
@@ -28,8 +28,8 @@ class TestWireless(unittest.TestCase, _TabsMixin):
                     "hidden": True,
                     "ack_distance": 300,
                     "rts_threshold": 1300,
-                    "frag_threshold": 1500
-                }
+                    "frag_threshold": 1500,
+                },
             }
         ]
     }
@@ -65,7 +65,8 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config, self._wifi_netjson)
 
     def test_parse_wifi_interface_partial(self):
-        o = OpenWrt(native="""package wireless
+        o = OpenWrt(
+            native="""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -73,7 +74,8 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyWifiAP'
-""")
+"""
+        )
         expected = {
             "interfaces": [
                 {
@@ -82,8 +84,8 @@ config wifi-iface 'wifi_wlan0'
                     "wireless": {
                         "radio": "radio0",
                         "mode": "access_point",
-                        "ssid": "MyWifiAP"
-                    }
+                        "ssid": "MyWifiAP",
+                    },
                 }
             ]
         }
@@ -94,34 +96,24 @@ config wifi-iface 'wifi_wlan0'
             {
                 "name": "wlan0",
                 "type": "wireless",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ],
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
                 "wireless": {
                     "radio": "radio0",
                     "mode": "access_point",
-                    "ssid": "ap-ssid"
-                }
+                    "ssid": "ap-ssid",
+                },
             },
             {
                 "name": "wlan1",
                 "type": "wireless",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ],
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
                 "wireless": {
                     "radio": "radio1",
                     "mode": "adhoc",
                     "ssid": "adhoc-ssid",
-                    "bssid": "00:11:22:33:44:55"
-                }
-            }
+                    "bssid": "00:11:22:33:44:55",
+                },
+            },
         ]
     }
     _multiple_wifi_uci = """package network
@@ -163,35 +155,25 @@ config wifi-iface 'wifi_wlan1'
 
     _wifi_bridge_netjson = {
         "interfaces": [
-            {
-                "name": "eth0.1",
-                "type": "ethernet"
-            },
+            {"name": "eth0.1", "type": "ethernet"},
             {
                 "name": "wlan0",
                 "type": "wireless",
-                "wireless": {
-                    "radio": "radio0",
-                    "mode": "access_point",
-                    "ssid": "open"
-                }
+                "wireless": {"radio": "radio0", "mode": "access_point", "ssid": "open"},
             },
             {
                 "name": "br-lan",
                 "type": "bridge",
-                "bridge_members": [
-                    "eth0.1",
-                    "wlan0"
-                ],
+                "bridge_members": ["eth0.1", "wlan0"],
                 "addresses": [
                     {
                         "address": "192.168.1.1",
                         "mask": 24,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
-                ]
-            }
+                ],
+            },
         ]
     }
     _wifi_bridge_uci = """package network
@@ -232,26 +214,18 @@ config wifi-iface 'wifi_wlan0'
 
     _wifi_networks_netjson = {
         "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet"
-            },
+            {"name": "eth0", "type": "ethernet"},
             {
                 "name": "wlan0",
                 "type": "wireless",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ],
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
                 "wireless": {
                     "radio": "radio0",
                     "mode": "access_point",
                     "ssid": "open",
-                    "network": ["wlan0", "eth0"]
-                }
-            }
+                    "network": ["wlan0", "eth0"],
+                },
+            },
         ]
     }
     _wifi_networks_uci = """package network
@@ -284,21 +258,24 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config, self._wifi_networks_netjson)
 
     def test_render_wireless_empty_network_attr(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "open",
-                        "network": []
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "network": [],
+                        },
                     }
-                }
-            ]
-        })
-        expected = self._tabs("""package network
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -312,24 +289,27 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'open'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)
 
     def test_wireless_network_attr_validation(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "open",
-                        "network": "lan 0"
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "network": "lan 0",
+                        },
                     }
-                }
-            ]
-        })
+                ]
+            }
+        )
         # pattern does not validate
         with self.assertRaises(ValidationError):
             o.validate()
@@ -347,11 +327,7 @@ config wifi-iface 'wifi_wlan0'
                 "name": "wlan0",
                 "type": "wireless",
                 "network": "guests",
-                "wireless": {
-                    "radio": "radio0",
-                    "mode": "access_point",
-                    "ssid": "open"
-                }
+                "wireless": {"radio": "radio0", "mode": "access_point", "ssid": "open"},
             }
         ]
     }
@@ -381,21 +357,24 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config, self._interface_network_netjson)
 
     def test_network_dot_conversion(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "open",
-                        "network": ["eth0.1"],
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "network": ["eth0.1"],
+                        },
                     }
-                }
-            ]
-        })
-        expected = self._tabs("""package network
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -409,25 +388,29 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'eth0_1'
     option ssid 'open'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)
 
     def test_network_dash_conversion(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "open",
-                        "network": ["eth0-1"],
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "network": ["eth0-1"],
+                        },
                     }
-                }
-            ]
-        })
-        expected = self._tabs("""package network
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -441,7 +424,8 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'eth0_1'
     option ssid 'open'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)
 
     _disabled_netjson = {
@@ -454,8 +438,8 @@ config wifi-iface 'wifi_wlan0'
                     "radio": "radio0",
                     "mode": "station",
                     "ssid": "mywifi",
-                    "bssid": "00:11:22:33:44:55"
-                }
+                    "bssid": "00:11:22:33:44:55",
+                },
             }
         ]
     }
@@ -492,7 +476,8 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config, self._disabled_netjson)
 
     def test_parse_interface_disabled_partial(self):
-        o = OpenWrt(native="""package wireless
+        o = OpenWrt(
+            native="""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option bssid '00:11:22:33:44:55'
@@ -502,7 +487,8 @@ config wifi-iface 'wifi_wlan0'
     option mode 'sta'
     option network 'wlan0'
     option ssid 'mywifi'
-""")
+"""
+        )
         self.assertEqual(o.config, self._disabled_netjson)
 
     _wds_netjson = {
@@ -514,8 +500,8 @@ config wifi-iface 'wifi_wlan0'
                     "radio": "radio0",
                     "mode": "access_point",
                     "wds": True,
-                    "ssid": "MyWdsAp"
-                }
+                    "ssid": "MyWdsAp",
+                },
             }
         ]
     }
@@ -550,24 +536,27 @@ config wifi-iface 'wifi_wlan0'
         ensure ack_distance, rts_threshold and frag_threshold
         are ignored if left empty
         """
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "MyWifiAP",
-                        "wmm": True,
-                        "ack_distance": 0,
-                        "rts_threshold": 0,
-                        "frag_threshold": 0
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "MyWifiAP",
+                            "wmm": True,
+                            "ack_distance": 0,
+                            "rts_threshold": 0,
+                            "frag_threshold": 0,
+                        },
                     }
-                }
-            ]
-        })
-        expected = self._tabs("""package network
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package network
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -582,7 +571,8 @@ config wifi-iface 'wifi_wlan0'
     option network 'wlan0'
     option ssid 'MyWifiAP'
     option wmm '1'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)
 
     _macfilter_netjson = {
@@ -595,11 +585,8 @@ config wifi-iface 'wifi_wlan0'
                     "mode": "access_point",
                     "ssid": "MyWifiAP",
                     "macfilter": "deny",
-                    "maclist": [
-                        "E8:94:F6:33:8C:1D",
-                        "42:6c:8f:95:0f:00"
-                    ]
-                }
+                    "maclist": ["E8:94:F6:33:8C:1D", "42:6c:8f:95:0f:00"],
+                },
             }
         ]
     }
@@ -632,23 +619,23 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config, self._macfilter_netjson)
 
     def test_maclist_format(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "MyWifiAP",
-                        "macfilter": "deny",
-                        "maclist": [
-                            "E8:94:F6:33:8C:1D",
-                        ]
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "MyWifiAP",
+                            "macfilter": "deny",
+                            "maclist": ["E8:94:F6:33:8C:1D"],
+                        },
                     }
-                }
-            ]
-        })
+                ]
+            }
+        )
         o.validate()
         # too short
         o.config['interfaces'][0]['wireless']['maclist'][0] = '00:11:22:33:44'
@@ -678,8 +665,8 @@ config wifi-iface 'wifi_wlan0'
                     "network": ["wds_bridge"],
                     "ssid": "FreeRomaWifi",
                     "bssid": "C0:4A:00:2D:05:FD",
-                    "wds": True
-                }
+                    "wds": True,
+                },
             },
             # repeater access point
             {
@@ -689,25 +676,17 @@ config wifi-iface 'wifi_wlan0'
                     "mode": "access_point",
                     "radio": "radio1",
                     "network": ["wds_bridge"],
-                    "ssid": "FreeRomaWifi"
-                }
+                    "ssid": "FreeRomaWifi",
+                },
             },
             # WDS bridge
             {
                 "name": "br-wds_bridge",
                 "network": "wds_bridge",
                 "type": "bridge",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ],
-                "bridge_members": [
-                    "wlan0",
-                    "wlan1",
-                ]
-            }
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                "bridge_members": ["wlan0", "wlan1"],
+            },
         ]
     }
     _wds_bridge_uci = """package network
@@ -762,8 +741,8 @@ config wifi-iface 'wifi_wlan1'
                     "radio": "radio0",
                     "mode": "802.11s",
                     "mesh_id": "ninux",
-                    "network": ["lan"]
-                }
+                    "network": ["lan"],
+                },
             },
             {
                 "name": "br-lan",
@@ -775,10 +754,10 @@ config wifi-iface 'wifi_wlan1'
                         "address": "192.168.0.1",
                         "mask": 24,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
-                ]
-            }
+                ],
+            },
         ]
     }
     _80211s_uci = """package network
@@ -822,8 +801,8 @@ config wifi-iface 'wifi_mesh0'
                     "radio": "radio0",
                     "mode": "adhoc",
                     "ssid": "bssid-test",
-                    "bssid": "00:11:22:33:44:55"
-                }
+                    "bssid": "00:11:22:33:44:55",
+                },
             }
         ]
     }
@@ -874,8 +853,8 @@ config wifi-iface 'wifi_mesh0'
                     "radio": "radio0",
                     "mode": "access_point",
                     "ssid": "open",
-                    "basic_rate": ["6000", "9000"]
-                }
+                    "basic_rate": ["6000", "9000"],
+                },
             }
         ]
     }
@@ -907,20 +886,22 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config, self._list_option_netjson)
 
     def test_isolate(self):
-        o = OpenWrt({
-            "interfaces": [
-                {
-                    "name": "wlan0",
-                    "type": "wireless",
-                    "wireless": {
-                        "radio": "radio0",
-                        "mode": "access_point",
-                        "ssid": "open",
-                        "isolate": True
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": "open",
+                            "isolate": True,
+                        },
                     }
-                }
-            ]
-        })
+                ]
+            }
+        )
         self.assertIn("option isolate '1'", o.render())
         # try entering an invalid value
         o.config['interfaces'][0]['wireless']['isolate'] = 'wrong'
@@ -933,11 +914,7 @@ config wifi-iface 'wifi_wlan0'
                 "name": "wlan0",
                 "type": "wireless",
                 "mac": "E8:94:F6:33:8C:00",
-                "wireless": {
-                    "radio": "radio0",
-                    "mode": "access_point",
-                    "ssid": "open"
-                }
+                "wireless": {"radio": "radio0", "mode": "access_point", "ssid": "open"},
             }
         ]
     }
@@ -976,8 +953,8 @@ config wifi-iface 'wifi_wlan0'
                     "id": "arbitrary_id",
                     "radio": "radio0",
                     "mode": "access_point",
-                    "ssid": "MyWifiAP"
-                }
+                    "ssid": "MyWifiAP",
+                },
             }
         ]
     }

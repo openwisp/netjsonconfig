@@ -89,14 +89,16 @@ config core 'main'
     option mediaurlbase '/luci-static/bootstrap'
     option number '4'
     option resourcebase '/luci-static/resources'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)
         # try a second time to ensure that the usage of dict.pop
         # in templates does not cause any issue
         self.assertEqual(o.render(), expected)
 
     def test_parse_default(self):
-        native = self._tabs("""package firewall
+        native = self._tabs(
+            """package firewall
 
 config rule 'rule_1'
     option family 'ipv6'
@@ -136,7 +138,8 @@ config led 'led_usb1'
 
 config custom 'custom'
     option test '1'
-""")
+"""
+        )
         o = OpenWrt(native=native)
         expected = {
             "luci": [
@@ -147,7 +150,7 @@ config custom 'custom'
                     "resourcebase": "/luci-static/resources",
                     "mediaurlbase": "/luci-static/bootstrap",
                     "number": "4",
-                    "boolean": "1"
+                    "boolean": "1",
                 }
             ],
             "firewall": {
@@ -173,19 +176,10 @@ config custom 'custom'
                     "interval": 50,
                 }
             ],
-            "interfaces": [
-                {
-                    "name": "eth0",
-                    "type": "ethernet"
-                }
-            ],
+            "interfaces": [{"name": "eth0", "type": "ethernet"}],
             "system": [
-                {
-                    "test": "1",
-                    "config_name": "custom",
-                    "config_value": "custom"
-                }
-            ]
+                {"test": "1", "config_name": "custom", "config_value": "custom"}
+            ],
         }
         self.assertDictEqual(o.config, expected)
 
@@ -194,13 +188,7 @@ config custom 'custom'
         self.assertEqual(o.render(), '')
 
     def test_warning(self):
-        o = OpenWrt({
-            "luci": [
-                {
-                    "unrecognized": True
-                }
-            ]
-        })
+        o = OpenWrt({"luci": [{"unrecognized": True}]})
         self.assertEqual(o.render(), '')
 
     def test_merge(self):
@@ -211,7 +199,7 @@ config custom 'custom'
                     "config_value": "main",
                     "number": 3,
                     "list": ["eth0"],
-                    "some_value": True
+                    "some_value": True,
                 }
             ]
         }
@@ -221,7 +209,7 @@ config custom 'custom'
                     "config_name": "core",
                     "config_value": "main",
                     "number": 4,
-                    "list": ["wlan0"]
+                    "list": ["wlan0"],
                 }
             ]
         }
@@ -232,7 +220,7 @@ config custom 'custom'
                     "config_value": "main",
                     "number": 4,
                     "list": ["eth0", "wlan0"],
-                    "some_value": True
+                    "some_value": True,
                 }
             ]
         }
@@ -244,26 +232,30 @@ config custom 'custom'
         self.assertEqual(o.render(), '')
 
     def test_render_invalid_uci_name(self):
-        o = OpenWrt({
-            "olsrd2": [
-                {
-                    "lan": "10.150.25.0/24 domain=0",
-                    "config_value": "lan-hna",
-                    "config_name": "olsrv2"
-                },
-                {
-                    "lan": "0.0.0.0/24 domain=1",
-                    "config_value": "internet-hna",
-                    "config_name": "olsrv2"
-                }
-            ],
-        })
-        expected = self._tabs("""package olsrd2
+        o = OpenWrt(
+            {
+                "olsrd2": [
+                    {
+                        "lan": "10.150.25.0/24 domain=0",
+                        "config_value": "lan-hna",
+                        "config_name": "olsrv2",
+                    },
+                    {
+                        "lan": "0.0.0.0/24 domain=1",
+                        "config_value": "internet-hna",
+                        "config_name": "olsrv2",
+                    },
+                ],
+            }
+        )
+        expected = self._tabs(
+            """package olsrd2
 
 config olsrv2 'lan_hna'
     option lan '10.150.25.0/24 domain=0'
 
 config olsrv2 'internet_hna'
     option lan '0.0.0.0/24 domain=1'
-""")
+"""
+        )
         self.assertEqual(o.render(), expected)

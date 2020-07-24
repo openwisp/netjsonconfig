@@ -7,6 +7,7 @@ class BaseRenderer(object):
     Renderers are used to generate a string
     which represents the router configuration
     """
+
     def __init__(self, backend):
         self.config = backend.config
         self.backend = backend
@@ -17,7 +18,9 @@ class BaseRenderer(object):
 
     @property
     def template_env(self):
-        return Environment(loader=PackageLoader(self.env_path, 'templates'), trim_blocks=True)
+        return Environment(
+            loader=PackageLoader(self.env_path, 'templates'), trim_blocks=True
+        )
 
     @classmethod
     def get_name(cls):

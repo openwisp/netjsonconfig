@@ -10,10 +10,7 @@ class Ntp(OpenWrtConverter):
 
     def to_intermediate_loop(self, block, result, index=None):
         if block:
-            block.update({
-                '.type': 'timeserver',
-                '.name': block.pop('id', 'ntp'),
-            })
+            block.update({'.type': 'timeserver', '.name': block.pop('id', 'ntp')})
             result.setdefault('system', [])
             result['system'] = [self.sorted_dict(block)]
         return result

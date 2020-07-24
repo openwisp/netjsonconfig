@@ -14,10 +14,7 @@ class Radios(OpenWrtConverter):
         return result
 
     def __intermediate_radio(self, radio):
-        radio.update({
-            '.type': 'wifi-device',
-            '.name': radio.pop('name'),
-        })
+        radio.update({'.type': 'wifi-device', '.name': radio.pop('name')})
         # rename tx_power to txpower
         if 'tx_power' in radio:
             radio['txpower'] = radio.pop('tx_power')
@@ -26,7 +23,7 @@ class Radios(OpenWrtConverter):
         # determine hwmode option
         radio['hwmode'] = self.__intermediate_hwmode(radio)
         # check if using channel 0, that means "auto"
-        if radio['channel'] is 0:
+        if radio['channel'] == 0:
             radio['channel'] = 'auto'
         # determine channel width
         if radio['type'] == 'mac80211':
@@ -45,7 +42,7 @@ class Radios(OpenWrtConverter):
             # return 11a, 11b or 11g
             return protocol[4:]
         # determine hwmode depending on channel used
-        if radio['channel'] is 0:
+        if radio['channel'] == 0:
             # when using automatic channel selection, we need an
             # additional parameter to determine the frequency band
             return radio.get('hwmode')

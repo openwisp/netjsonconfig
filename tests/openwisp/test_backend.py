@@ -13,30 +13,24 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     """
     tests for OpenWisp backend
     """
+
     config = {
-        "general": {
-            "hostname": "openwisp-test"
-        },
+        "general": {"hostname": "openwisp-test"},
         "interfaces": [
-            {
-                "name": "tap0",
-                "type": "virtual"
-            },
+            {"name": "tap0", "type": "virtual"},
             {
                 "network": "serv",
                 "name": "br-serv",
                 "type": "bridge",
-                "bridge_members": [
-                    "tap0"
-                ],
+                "bridge_members": ["tap0"],
                 "addresses": [
                     {
                         "proto": "static",
                         "family": "ipv4",
                         "address": "192.168.1.2",
-                        "mask": 24
+                        "mask": 24,
                     }
-                ]
+                ],
             },
             {
                 "name": "wlan0",
@@ -46,9 +40,9 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                     "mode": "access_point",
                     "ssid": "wifi-service",
                     "isolate": True,
-                    "network": ["wlan1", "serv"]
-                }
-            }
+                    "network": ["wlan1", "serv"],
+                },
+            },
         ],
         "radios": [
             {
@@ -59,7 +53,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "channel": 11,
                 "channel_width": 20,
                 "tx_power": 5,
-                "country": "IT"
+                "country": "IT",
             }
         ],
         "openvpn": [
@@ -83,39 +77,30 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "ns_cert_type": "server",
                 "persist_tun": True,
                 "proto": "tcp-client",
-                "remote": [
-                    {
-                        "host": "vpn.openwisp.org",
-                        "port": 12128
-                    }
-                ],
+                "remote": [{"host": "vpn.openwisp.org", "port": 12128}],
                 "script_security": 1,
                 "tls_client": True,
                 "up": "/tmp/owispmanager/openvpn/vpn_2693_script_up.sh",
                 "up_delay": 1,
                 "up_restart": True,
-                "verb": 1
+                "verb": 1,
             }
         ],
         "tc_options": [
-            {
-                "name": "tap0",
-                "input_bandwidth": 2048,
-                "output_bandwidth": 1024
-            }
+            {"name": "tap0", "input_bandwidth": 2048, "output_bandwidth": 1024}
         ],
         "files": [
             {
                 "path": "/openvpn/x509/ca_1_service.pem",
-                "mode": "0644",
-                "contents": "-----BEGIN CERTIFICATE-----\ntest\n-----END CERTIFICATE-----\n"  # noqa
+                "mode": "0600",
+                "contents": "-----BEGIN CERTIFICATE-----\ntest\n-----END CERTIFICATE-----\n",  # noqa
             },
             {
                 "path": "/openvpn/x509/l2vpn_client_2693.pem",
-                "mode": "0644",
-                "contents": "-----BEGIN CERTIFICATE-----\ntest==\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\ntest\n-----END RSA PRIVATE KEY-----\n"  # noqa
-            }
-        ]
+                "mode": "0600",
+                "contents": "-----BEGIN CERTIFICATE-----\ntest==\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\ntest\n-----END RSA PRIVATE KEY-----\n",  # noqa
+            },
+        ],
     }
 
     def test_uci(self):
@@ -123,11 +108,13 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         tar = tarfile.open(fileobj=o.generate(), mode='r')
         system = tar.getmember('uci/system.conf')
         contents = tar.extractfile(system).read().decode()
-        expected = self._tabs("""package system
+        expected = self._tabs(
+            """package system
 
 config system 'system'
     option hostname 'openwisp-test'
-""")
+"""
+        )
         self.assertEqual(contents, expected)
         tar.close()
 
@@ -193,9 +180,7 @@ config system 'system'
         o.generate()
 
     def test_wireless_radio_disabled_0(self):
-        o = OpenWisp({
-            'radios': self.config['radios']
-        })
+        o = OpenWisp({'radios': self.config['radios']})
         output = o.render()
         self.assertIn("option disabled '0'", output)
 
@@ -208,11 +193,19 @@ config system 'system'
         self.assertIn('tc qdisc del dev tap0 root', contents)
         self.assertIn('tc qdisc del dev tap0 ingress', contents)
         self.assertIn('tc qdisc add dev tap0 root handle 1: htb default 2', contents)
-        self.assertIn('tc class add dev tap0 parent 1 classid 1:1 htb rate 1024kbit burst 191k', contents)
-        self.assertIn('tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit', contents)
+        self.assertIn(
+            'tc class add dev tap0 parent 1 classid 1:1 htb rate 1024kbit burst 191k',
+            contents,
+        )
+        self.assertIn(
+            'tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit',
+            contents,
+        )
         self.assertIn('tc qdisc add dev tap0 ingress', contents)
-        line = 'tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police '\
-               'rate 2048kbit burst 383k drop flowid :1'
+        line = (
+            'tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police '
+            'rate 2048kbit burst 383k drop flowid :1'
+        )
         self.assertIn(line, contents)
         tar.close()
 
@@ -222,7 +215,7 @@ config system 'system'
             {
                 "path": "/crontabs/root",
                 "mode": "0644",
-                "contents": "* * * * * echo 'test' > /tmp/test-cron"
+                "contents": "* * * * * echo 'test' > /tmp/test-cron",
             }
         ]
         o = OpenWisp(config)

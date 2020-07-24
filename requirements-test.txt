@@ -1,7 +1,6 @@
-nose
-coverage
+nose2[coverage_plugin]>=0.6.5
 coveralls
 sphinx
 sphinx_rtd_theme
 # commit message style check
-openwisp-utils[qa]>=0.2.1
+openwisp-utils[qa]~=0.5.1

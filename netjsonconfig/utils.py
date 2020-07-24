@@ -2,8 +2,6 @@ import re
 from collections import OrderedDict
 from copy import deepcopy
 
-import six
-
 
 def merge_config(template, config, list_identifiers=None):
     """
@@ -93,7 +91,7 @@ def evaluate_vars(data, context=None):
             loop_items = enumerate(data)
         for key, value in loop_items:
             data[key] = evaluate_vars(value, context)
-    elif isinstance(data, six.string_types):
+    elif isinstance(data, str):
         vars_found = var_pattern.findall(data)
         for var in vars_found:
             var = var.strip()
@@ -112,20 +110,21 @@ def evaluate_vars(data, context=None):
 
 
 def get_copy(dict_, key, default=None):
-        """
-        Looks for a key in a dictionary, if found returns
-        a deepcopied value, otherwise returns default value
-        """
-        value = dict_.get(key, default)
-        if value:
-            return deepcopy(value)
-        return value
+    """
+    Looks for a key in a dictionary, if found returns
+    a deepcopied value, otherwise returns default value
+    """
+    value = dict_.get(key, default)
+    if value:
+        return deepcopy(value)
+    return value
 
 
 class _TabsMixin(object):  # pragma: nocover
     """
     mixin that adds _tabs method to test classes
     """
+
     def _tabs(self, string):
         """
         replace 4 spaces with 1 tab

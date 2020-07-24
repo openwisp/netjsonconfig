@@ -1,6 +1,6 @@
 import unittest
 
-from jsonschema import ValidationError, validate
+from jsonschema import Draft4Validator, ValidationError
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import _list_errors
@@ -12,25 +12,13 @@ schema = {
     'definitions': {
         'spam_object': {
             'additionalProperties': True,
-            'required': [
-                'spam',
-            ],
-            'properties': {
-                'spam': {
-                    'type': 'string',
-                },
-            },
+            'required': ['spam'],
+            'properties': {'spam': {'type': 'string'}},
         },
         'eggs_object': {
             'additionalProperties': True,
-            'required': [
-                'eggs',
-            ],
-            'properties': {
-                'eggs': {
-                    'type': 'boolean',
-                },
-            },
+            'required': ['eggs'],
+            'properties': {'eggs': {'type': 'boolean'}},
         },
     },
     'properties': {
@@ -41,14 +29,18 @@ schema = {
                 {'$ref': '#/definitions/eggs_object'},
             ],
         }
-    }
+    },
 }
+
+
+validate = Draft4Validator(schema).validate
 
 
 class TestJsonSchema(unittest.TestCase):
     """
     tests ValidationError helpers
     """
+
     def test_spam_object(self):
         test_i = {'test_object': {'spam': 'lots of'}}
         validate(test_i, schema)

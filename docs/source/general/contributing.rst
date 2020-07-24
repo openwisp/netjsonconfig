@@ -67,7 +67,7 @@ When you introduce changes, ensure test coverage is not decreased with:
 
 .. code-block:: shell
 
-    nosetests --with-coverage --cover-package=netjsonconfig
+    nose2 --with-coverage --coverage netjsonconfig
 
 Follow style conventions (PEP8, isort)
 --------------------------------------

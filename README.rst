@@ -11,15 +11,23 @@ netjsonconfig
    :target: https://requires.io/github/openwisp/netjsonconfig/requirements/?branch=master
    :alt: Requirements Status
 
-.. image:: https://badge.fury.io/py/netjsonconfig.svg
-   :target: http://badge.fury.io/py/netjsonconfig
-   
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
    :target: https://gitter.im/openwisp/general
 
+.. image:: https://badge.fury.io/py/netjsonconfig.svg
+   :target: http://badge.fury.io/py/netjsonconfig
+   
+.. image:: https://pepy.tech/badge/netjsonconfig
+   :target: https://pepy.tech/project/netjsonconfig
+   :alt: downloads
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://pypi.org/project/black/
+   :alt: code style: black
+
 ------------
 
-Netjsonconfig is part of the `OpenWISP project <http://openwisp.org>`_ and it's the official
+Netjsonconfig is a part of the `OpenWISP project <http://openwisp.org>`_ and it's the official
 configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwisp2>`_.
 
 .. image:: http://netjsonconfig.openwisp.org/en/latest/_images/openwisp.org.svg
@@ -30,7 +38,7 @@ configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwis
 on systems like `OpenWRT <http://openwrt.org>`_, `LEDE <https://www.lede-project.org/>`_
 or `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_.
 
-Its main features are:
+Its main features are listed below for your reference:
 
 * `OpenWRT <http://openwrt.org>`_ / `LEDE <https://www.lede-project.org/>`_ support
 * `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_ support

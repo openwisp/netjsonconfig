@@ -1,11 +1,11 @@
-from pkg_resources import iter_entry_points
 import logging
 
-from .version import VERSION, __version__, get_version  # noqa
+from pkg_resources import iter_entry_points
 
-from .backends.openwrt.openwrt import OpenWrt  # noqa
-from .backends.openwisp.openwisp import OpenWisp  # noqa
 from .backends.openvpn.openvpn import OpenVpn  # noqa
+from .backends.openwisp.openwisp import OpenWisp  # noqa
+from .backends.openwrt.openwrt import OpenWrt  # noqa
+from .version import VERSION, __version__, get_version  # noqa
 
 
 def get_backends():

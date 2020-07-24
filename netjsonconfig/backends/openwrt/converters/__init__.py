@@ -1,6 +1,6 @@
 from .default import Default
-from .interfaces import Interfaces
 from .general import General
+from .interfaces import Interfaces
 from .led import Led
 from .ntp import Ntp
 from .openvpn import OpenVpn

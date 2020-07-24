@@ -1,12 +1,12 @@
 import gzip
+import ipaddress
 import json
 import tarfile
 from collections import OrderedDict
 from copy import deepcopy
 from io import BytesIO
 
-import six
-from jsonschema import FormatChecker, validate
+from jsonschema import Draft4Validator, draft4_format_checker
 from jsonschema.exceptions import ValidationError as JsonSchemaError
 
 from ...exceptions import ValidationError
@@ -18,6 +18,7 @@ class BaseBackend(object):
     """
     Base Backend class
     """
+
     schema = None
     FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
     list_identifiers = []
@@ -46,21 +47,24 @@ class BaseBackend(object):
         elif native is not None:
             self.parse(native)
         else:
-            raise ValueError('Expecting either config or native argument to be '
-                             'passed during the initialization of the backend')
+            raise ValueError(
+                'Expecting either config or native argument to be '
+                'passed during the initialization of the backend'
+            )
 
     def _load(self, config):
         """
         Loads config from string or dict
         """
-        if isinstance(config, six.string_types):
+        if isinstance(config, str):
             try:
                 config = json.loads(config)
             except ValueError:
                 pass
         if not isinstance(config, dict):
-            raise TypeError('config block must be an istance '
-                            'of dict or a valid NetJSON string')
+            raise TypeError(
+                'config block must be an instance of dict or a valid NetJSON string'
+            )
         return config
 
     def _merge_config(self, config, templates):
@@ -102,15 +106,36 @@ class BaseBackend(object):
         for f in files:
             mode = f.get('mode', DEFAULT_FILE_MODE)
             # add file to output
-            file_output = '# path: {0}\n'\
-                          '# mode: {1}\n\n'\
-                          '{2}\n\n'.format(f['path'], mode, f['contents'])
+            file_output = (
+                '# path: {0}\n'
+                '# mode: {1}\n\n'
+                '{2}\n\n'.format(f['path'], mode, f['contents'])
+            )
             output += file_output
         return output
 
+    def _deduplicate_files(self):
+        files = self.config.get('files', [])
+        if not files:
+            return
+        files_dict = OrderedDict()
+        for file in files:
+            files_dict[file['path']] = file
+        self.config['files'] = list(files_dict.values())
+
+    @draft4_format_checker.checks('cidr', AssertionError)
+    def _cidr_notation(value):
+        try:
+            ipaddress.ip_network(value)
+        except ValueError as e:
+            assert False, str(e)
+        return True
+
     def validate(self):
         try:
-            validate(self.config, self.schema, format_checker=FormatChecker())
+            Draft4Validator(self.schema, format_checker=draft4_format_checker).validate(
+                self.config
+            )
         except JsonSchemaError as e:
             raise ValidationError(e)
 
@@ -126,6 +151,7 @@ class BaseBackend(object):
         # convert NetJSON config to intermediate data structure
         if self.intermediate_data is None:
             self.to_intermediate()
+        self._deduplicate_files()
         # support multiple renderers
         renderers = getattr(self, 'renderers', None) or [self.renderer]
         # convert intermediate data structure to native configuration
@@ -218,10 +244,12 @@ class BaseBackend(object):
             # remove leading slashes from path
             if path.startswith('/'):
                 path = path[1:]
-            self._add_file(tar=tar,
-                           name=path,
-                           contents=file_item['contents'],
-                           mode=file_item.get('mode', DEFAULT_FILE_MODE))
+            self._add_file(
+                tar=tar,
+                name=path,
+                contents=file_item['contents'],
+                mode=file_item.get('mode', DEFAULT_FILE_MODE),
+            )
 
     def _add_file(self, tar, name, contents, mode=DEFAULT_FILE_MODE):
         """
@@ -263,9 +291,9 @@ class BaseBackend(object):
             if value and isinstance(value, (tuple, list)):  # pragma: nocover
                 value = OrderedDict(value)
             if value:
-                self.intermediate_data = merge_config(self.intermediate_data,
-                                                      value,
-                                                      list_identifiers=['.name'])
+                self.intermediate_data = merge_config(
+                    self.intermediate_data, value, list_identifiers=['.name']
+                )
 
     def parse(self, native):
         """
@@ -292,9 +320,9 @@ class BaseBackend(object):
             converter = converter_class(self)
             value = converter.to_netjson()
             if value:
-                self.config = merge_config(self.config,
-                                           value,
-                                           list_identifiers=self.list_identifiers)
+                self.config = merge_config(
+                    self.config, value, list_identifiers=self.list_identifiers
+                )
         self.__restore_intermediate_data()
         self.validate()
 

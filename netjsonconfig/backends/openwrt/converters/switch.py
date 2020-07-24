@@ -7,10 +7,12 @@ class Switch(OpenWrtConverter):
     intermediate_key = 'network'
     _uci_types = ['switch', 'switch_vlan']
     _switch_schema = schema['properties']['switch']['items']
-    _vlan_schema = schema['properties']['switch']['items']['properties']['vlan']['items']
+    _vlan_schema = schema['properties']['switch']['items']['properties']['vlan'][
+        'items'
+    ]
 
     def __init__(self, *args, **kwargs):
-        super(Switch, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # instance attributes used during backward conversion
         self._vlan_counter = 0
         self._switch_map = {}
@@ -21,20 +23,30 @@ class Switch(OpenWrtConverter):
         result['network'] += switch_vlan
         return result
 
+    def to_netjson_clean(self, intermediate_data):
+        reordered_data, last_items = [], []
+        for block in super().to_netjson_clean(intermediate_data):
+            if '.type' in block and block['.type'] == 'switch_vlan':
+                last_items.append(block)
+            else:
+                reordered_data.append(block)
+        reordered_data.extend(last_items)
+        return reordered_data
+
     def __intermediate_switch(self, switch):
-        switch.update({
-            '.type': 'switch',
-            '.name': switch.pop('id', None) or
-                     switch['name'],
-        })
+        switch.update(
+            {'.type': 'switch', '.name': switch.pop('id', None) or switch['name']}
+        )
         i = 1
         vlans = []
         for vlan in switch['vlan']:
-            vlan.update({
-                '.type': 'switch_vlan',
-                '.name': vlan.pop('id', None) or
-                         self.__get_auto_name(switch['name'], i)
-            })
+            vlan.update(
+                {
+                    '.type': 'switch_vlan',
+                    '.name': vlan.pop('id', None)
+                    or self.__get_auto_name(switch['name'], i),
+                }
+            )
             if 'vid' not in vlan:
                 vlan['vid'] = vlan['vlan']
             vlans.append(self.sorted_dict(vlan))

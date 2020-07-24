@@ -22,15 +22,16 @@ class OpenWrtParser(BaseParser):
         for member in tar.getmembers():
             if not member.name.startswith(config_path):
                 continue
-            text += 'package {name}\n\n{contents}'.format(**{
-                'name': member.name.replace(config_path, ''),
-                'contents': tar.extractfile(member).read().decode()
-            })
+            text += 'package {name}\n\n{contents}'.format(
+                **{
+                    'name': member.name.replace(config_path, ''),
+                    'contents': tar.extractfile(member).read().decode(),
+                }
+            )
         return self._get_uci_packages(text)
 
     def _strip_quotes(self, value):
-        return value.replace('\'', '')\
-                    .replace('\"', '')
+        return value.replace('\'', '').replace('\"', '')
 
     def _get_uci_packages(self, text):
         results = re.split(packages_pattern, text)
@@ -41,7 +42,9 @@ class OpenWrtParser(BaseParser):
                 continue
             lines = result.split('\n')
             name = lines[0]
+            # fmt: off
             contents = result[len(name):]
+            # fmt: on
             packages[name] = self._get_uci_blocks(contents)
         return packages
 
