@@ -1,4 +1,5 @@
 from .default import Default
+from .firewall import Firewall
 from .general import General
 from .interfaces import Interfaces
 from .led import Led
@@ -9,9 +10,18 @@ from .routes import Routes
 from .rules import Rules
 from .switch import Switch
 from .wireless import Wireless
-from .firewall import Firewall
 
-__all__ = ['Default', 'Interfaces', 'General',
-           'Led', 'Ntp', 'OpenVpn', 'Radios',
-           'Routes', 'Rules', 'Switch',
-           'Wireless', 'Firewall']
+__all__ = [
+    "Default",
+    "Interfaces",
+    "General",
+    "Led",
+    "Ntp",
+    "OpenVpn",
+    "Radios",
+    "Routes",
+    "Rules",
+    "Switch",
+    "Wireless",
+    "Firewall",
+]
