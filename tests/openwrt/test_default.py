@@ -8,78 +8,72 @@ class TestDefault(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
     def test_render_default(self):
-        o = OpenWrt({
-            "luci": [
-                {
-                    "config_name": "core",
-                    "config_value": "main",
-                    "lang": "auto",
-                    "resourcebase": "/luci-static/resources",
-                    "mediaurlbase": "/luci-static/bootstrap",
-                    "number": 4,
-                    "boolean": True
-                }
-            ],
-            "firewall": {
-                "rules": [
+        o = OpenWrt(
+            {
+                "luci": [
                     {
-                        "config_name": "rule",
-                        "name": "Allow-MLD",
-                        "src": "wan",
-                        "proto": "icmp",
-                        "src_ip": "fe80::/10",
-                        "family": "ipv6",
-                        "target": "ACCEPT",
-                        "icmp_type": [
-                            "130/0",
-                            "131/0",
-                            "132/0",
-                            "143/0"
-                        ]
-                    },
-                    {
-                        "config_name": "rule",
-                        "name": "Rule2",
-                        "src": "wan",
-                        "proto": "icmp",
-                        "src_ip": "192.168.1.1/24",
-                        "family": "ipv4",
-                        "target": "ACCEPT",
-                        "icmp_type": [
-                            "130/0",
-                            "131/0",
-                            "132/0",
-                            "143/0"
-                        ]
+                        "config_name": "core",
+                        "config_value": "main",
+                        "lang": "auto",
+                        "resourcebase": "/luci-static/resources",
+                        "mediaurlbase": "/luci-static/bootstrap",
+                        "number": 4,
+                        "boolean": True,
                     }
-                ]
+                ],
+                "firewall": {
+                    "rules": [
+                        {
+                            "name": "Allow-MLD",
+                            "src": "wan",
+                            "proto": "icmp",
+                            "src_ip": "fe80::/10",
+                            "family": "ipv6",
+                            "target": "ACCEPT",
+                            "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
+                        },
+                        {
+                            "name": "Rule2",
+                            "src": "wan",
+                            "proto": "icmp",
+                            "src_ip": "192.168.1.1/24",
+                            "family": "ipv4",
+                            "target": "ACCEPT",
+                            "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
+                        },
+                    ]
+                },
             }
-        })
-        expected = self._tabs("""package firewall
+        )
+        expected = self._tabs(
+            """\
+package firewall
+
+config defaults 'defaults'
 
 config rule 'rule_Allow_MLD'
+    option name 'Allow-MLD'
+    option src 'wan'
+    option proto 'icmp'
+    option src_ip 'fe80::/10'
     option family 'ipv6'
+    option target 'ACCEPT'
     list icmp_type '130/0'
     list icmp_type '131/0'
     list icmp_type '132/0'
     list icmp_type '143/0'
-    option name 'Allow-MLD'
-    option proto 'icmp'
-    option src 'wan'
-    option src_ip 'fe80::/10'
-    option target 'ACCEPT'
 
 config rule 'rule_Rule2'
+    option name 'Rule2'
+    option src 'wan'
+    option proto 'icmp'
+    option src_ip '192.168.1.1/24'
     option family 'ipv4'
+    option target 'ACCEPT'
     list icmp_type '130/0'
     list icmp_type '131/0'
     list icmp_type '132/0'
     list icmp_type '143/0'
-    option name 'Rule2'
-    option proto 'icmp'
-    option src 'wan'
-    option src_ip '192.168.1.1/24'
-    option target 'ACCEPT'
 
 package luci
 
@@ -142,54 +136,59 @@ config custom 'custom'
         )
         o = OpenWrt(native=native)
         expected = {
-            "luci": [
-                {
-                    "config_name": "core",
-                    "config_value": "main",
-                    "lang": "auto",
-                    "resourcebase": "/luci-static/resources",
-                    "mediaurlbase": "/luci-static/bootstrap",
-                    "number": "4",
-                    "boolean": "1",
-                }
-            ],
-            "firewall": {
-                "rules": [
-                    {
-                        "config_name": "rule",
-                        "name": "Allow-MLD",
-                        "src": "wan",
-                        "proto": "icmp",
-                        "src_ip": "fe80::/10",
-                        "family": "ipv6",
-                        "target": "ACCEPT",
-                        "icmp_type": ["130/0", "131/0", "132/0", "143/0"]
-                    }
-                ]
-            },
             "led": [
                 {
+                    "dev": "1-1.1",
+                    "interval": 50,
                     "name": "USB1",
                     "sysfs": "tp-link:green:usb1",
                     "trigger": "usbdev",
-                    "dev": "1-1.1",
-                    "interval": 50,
                 }
             ],
             "interfaces": [{"name": "eth0", "type": "ethernet"}],
+            "firewall": {
+                "rules": [
+                    {
+                        "family": "ipv6",
+                        "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
+                        "name": "Allow-MLD",
+                        "proto": "icmp",
+                        "src": "wan",
+                        "src_ip": "fe80::/10",
+                        "target": "ACCEPT",
+                    }
+                ]
+            },
+            "luci": [
+                {
+                    "boolean": "1",
+                    "lang": "auto",
+                    "mediaurlbase": "/luci-static/bootstrap",
+                    "number": "4",
+                    "resourcebase": "/luci-static/resources",
+                    "config_value": "main",
+                    "config_name": "core",
+                }
+            ],
             "system": [
-                {"test": "1", "config_name": "custom", "config_value": "custom"}
+                {"test": "1", "config_value": "custom", "config_name": "custom"}
             ],
         }
+
+        print("*" * 80)
+        import json
+
+        print(json.dumps(o.config, indent=4))
+        print("*" * 80)
         self.assertDictEqual(o.config, expected)
 
     def test_skip(self):
         o = OpenWrt({"skipme": {"enabled": True}})
-        self.assertEqual(o.render(), '')
+        self.assertEqual(o.render(), "")
 
     def test_warning(self):
         o = OpenWrt({"luci": [{"unrecognized": True}]})
-        self.assertEqual(o.render(), '')
+        self.assertEqual(o.render(), "")
 
     def test_merge(self):
         template = {
@@ -228,8 +227,8 @@ config custom 'custom'
         self.assertEqual(o.config, expected)
 
     def test_skip_nonlists(self):
-        o = OpenWrt({"custom_package": {'unknown': True}})
-        self.assertEqual(o.render(), '')
+        o = OpenWrt({"custom_package": {"unknown": True}})
+        self.assertEqual(o.render(), "")
 
     def test_render_invalid_uci_name(self):
         o = OpenWrt(
