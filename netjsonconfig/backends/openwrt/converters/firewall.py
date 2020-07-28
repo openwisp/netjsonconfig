@@ -64,6 +64,11 @@ class Firewall(OpenWrtConverter):
             resultdict = OrderedDict(
                 ((".name", self.__get_auto_name_zone(zone)), (".type", "zone"))
             )
+            # If network contains only a single value, force the use of a UCI "option"
+            # rather than "list"".
+            network = zone["network"]
+            if len(network) == 1:
+                zone["network"] = network[0]
             resultdict.update(zone)
             result.append(resultdict)
         return result
@@ -109,6 +114,10 @@ class Firewall(OpenWrtConverter):
             rule = self.__netjson_rule(block)
             result["firewall"].setdefault("rules", [])
             result["firewall"]["rules"].append(rule)
+        if _type == "zone":
+            zone = self.__netjson_zone(block)
+            result["firewall"].setdefault("zones", [])
+            result["firewall"]["zones"].append(zone)
 
         return self.type_cast(result)
 
@@ -124,3 +133,19 @@ class Firewall(OpenWrtConverter):
                     rule["proto"] = [proto]
 
         return self.type_cast(rule)
+
+    def __netjson_zone(self, zone):
+        network = zone["network"]
+        # network may be specified as a list in a single string e.g.
+        #     option network 'wan wan6'
+        # Here we ensure that network is always a list.
+        if not isinstance(network, list):
+            zone["network"] = network.split()
+
+        if "mtu_fix" in zone:
+            zone["mtu_fix"] = zone.pop("mtu_fix") == "1"
+
+        if "masq" in zone:
+            zone["masq"] = zone.pop("masq") == "1"
+
+        return self.type_cast(zone)

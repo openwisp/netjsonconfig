@@ -176,3 +176,109 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     def test_parse_rule_4(self):
         o = OpenWrt(native=self._rule_4_uci)
         self.assertEqual(o.config, self._rule_4_netjson)
+
+    _zone_1_netjson = {
+        "firewall": {
+            "zones": [
+                {
+                    "name": "lan",
+                    "input": "ACCEPT",
+                    "output": "ACCEPT",
+                    "forward": "ACCEPT",
+                    "network": ["lan"],
+                    "mtu_fix": True,
+                }
+            ]
+        }
+    }
+
+    _zone_1_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config zone 'zone_lan'
+            option name 'lan'
+            option input 'ACCEPT'
+            option output 'ACCEPT'
+            option forward 'ACCEPT'
+            option network 'lan'
+            option mtu_fix '1'
+        """
+    )
+
+    def test_render_zone_1(self):
+        o = OpenWrt(self._zone_1_netjson)
+        expected = self._tabs(self._zone_1_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_zone_1(self):
+        o = OpenWrt(native=self._zone_1_uci)
+        self.assertEqual(o.config, self._zone_1_netjson)
+
+    _zone_2_netjson = {
+        "firewall": {
+            "zones": [
+                {
+                    "name": "wan",
+                    "input": "DROP",
+                    "output": "ACCEPT",
+                    "forward": "DROP",
+                    "network": ["wan", "wan6"],
+                    "mtu_fix": True,
+                    "masq": True,
+                }
+            ]
+        }
+    }
+
+    _zone_2_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config zone 'zone_wan'
+            option name 'wan'
+            option input 'DROP'
+            option output 'ACCEPT'
+            option forward 'DROP'
+            list network 'wan'
+            list network 'wan6'
+            option mtu_fix '1'
+            option masq '1'
+        """
+    )
+
+    # This one is the same as _zone_2_uci with the exception that the "network"
+    # parameter is specified as a single string.
+    _zone_3_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config zone 'zone_wan'
+            option name 'wan'
+            option input 'DROP'
+            option output 'ACCEPT'
+            option forward 'DROP'
+            option network 'wan wan6'
+            option mtu_fix '1'
+            option masq '1'
+        """
+    )
+
+    def test_render_zone_2(self):
+        o = OpenWrt(self._zone_2_netjson)
+        expected = self._tabs(self._zone_2_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_zone_2(self):
+        o = OpenWrt(native=self._zone_2_uci)
+        self.assertEqual(o.config, self._zone_2_netjson)
+
+    def test_parse_zone_3(self):
+        o = OpenWrt(native=self._zone_3_uci)
+        self.assertEqual(o.config, self._zone_2_netjson)
