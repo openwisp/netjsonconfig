@@ -615,7 +615,7 @@ schema = merge_config(
                                     "propertyOrder": 5,
                                 },
                                 "proto": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "proto",
                                     "description": "match incoming traffic using the given protocol. "
                                     "Can be one of tcp, udp, tcpudp, udplite, icmp, esp, "
@@ -623,8 +623,12 @@ schema = merge_config(
                                     "representing one of these protocols or a different one. "
                                     "A protocol name from /etc/protocols is also allowed. "
                                     "The number 0 is equivalent to all",
-                                    "default": "tcpudp",
+                                    "default": ["tcp", "udp"],
                                     "propertyOrder": 6,
+                                    "items": {
+                                        "title": "Protocol type",
+                                        "type": "string",
+                                    },
                                 },
                                 "icmp_type": {
                                     "title": "icmp_type",

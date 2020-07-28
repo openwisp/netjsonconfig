@@ -1,3 +1,10 @@
+"""Firewall configuration management for OpenWRT.
+
+See the following resource for a detailed description of the sections and parameters of
+the UCI configuration for the OpenWRT firewall.
+
+    https://openwrt.org/docs/guide-user/firewall/firewall_configuration
+"""
 from collections import OrderedDict
 
 from ..schema import schema
@@ -76,6 +83,15 @@ class Firewall(OpenWrtConverter):
             resultdict = OrderedDict(
                 ((".name", self.__get_auto_name_rule(rule)), (".type", "rule"))
             )
+            if "proto" in rule:
+                # If proto is a single value, then force it not to be in a list so that
+                # the UCI uses "option" rather than "list". If proto is only "tcp"
+                # and"udp", we can force it to the single special value of "tcpudp".
+                proto = rule["proto"]
+                if len(proto) == 1:
+                    rule["proto"] = proto[0]
+                elif set(proto) == {"tcp", "udp"}:
+                    rule["proto"] = "tcpudp"
             resultdict.update(rule)
             result.append(resultdict)
         return result
@@ -99,5 +115,12 @@ class Firewall(OpenWrtConverter):
     def __netjson_rule(self, rule):
         if "enabled" in rule:
             rule["enabled"] = rule.pop("enabled") == "1"
+        if "proto" in rule:
+            proto = rule.pop("proto")
+            if not isinstance(proto, list):
+                if proto == "tcpudp":
+                    rule["proto"] = ["tcp", "udp"]
+                else:
+                    rule["proto"] = [proto]
 
         return self.type_cast(rule)

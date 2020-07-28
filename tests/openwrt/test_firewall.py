@@ -15,7 +15,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
                     "name": "Allow-MLD",
                     "src": "wan",
                     "src_ip": "fe80::/10",
-                    "proto": "icmp",
+                    "proto": ["icmp"],
                     "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
                     "target": "ACCEPT",
                     "family": "ipv6",
@@ -62,7 +62,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
                     "src_ip": "fc00::/6",
                     "dest_ip": "fc00::/6",
                     "dest_port": "546",
-                    "proto": "udp",
+                    "proto": ["udp"],
                     "target": "ACCEPT",
                     "family": "ipv6",
                 }
@@ -103,7 +103,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
                 {
                     "name": "Allow-Ping",
                     "src": "wan",
-                    "proto": "icmp",
+                    "proto": ["icmp"],
                     "family": "ipv4",
                     "icmp_type": ["echo-request"],
                     "target": "ACCEPT",
