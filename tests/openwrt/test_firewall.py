@@ -138,3 +138,41 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     def test_parse_rule_3(self):
         o = OpenWrt(native=self._rule_3_uci)
         self.assertEqual(o.config, self._rule_3_netjson)
+
+    _rule_4_netjson = {
+        "firewall": {
+            "rules": [
+                {
+                    "name": "Allow-Isolated-DHCP",
+                    "src": "isolated",
+                    "proto": ["udp"],
+                    "dest_port": "67-68",
+                    "target": "ACCEPT",
+                }
+            ]
+        }
+    }
+
+    _rule_4_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config rule 'rule_Allow_Isolated_DHCP'
+            option name 'Allow-Isolated-DHCP'
+            option src 'isolated'
+            option proto 'udp'
+            option dest_port '67-68'
+            option target 'ACCEPT'
+        """
+    )
+
+    def test_render_rule_4(self):
+        o = OpenWrt(self._rule_4_netjson)
+        expected = self._tabs(self._rule_4_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_rule_4(self):
+        o = OpenWrt(native=self._rule_4_uci)
+        self.assertEqual(o.config, self._rule_4_netjson)
