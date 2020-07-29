@@ -2,6 +2,7 @@ import textwrap
 import unittest
 
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -282,3 +283,93 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     def test_parse_zone_3(self):
         o = OpenWrt(native=self._zone_3_uci)
         self.assertEqual(o.config, self._zone_2_netjson)
+
+    _forwarding_1_netjson = {
+        "firewall": {"forwardings": [{"src": "isolated", "dest": "wan"}]}
+    }
+
+    _forwarding_1_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config forwarding 'forwarding_isolated_wan'
+            option src 'isolated'
+            option dest 'wan'
+        """
+    )
+
+    def test_render_forwarding_1(self):
+        o = OpenWrt(self._forwarding_1_netjson)
+        expected = self._tabs(self._forwarding_1_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_forwarding_1(self):
+        o = OpenWrt(native=self._forwarding_1_uci)
+        self.assertEqual(o.config, self._forwarding_1_netjson)
+
+    _forwarding_2_netjson = {
+        "firewall": {
+            "forwardings": [{"src": "isolated", "dest": "wan", "family": "ipv4"}]
+        }
+    }
+
+    _forwarding_2_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config forwarding 'forwarding_isolated_wan_ipv4'
+            option src 'isolated'
+            option dest 'wan'
+            option family 'ipv4'
+        """
+    )
+
+    def test_render_forwarding_2(self):
+        o = OpenWrt(self._forwarding_2_netjson)
+        expected = self._tabs(self._forwarding_2_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_forwarding_2(self):
+        o = OpenWrt(native=self._forwarding_2_uci)
+        self.assertEqual(o.config, self._forwarding_2_netjson)
+
+    _forwarding_3_netjson = {
+        "firewall": {"forwardings": [{"src": "lan", "dest": "wan", "family": "any"}]}
+    }
+
+    _forwarding_3_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config forwarding 'forwarding_lan_wan_any'
+            option src 'lan'
+            option dest 'wan'
+            option family 'any'
+        """
+    )
+
+    def test_render_forwarding_3(self):
+        o = OpenWrt(self._forwarding_3_netjson)
+        expected = self._tabs(self._forwarding_3_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_forwarding_3(self):
+        o = OpenWrt(native=self._forwarding_3_uci)
+        self.assertEqual(o.config, self._forwarding_3_netjson)
+
+    def test_forwarding_validation_error(self):
+        o = OpenWrt(
+            {
+                "firewall": {
+                    "forwardings": [{"src": "lan", "dest": "wan", "family": "XXXXXX"}]
+                }
+            }
+        )
+        with self.assertRaises(ValidationError):
+            o.validate()

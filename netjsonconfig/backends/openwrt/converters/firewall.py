@@ -118,6 +118,10 @@ class Firewall(OpenWrtConverter):
             zone = self.__netjson_zone(block)
             result["firewall"].setdefault("zones", [])
             result["firewall"]["zones"].append(zone)
+        if _type == "forwarding":
+            forwarding = self.__netjson_forwarding(block)
+            result["firewall"].setdefault("forwardings", [])
+            result["firewall"]["forwardings"].append(forwarding)
 
         return self.type_cast(result)
 
@@ -149,3 +153,6 @@ class Firewall(OpenWrtConverter):
             zone["masq"] = zone.pop("masq") == "1"
 
         return self.type_cast(zone)
+
+    def __netjson_forwarding(self, forwarding):
+        return self.type_cast(forwarding)
