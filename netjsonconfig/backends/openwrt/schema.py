@@ -8,6 +8,19 @@ from .timezones import timezones
 
 default_radio_driver = "mac80211"
 
+# The following regex will match against a single valid port, or a port range e.g. 1234-5000
+port_range_regex = "^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(-([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$"  # noqa
+
+# Match against a MAC address
+mac_address_regex = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$"
+
+# Match against a yyyy-mm-dd format date. Note that draft07 of the JSON schema standard
+# include a "date" pattern which can replace this.
+# https://json-schema.org/understanding-json-schema/reference/string.html
+date_regex = "^([0-9]{4})-(0[1-9]|[12][0-9]|3[01])-([012][0-9]|[3][01])$"
+
+# Match against a time in the format hh:mm:ss
+time_regex = "^([01][0-9]|2[0123])(:([012345][0-9])){2}$"
 
 schema = merge_config(
     default_schema,
@@ -32,7 +45,7 @@ schema = merge_config(
                             "network": {
                                 "type": "array",
                                 "title": "Attached Networks",
-                                "description": "override OpenWRT \"network\" config option of of wifi-iface "
+                                "description": 'override OpenWRT "network" config option of of wifi-iface '
                                 "directive; will be automatically determined if left blank",
                                 "uniqueItems": True,
                                 "additionalItems": True,
@@ -71,9 +84,9 @@ schema = merge_config(
                             "macfilter": {
                                 "type": "string",
                                 "title": "MAC Filter",
-                                "description": "specifies the mac filter policy, \"disable\" to disable "
-                                "the filter, \"allow\" to treat it as whitelist or "
-                                "\"deny\" to treat it as blacklist",
+                                "description": 'specifies the mac filter policy, "disable" to disable '
+                                'the filter, "allow" to treat it as whitelist or '
+                                '"deny" to treat it as blacklist',
                                 "enum": ["disable", "allow", "deny"],
                                 "default": "disable",
                                 "propertyOrder": 15,
@@ -82,7 +95,7 @@ schema = merge_config(
                                 "type": "array",
                                 "title": "MAC List",
                                 "description": "mac addresses that will be filtered according to the policy "
-                                "specified in the \"macfilter\" option",
+                                'specified in the "macfilter" option',
                                 "propertyOrder": 16,
                                 "items": {
                                     "type": "string",
@@ -103,7 +116,7 @@ schema = merge_config(
                             "igmp_snooping": {
                                 "type": "boolean",
                                 "title": "IGMP snooping",
-                                "description": "sets the \"multicast_snooping\" kernel setting for a bridge",
+                                "description": 'sets the "multicast_snooping" kernel setting for a bridge',
                                 "default": True,
                                 "format": "checkbox",
                                 "propertyOrder": 4,
@@ -693,10 +706,262 @@ schema = merge_config(
                                 },
                                 "enabled": {
                                     "type": "boolean",
-                                    "title": "enable rule",
+                                    "title": "enable",
+                                    "description": "Enable this rule.",
                                     "default": True,
                                     "format": "checkbox",
                                     "propertyOrder": 14,
+                                },
+                            },
+                        },
+                    },
+                    "redirects": {
+                        "type": "array",
+                        "title": "Redirects",
+                        "propertyOrder": 8,
+                        "items": {
+                            "type": "object",
+                            "title": "Redirect",
+                            "additionalProperties": False,
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "name",
+                                    "description": "Name of redirect",
+                                    "propertyOrder": 1,
+                                },
+                                "src": {
+                                    "type": "string",
+                                    "title": "src",
+                                    "description": "Specifies the traffic source zone. "
+                                    "Must refer to one of the defined zone names. "
+                                    "For typical port forwards this usually is wan.",
+                                    "propertyOrder": 2,
+                                },
+                                "src_ip": {
+                                    "type": "string",
+                                    "title": "src_ip",
+                                    "description": "Match incoming traffic from the specified source ip "
+                                    "address.",
+                                    "format": "ipv4",
+                                    "propertyOrder": 3,
+                                },
+                                "src_dip": {
+                                    "type": "string",
+                                    "title": "src_dip",
+                                    "description": "For DNAT, match incoming traffic directed at the "
+                                    "given destination ip address. For SNAT rewrite the source address "
+                                    "to the given address.",
+                                    "format": "ipv4",
+                                    "propertyOrder": 4,
+                                },
+                                "src_mac": {
+                                    "type": "string",
+                                    "title": "src_mac",
+                                    "description": "Match incoming traffic from the specified MAC address.",
+                                    "pattern": mac_address_regex,
+                                    "propertyOrder": 5,
+                                },
+                                "src_port": {
+                                    "type": "string",
+                                    "title": "src_port",
+                                    "description": "Match incoming traffic originating from the given source "
+                                    "port or port range on the client host.",
+                                    "pattern": port_range_regex,
+                                    "propertyOrder": 6,
+                                },
+                                "src_dport": {
+                                    "type": "string",
+                                    "title": "src_dport",
+                                    "description": "For DNAT, match incoming traffic directed at the given "
+                                    "destination port or port range on this host. For SNAT rewrite the "
+                                    "source ports to the given value.",
+                                    "pattern": port_range_regex,
+                                    "propertyOrder": 7,
+                                },
+                                "proto": {
+                                    "type": "array",
+                                    "title": "proto",
+                                    "description": "Match incoming traffic using the given protocol. "
+                                    "Can be one of tcp, udp, tcpudp, udplite, icmp, esp, "
+                                    "ah, sctp, or all or it can be a numeric value, "
+                                    "representing one of these protocols or a different one. "
+                                    "A protocol name from /etc/protocols is also allowed. "
+                                    "The number 0 is equivalent to all",
+                                    "default": ["tcp", "udp"],
+                                    "propertyOrder": 8,
+                                    "items": {
+                                        "title": "Protocol type",
+                                        "type": "string",
+                                    },
+                                },
+                                "dest": {
+                                    "type": "string",
+                                    "title": "dest",
+                                    "description": "Specifies the traffic destination zone. Must refer to "
+                                    "on of the defined zone names. For DNAT target on Attitude Adjustment, "
+                                    'NAT reflection works only if this is equal to "lan".',
+                                    "propertyOrder": 9,
+                                },
+                                "dest_ip": {
+                                    "type": "string",
+                                    "title": "dest_ip",
+                                    "description": "For DNAT, redirect matches incoming traffic to the "
+                                    "specified internal host. For SNAT, it matches traffic directed at "
+                                    "the given address. For DNAT, if the dest_ip is not specified, the rule "
+                                    "is translated in a iptables/REDIRECT rule, otherwise it is a "
+                                    "iptables/DNAT rule.",
+                                    "format": "ipv4",
+                                    "propertyOrder": 10,
+                                },
+                                "dest_port": {
+                                    "type": "string",
+                                    "title": "dest_port",
+                                    "description": "For DNAT, redirect matched incoming traffic to the given "
+                                    "port on the internal host. For SNAT, match traffic directed at the "
+                                    "given ports. Only a single port or range can be specified.",
+                                    "pattern": port_range_regex,
+                                    "propertyOrder": 11,
+                                },
+                                "ipset": {
+                                    "type": "string",
+                                    "title": "ipset",
+                                    "description": "Match traffic against the given ipset. The match can be "
+                                    "inverted by prefixing the value with an exclamation mark.",
+                                    "propertyOrder": 12,
+                                },
+                                "mark": {
+                                    "type": "string",
+                                    "title": "mark",
+                                    "description": 'Match traffic against the given firewall mark, e.g. '
+                                    '"0xFF" to match mark 255 or "0x0/0x1" to match any even mark value. '
+                                    'The match can be inverted by prefixing the value with an exclamation '
+                                    'mark, e.g. "!0x10" to match all but mark #16.',
+                                    "propertyOrder": 13,
+                                },
+                                "start_date": {
+                                    "type": "string",
+                                    "title": "start_date",
+                                    "description": "Only match traffic after the given date (inclusive).",
+                                    "pattern": date_regex,
+                                    # "format": "date", TODO: replace pattern with this
+                                    # when adopt draft07
+                                    "propertyOrder": 14,
+                                },
+                                "stop_date": {
+                                    "type": "string",
+                                    "title": "stop_date",
+                                    "description": "Only match traffic before the given date (inclusive).",
+                                    "pattern": date_regex,
+                                    # "format": "date", TODO: replace pattern with this
+                                    # when adopt draft07
+                                    "propertyOrder": 15,
+                                },
+                                "start_time": {
+                                    "type": "string",
+                                    "title": "start_time",
+                                    "description": "Only match traffic after the given time of day "
+                                    "(inclusive).",
+                                    "pattern": time_regex,
+                                    "propertyOrder": 16,
+                                },
+                                "stop_time": {
+                                    "type": "string",
+                                    "title": "stop_time",
+                                    "description": "Only match traffic before the given time of day "
+                                    "(inclusive).",
+                                    "pattern": time_regex,
+                                    "propertyOrder": 17,
+                                },
+                                # FIXME: regex needed. Also, should this be an array?
+                                "weekdays": {
+                                    "type": "string",
+                                    "title": "weekdays",
+                                    "description": "Only match traffic during the given week days, "
+                                    'e.g. "sun mon thu fri" to only match on Sundays, Mondays, Thursdays and '
+                                    "Fridays. The list can be inverted by prefixing it with an exclamation "
+                                    'mark, e.g. "! sat sun" to always match but not on Saturdays and '
+                                    "Sundays.",
+                                    "propertyOrder": 18,
+                                },
+                                # FIXME: regex needed. Also, should this be an array?
+                                "monthdays": {
+                                    "type": "string",
+                                    "title": "monthdays",
+                                    "description": "Only match traffic during the given days of the "
+                                    'month, e.g. "2 5 30" to only match on every 2nd, 5th and 30th '
+                                    "day of the month. The list can be inverted by prefixing it with "
+                                    'an exclamation mark, e.g. "! 31" to always match but on the '
+                                    "31st of the month.",
+                                    "propertyOrder": 19,
+                                },
+                                "utc_time": {
+                                    "type": "boolean",
+                                    "title": "utc_time",
+                                    "description": "Treat all given time values as UTC time instead of local "
+                                    "time.",
+                                    "default": False,
+                                    "propertyOrder": 20,
+                                },
+                                "target": {
+                                    "type": "string",
+                                    "title": "target",
+                                    "description": "NAT target (DNAT or SNAT) to use when generating the "
+                                    "rule.",
+                                    "enum": ["DNAT", "SNAT"],
+                                    "default": "DNAT",
+                                    "propertyOrder": 21,
+                                },
+                                "family": {
+                                    "type": "string",
+                                    "title": "family",
+                                    "description": "Protocol family (ipv4, ipv6 or any) to generate iptables "
+                                    "rules for",
+                                    "enum": ["ipv4", "ipv6", "any"],
+                                    "default": "any",
+                                    "propertyOrder": 22,
+                                },
+                                "reflection": {
+                                    "type": "boolean",
+                                    "title": "reflection",
+                                    "description": "Activate NAT reflection for this redirect. Applicable to "
+                                    "DNAT targets.",
+                                    "default": True,
+                                    "propertyOrder": 23,
+                                },
+                                "reflection_src": {
+                                    "type": "string",
+                                    "title": "reflection_src",
+                                    "description": "The source address to use for NAT-reflected packets if "
+                                    "reflection is True. This can be internal or external, specifying which "
+                                    "interface’s address to use. Applicable to DNAT targets.",
+                                    "enum": ["internal", "external"],
+                                    "default": "internal",
+                                    "propertyOrder": 24,
+                                },
+                                "limit": {
+                                    "type": "string",
+                                    "title": "limit",
+                                    "description": "Maximum average matching rate; specified as a number, "
+                                    "with an optional /second, /minute, /hour or /day suffix. "
+                                    "Examples: 3/second, 3/sec or 3/s.",
+                                    "propertyOrder": 25,
+                                },
+                                "limit_burst": {
+                                    "type": "integer",
+                                    "title": "limit_burst",
+                                    "description": "Maximum initial number of packets to match, allowing a "
+                                    "short-term average above limit.",
+                                    "default": 5,
+                                    "propertyOrder": 26,
+                                },
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "enable",
+                                    "description": "Enable this redirect.",
+                                    "default": True,
+                                    "format": "checkbox",
+                                    "propertyOrder": 27,
                                 },
                             },
                         },

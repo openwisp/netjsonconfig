@@ -14,16 +14,19 @@ from .base import OpenWrtConverter
 class Firewall(OpenWrtConverter):
     netjson_key = "firewall"
     intermediate_key = "firewall"
-    _uci_types = ["defaults", "forwarding", "zone", "rule"]
+    _uci_types = ["defaults", "forwarding", "zone", "rule", "redirect"]
     _schema = schema["properties"]["firewall"]
 
     def to_intermediate_loop(self, block, result, index=None):
         forwardings = self.__intermediate_forwardings(block.pop("forwardings", {}))
         zones = self.__intermediate_zones(block.pop("zones", {}))
         rules = self.__intermediate_rules(block.pop("rules", {}))
+        redirects = self.__intermediate_redirects(block.pop("redirects", {}))
         block.update({".type": "defaults", ".name": block.pop("id", "defaults")})
         result.setdefault("firewall", [])
-        result["firewall"] = [self.sorted_dict(block)] + forwardings + zones + rules
+        result["firewall"] = (
+            [self.sorted_dict(block)] + forwardings + zones + rules + redirects
+        )
         return result
 
     def __intermediate_forwardings(self, forwardings):
@@ -104,6 +107,37 @@ class Firewall(OpenWrtConverter):
     def __get_auto_name_rule(self, rule):
         return "rule_{0}".format(self._get_uci_name(rule["name"]))
 
+    def __intermediate_redirects(self, redirects):
+        """
+        converts NetJSON redirect to
+        UCI intermediate data structure
+        """
+        result = []
+        for redirect in redirects:
+            if "config_name" in redirect:
+                del redirect["config_name"]
+            resultdict = OrderedDict(
+                (
+                    (".name", self.__get_auto_name_redirect(redirect)),
+                    (".type", "redirect"),
+                )
+            )
+            if "proto" in redirect:
+                # If proto is a single value, then force it not to be in a list so that
+                # the UCI uses "option" rather than "list". If proto is only "tcp"
+                # and"udp", we can force it to the single special value of "tcpudp".
+                proto = redirect["proto"]
+                if len(proto) == 1:
+                    redirect["proto"] = proto[0]
+                elif set(proto) == {"tcp", "udp"}:
+                    redirect["proto"] = "tcpudp"
+            resultdict.update(redirect)
+            result.append(resultdict)
+        return result
+
+    def __get_auto_name_redirect(self, redirect):
+        return "redirect_{0}".format(self._get_uci_name(redirect["name"]))
+
     def to_netjson_loop(self, block, result, index):
         result.setdefault("firewall", {})
 
@@ -122,6 +156,10 @@ class Firewall(OpenWrtConverter):
             forwarding = self.__netjson_forwarding(block)
             result["firewall"].setdefault("forwardings", [])
             result["firewall"]["forwardings"].append(forwarding)
+        if _type == "redirect":
+            redirect = self.__netjson_redirect(block)
+            result["firewall"].setdefault("redirects", [])
+            result["firewall"]["redirects"].append(redirect)
 
         return self.type_cast(result)
 
@@ -156,3 +194,14 @@ class Firewall(OpenWrtConverter):
 
     def __netjson_forwarding(self, forwarding):
         return self.type_cast(forwarding)
+
+    def __netjson_redirect(self, redirect):
+        if "proto" in redirect:
+            proto = redirect.pop("proto")
+            if not isinstance(proto, list):
+                if proto == "tcpudp":
+                    redirect["proto"] = ["tcp", "udp"]
+                else:
+                    redirect["proto"] = [proto]
+
+        return self.type_cast(redirect)

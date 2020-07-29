@@ -373,3 +373,43 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
         )
         with self.assertRaises(ValidationError):
             o.validate()
+
+    _redirect_1_netjson = {
+        "firewall": {
+            "redirects": [
+                {
+                    "name": "Adblock DNS, port 53",
+                    "src": "lan",
+                    "proto": ["tcp", "udp"],
+                    "src_dport": "53",
+                    "dest_port": "53",
+                    "target": "DNAT",
+                }
+            ]
+        }
+    }
+
+    _redirect_1_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config redirect 'redirect_Adblock DNS, port 53'
+            option name 'Adblock DNS, port 53'
+            option src 'lan'
+            option proto 'tcpudp'
+            option src_dport '53'
+            option dest_port '53'
+            option target 'DNAT'
+        """
+    )
+
+    def test_render_redirect_1(self):
+        o = OpenWrt(self._redirect_1_netjson)
+        expected = self._tabs(self._redirect_1_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_redirect_1(self):
+        o = OpenWrt(native=self._redirect_1_uci)
+        self.assertEqual(o.config, self._redirect_1_netjson)
