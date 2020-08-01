@@ -168,13 +168,9 @@ class Firewall(OpenWrtConverter):
     def __netjson_rule(self, rule):
         if "enabled" in rule:
             rule["enabled"] = rule.pop("enabled") == "1"
+
         if "proto" in rule:
-            proto = rule.pop("proto")
-            if not isinstance(proto, list):
-                if proto == "tcpudp":
-                    rule["proto"] = ["tcp", "udp"]
-                else:
-                    rule["proto"] = [proto]
+            rule["proto"] = self.__netjson_generic_proto(rule["proto"])
 
         return self.type_cast(rule)
 
@@ -199,7 +195,7 @@ class Firewall(OpenWrtConverter):
 
     def __netjson_redirect(self, redirect):
         if "proto" in redirect:
-            redirect["proto"] = self.__netjson_redirect_proto(redirect["proto"])
+            redirect["proto"] = self.__netjson_generic_proto(redirect["proto"])
 
         if "weekdays" in redirect:
             redirect["weekdays"] = self.__netjson_redirect_weekdays(
@@ -225,7 +221,7 @@ class Firewall(OpenWrtConverter):
 
         return self.type_cast(redirect)
 
-    def __netjson_redirect_proto(self, proto):
+    def __netjson_generic_proto(self, proto):
         if isinstance(proto, list):
             return proto.copy()
         else:
