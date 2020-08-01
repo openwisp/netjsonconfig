@@ -199,38 +199,17 @@ class Firewall(OpenWrtConverter):
 
     def __netjson_redirect(self, redirect):
         if "proto" in redirect:
-            proto = redirect.pop("proto")
-            if not isinstance(proto, list):
-                if proto == "tcpudp":
-                    redirect["proto"] = ["tcp", "udp"]
-                else:
-                    redirect["proto"] = [proto]
+            redirect["proto"] = self.__netjson_redirect_proto(redirect["proto"])
 
         if "weekdays" in redirect:
-            weekdays = redirect["weekdays"]
-            if not isinstance(weekdays, list):
-                weekdays = weekdays.split()
-            # UCI allows the first entry to be "!" which means negate the remaining
-            # entries
-            if weekdays[0] == "!":
-                all_days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
-                wd = set([x for x in weekdays[1:]])
-                redirect["weekdays"] = list(set(all_days) - wd)
-                # Sort the days for predictability when testing
-                redirect["weekdays"].sort(key=lambda v: all_days.index(v))
+            redirect["weekdays"] = self.__netjson_redirect_weekdays(
+                redirect["weekdays"]
+            )
 
         if "monthdays" in redirect:
-            monthdays = redirect["monthdays"]
-            if not isinstance(monthdays, list):
-                monthdays = monthdays.split()
-            # UCI allows the first entry to be "!" which means negate the remaining
-            # entries
-            if monthdays[0] == "!":
-                all_days = set(range(1, 32))
-                md = set([int(x) for x in monthdays[1:]])
-                redirect["monthdays"] = list(all_days - md)
-            else:
-                redirect["monthdays"] = [int(x) for x in monthdays]
+            redirect["monthdays"] = self.__netjson_redirect_monthdays(
+                redirect["monthdays"]
+            )
 
         if "utc_time" in redirect:
             redirect["utc_time"] = redirect["utc_time"] == "1"
@@ -245,3 +224,41 @@ class Firewall(OpenWrtConverter):
             redirect["enabled"] = redirect["enabled"] == "1"
 
         return self.type_cast(redirect)
+
+    def __netjson_redirect_proto(self, proto):
+        if isinstance(proto, list):
+            return proto.copy()
+        else:
+            if proto == "tcpudp":
+                return ["tcp", "udp"]
+            else:
+                return proto.split()
+
+    def __netjson_redirect_weekdays(self, weekdays):
+        if not isinstance(weekdays, list):
+            wd = weekdays.split()
+        else:
+            wd = weekdays.copy()
+
+        # UCI allows the first entry to be "!" which means negate the remaining entries
+        if wd[0] == "!":
+            all_days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+            wd = [day for day in all_days if day not in wd[1:]]
+
+        return wd
+
+    def __netjson_redirect_monthdays(self, monthdays):
+        if not isinstance(monthdays, list):
+            md = monthdays.split()
+        else:
+            md = monthdays.copy()
+
+        # UCI allows the first entry to be "!" which means negate the remaining entries
+        if md[0] == "!":
+            md = [int(day) for day in md[1:]]
+            all_days = range(1, 32)
+            md = [day for day in all_days if day not in md]
+        else:
+            md = [int(day) for day in md]
+
+        return md
