@@ -131,8 +131,10 @@ class Firewall(OpenWrtConverter):
                     redirect["proto"] = proto[0]
                 elif set(proto) == {"tcp", "udp"}:
                     redirect["proto"] = "tcpudp"
+
             resultdict.update(redirect)
             result.append(resultdict)
+
         return result
 
     def __get_auto_name_redirect(self, redirect):
@@ -203,5 +205,7 @@ class Firewall(OpenWrtConverter):
                     redirect["proto"] = ["tcp", "udp"]
                 else:
                     redirect["proto"] = [proto]
+        if "monthdays" in redirect:
+            redirect["monthdays"] = [int(x) for x in redirect["monthdays"]]
 
         return self.type_cast(redirect)

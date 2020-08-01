@@ -413,3 +413,74 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     def test_parse_redirect_1(self):
         o = OpenWrt(native=self._redirect_1_uci)
         self.assertEqual(o.config, self._redirect_1_netjson)
+
+    _redirect_2_netjson = {
+        "firewall": {
+            "redirects": [
+                {
+                    "name": "Adblock DNS, port 53",
+                    "src": "lan",
+                    "proto": ["tcp", "udp"],
+                    "src_dport": "53",
+                    "dest_port": "53",
+                    "target": "DNAT",
+                    # Contrived, unrealistic example for testing
+                    "weekdays": ["mon", "tue", "wed"],
+                    "monthdays": [1, 2, 3, 29, 30],
+                }
+            ]
+        }
+    }
+
+    _redirect_2_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config redirect 'redirect_Adblock DNS, port 53'
+            option name 'Adblock DNS, port 53'
+            option src 'lan'
+            option proto 'tcpudp'
+            option src_dport '53'
+            option dest_port '53'
+            option target 'DNAT'
+            list weekdays 'mon'
+            list weekdays 'tue'
+            list weekdays 'wed'
+            list monthdays '1'
+            list monthdays '2'
+            list monthdays '3'
+            list monthdays '29'
+            list monthdays '30'
+        """
+    )
+
+    def test_render_redirect_2(self):
+        o = OpenWrt(self._redirect_2_netjson)
+        expected = self._tabs(self._redirect_2_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_redirect_2(self):
+        o = OpenWrt(native=self._redirect_2_uci)
+        self.assertEqual(o.config, self._redirect_2_netjson)
+
+    def test_redirect_weekdays_validation_error_1(self):
+        o = OpenWrt({"firewall": {"redirects": [{"weekdays": ["mon", "xxx"]}]}})
+        with self.assertRaises(ValidationError):
+            o.validate()
+
+    def test_redirect_weekdays_validation_error_2(self):
+        o = OpenWrt({"firewall": {"redirects": [{"weekdays": ["mon", 1]}]}})
+        with self.assertRaises(ValidationError):
+            o.validate()
+
+    def test_redirect_monthdays_validation_error_1(self):
+        o = OpenWrt({"firewall": {"redirects": [{"monthdays": [2, 8, 32]}]}})
+        with self.assertRaises(ValidationError):
+            o.validate()
+
+    def test_redirect_monthdays_validation_error_2(self):
+        o = OpenWrt({"firewall": {"redirects": [{"monthdays": [0, 2, 8]}]}})
+        with self.assertRaises(ValidationError):
+            o.validate()

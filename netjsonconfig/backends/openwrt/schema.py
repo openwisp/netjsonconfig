@@ -873,27 +873,44 @@ schema = merge_config(
                                     "pattern": time_regex,
                                     "propertyOrder": 17,
                                 },
-                                # FIXME: regex needed. Also, should this be an array?
+                                # Note: here we don't support negation of values like
+                                # the UCI syntax does, as it's not necessary.
                                 "weekdays": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "weekdays",
                                     "description": "Only match traffic during the given week days, "
-                                    'e.g. "sun mon thu fri" to only match on Sundays, Mondays, Thursdays and '
-                                    "Fridays. The list can be inverted by prefixing it with an exclamation "
-                                    'mark, e.g. "! sat sun" to always match but not on Saturdays and '
-                                    "Sundays.",
+                                    'e.g. ["sun", "mon", "thu", "fri"] to only match on Sundays, '
+                                    "Mondays, Thursdays and Fridays.",
                                     "propertyOrder": 18,
+                                    "items": {
+                                        "type": "string",
+                                        "title": "weekday",
+                                        "enum": [
+                                            "mon",
+                                            "tue",
+                                            "wed",
+                                            "thu",
+                                            "fri",
+                                            "sat",
+                                            "sun",
+                                        ],
+                                    },
                                 },
-                                # FIXME: regex needed. Also, should this be an array?
+                                # Note: here we don't support negation of values like
+                                # the UCI syntax does, as it's not necessary.
                                 "monthdays": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "monthdays",
                                     "description": "Only match traffic during the given days of the "
-                                    'month, e.g. "2 5 30" to only match on every 2nd, 5th and 30th '
-                                    "day of the month. The list can be inverted by prefixing it with "
-                                    'an exclamation mark, e.g. "! 31" to always match but on the '
-                                    "31st of the month.",
+                                    "month, e.g. [2, 5, 30] to only match on every 2nd, 5th and 30th "
+                                    "day of the month.",
                                     "propertyOrder": 19,
+                                    "items": {
+                                        "type": "integer",
+                                        "title": "day of month",
+                                        "minimum": 1,
+                                        "maximum": 31,
+                                    },
                                 },
                                 "utc_time": {
                                     "type": "boolean",
