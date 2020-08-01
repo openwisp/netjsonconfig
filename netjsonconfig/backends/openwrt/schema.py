@@ -12,7 +12,7 @@ default_radio_driver = "mac80211"
 port_range_regex = "^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(-([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$"  # noqa
 
 # Match against a MAC address
-mac_address_regex = "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$"
+mac_address_regex = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
 
 # Match against a yyyy-mm-dd format date. Note that draft07 of the JSON schema standard
 # include a "date" pattern which can replace this.
@@ -100,7 +100,7 @@ schema = merge_config(
                                 "items": {
                                     "type": "string",
                                     "title": "MAC address",
-                                    "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
+                                    "pattern": mac_address_regex,
                                     "minLength": 17,
                                     "maxLength": 17,
                                 },
@@ -613,7 +613,7 @@ schema = merge_config(
                                     "title": "src_mac",
                                     "description": "match incoming traffic from the specified "
                                     "mac address",
-                                    "pattern": "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$",
+                                    "pattern": mac_address_regex,
                                     "minLength": 17,
                                     "maxLength": 17,
                                     "propertyOrder": 4,
@@ -760,6 +760,8 @@ schema = merge_config(
                                     "title": "src_mac",
                                     "description": "Match incoming traffic from the specified MAC address.",
                                     "pattern": mac_address_regex,
+                                    "minLength": 17,
+                                    "maxLength": 17,
                                     "propertyOrder": 5,
                                 },
                                 "src_port": {
