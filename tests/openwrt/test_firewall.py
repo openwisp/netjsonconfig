@@ -549,5 +549,90 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
     def test_parse_redirect_3(self):
         o = OpenWrt(native=self._redirect_3_uci)
-        print(o.config)
         self.assertEqual(o.config, self._redirect_3_netjson)
+
+    _redirect_4_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config redirect 'redirect_Adblock DNS, port 53'
+            option name 'Adblock DNS, port 53'
+            option src 'lan'
+            option proto 'tcpudp'
+            option src_dport '53'
+            option dest_port '53'
+            option target 'DNAT'
+            list weekdays 'mon'
+            list weekdays 'tue'
+            list weekdays 'wed'
+            list monthdays '1'
+            list monthdays '2'
+            list monthdays '31'
+            option src_ip '192.168.1.1'
+            option src_dip '192.168.1.1'
+            option src_mac 'AA:AA:AA:AA:AA:AA'
+            option src_port '1-1064'
+            option dest 'wan'
+            option dest_ip '10.0.0.1'
+            option ipset 'myipset'
+            option mark '0xff'
+            option start_date '2020-02-02'
+            option stop_date '2020-03-02'
+            option start_time '12:12:12'
+            option stop_time '23:23:23'
+            option utc_time '1'
+            option family 'any'
+            option reflection '0'
+            option reflection_src 'external'
+            option limit '3/sec'
+            option limit_burst '5'
+            option enabled '0'
+        """
+    )
+
+    _redirect_4_netjson = {
+        "firewall": {
+            "redirects": [
+                {
+                    "name": "Adblock DNS, port 53",
+                    "src": "lan",
+                    "proto": ["tcp", "udp"],
+                    "src_dport": "53",
+                    "dest_port": "53",
+                    "target": "DNAT",
+                    "weekdays": ["mon", "tue", "wed"],
+                    "monthdays": [1, 2, 31],
+                    "src_ip": "192.168.1.1",
+                    "src_dip": "192.168.1.1",
+                    "src_mac": "AA:AA:AA:AA:AA:AA",
+                    "src_port": "1-1064",
+                    "dest": "wan",
+                    "dest_ip": "10.0.0.1",
+                    "ipset": "myipset",
+                    "mark": "0xff",
+                    "start_date": "2020-02-02",
+                    "stop_date": "2020-03-02",
+                    "start_time": "12:12:12",
+                    "stop_time": "23:23:23",
+                    "utc_time": True,
+                    "family": "any",
+                    "reflection": False,
+                    "reflection_src": "external",
+                    "limit": "3/sec",
+                    "limit_burst": 5,
+                    "enabled": False,
+                }
+            ]
+        }
+    }
+
+    def test_render_redirect_4(self):
+        o = OpenWrt(self._redirect_4_netjson)
+        expected = self._tabs(self._redirect_4_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_redirect_4(self):
+        o = OpenWrt(native=self._redirect_4_uci)
+        self.assertEqual(o.config, self._redirect_4_netjson)

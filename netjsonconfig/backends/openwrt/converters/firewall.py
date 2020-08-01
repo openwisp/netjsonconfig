@@ -232,4 +232,16 @@ class Firewall(OpenWrtConverter):
             else:
                 redirect["monthdays"] = [int(x) for x in monthdays]
 
+        if "utc_time" in redirect:
+            redirect["utc_time"] = redirect["utc_time"] == "1"
+
+        if "reflection" in redirect:
+            redirect["reflection"] = redirect["reflection"] == "1"
+
+        if "limit_burst" in redirect:
+            redirect["limit_burst"] = int(redirect["limit_burst"])
+
+        if "enabled" in redirect:
+            redirect["enabled"] = redirect["enabled"] == "1"
+
         return self.type_cast(redirect)
