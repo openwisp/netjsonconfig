@@ -484,3 +484,70 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
         o = OpenWrt({"firewall": {"redirects": [{"monthdays": [0, 2, 8]}]}})
         with self.assertRaises(ValidationError):
             o.validate()
+
+    _redirect_3_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config redirect 'redirect_Adblock DNS, port 53'
+            option name 'Adblock DNS, port 53'
+            option src 'lan'
+            option proto 'tcpudp'
+            option src_dport '53'
+            option dest_port '53'
+            option target 'DNAT'
+            option weekdays '! mon tue wed'
+            option monthdays '! 1 2 3 4 5'
+        """
+    )
+
+    _redirect_3_netjson = {
+        "firewall": {
+            "redirects": [
+                {
+                    "name": "Adblock DNS, port 53",
+                    "src": "lan",
+                    "proto": ["tcp", "udp"],
+                    "src_dport": "53",
+                    "dest_port": "53",
+                    "target": "DNAT",
+                    "weekdays": ["sun", "thu", "fri", "sat"],
+                    "monthdays": [
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15,
+                        16,
+                        17,
+                        18,
+                        19,
+                        20,
+                        21,
+                        22,
+                        23,
+                        24,
+                        25,
+                        26,
+                        27,
+                        28,
+                        29,
+                        30,
+                        31,
+                    ],
+                }
+            ]
+        }
+    }
+
+    def test_parse_redirect_3(self):
+        o = OpenWrt(native=self._redirect_3_uci)
+        print(o.config)
+        self.assertEqual(o.config, self._redirect_3_netjson)

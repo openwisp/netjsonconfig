@@ -205,7 +205,31 @@ class Firewall(OpenWrtConverter):
                     redirect["proto"] = ["tcp", "udp"]
                 else:
                     redirect["proto"] = [proto]
+
+        if "weekdays" in redirect:
+            weekdays = redirect["weekdays"]
+            if not isinstance(weekdays, list):
+                weekdays = weekdays.split()
+            # UCI allows the first entry to be "!" which means negate the remaining
+            # entries
+            if weekdays[0] == "!":
+                all_days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+                wd = set([x for x in weekdays[1:]])
+                redirect["weekdays"] = list(set(all_days) - wd)
+                # Sort the days for predictability when testing
+                redirect["weekdays"].sort(key=lambda v: all_days.index(v))
+
         if "monthdays" in redirect:
-            redirect["monthdays"] = [int(x) for x in redirect["monthdays"]]
+            monthdays = redirect["monthdays"]
+            if not isinstance(monthdays, list):
+                monthdays = monthdays.split()
+            # UCI allows the first entry to be "!" which means negate the remaining
+            # entries
+            if monthdays[0] == "!":
+                all_days = set(range(1, 32))
+                md = set([int(x) for x in monthdays[1:]])
+                redirect["monthdays"] = list(all_days - md)
+            else:
+                redirect["monthdays"] = [int(x) for x in monthdays]
 
         return self.type_cast(redirect)
