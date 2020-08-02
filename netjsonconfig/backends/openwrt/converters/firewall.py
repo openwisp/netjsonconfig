@@ -167,7 +167,7 @@ class Firewall(OpenWrtConverter):
 
     def __netjson_rule(self, rule):
         if "enabled" in rule:
-            rule["enabled"] = rule.pop("enabled") == "1"
+            rule["enabled"] = self.__netjson_generic_boolean(rule["enabled"])
 
         if "proto" in rule:
             rule["proto"] = self.__netjson_generic_proto(rule["proto"])
@@ -182,11 +182,9 @@ class Firewall(OpenWrtConverter):
         if not isinstance(network, list):
             zone["network"] = network.split()
 
-        if "mtu_fix" in zone:
-            zone["mtu_fix"] = zone.pop("mtu_fix") == "1"
-
-        if "masq" in zone:
-            zone["masq"] = zone.pop("masq") == "1"
+        for param in ["mtu_fix", "masq"]:
+            if param in zone:
+                zone[param] = self.__netjson_generic_boolean(zone[param])
 
         return self.type_cast(zone)
 
@@ -207,19 +205,21 @@ class Firewall(OpenWrtConverter):
                 redirect["monthdays"]
             )
 
-        if "utc_time" in redirect:
-            redirect["utc_time"] = redirect["utc_time"] == "1"
-
-        if "reflection" in redirect:
-            redirect["reflection"] = redirect["reflection"] == "1"
+        for param in ["utc_time", "reflection", "enabled"]:
+            if param in redirect:
+                redirect[param] = self.__netjson_generic_boolean(redirect[param])
 
         if "limit_burst" in redirect:
             redirect["limit_burst"] = int(redirect["limit_burst"])
 
-        if "enabled" in redirect:
-            redirect["enabled"] = redirect["enabled"] == "1"
-
         return self.type_cast(redirect)
+
+    def __netjson_generic_boolean(self, boolean):
+        # Per convention, boolean options may have one of the values '0', 'no', 'off',
+        # 'false' or 'disabled' to specify a false value or '1' , 'yes', 'on', 'true' or
+        # 'enabled' to specify a true value.
+        # https://openwrt.org/docs/guide-user/base-system/uci
+        return boolean in ["1", "yes", "on", "true", "enabled"]
 
     def __netjson_generic_proto(self, proto):
         if isinstance(proto, list):
