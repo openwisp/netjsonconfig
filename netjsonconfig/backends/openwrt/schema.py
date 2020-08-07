@@ -114,14 +114,16 @@ schema = merge_config(
             },
             "dialup_interface": {
                 "title": "Dialup interface",
-                "required": [
-                    "proto",
-                    "username",
-                    "password"
-                ],
+                "required": ["proto", "username", "password"],
                 "allOf": [
                     {
                         "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["dialup"],
+                                "default": "dialup",
+                                "propertyOrder": 1,
+                            },
                             "proto": {
                                 "type": "string",
                                 "enum": [
@@ -135,7 +137,7 @@ schema = merge_config(
                                     "pppoe",
                                     "pptp",
                                     "qmi",
-                                    "wwan"
+                                    "wwan",
                                 ],
                                 "default": "pppoe",
                                 "propertyOrder": 8,
@@ -149,11 +151,11 @@ schema = merge_config(
                                 "type": "string",
                                 "description": "password for authentication in protocols like PPPoE",
                                 "propertyOrder": 10,
-                            }
+                            },
                         }
                     },
                     {"$ref": "#/definitions/interface_settings"},
-                ]
+                ],
             },
             "base_radio_settings": {
                 "properties": {
@@ -209,17 +211,7 @@ schema = merge_config(
                 }
             },
             "interfaces": {
-                "type": "array",
-                "title": "Interfaces",
-                "uniqueItems": True,
-                "additionalItems": True,
-                "propertyOrder": 2,
-                "items": {
-                    "title": "Interface",
-                    "oneOf": [
-                        {"$ref": "#/definitions/dialup_interface"}
-                    ]
-                }
+                "items": {"oneOf": [{"$ref": "#/definitions/dialup_interface"}]}
             },
             "routes": {
                 "items": {

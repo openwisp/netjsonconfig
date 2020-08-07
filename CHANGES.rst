@@ -1,6 +1,10 @@
 Change log
 ==========
 
+- Added dialup interface handling for openwrt backend.
+  This change is backward incompatible for custom defined interfaces of the
+  proto type ``other``.
+
 Version 0.8.1 [2020-05-28]
 --------------------------
 
