@@ -1,3 +1,4 @@
+from .ddns import Ddns
 from .default import Default
 from .general import General
 from .interfaces import Interfaces
@@ -10,7 +11,6 @@ from .rules import Rules
 from .switch import Switch
 from .wireguard_peers import WireguardPeers
 from .wireless import Wireless
-from .ddns import Ddns
 
 __all__ = [
     'Default',

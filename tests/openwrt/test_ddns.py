@@ -13,7 +13,7 @@ class TestDdns(unittest.TestCase, _TabsMixin):
             "ddns_loglines": 250,
             "ddns_rundir": "/var/run/ddns",
             "upd_privateip": False,
-            "use_curl": False
+            "use_curl": False,
         }
     }
     _ddns_uci_global = """package ddns

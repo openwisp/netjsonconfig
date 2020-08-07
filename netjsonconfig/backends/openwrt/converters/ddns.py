@@ -13,10 +13,7 @@ class Ddns(OpenWrtConverter):
     def to_intermediate_loop(self, block, result, index=None):
         if block:
             provider_list = self.__intermediate_providers(block.pop('providers', {}))
-            block.update({
-                '.type': 'ddns',
-                '.name': block.pop('id', 'global'),
-            })
+            block.update({'.type': 'ddns', '.name': block.pop('id', 'global')})
             result.setdefault('ddns', [])
             result['ddns'] = [self.sorted_dict(block)] + provider_list
         return result
@@ -29,8 +26,7 @@ class Ddns(OpenWrtConverter):
         result = []
         for provider in providers:
             uci_name = self._get_uci_name(provider['lookup_host'])
-            resultdict = OrderedDict((('.name', uci_name),
-                                      ('.type', 'service')))
+            resultdict = OrderedDict((('.name', uci_name), ('.type', 'service')))
             resultdict.update(provider)
             result.append(resultdict)
         return result
