@@ -723,7 +723,7 @@ firewall_redirect_properties = {
         "description": "NAT target (DNAT or SNAT) to use when generating the rule.",
         "enum": ["DNAT", "SNAT"],
         "default": "DNAT",
-        "propertyOrder": 21,
+        "propertyOrder": 105,
     },
 }
 
@@ -882,12 +882,53 @@ firewall_zones_properties = {
             ],
         },
     },
+    "masq_allow_invalid": {
+        "type": "boolean",
+        "title": "Allow invalid packets.",
+        "description": "Do not add DROP INVALID rules to the firewall if masquerading "
+        "is used. The DROP rules are supposed to prevent NAT leakage."
+        "default": False,
+        "format": "checkbox",
+        "propertyOrder": 10,
+    },
+    "family": {"$ref": "#/definitions/firewall/family"},
+    "log": {
+        "type": "integer",
+        "title": "Enable logging for the filter and/or mangle table.",
+        "description": "Bit field to enable logging in the filter and/or mangle tables, "
+        "bit 0 = filter, bit 1 = mangle.",
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "propertyOrder": 10,
+    },
+    "log_limit": {
+        "type": "string",
+        "title": "Limit on the number of log messages.",
+        "description": "Limits the amount of log messages per interval. For example, "
+        '"10/minute" will limit the logging to 10 messages per minute',
+        "default": "10/minute",
+        "propertyOrder": 11,
+    },
+    "device": {
+        "type": "array",
+        "title":  "Raw devices to attach to this zone."
+        "description": "A list of raw device names to associate with this zone. "
+        "items": {
+            "type": "string",
+            "title": "A device to attach to the zone.",
+            "description": "A device to attach to the zone."
+            'For example, "ppp+" to match any PPP interface to the zone.',
+        },
+        "propertyOrder": 12,
+    },
 }
 
 firewall_properties = {
     "syn_flood": {
         "type": "boolean",
-        "title": "enable SYN flood protection",
+        "title": "SYN flood protection.",
+        "description": "Enables SYN flood protection.",
         "default": False,
         "format": "checkbox",
         "propertyOrder": 1,
