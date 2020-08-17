@@ -1,6 +1,11 @@
 Change log
 ==========
 
+Version 0.8.2 [2020-08-17]
+--------------------------
+
+- [fix] Fixed bug in OpenWRT backend validation for ip_rules/src
+
 Version 0.8.1 [2020-05-28]
 --------------------------
 
