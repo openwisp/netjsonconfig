@@ -601,25 +601,21 @@ config interface 'ppp0'
         native = self._tabs(
             """package network
 
-config interface 'ppp0'
+config interface 'custom_if0'
     option device '/dev/usb/modem1'
-    option ifname 'ppp0'
+    option ifname 'custom_if0'
     option ipv6 '1'
     option keepalive '3'
-    option password 'pwd0123'
-    option proto 'ppp'
-    option username 'user1'
+    option proto 'custom'
 """
         )
         expected = {
             "interfaces": [
                 {
-                    "name": "ppp0",
+                    "name": "custom_if0",
                     "type": "other",
-                    "proto": "ppp",
+                    "proto": "custom",
                     "device": "/dev/usb/modem1",
-                    "username": "user1",
-                    "password": "pwd0123",
                     "keepalive": '3',
                     "ipv6": '1',
                 }

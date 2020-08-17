@@ -1,6 +1,16 @@
 Change log
 ==========
 
+Version 0.9.0 [unreleased]
+--------------------------
+
+- [change] **Potentially backward incompatible**:
+  added support for dialup interfaces (ppp, pppoe, pppoa,
+  3g, qmi, ncm, wwan, pptp, 6in4, aiccu or l2tp) to openwrt backend.
+  This change is backward incompatible if the same type of configuration
+  was achieved using a workaround, in these cases the configuration
+  will have to be upgraded to use the new format.
+
 Version 0.8.2 [2020-08-17]
 --------------------------
 

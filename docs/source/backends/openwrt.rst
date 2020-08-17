@@ -288,11 +288,12 @@ The network interface settings reside in the ``interfaces`` key of the
 `NetJSON interface objects <http://netjson.org/rfc.html#interfaces1>`_
 (see the link for the detailed specification).
 
-There are 3 main type of interfaces:
+There are 4 main types of interfaces:
 
 * **network interfaces**: may be of type ``ethernet``, ``virtual``, ``loopback`` or ``other``
 * **wireless interfaces**: must be of type ``wireless``
 * **bridge interfaces**: must be of type ``bridge``
+* **dialup interfaces**: must be of type ``dialup``
 
 Interface object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -376,7 +377,12 @@ Will be rendered as follows::
 
     package network
 
-    config interface 'eth0'        option ifname 'eth0'        option ip6addr 'fdb4:5f35:e8fd::1/48'        option ipaddr '10.27.251.1'        option netmask '255.255.255.0'        option proto 'static'
+    config interface 'eth0'
+        option ifname 'eth0'
+        option ip6addr 'fdb4:5f35:e8fd::1/48'
+        option ipaddr '10.27.251.1'
+        option netmask '255.255.255.0'
+        option proto 'static'
 
 DNS servers and search domains
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -431,7 +437,22 @@ Will return the following UCI output::
 
     package network
 
-    config interface 'eth0'            option dns '10.11.12.13 8.8.8.8'            option dns_search 'openwisp.org netjson.org'            option ifname 'eth0'            option ipaddr '192.168.1.1'            option netmask '255.255.255.0'            option proto 'static'    config interface 'eth1'            option dns_search 'openwisp.org netjson.org'            option ifname 'eth1'            option proto 'dhcp'    config interface 'eth1_31'            option ifname 'eth1.31'            option proto 'none'
+    config interface 'eth0'
+            option dns '10.11.12.13 8.8.8.8'
+            option dns_search 'openwisp.org netjson.org'
+            option ifname 'eth0'
+            option ipaddr '192.168.1.1'
+            option netmask '255.255.255.0'
+            option proto 'static'
+
+    config interface 'eth1'
+            option dns_search 'openwisp.org netjson.org'
+            option ifname 'eth1'
+            option proto 'dhcp'
+
+    config interface 'eth1_31'
+            option ifname 'eth1.31'
+            option proto 'none'
 
 DHCP ipv6 ethernet interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1189,6 +1210,54 @@ UCI Output::
             option network 'wlan0'
             option password 'test-password'
             option ssid 'enterprise-client'
+
+Dialup settings
+---------------
+
+Interfaces of type ``dialup`` contain a few options that are specific to dialup connections.
+
+The ``OpenWrt`` backend NetJSON extensions for dialup interfaces:
+
++--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
+| key name     | type    | default   | allowed values                                                                                             |
++==============+=========+===========+============================================================================================================+
+| ``proto``    | string  | ``pppoe`` | ``3g``, ``6in4``, ``aiccu``, ``l2tp``, ``ncm``, ``ppp``, ``pppoa``, ``pppoe``, ``pptp``, ``qmi``, ``wwan`` |
++--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
+| ``password`` | string  | ``""``    |                                                                                                            |
++--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
+| ``username`` | string  | ``""``    |                                                                                                            |
++--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
+
+Dialup interface example
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "dsl0",
+                "network": "xdsl",
+                "proto": "pppoe",
+                "password": "jf93nf82o023$",
+                "username": "dsluser",
+                "mtu": 1448
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config interface 'xdsl'               
+            option ifname 'dsl0'
+            option proto 'pppoe'     
+            option username 'dsluser' 
+            option password 'jf93nf82o023$'
+            option mtu '1448'          
 
 Radio settings
 --------------

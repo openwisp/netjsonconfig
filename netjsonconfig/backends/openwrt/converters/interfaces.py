@@ -248,7 +248,8 @@ class Interfaces(OpenWrtConverter):
             return interface
         if proto not in ['static', 'dhcp', 'dhcpv6', 'none']:
             interface['proto'] = proto
-            interface['type'] = 'other'
+            interface['type'] = self.__get_special_interface_type(interface)
+
         addresses = []
         ipv4 = interface.pop('ipaddr', [])
         ipv6 = interface.pop('ip6addr', [])
@@ -271,6 +272,15 @@ class Interfaces(OpenWrtConverter):
         if addresses:
             interface['addresses'] = addresses
         return interface
+
+    def __get_special_interface_type(self, interface):
+        username = interface.get('username', False)
+        password = interface.get('password', False)
+
+        if username and password:
+            return 'dialup'
+
+        return 'other'
 
     def __netjson_address(self, address, interface):
         ip = ip_interface(address)
