@@ -2534,19 +2534,19 @@ The following *configuration dictionary*:
         "ddns": {
             "ddns_logdir": "/var/log/ddns",
             "ddns_rundir": "/var/run/ddns",
-            "use_curl": false,
-            "upd_privateip": false,
+            "use_curl": False,
+            "upd_privateip": False,
             "ddns_dateformat": "%F %R",
             "ddns_loglines": 250,
             "providers": [
                 {
-                    "enabled": true,
+                    "enabled": True,
                     "lookup_host": "myhost.dyndns.org",
                     "service_name": "dyndns.org",
                     "domain": "myhost.dyndns.org",
                     "username": "myuser",
                     "password": "mypassword",
-                    "use_logfile": true,
+                    "use_logfile": True,
                     "ip_source": "interface",
                     "ip_interface": "pppoe-xdsl",
                     "use_syslog": 2,
