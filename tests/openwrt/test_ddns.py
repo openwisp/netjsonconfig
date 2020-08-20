@@ -14,6 +14,21 @@ class TestDdns(unittest.TestCase, _TabsMixin):
             "ddns_rundir": "/var/run/ddns",
             "upd_privateip": False,
             "use_curl": False,
+            "providers": [
+                {
+                    "enabled": True,
+                    "lookup_host": "myhost.dyndns.org",
+                    "service_name": "dyndns.org",
+                    "domain": "myhost.dyndns.org",
+                    "username": "myuser",
+                    "password": "mypassword",
+                    "use_logfile": True,
+                    "ip_source": "interface",
+                    "ip_interface": "pppoe-xdsl",
+                    "use_syslog": 2,
+                    "interface": "xdsl",
+                }
+            ],
         }
     }
     _ddns_uci_global = """package ddns
@@ -25,13 +40,27 @@ config ddns 'global'
     option ddns_rundir '/var/run/ddns'
     option upd_privateip '0'
     option use_curl '0'
+
+config service 'myhost_dyndns_org'
+    option enabled '1'
+    option lookup_host 'myhost.dyndns.org'
+    option service_name 'dyndns.org'
+    option domain 'myhost.dyndns.org'
+    option username 'myuser'
+    option password 'mypassword'
+    option use_logfile '1'
+    option ip_source 'interface'
+    option ip_interface 'pppoe-xdsl'
+    option use_syslog '2'
+    option interface 'xdsl'
 """
 
     def test_render_ddns_global(self):
-        o = OpenWrt(self._ddns_netjson_global)
+        result = OpenWrt(self._ddns_netjson_global).render()
         expected = self._tabs(self._ddns_uci_global)
-        self.assertEqual(o.render(), expected)
+        self.assertEqual(result, expected)
 
     def test_parse_ddns_global(self):
-        o = OpenWrt(native=self._ddns_uci_global)
-        self.assertDictEqual(o.config, self._ddns_netjson_global)
+        result = OpenWrt(native=self._ddns_uci_global).config
+        expected = self._ddns_netjson_global
+        self.assertDictEqual(result, expected)
