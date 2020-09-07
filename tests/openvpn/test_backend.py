@@ -8,7 +8,7 @@ from netjsonconfig.exceptions import ValidationError
 
 class TestBackend(unittest.TestCase):
     """
-    tests for OpenWisp backend
+    tests for OpenVpn backend
     """
 
     maxDiff = None
