@@ -175,11 +175,6 @@ config custom 'custom'
             ],
         }
 
-        print("*" * 80)
-        import json
-
-        print(json.dumps(o.config, indent=4))
-        print("*" * 80)
         self.assertDictEqual(o.config, expected)
 
     def test_skip(self):
