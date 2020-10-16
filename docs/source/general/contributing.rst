@@ -12,17 +12,13 @@ Follow these guidelines to speed up the process.
    :backlinks: none
    :depth: 3
 
-Reach out before you start
---------------------------
+General contributing guidelines of OpenWISP
+-------------------------------------------
 
-Before opening a new issue, try the following steps:
-
-- look if somebody else has already started working on the same issue
-  by looking in the `github issues <https://github.com/openwisp/netjsonconfig/issues>`_
-  and `pull requests <https://github.com/openwisp/netjsonconfig/pulls>`_
-- look also in the `OpenWISP mailing list <https://groups.google.com/d/forum/openwisp/join>`_
-- announce your intentions by opening a new issue
-- present yourself on the mailing list
+We highly recommend reading the general
+`OpenWISP Contributing Guidelines <https://openwisp.io/docs/developer/contributing.html>`_
+to find out the conventions we use to maintain consistency and quality standards
+across the different OpenWISP modules.
 
 Create a virtual environment
 ----------------------------
@@ -69,8 +65,8 @@ When you introduce changes, ensure test coverage is not decreased with:
 
     nose2 --with-coverage --coverage netjsonconfig
 
-Follow style conventions (PEP8, isort)
---------------------------------------
+Follow the coding style conventions and run the QA checks
+---------------------------------------------------------
 
 First of all, install the test requirements:
 
@@ -79,17 +75,18 @@ First of all, install the test requirements:
     workon netjsonconfig  # activate virtualenv
     pip install -r requirements-test.txt
 
-Before committing your work check that your changes are not breaking the style conventions with:
+Before committing your work, run ``openwisp-qa-format`` to format the code according
+to our `python code conventions <https://openwisp.io/docs/developer/contributing.html#python-code-conventions>`_:
 
 .. code-block:: shell
 
-    flake8
-    isort --check-only --recursive .
+    openwisp-qa-format
 
-For more information, please see:
+Then, you can run the QA checks with:
 
-- `PEP8: Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_
-- `isort: a python utility / library to sort imports <https://github.com/timothycrosley/isort>`_
+.. code-block:: shell
+
+    ./run-qa-checks
 
 Update the documentation
 ------------------------
