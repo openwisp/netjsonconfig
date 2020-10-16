@@ -137,6 +137,51 @@ schema = merge_config(
                     }
                 ]
             },
+            "dialup_interface": {
+                "title": "Dialup interface",
+                "required": ["proto", "username", "password"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["dialup"],
+                                "default": "dialup",
+                                "propertyOrder": 1,
+                            },
+                            "proto": {
+                                "type": "string",
+                                "enum": [
+                                    "3g",
+                                    "6in4",
+                                    "aiccu",
+                                    "l2tp",
+                                    "ncm",
+                                    "ppp",
+                                    "pppoa",
+                                    "pppoe",
+                                    "pptp",
+                                    "qmi",
+                                    "wwan",
+                                ],
+                                "default": "pppoe",
+                                "propertyOrder": 8,
+                            },
+                            "username": {
+                                "type": "string",
+                                "description": "username for authentication in protocols like PPPoE",
+                                "propertyOrder": 9,
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "password for authentication in protocols like PPPoE",
+                                "propertyOrder": 10,
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/interface_settings"},
+                ],
+            },
             "base_radio_settings": {  # Overrides default schema
                 "properties": {
                     "driver": {
@@ -189,6 +234,9 @@ schema = merge_config(
                 "properties": {
                     "timezone": {"enum": list(timezones.keys()), "default": "UTC"}
                 }
+            },
+            "interfaces": {
+                "items": {"oneOf": [{"$ref": "#/definitions/dialup_interface"}]}
             },
             "routes": {
                 "items": {
@@ -886,7 +934,7 @@ firewall_zones_properties = {
         "type": "boolean",
         "title": "Allow invalid packets.",
         "description": "Do not add DROP INVALID rules to the firewall if masquerading "
-        "is used. The DROP rules are supposed to prevent NAT leakage."
+        "is used. The DROP rules are supposed to prevent NAT leakage.",
         "default": False,
         "format": "checkbox",
         "propertyOrder": 10,
@@ -912,8 +960,8 @@ firewall_zones_properties = {
     },
     "device": {
         "type": "array",
-        "title":  "Raw devices to attach to this zone."
-        "description": "A list of raw device names to associate with this zone. "
+        "title":  "Raw devices to attach to this zone.",
+        "description": "A list of raw device names to associate with this zone. ",
         "items": {
             "type": "string",
             "title": "A device to attach to the zone.",
