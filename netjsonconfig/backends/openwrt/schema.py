@@ -960,7 +960,7 @@ firewall_zones_properties = {
     },
     "device": {
         "type": "array",
-        "title":  "Raw devices to attach to this zone.",
+        "title": "Raw devices to attach to this zone.",
         "description": "A list of raw device names to associate with this zone. ",
         "items": {
             "type": "string",
