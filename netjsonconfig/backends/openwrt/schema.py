@@ -126,6 +126,7 @@ schema = merge_config(
                             },
                             "proto": {
                                 "type": "string",
+                                "title": "protocol",
                                 "enum": [
                                     "3g",
                                     "6in4",
@@ -140,7 +141,7 @@ schema = merge_config(
                                     "wwan",
                                 ],
                                 "default": "pppoe",
-                                "propertyOrder": 8,
+                                "propertyOrder": 1.1,
                             },
                             "username": {
                                 "type": "string",

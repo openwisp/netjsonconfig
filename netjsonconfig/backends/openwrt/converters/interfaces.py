@@ -109,6 +109,12 @@ class Interfaces(OpenWrtConverter):
             del interface['wireless']
         if 'addresses' in interface:
             del interface['addresses']
+        # specific transformation
+        type_ = self._get_uci_name(interface["type"])
+        method = getattr(self, f'_intermediate_{type_}', None)
+        if method:
+            interface = method(interface)
+        return interface
         return interface
 
     _address_keys = ['address', 'mask', 'family', 'gateway']
@@ -225,6 +231,10 @@ class Interfaces(OpenWrtConverter):
             interface['mac'] = interface.pop('macaddr')
         if interface['network'] == self._get_uci_name(interface['name']):
             del interface['network']
+        # specific transformation
+        method = getattr(self, f'_netjson_{interface.get("proto")}', None)
+        if method:
+            interface = method(interface)
         return interface
 
     def __netjson_type(self, interface):
@@ -243,13 +253,17 @@ class Interfaces(OpenWrtConverter):
         return 'ethernet'
 
     def __netjson_addresses(self, interface):
-        proto = interface.pop('proto', 'none')
+        proto = interface.get('proto', 'none')
+        address_protos = ['static', 'dhcp', 'dhcpv6', 'none']
+        if 'proto' in interface and proto in address_protos:
+            del interface['proto']
         if 'ipaddr' not in interface and 'ip6addr' not in interface and proto == 'none':
             return interface
-        if proto not in ['static', 'dhcp', 'dhcpv6', 'none']:
-            interface['proto'] = proto
-            interface['type'] = self.__get_special_interface_type(interface)
+        if proto not in address_protos:
+            interface['type'] = 'other'
+        return self._add_netjson_addresses(interface, proto)
 
+    def _add_netjson_addresses(self, interface, proto):
         addresses = []
         ipv4 = interface.pop('ipaddr', [])
         ipv6 = interface.pop('ip6addr', [])
@@ -273,14 +287,9 @@ class Interfaces(OpenWrtConverter):
             interface['addresses'] = addresses
         return interface
 
-    def __get_special_interface_type(self, interface):
-        username = interface.get('username', False)
-        password = interface.get('password', False)
-
-        if username and password:
-            return 'dialup'
-
-        return 'other'
+    def _netjson_dialup(self, interface):
+        interface['type'] = 'dialup'
+        return interface
 
     def __netjson_address(self, address, interface):
         ip = ip_interface(address)
@@ -308,7 +317,7 @@ class Interfaces(OpenWrtConverter):
         if ip and netmask:
             return '{0}/{1}'.format(ip, netmask)
         else:
-            None
+            return None
 
     def __netjson_dns(self, interface, result):
         key_mapping = {'dns': 'dns_servers', 'dns_search': 'dns_search'}
@@ -320,3 +329,19 @@ class Interfaces(OpenWrtConverter):
                 items = items.split()
             result.setdefault(netjson_key, [])
             result[netjson_key] += items
+
+
+for proto in [
+    '3g',
+    '6in4',
+    'aiccu',
+    'l2tp',
+    'ncm',
+    'ppp',
+    'pppoa',
+    'pppoe',
+    'pptp',
+    'qmi',
+    'wwan',
+]:
+    setattr(Interfaces, f'_netjson_{proto}', Interfaces._netjson_dialup)

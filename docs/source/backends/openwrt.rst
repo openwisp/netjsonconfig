@@ -1252,12 +1252,12 @@ Will be rendered as follows::
 
     package network
 
-    config interface 'xdsl'               
+    config interface 'xdsl'
             option ifname 'dsl0'
-            option proto 'pppoe'     
-            option username 'dsluser' 
+            option proto 'pppoe'
+            option username 'dsluser'
             option password 'jf93nf82o023$'
-            option mtu '1448'          
+            option mtu '1448'
 
 Radio settings
 --------------
