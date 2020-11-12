@@ -2,6 +2,7 @@ from collections import OrderedDict
 from copy import deepcopy
 from ipaddress import ip_address, ip_interface
 
+from ..schema import schema
 from .base import OpenWrtConverter
 
 
@@ -115,6 +116,10 @@ class Interfaces(OpenWrtConverter):
         if method:
             interface = method(interface)
         return interface
+
+    def _intermediate_modem_manager(self, interface):
+        interface['proto'] = 'modemmanager'
+        interface['pincode'] = interface.pop('pin', None)
         return interface
 
     _address_keys = ['address', 'mask', 'family', 'gateway']
@@ -290,6 +295,16 @@ class Interfaces(OpenWrtConverter):
     def _netjson_dialup(self, interface):
         interface['type'] = 'dialup'
         return interface
+
+    _modem_manager_schema = schema['definitions']['modemmanager_interface']
+
+    def _netjson_modem_manager(self, interface):
+        del interface['proto']
+        interface['type'] = 'modem-manager'
+        interface['pin'] = interface.pop('pincode', None)
+        return self.type_cast(interface, schema=self._modem_manager_schema)
+
+    _netjson_modemmanager = _netjson_modem_manager
 
     def __netjson_address(self, address, interface):
         ip = ip_interface(address)

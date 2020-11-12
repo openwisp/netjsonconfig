@@ -294,6 +294,7 @@ There are 4 main types of interfaces:
 * **wireless interfaces**: must be of type ``wireless``
 * **bridge interfaces**: must be of type ``bridge``
 * **dialup interfaces**: must be of type ``dialup``
+* **modem manager interfaces**: must be of type ``modem-manager``
 
 Interface object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1258,6 +1259,83 @@ Will be rendered as follows::
             option username 'dsluser'
             option password 'jf93nf82o023$'
             option mtu '1448'
+
+Modem Manager settings
+----------------------
+
+Interfaces of type ``modem-manager`` contain a few options
+that are specific to modem-manager interfaces (2G, 3G, 4G, LTE, etc).
+
+These are the ``OpenWrt`` backend NetJSON extensions for Modem Manager interfaces:
+
++--------------+---------+-----------------+--------------------------------------------+
+| key name     | type    | default         | allowed values                             |
++==============+=========+=================+============================================+
+| ``proto``    | string  | ``modemanager`` | ``modemanager``                            |
++--------------+---------+-----------------+--------------------------------------------+
+| ``apn``      | string  | empty           | APN, can be left blank                     |
++--------------+---------+-----------------+--------------------------------------------+
+| ``pin``      | string  | empty           | PIN code, can be left blank                |
++--------------+---------+-----------------+--------------------------------------------+
+| ``device``   | string  | empty           | path to device (see note below)            |
++--------------+---------+-----------------+--------------------------------------------+
+| ``password`` | string  | empty           | password, can be left blank                |
++--------------+---------+-----------------+--------------------------------------------+
+| ``username`` | string  | empty           | username, can be left blank                |
++--------------+---------+-----------------+--------------------------------------------+
+| ``metric``   | integer | ``50``          | metric, can be left blank                  |
++--------------+---------+-----------------+--------------------------------------------+
+| ``iptype``   | string  | ``ipv4``        | One of ``ipv4``, ``ipv6``, ``ipv4v6``      |
++--------------+---------+-----------------+--------------------------------------------+
+| ``lowpower`` | boolean | ``False``       | low power mode                             |
++--------------+---------+-----------------+--------------------------------------------+
+
+.. note::
+    ``device`` is a required property but can be left empty so that
+    the default value supplied by the hardware itself and already
+    present on the device can be left untouched by merging the
+    configuration generated with netjsonconfig
+    (instead of fully overwriting it).
+
+Modem Manager interface example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "modem-manager",
+                "apn": "apn.operator.com",
+                "pin": "1234",
+                "device": "/sys/devices/platform/ahb/1b000000.usb/usb1/1-1",
+                "username": "user123",
+                "password": "pwd123456",
+                "metric": 50,
+                "lowpower": False,
+                "name": "modem0",
+                "mtu": 1500
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config interface 'modem0'
+            option apn 'apn.operator.com'
+            option device '/sys/devices/platform/ahb/1b000000.usb/usb1/1-1'
+            option ifname 'wwan0'
+            option lowpower '0'
+            option metric '50'
+            option mtu '1500'
+            option password 'pwd123456'
+            option pincode '1234'
+            option proto 'modemmanager'
+            option username 'user123'
 
 Radio settings
 --------------

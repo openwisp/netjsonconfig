@@ -7,6 +7,9 @@ from ..openvpn.schema import base_openvpn_schema
 from .timezones import timezones
 
 default_radio_driver = "mac80211"
+_interface_properties = default_schema["definitions"]["interface_settings"][
+    "properties"
+]
 
 
 schema = merge_config(
@@ -158,6 +161,53 @@ schema = merge_config(
                     {"$ref": "#/definitions/interface_settings"},
                 ],
             },
+            "modemmanager_interface": {
+                "type": "object",
+                "title": "Modem manager interface",
+                "required": ["name", "device"],
+                "properties": {
+                    "name": _interface_properties["name"],
+                    "mtu": _interface_properties["mtu"],
+                    "autostart": _interface_properties["autostart"],
+                    "disabled": _interface_properties["disabled"],
+                    "type": {
+                        "type": "string",
+                        "enum": ["modem-manager"],
+                        "default": "dialup",
+                        "propertyOrder": 1,
+                    },
+                    "apn": {"type": "string", "title": "APN", "propertyOrder": 1.1},
+                    "pin": {
+                        "type": "string",
+                        "title": "PIN code",
+                        "maxLength": 4,
+                        "propertyOrder": 1.2,
+                    },
+                    "device": {
+                        "type": "string",
+                        "description": "Leave blank to use the hardware default",
+                        "propertyOrder": 1.3,
+                    },
+                    "username": {"type": "string", "propertyOrder": 1.4},
+                    "password": {"type": "string", "propertyOrder": 1.5},
+                    "metric": {"type": "integer", "default": 50, "propertyOrder": 1.6},
+                    "iptype": {
+                        "type": "string",
+                        "title": "IP type",
+                        "default": "ipv4",
+                        "enum": ["ipv4", "ipv6", "ipv4v6"],
+                        "options": {"enum_titles": ["IPv4", "IPv6", "IPv4 and IPv6"]},
+                        "propertyOrder": 1.7,
+                    },
+                    "lowpower": {
+                        "type": "boolean",
+                        "title": "Low power mode",
+                        "format": "checkbox",
+                        "default": False,
+                        "propertyOrder": 1.8,
+                    },
+                },
+            },
             "base_radio_settings": {
                 "properties": {
                     "driver": {
@@ -212,7 +262,12 @@ schema = merge_config(
                 }
             },
             "interfaces": {
-                "items": {"oneOf": [{"$ref": "#/definitions/dialup_interface"}]}
+                "items": {
+                    "oneOf": [
+                        {"$ref": "#/definitions/dialup_interface"},
+                        {"$ref": "#/definitions/modemmanager_interface"},
+                    ]
+                }
             },
             "routes": {
                 "items": {
