@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.9.0 [unreleased]
+Version 0.9.0 [2020-11-18]
 --------------------------
 
 - [change] **Potentially backward incompatible**:
