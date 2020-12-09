@@ -180,7 +180,6 @@ schema = merge_config(
                     "pin": {
                         "type": "string",
                         "title": "PIN code",
-                        "maxLength": 4,
                         "propertyOrder": 1.2,
                     },
                     "device": {
