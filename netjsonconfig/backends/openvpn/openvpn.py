@@ -110,7 +110,6 @@ class OpenVpn(BaseBackend):
             'cert',
             'key',
             'pkcs12',
-            'mtu_disc',
             'mtu_test',
             'fragment',
             'mssfix',
