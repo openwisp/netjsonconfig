@@ -290,6 +290,10 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
         expected = self._tabs(self._rule_6_uci)
         self.assertEqual(o.render(), expected)
 
+    def test_parse_rule_6(self):
+        o = OpenWrt(native=self._rule_6_uci)
+        self.assertEqual(o.config, self._rule_6_netjson)
+
     _zone_1_netjson = {
         "firewall": {
             "zones": [
