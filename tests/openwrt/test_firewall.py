@@ -189,7 +189,6 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
                     "proto": ["udp"],
                     "dest_port": "67-68",
                     "target": "ACCEPT",
-
                 }
             ]
         }
@@ -220,6 +219,76 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     def test_parse_rule_5(self):
         o = OpenWrt(native=self._rule_5_uci)
         self.assertEqual(o.config, self._rule_5_netjson)
+
+    _rule_6_netjson = {
+        "firewall": {
+            "rules": [
+                {
+                    "name": "Allow-Isolated-DHCP",
+                    "src_ip": "10.10.10.10",
+                    "src_mac": "fc:aa:14:18:12:98",
+                    "src": "isolated",
+                    "proto": ["udp"],
+                    "dest_port": "67-68",
+                    "target": "ACCEPT",
+                    "dest": "dest_zone",
+                    "dest_ip": "192.168.1.2",
+                    "ipset": "my_ipset",
+                    "mark": "DROP",
+                    "start_date": "2021-01-21",
+                    "stop_date": "2021-01-22",
+                    "start_time": "01:01:01",
+                    "stop_time": "11:11:11",
+                    "weekdays": ["sun", "mon"],
+                    "monthdays": [2, 10],
+                    "utc_time": True,
+                    "family": "any",
+                    "limit": "3/second",
+                    "limit_burst": 30,
+                    "enabled": True,
+                }
+            ]
+        }
+    }
+
+    _rule_6_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config rule 'rule_Allow_Isolated_DHCP'
+            option name 'Allow-Isolated-DHCP'
+            option src_ip '10.10.10.10'
+            option src_mac 'fc:aa:14:18:12:98'
+            option src 'isolated'
+            option proto 'udp'
+            option dest_port '67-68'
+            option target 'ACCEPT'
+            option dest 'dest_zone'
+            option dest_ip '192.168.1.2'
+            option ipset 'my_ipset'
+            option mark 'DROP'
+            option start_date '2021-01-21'
+            option stop_date '2021-01-22'
+            option start_time '01:01:01'
+            option stop_time '11:11:11'
+            list weekdays 'sun'
+            list weekdays 'mon'
+            list monthdays '2'
+            list monthdays '10'
+            option utc_time '1'
+            option family 'any'
+            option limit '3/second'
+            option limit_burst '30'
+            option enabled '1'
+        """
+    )
+
+    def test_render_rule_6(self):
+        o = OpenWrt(self._rule_6_netjson)
+        expected = self._tabs(self._rule_6_uci)
+        self.assertEqual(o.render(), expected)
 
     _zone_1_netjson = {
         "firewall": {
