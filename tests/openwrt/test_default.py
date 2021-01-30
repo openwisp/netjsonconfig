@@ -1,5 +1,7 @@
 import unittest
 
+from openwisp_utils.tests import capture_stdout
+
 from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
 
@@ -181,6 +183,7 @@ config custom 'custom'
         o = OpenWrt({"skipme": {"enabled": True}})
         self.assertEqual(o.render(), "")
 
+    @capture_stdout()
     def test_warning(self):
         o = OpenWrt({"luci": [{"unrecognized": True}]})
         self.assertEqual(o.render(), "")

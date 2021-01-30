@@ -690,7 +690,7 @@ config interface 'mobile0'
     option custom_attr 'yes'
     option ifname 'mobile0'
     option mtu '1400'
-    option proto '3g'
+    option proto 'exotic'
 """
         )
         expected = {
@@ -700,7 +700,7 @@ config interface 'mobile0'
                     "type": "other",
                     "mtu": 1400,
                     "custom_attr": "yes",
-                    "proto": "3g",
+                    "proto": "exotic",
                 }
             ]
         }

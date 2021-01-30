@@ -7,6 +7,9 @@ from ..openvpn.schema import base_openvpn_schema
 from .timezones import timezones
 
 default_radio_driver = "mac80211"
+_interface_properties = default_schema["definitions"]["interface_settings"][
+    "properties"
+]
 
 # The following regex will match against a single valid port, or a port range e.g. 1234-5000
 port_range_regex = "^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(-([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$"  # noqa
@@ -151,6 +154,7 @@ schema = merge_config(
                             },
                             "proto": {
                                 "type": "string",
+                                "title": "protocol",
                                 "enum": [
                                     "3g",
                                     "6in4",
@@ -165,7 +169,7 @@ schema = merge_config(
                                     "wwan",
                                 ],
                                 "default": "pppoe",
-                                "propertyOrder": 8,
+                                "propertyOrder": 1.1,
                             },
                             "username": {
                                 "type": "string",
@@ -182,7 +186,53 @@ schema = merge_config(
                     {"$ref": "#/definitions/interface_settings"},
                 ],
             },
-            "base_radio_settings": {  # Overrides default schema
+            "modemmanager_interface": {
+                "type": "object",
+                "title": "Modem manager interface",
+                "required": ["name", "device"],
+                "properties": {
+                    "name": _interface_properties["name"],
+                    "mtu": _interface_properties["mtu"],
+                    "autostart": _interface_properties["autostart"],
+                    "disabled": _interface_properties["disabled"],
+                    "type": {
+                        "type": "string",
+                        "enum": ["modem-manager"],
+                        "default": "dialup",
+                        "propertyOrder": 1,
+                    },
+                    "apn": {"type": "string", "title": "APN", "propertyOrder": 1.1},
+                    "pin": {
+                        "type": "string",
+                        "title": "PIN code",
+                        "propertyOrder": 1.2,
+                    },
+                    "device": {
+                        "type": "string",
+                        "description": "Leave blank to use the hardware default",
+                        "propertyOrder": 1.3,
+                    },
+                    "username": {"type": "string", "propertyOrder": 1.4},
+                    "password": {"type": "string", "propertyOrder": 1.5},
+                    "metric": {"type": "integer", "default": 50, "propertyOrder": 1.6},
+                    "iptype": {
+                        "type": "string",
+                        "title": "IP type",
+                        "default": "ipv4",
+                        "enum": ["ipv4", "ipv6", "ipv4v6"],
+                        "options": {"enum_titles": ["IPv4", "IPv6", "IPv4 and IPv6"]},
+                        "propertyOrder": 1.7,
+                    },
+                    "lowpower": {
+                        "type": "boolean",
+                        "title": "Low power mode",
+                        "format": "checkbox",
+                        "default": False,
+                        "propertyOrder": 1.8,
+                    },
+                },
+            },
+            "base_radio_settings": {
                 "properties": {
                     "driver": {
                         "type": "string",
@@ -236,7 +286,12 @@ schema = merge_config(
                 }
             },
             "interfaces": {
-                "items": {"oneOf": [{"$ref": "#/definitions/dialup_interface"}]}
+                "items": {
+                    "oneOf": [
+                        {"$ref": "#/definitions/dialup_interface"},
+                        {"$ref": "#/definitions/modemmanager_interface"},
+                    ]
+                }
             },
             "routes": {
                 "items": {

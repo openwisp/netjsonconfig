@@ -1,7 +1,7 @@
 Change log
 ==========
 
-Version 0.9.0 [unreleased]
+Version 0.9.0 [2020-11-18]
 --------------------------
 
 - [change] **Potentially backward incompatible**:
@@ -10,6 +10,7 @@ Version 0.9.0 [unreleased]
   This change is backward incompatible if the same type of configuration
   was achieved using a workaround, in these cases the configuration
   will have to be upgraded to use the new format.
+- [feature] Added support for modem manager interfaces
 
 Version 0.8.2 [2020-08-17]
 --------------------------
