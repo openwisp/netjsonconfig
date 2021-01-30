@@ -166,11 +166,25 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(result)
 
     def __netjson_rule(self, rule):
-        if "enabled" in rule:
-            rule["enabled"] = self.__netjson_generic_boolean(rule["enabled"])
+        for param in ["enabled", "utc_time"]:
+            if param in rule:
+                rule[param] = self.__netjson_generic_boolean(rule[param])
 
         if "proto" in rule:
             rule["proto"] = self.__netjson_generic_proto(rule["proto"])
+
+        if "weekdays" in rule:
+            rule["weekdays"] = self.__netjson_generic_weekdays(
+                rule["weekdays"]
+            )
+
+        if "monthdays" in rule:
+            rule["monthdays"] = self.__netjson_generic_monthdays(
+                rule["monthdays"]
+            )
+
+        if "limit_burst" in rule:
+            rule["limit_burst"] = int(rule["limit_burst"])
 
         return self.type_cast(rule)
 
@@ -196,12 +210,12 @@ class Firewall(OpenWrtConverter):
             redirect["proto"] = self.__netjson_generic_proto(redirect["proto"])
 
         if "weekdays" in redirect:
-            redirect["weekdays"] = self.__netjson_redirect_weekdays(
+            redirect["weekdays"] = self.__netjson_generic_weekdays(
                 redirect["weekdays"]
             )
 
         if "monthdays" in redirect:
-            redirect["monthdays"] = self.__netjson_redirect_monthdays(
+            redirect["monthdays"] = self.__netjson_generic_monthdays(
                 redirect["monthdays"]
             )
 
@@ -230,7 +244,7 @@ class Firewall(OpenWrtConverter):
             else:
                 return proto.split()
 
-    def __netjson_redirect_weekdays(self, weekdays):
+    def __netjson_generic_weekdays(self, weekdays):
         if not isinstance(weekdays, list):
             wd = weekdays.split()
         else:
@@ -243,7 +257,7 @@ class Firewall(OpenWrtConverter):
 
         return wd
 
-    def __netjson_redirect_monthdays(self, monthdays):
+    def __netjson_generic_monthdays(self, monthdays):
         if not isinstance(monthdays, list):
             md = monthdays.split()
         else:
