@@ -18,16 +18,28 @@ class Firewall(OpenWrtConverter):
     _schema = schema["properties"]["firewall"]
 
     def to_intermediate_loop(self, block, result, index=None):
+        defaults = self.__intermediate_defaults(block.pop("defaults", {}))
         forwardings = self.__intermediate_forwardings(block.pop("forwardings", {}))
         zones = self.__intermediate_zones(block.pop("zones", {}))
         rules = self.__intermediate_rules(block.pop("rules", {}))
         redirects = self.__intermediate_redirects(block.pop("redirects", {}))
-        block.update({".type": "defaults", ".name": block.pop("id", "defaults")})
         result.setdefault("firewall", [])
-        result["firewall"] = (
-            [self.sorted_dict(block)] + forwardings + zones + rules + redirects
-        )
+        result["firewall"] = defaults + forwardings + zones + rules + redirects
         return result
+
+    def __intermediate_defaults(self, defaults):
+        """
+        converts NetJSON defaults to
+        UCI intermediate data structure
+        """
+        result = OrderedDict(
+            (
+                (".name", "defaults"),
+                (".type", "defaults")
+            )
+        )
+        result.update(defaults)
+        return [result]
 
     def __intermediate_forwardings(self, forwardings):
         """
@@ -146,6 +158,10 @@ class Firewall(OpenWrtConverter):
         block.pop(".name")
         _type = block.pop(".type")
 
+        if _type == "defaults":
+            defaults = self.__netjson_defaults(block)
+            result["firewall"].setdefault("defaults", {})
+            result["firewall"]["defaults"].update(defaults)
         if _type == "rule":
             rule = self.__netjson_rule(block)
             result["firewall"].setdefault("rules", [])
@@ -164,6 +180,12 @@ class Firewall(OpenWrtConverter):
             result["firewall"]["redirects"].append(redirect)
 
         return self.type_cast(result)
+
+    def __netjson_defaults(self, defaults):
+        for param in ["synflood_protect"]:
+            if param in defaults:
+                defaults[param] = self.__netjson_generic_boolean(defaults[param])
+        return self.type_cast(defaults)
 
     def __netjson_rule(self, rule):
         for param in ["enabled", "utc_time"]:
