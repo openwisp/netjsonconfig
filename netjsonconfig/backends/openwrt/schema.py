@@ -1027,22 +1027,14 @@ firewall_zones_properties = {
     },
 }
 
-firewall_properties = {
-    "syn_flood": {
-        "type": "boolean",
-        "title": "SYN flood protection.",
-        "description": "Enables SYN flood protection.",
-        "default": False,
-        "format": "checkbox",
-        "propertyOrder": 1,
-    },
+firewall_defaults = {
     "input": {
         "allOf": [
             {"$ref": "#/definitions/firewall/firewall_policy"},
             {
-                "title": "input",
-                "description": "policy for the INPUT chain of the filter table",
-                "propertyOrder": 2,
+                "title": "Default input policy",
+                "description": "Default policy for the INPUT chain of the filter table",
+                "propertyOrder": 1,
             },
         ]
     },
@@ -1050,9 +1042,9 @@ firewall_properties = {
         "allOf": [
             {"$ref": "#/definitions/firewall/firewall_policy"},
             {
-                "title": "output",
-                "description": "policy for the OUTPUT chain of the filter table",
-                "propertyOrder": 3,
+                "title": "Default output policy",
+                "description": "Default policy for the OUTPUT chain of the filter table",
+                "propertyOrder": 2,
             },
         ]
     },
@@ -1060,11 +1052,30 @@ firewall_properties = {
         "allOf": [
             {"$ref": "#/definitions/firewall/firewall_policy"},
             {
-                "title": "forward",
-                "description": "policy for the FORWARD chain of the filter table",
-                "propertyOrder": 4,
+                "title": "Default forward policy",
+                "description": "Defulat policy for the FORWARD chain of the filter table",
+                "propertyOrder": 3,
             },
         ]
+    },
+    "synflood_protect": {
+        "type": "boolean",
+        "title": "Enable SYN flood protection.",
+        "description": "Enables SYN flood protection.",
+        "default": False,
+        "format": "checkbox",
+        "propertyOrder": 4,
+    },
+}
+
+firewall_properties = {
+    "defaults": {
+        "type": "object",
+        "title": "Defaults",
+        "description": "Defaults for the fireall",
+        "propertyOrder": 4,
+        "properties": firewall_defaults,
+        "required": ["input", "output", "forward", "synflood_protect"],
     },
     "forwardings": {
         "type": "array",
