@@ -32,7 +32,6 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
        """
     )
 
-
     def test_render_defaults_1(self):
         o = OpenWrt(self._defaults_1_netjson)
         expected = self._tabs(self._defaults_1_uci)
