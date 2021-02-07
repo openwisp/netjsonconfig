@@ -32,12 +32,7 @@ class Firewall(OpenWrtConverter):
         converts NetJSON defaults to
         UCI intermediate data structure
         """
-        result = OrderedDict(
-            (
-                (".name", "defaults"),
-                (".type", "defaults")
-            )
-        )
+        result = OrderedDict(((".name", "defaults"), (".type", "defaults")))
         result.update(defaults)
         return [result]
 
@@ -196,14 +191,10 @@ class Firewall(OpenWrtConverter):
             rule["proto"] = self.__netjson_generic_proto(rule["proto"])
 
         if "weekdays" in rule:
-            rule["weekdays"] = self.__netjson_generic_weekdays(
-                rule["weekdays"]
-            )
+            rule["weekdays"] = self.__netjson_generic_weekdays(rule["weekdays"])
 
         if "monthdays" in rule:
-            rule["monthdays"] = self.__netjson_generic_monthdays(
-                rule["monthdays"]
-            )
+            rule["monthdays"] = self.__netjson_generic_monthdays(rule["monthdays"])
 
         if "limit_burst" in rule:
             rule["limit_burst"] = int(rule["limit_burst"])
@@ -232,9 +223,7 @@ class Firewall(OpenWrtConverter):
             redirect["proto"] = self.__netjson_generic_proto(redirect["proto"])
 
         if "weekdays" in redirect:
-            redirect["weekdays"] = self.__netjson_generic_weekdays(
-                redirect["weekdays"]
-            )
+            redirect["weekdays"] = self.__netjson_generic_weekdays(redirect["weekdays"])
 
         if "monthdays" in redirect:
             redirect["monthdays"] = self.__netjson_generic_monthdays(
