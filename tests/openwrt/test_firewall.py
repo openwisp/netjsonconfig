@@ -9,6 +9,39 @@ from netjsonconfig.utils import _TabsMixin
 class TestFirewall(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
+    _defaults_1_netjson = {
+        "firewall": {
+            "defaults": {
+                "input": "ACCEPT",
+                "forward": "REJECT",
+                "output": "ACCEPT",
+                "synflood_protect": True,
+            }
+        }
+    }
+
+    _defaults_1_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+            option input 'ACCEPT'
+            option forward 'REJECT'
+            option output 'ACCEPT'
+            option synflood_protect '1'
+       """
+    )
+
+
+    def test_render_defaults_1(self):
+        o = OpenWrt(self._defaults_1_netjson)
+        expected = self._tabs(self._defaults_1_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_defaults_1(self):
+        o = OpenWrt(native=self._defaults_1_uci)
+        self.assertEqual(o.config, self._defaults_1_netjson)
+
     _rule_1_netjson = {
         "firewall": {
             "rules": [
