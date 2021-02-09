@@ -1178,8 +1178,8 @@ firewall_defaults = {
 firewall_properties = {
     "defaults": {
         "type": "object",
-        "title": "Defaults",
-        "description": "Defaults for the fireall",
+        "title": "Firewall defaults",
+        "description": "Defaults for the firewall",
         "propertyOrder": 4,
         "properties": firewall_defaults,
     },
