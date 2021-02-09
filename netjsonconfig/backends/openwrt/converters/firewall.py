@@ -177,9 +177,25 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(result)
 
     def __netjson_defaults(self, defaults):
-        for param in ["synflood_protect"]:
+        for param in [
+            "drop_invalid",
+            "synflood_protect",
+            "tcp_syncookies",
+            "tcp_ecn",
+            "tcp_window_scaling",
+            "accept_redirects",
+            "accept_source_route",
+            "custom_chains",
+            "disable_ipv6",
+            "flow_offloading",
+            "flow_offloading_hw",
+            "auto_helper",
+        ]:
             if param in defaults:
                 defaults[param] = self.__netjson_generic_boolean(defaults[param])
+        for param in ["synflood_limit", "synflood_burst"]:
+            if param in defaults:
+                defaults[param] = int(defaults[param])
         return self.type_cast(defaults)
 
     def __netjson_rule(self, rule):

@@ -41,6 +41,58 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
         o = OpenWrt(native=self._defaults_1_uci)
         self.assertEqual(o.config, self._defaults_1_netjson)
 
+    _defaults_2_netjson = {
+        "firewall": {
+            "defaults": {
+                "input": "ACCEPT",
+                "output": "ACCEPT",
+                "forward": "REJECT",
+                "custom_chains": True,
+                "drop_invalid": True,
+                "synflood_protect": True,
+                "synflood_burst": 50,
+                "tcp_ecn": True,
+                "tcp_syncookies": True,
+                "tcp_window_scaling": True,
+                "disable_ipv6": False,
+                "flow_offloading": False,
+                "flow_offloading_hw": False,
+                "auto_helper": True,
+            }
+        }
+    }
+
+    _defaults_2_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+            option input 'ACCEPT'
+            option output 'ACCEPT'
+            option forward 'REJECT'
+            option custom_chains '1'
+            option drop_invalid '1'
+            option synflood_protect '1'
+            option synflood_burst '50'
+            option tcp_ecn '1'
+            option tcp_syncookies '1'
+            option tcp_window_scaling '1'
+            option disable_ipv6 '0'
+            option flow_offloading '0'
+            option flow_offloading_hw '0'
+            option auto_helper '1'
+       """
+    )
+
+    def test_render_defaults_2(self):
+        o = OpenWrt(self._defaults_2_netjson)
+        expected = self._tabs(self._defaults_2_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_defaults_2(self):
+        o = OpenWrt(native=self._defaults_2_uci)
+        self.assertEqual(o.config, self._defaults_2_netjson)
+
     _rule_1_netjson = {
         "firewall": {
             "rules": [
