@@ -1353,7 +1353,7 @@ also requires setting the following additional options for each radio in the lis
 +--------------+---------+-----------------------------------------------+
 | key name     | type    | allowed values                                |
 +==============+=========+===============================================+
-| ``driver``   | string  | mac80211, madwifi, ath5k, ath9k, broadcom     |
+| ``driver``   | string  | mac80211, atheros, ath5k, ath9k, broadcom     |
 +--------------+---------+-----------------------------------------------+
 | ``protocol`` | string  | 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac  |
 +--------------+---------+-----------------------------------------------+

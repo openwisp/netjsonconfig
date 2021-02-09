@@ -28,6 +28,8 @@ class Radios(OpenWrtConverter):
         # determine channel width
         if radio['type'] == 'mac80211':
             radio['htmode'] = self.__intermediate_htmode(radio)
+        else:
+            del radio['protocol']
         # ensure country is uppercase
         if 'country' in radio:
             radio['country'] = radio['country'].upper()
