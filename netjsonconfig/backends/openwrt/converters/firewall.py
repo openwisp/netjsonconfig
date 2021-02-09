@@ -155,8 +155,9 @@ class Firewall(OpenWrtConverter):
 
         if _type == "defaults":
             defaults = self.__netjson_defaults(block)
-            result["firewall"].setdefault("defaults", {})
-            result["firewall"]["defaults"].update(defaults)
+            if defaults:  # note: default section can be empty
+                result["firewall"].setdefault("defaults", {})
+                result["firewall"]["defaults"].update(defaults)
         if _type == "rule":
             rule = self.__netjson_rule(block)
             result["firewall"].setdefault("rules", [])
