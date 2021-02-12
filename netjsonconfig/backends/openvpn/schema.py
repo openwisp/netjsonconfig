@@ -12,7 +12,7 @@ base_openvpn_schema = {
     "definitions": {
         "tunnel": {
             "type": "object",
-            "required": ["name", "mode", "proto", "dev"],
+            "required": ["name"],
             "properties": {
                 "name": {
                     "title": "name",
@@ -450,7 +450,6 @@ base_openvpn_schema = {
                 {"$ref": "#/definitions/tunnel"},
                 {
                     "type": "object",
-                    "required": ["remote"],
                     "properties": {
                         "mode": {"enum": ["p2p"]},
                         "proto": {
@@ -740,7 +739,7 @@ base_openvpn_schema = {
                 "type": "object",
                 "title": "VPN",
                 "additionalProperties": True,
-                "oneOf": [
+                "anyOf": [
                     {"$ref": "#/definitions/client"},
                     {"$ref": "#/definitions/server_manual"},
                     {"$ref": "#/definitions/server_bridged"},
