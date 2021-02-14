@@ -495,6 +495,30 @@ base_openvpn_schema = {
                                         "minimum": 1,
                                         "propertyOrder": 2,
                                     },
+                                    "proto": {
+                                        "title": "protocol",
+                                        "type": "string",
+                                        "default": "",
+                                        "enum": [
+                                            "udp",
+                                            "udp4",
+                                            "udp6",
+                                            "tcp",
+                                            "tcp4",
+                                            "tcp6",
+                                        ],
+                                        "options": {
+                                            "enum_titles": [
+                                                "UDP",
+                                                "UDP with IPv4",
+                                                "UDP with IPv6",
+                                                "TCP",
+                                                "TCP with IPv4",
+                                                "TCP with IPv6",
+                                            ]
+                                        },
+                                        "propertyOrder": 3,
+                                    },
                                 },
                             },
                         },
