@@ -551,7 +551,13 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     _forwarding_3_netjson = {
         "firewall": {
             "forwardings": [
-                {"name": "lan-wan-any", "src": "lan", "dest": "wan", "family": "any"}
+                {
+                    "name": "lan-wan-any",
+                    "src": "lan",
+                    "dest": "wan",
+                    "family": "any",
+                    "enabled": False,
+                }
             ]
         }
     }
@@ -567,6 +573,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
             option src 'lan'
             option dest 'wan'
             option family 'any'
+            option enabled '0'
         """
     )
 
