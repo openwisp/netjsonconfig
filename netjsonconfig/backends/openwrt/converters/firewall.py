@@ -45,24 +45,13 @@ class Firewall(OpenWrtConverter):
         for forwarding in forwardings:
             resultdict = OrderedDict(
                 (
-                    (".name", self.__get_auto_name_forwarding(forwarding)),
+                    (".name", self._get_uci_name(forwarding["name"])),
                     (".type", "forwarding"),
                 )
             )
             resultdict.update(forwarding)
             result.append(resultdict)
         return result
-
-    def __get_auto_name_forwarding(self, forwarding):
-        if "family" in forwarding.keys():
-            uci_name = self._get_uci_name(
-                "_".join([forwarding["src"], forwarding["dest"], forwarding["family"]])
-            )
-        else:
-            uci_name = self._get_uci_name(
-                "_".join([forwarding["src"], forwarding["dest"]])
-            )
-        return "forwarding_{0}".format(uci_name)
 
     def __intermediate_zones(self, zones):
         """
@@ -72,7 +61,7 @@ class Firewall(OpenWrtConverter):
         result = []
         for zone in zones:
             resultdict = OrderedDict(
-                ((".name", self.__get_auto_name_zone(zone)), (".type", "zone"))
+                ((".name", self._get_uci_name(zone["name"])), (".type", "zone"))
             )
             # If network contains only a single value, force the use of a UCI "option"
             # rather than "list"".
@@ -82,9 +71,6 @@ class Firewall(OpenWrtConverter):
             resultdict.update(zone)
             result.append(resultdict)
         return result
-
-    def __get_auto_name_zone(self, zone):
-        return "zone_{0}".format(self._get_uci_name(zone["name"]))
 
     def __intermediate_rules(self, rules):
         """
@@ -96,7 +82,7 @@ class Firewall(OpenWrtConverter):
             if "config_name" in rule:
                 del rule["config_name"]
             resultdict = OrderedDict(
-                ((".name", self.__get_auto_name_rule(rule)), (".type", "rule"))
+                ((".name", self._get_uci_name(rule["name"])), (".type", "rule"))
             )
             if "proto" in rule:
                 # If proto is a single value, then force it not to be in a list so that
@@ -111,9 +97,6 @@ class Firewall(OpenWrtConverter):
             result.append(resultdict)
         return result
 
-    def __get_auto_name_rule(self, rule):
-        return "rule_{0}".format(self._get_uci_name(rule["name"]))
-
     def __intermediate_redirects(self, redirects):
         """
         converts NetJSON redirect to
@@ -125,7 +108,7 @@ class Firewall(OpenWrtConverter):
                 del redirect["config_name"]
             resultdict = OrderedDict(
                 (
-                    (".name", self.__get_auto_name_redirect(redirect)),
+                    (".name", self._get_uci_name(redirect["name"])),
                     (".type", "redirect"),
                 )
             )
@@ -143,9 +126,6 @@ class Firewall(OpenWrtConverter):
             result.append(resultdict)
 
         return result
-
-    def __get_auto_name_redirect(self, redirect):
-        return "redirect_{0}".format(self._get_uci_name(redirect["name"]))
 
     def to_netjson_loop(self, block, result, index):
         result.setdefault("firewall", {})
@@ -233,6 +213,10 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(zone)
 
     def __netjson_forwarding(self, forwarding):
+        if "enabled" in forwarding:
+            forwarding["enabled"] = self.__netjson_generic_boolean(
+                forwarding["enabled"]
+            )
         return self.type_cast(forwarding)
 
     def __netjson_redirect(self, redirect):

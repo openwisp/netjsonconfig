@@ -115,7 +115,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config rule 'rule_Allow_MLD'
+        config rule 'Allow_MLD'
             option name 'Allow-MLD'
             option src 'wan'
             option src_ip 'fe80::/10'
@@ -161,7 +161,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config rule 'rule_Allow_DHCPv6'
+        config rule 'Allow_DHCPv6'
             option name 'Allow-DHCPv6'
             option src 'wan'
             option src_ip 'fc00::/6'
@@ -204,7 +204,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config rule 'rule_Allow_Ping'
+        config rule 'Allow_Ping'
             option name 'Allow-Ping'
             option src 'wan'
             option proto 'icmp'
@@ -244,7 +244,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config rule 'rule_Allow_Isolated_DHCP'
+        config rule 'Allow_Isolated_DHCP'
             option name 'Allow-Isolated-DHCP'
             option src 'isolated'
             option proto 'udp'
@@ -284,7 +284,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config rule 'rule_Allow_Isolated_DHCP'
+        config rule 'Allow_Isolated_DHCP'
             option name 'Allow-Isolated-DHCP'
             option src_ip '10.10.10.10'
             option src_mac 'fc:aa:14:18:12:98'
@@ -341,7 +341,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config rule 'rule_Allow_Isolated_DHCP'
+        config rule 'Allow_Isolated_DHCP'
             option name 'Allow-Isolated-DHCP'
             option src_ip '10.10.10.10'
             option src_mac 'fc:aa:14:18:12:98'
@@ -399,7 +399,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config zone 'zone_lan'
+        config zone 'lan'
             option name 'lan'
             option input 'ACCEPT'
             option output 'ACCEPT'
@@ -440,7 +440,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config zone 'zone_wan'
+        config zone 'wan'
             option name 'wan'
             option input 'DROP'
             option output 'ACCEPT'
@@ -460,7 +460,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config zone 'zone_wan'
+        config zone 'wan'
             option name 'wan'
             option input 'DROP'
             option output 'ACCEPT'
@@ -485,7 +485,9 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
         self.assertEqual(o.config, self._zone_2_netjson)
 
     _forwarding_1_netjson = {
-        "firewall": {"forwardings": [{"src": "isolated", "dest": "wan"}]}
+        "firewall": {
+            "forwardings": [{"name": "isolated-wan", "src": "isolated", "dest": "wan"}]
+        }
     }
 
     _forwarding_1_uci = textwrap.dedent(
@@ -494,7 +496,8 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config forwarding 'forwarding_isolated_wan'
+        config forwarding 'isolated_wan'
+            option name 'isolated-wan'
             option src 'isolated'
             option dest 'wan'
         """
@@ -511,7 +514,14 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
     _forwarding_2_netjson = {
         "firewall": {
-            "forwardings": [{"src": "isolated", "dest": "wan", "family": "ipv4"}]
+            "forwardings": [
+                {
+                    "name": "isolated-wan-ipv4",
+                    "src": "isolated",
+                    "dest": "wan",
+                    "family": "ipv4",
+                }
+            ]
         }
     }
 
@@ -521,7 +531,8 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config forwarding 'forwarding_isolated_wan_ipv4'
+        config forwarding 'isolated_wan_ipv4'
+            option name 'isolated-wan-ipv4'
             option src 'isolated'
             option dest 'wan'
             option family 'ipv4'
@@ -538,7 +549,11 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
         self.assertEqual(o.config, self._forwarding_2_netjson)
 
     _forwarding_3_netjson = {
-        "firewall": {"forwardings": [{"src": "lan", "dest": "wan", "family": "any"}]}
+        "firewall": {
+            "forwardings": [
+                {"name": "lan-wan-any", "src": "lan", "dest": "wan", "family": "any"}
+            ]
+        }
     }
 
     _forwarding_3_uci = textwrap.dedent(
@@ -547,7 +562,8 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config forwarding 'forwarding_lan_wan_any'
+        config forwarding 'lan_wan_any'
+            option name 'lan-wan-any'
             option src 'lan'
             option dest 'wan'
             option family 'any'
@@ -562,6 +578,45 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     def test_parse_forwarding_3(self):
         o = OpenWrt(native=self._forwarding_3_uci)
         self.assertEqual(o.config, self._forwarding_3_netjson)
+
+    _forwarding_4_netjson = {
+        "firewall": {
+            "forwardings": [
+                {
+                    "name": "forward_name",
+                    "src": "lan",
+                    "dest": "wan",
+                    "family": "any",
+                    "enabled": False,
+                }
+            ]
+        }
+    }
+
+    _forwarding_4_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config forwarding 'forward_name'
+            option name 'forward_name'
+            option src 'lan'
+            option dest 'wan'
+            option family 'any'
+            option enabled '0'
+        """
+    )
+
+    def test_render_forwarding_4(self):
+        o = OpenWrt(self._forwarding_4_netjson)
+        expected = self._tabs(self._forwarding_4_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_forwarding_4(self):
+        o = OpenWrt(native=self._forwarding_4_uci)
+        print(o.config)
+        self.assertEqual(o.config, self._forwarding_4_netjson)
 
     def test_forwarding_validation_error(self):
         o = OpenWrt(
@@ -595,7 +650,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config redirect 'redirect_Adblock DNS, port 53'
+        config redirect 'Adblock DNS, port 53'
             option name 'Adblock DNS, port 53'
             option src 'lan'
             option proto 'tcpudp'
@@ -638,7 +693,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config redirect 'redirect_Adblock DNS, port 53'
+        config redirect 'Adblock DNS, port 53'
             option name 'Adblock DNS, port 53'
             option src 'lan'
             option proto 'tcpudp'
@@ -691,7 +746,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config redirect 'redirect_Adblock DNS, port 53'
+        config redirect 'Adblock DNS, port 53'
             option name 'Adblock DNS, port 53'
             option src 'lan'
             option proto 'tcpudp'
@@ -757,7 +812,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
 
         config defaults 'defaults'
 
-        config redirect 'redirect_Adblock DNS, port 53'
+        config redirect 'Adblock DNS, port 53'
             option name 'Adblock DNS, port 53'
             option src 'lan'
             option proto 'tcpudp'
