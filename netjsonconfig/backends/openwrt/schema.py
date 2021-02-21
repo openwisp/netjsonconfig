@@ -236,7 +236,7 @@ schema = merge_config(
                 "properties": {
                     "driver": {
                         "type": "string",
-                        "enum": ["mac80211", "madwifi", "ath5k", "ath9k", "broadcom"],
+                        "enum": ["mac80211", "atheros", "ath5k", "ath9k", "broadcom"],
                         "default": default_radio_driver,
                         "propertyOrder": 2,
                     }

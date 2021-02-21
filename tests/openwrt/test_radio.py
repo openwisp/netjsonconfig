@@ -617,6 +617,36 @@ config wifi-device 'radio0'
         )
         self.assertEqual(o.render(), expected)
 
+    def test_render_atheros_driver(self):
+        expected = self._tabs(
+            """package wireless
+
+config wifi-device 'wifi0'
+    option channel '6'
+    option channel_width '20'
+    option disabled '0'
+    option hwmode '11g'
+    option phy 'wifi0'
+    option type 'atheros'
+"""
+        )
+        o = OpenWrt(
+            {
+                "radios": [
+                    {
+                        "protocol": "802.11g",
+                        "name": "wifi0",
+                        "phy": "wifi0",
+                        "channel": 6,
+                        "channel_width": 20,
+                        "disabled": False,
+                        "driver": "atheros",
+                    }
+                ]
+            }
+        )
+        self.assertEqual(o.render(), expected)
+
     def test_parse_radio_list_option(self):
         native = self._tabs(
             """package wireless
