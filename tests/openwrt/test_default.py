@@ -53,7 +53,7 @@ package firewall
 
 config defaults 'defaults'
 
-config rule 'rule_Allow_MLD'
+config rule 'Allow_MLD'
     option name 'Allow-MLD'
     option src 'wan'
     option proto 'icmp'
@@ -65,7 +65,7 @@ config rule 'rule_Allow_MLD'
     list icmp_type '132/0'
     list icmp_type '143/0'
 
-config rule 'rule_Rule2'
+config rule 'Rule2'
     option name 'Rule2'
     option src 'wan'
     option proto 'icmp'
