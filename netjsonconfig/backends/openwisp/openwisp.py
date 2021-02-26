@@ -3,6 +3,7 @@ import re
 from jinja2 import Environment, PackageLoader
 
 from ..openwrt.openwrt import OpenWrt
+from .renderer import OpenWrtRenderer
 from .schema import schema
 
 
@@ -12,6 +13,7 @@ class OpenWisp(OpenWrt):
     """
 
     schema = schema
+    renderer = OpenWrtRenderer
 
     def validate(self):
         self._sanitize_radios()

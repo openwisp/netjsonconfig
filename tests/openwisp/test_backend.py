@@ -111,8 +111,8 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         expected = self._tabs(
             """package system
 
-config system 'system'
-    option hostname 'openwisp-test'
+config 'system' 'system'
+    option 'hostname' 'openwisp-test'
 """
         )
         self.assertEqual(contents, expected)
@@ -182,7 +182,7 @@ config system 'system'
     def test_wireless_radio_disabled_0(self):
         o = OpenWisp({'radios': self.config['radios']})
         output = o.render()
-        self.assertIn("option disabled '0'", output)
+        self.assertIn("option 'disabled' '0'", output)
 
     def test_tc_script(self):
         config = deepcopy(self.config)
