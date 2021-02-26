@@ -20,7 +20,7 @@ def merge_config(template, config, list_identifiers=None):
     :param list_identifiers: ``list`` or ``None``
     :returns: merged ``dict``
     """
-    result = template.copy()
+    result = deepcopy(template)
     for key, value in config.items():
         if isinstance(value, dict):
             node = result.get(key, OrderedDict())
