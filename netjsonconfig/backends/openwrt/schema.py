@@ -756,6 +756,36 @@ firewall_definitions = {
     },
 }
 
+firewall_includes_properties = {
+    "name": {"$ref": "#/definitions/firewall/name"},
+    "enabled": {"$ref": "#/definitions/firewall/enabled"},
+    "family": {"$ref": "#/definitions/firewall/family"},
+    "type": {
+        "type": "string",
+        "title": "The type of the script",
+        "description": 'Specifies the type of the include, can be "script" for traditional '
+        'shell script includes or restore for plain files in iptables-restore format.',
+        "enum": ["script", "restore"],
+        "propertyOrder": 101,
+    },
+    "path": {
+        "type": "string",
+        "title": "Script to include",
+        "description": "Specifies a shell script to execute on boot or firewall restarts",
+        "default": "/etc/firewall.user",
+        "propertyOrder": 102,
+    },
+    "reload": {
+        "type": "boolean",
+        "title": "Reload the included file when reloading firewall rules",
+        "description": "This specifies whether or not the included file should be "
+        "reloaded when the firewall rules are reloaded. This is only needed if "
+        "the included file injects rules into internal OpenWRT chains.",
+        "default": False,
+        "propertyOrder": 103,
+    },
+}
+
 firewall_redirect_properties = {
     "name": {"$ref": "#/definitions/firewall/name"},
     "enabled": {"$ref": "#/definitions/firewall/enabled"},
@@ -1228,6 +1258,18 @@ firewall_properties = {
             "title": "Redirect",
             "additionalProperties": False,
             "properties": firewall_redirect_properties,
+        },
+    },
+    "includes": {
+        "type": "array",
+        "title": "Includes",
+        "propertyOrder": 9,
+        "items": {
+            "type": "object",
+            "title": "Include",
+            "additionalProperties": False,
+            "required": ["path"],
+            "properties": firewall_includes_properties,
         },
     },
 }
