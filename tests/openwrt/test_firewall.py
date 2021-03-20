@@ -898,3 +898,43 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
     def test_parse_redirect_4(self):
         o = OpenWrt(native=self._redirect_4_uci)
         self.assertEqual(o.config, self._redirect_4_netjson)
+
+    _include_1_uci = textwrap.dedent(
+        """\
+        package firewall
+
+        config defaults 'defaults'
+
+        config include 'Include Test'
+            option name 'Include Test'
+            option type 'script'
+            option family 'any'
+            option path '/a/b/c.ipt'
+            option reload '1'
+            option enabled '0'
+        """
+    )
+
+    _include_1_netjson = {
+        "firewall": {
+            "includes": [
+                {
+                    "name": "Include Test",
+                    "type": "script",
+                    "family": "any",
+                    "path": "/a/b/c.ipt",
+                    "reload": True,
+                    "enabled": False,
+                }
+            ]
+        }
+    }
+
+    def test_render_include_1(self):
+        o = OpenWrt(self._include_1_netjson)
+        expected = self._tabs(self._include_1_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_include_1(self):
+        o = OpenWrt(native=self._include_1_uci)
+        self.assertEqual(o.config, self._include_1_netjson)
