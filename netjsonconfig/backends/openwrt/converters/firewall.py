@@ -82,8 +82,6 @@ class Firewall(OpenWrtConverter):
         """
         result = []
         for rule in rules:
-            if "config_name" in rule:
-                del rule["config_name"]
             resultdict = OrderedDict(
                 ((".name", self._get_uci_name(rule["name"])), (".type", "rule"))
             )
@@ -107,8 +105,6 @@ class Firewall(OpenWrtConverter):
         """
         result = []
         for redirect in redirects:
-            if "config_name" in redirect:
-                del redirect["config_name"]
             resultdict = OrderedDict(
                 (
                     (".name", self._get_uci_name(redirect["name"])),
@@ -137,8 +133,6 @@ class Firewall(OpenWrtConverter):
         """
         result = []
         for include in includes:
-            if "config_name" in include:
-                del include["config_name"]
             resultdict = OrderedDict(
                 ((".name", self._get_uci_name(include["name"])), (".type", "include"),)
             )
