@@ -14,7 +14,7 @@ from .base import OpenWrtConverter
 class Firewall(OpenWrtConverter):
     netjson_key = "firewall"
     intermediate_key = "firewall"
-    _uci_types = ["defaults", "forwarding", "zone", "rule", "redirect"]
+    _uci_types = ["defaults", "forwarding", "zone", "rule", "redirect", "include"]
     _schema = schema["properties"]["firewall"]
 
     def to_intermediate_loop(self, block, result, index=None):
@@ -23,8 +23,11 @@ class Firewall(OpenWrtConverter):
         zones = self.__intermediate_zones(block.pop("zones", {}))
         rules = self.__intermediate_rules(block.pop("rules", {}))
         redirects = self.__intermediate_redirects(block.pop("redirects", {}))
+        includes = self.__intermediate_includes(block.pop("includes", {}))
         result.setdefault("firewall", [])
-        result["firewall"] = defaults + forwardings + zones + rules + redirects
+        result["firewall"] = (
+            defaults + forwardings + zones + rules + redirects + includes
+        )
         return result
 
     def __intermediate_defaults(self, defaults):
@@ -127,6 +130,24 @@ class Firewall(OpenWrtConverter):
 
         return result
 
+    def __intermediate_includes(self, includes):
+        """
+        converts NetJSON include to
+        UCI intermediate data structure
+        """
+        result = []
+        for include in includes:
+            if "config_name" in include:
+                del include["config_name"]
+            resultdict = OrderedDict(
+                ((".name", self._get_uci_name(include["name"])), (".type", "include"),)
+            )
+
+            resultdict.update(include)
+            result.append(resultdict)
+
+        return result
+
     def to_netjson_loop(self, block, result, index):
         result.setdefault("firewall", {})
 
@@ -154,6 +175,10 @@ class Firewall(OpenWrtConverter):
             redirect = self.__netjson_redirect(block)
             result["firewall"].setdefault("redirects", [])
             result["firewall"]["redirects"].append(redirect)
+        if _type == "include":
+            include = self.__netjson_include(block)
+            result["firewall"].setdefault("includes", [])
+            result["firewall"]["includes"].append(include)
 
         return self.type_cast(result)
 
@@ -239,6 +264,13 @@ class Firewall(OpenWrtConverter):
             redirect["limit_burst"] = int(redirect["limit_burst"])
 
         return self.type_cast(redirect)
+
+    def __netjson_include(self, include):
+        for param in ["reload", "enabled"]:
+            if param in include:
+                include[param] = self.__netjson_generic_boolean(include[param])
+
+        return self.type_cast(include)
 
     def __netjson_generic_boolean(self, boolean):
         # Per convention, boolean options may have one of the values '0', 'no', 'off',
