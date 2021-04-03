@@ -207,6 +207,75 @@ schema = merge_config(
                     },
                 },
             },
+            "vxlan_interface": {
+                "title": "VXLAN interface",
+                "required": ["vtep", "port", "vni", "tunlink"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["vxlan"],
+                                "default": "vxlan",
+                                "propertyOrder": 1,
+                            },
+                            "vtep": {
+                                "type": "string",
+                                "format": "hostname",
+                                "title": "VTEP",
+                                "description": "VXLAN Tunnel End Point",
+                                "propertyOrder": 1.1,
+                            },
+                            "port": {
+                                "type": "integer",
+                                "propertyOrder": 1.2,
+                                "default": 4789,
+                                "minimum": 1,
+                                "maximum": 65535,
+                            },
+                            "vni": {
+                                "type": ["integer", "string"],
+                                "title": "VNI",
+                                "description": "VXLAN Network Identifier",
+                                "propertyOrder": 1.3,
+                                "minimum": 1,
+                                "maximum": 16777216,
+                            },
+                            "tunlink": {
+                                "type": "string",
+                                "title": "TUN link",
+                                "description": "Interface to which the VXLAN tunnel will be bound",
+                                "propertyOrder": 1.4,
+                            },
+                            "rxcsum": {
+                                "type": "boolean",
+                                "title": "RX checksum validation",
+                                "description": "Use checksum validation in RX (receiving) direction",
+                                "default": True,
+                                "format": "checkbox",
+                                "propertyOrder": 1.5,
+                            },
+                            "txcsum": {
+                                "type": "boolean",
+                                "title": "TX checksum validation",
+                                "description": "Use checksum validation in TX (transmission) direction",
+                                "default": True,
+                                "format": "checkbox",
+                                "propertyOrder": 1.6,
+                            },
+                            "mtu": {"type": "integer", "default": 1280},
+                            "ttl": {
+                                "type": "integer",
+                                "title": "TTL",
+                                "description": "TTL of the encapsulation packets",
+                                "default": 64,
+                                "propertyOrder": 3,
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/interface_settings"},
+                ],
+            },
             "base_radio_settings": {
                 "properties": {
                     "driver": {
@@ -265,6 +334,7 @@ schema = merge_config(
                     "oneOf": [
                         {"$ref": "#/definitions/dialup_interface"},
                         {"$ref": "#/definitions/modemmanager_interface"},
+                        {"$ref": "#/definitions/vxlan_interface"},
                     ]
                 }
             },

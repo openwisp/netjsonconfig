@@ -4,6 +4,7 @@ from ipaddress import ip_address, ip_interface
 
 from ..schema import schema
 from .base import OpenWrtConverter
+from ..schema import schema
 
 
 class Interfaces(OpenWrtConverter):
@@ -128,6 +129,11 @@ class Interfaces(OpenWrtConverter):
     def _intermediate_modem_manager(self, interface):
         interface['proto'] = 'modemmanager'
         interface['pincode'] = interface.pop('pin', None)
+
+    def _intermediate_vxlan(self, interface):
+        interface['proto'] = 'vxlan'
+        interface['peeraddr'] = interface.pop('vtep')
+        interface['vid'] = interface.pop('vni')
         return interface
 
     _address_keys = ['address', 'mask', 'family', 'gateway']
@@ -313,6 +319,15 @@ class Interfaces(OpenWrtConverter):
         return self.type_cast(interface, schema=self._modem_manager_schema)
 
     _netjson_modemmanager = _netjson_modem_manager
+
+    _vxlan_schema = schema['definitions']['vxlan_interface']['allOf'][0]
+
+    def _netjson_vxlan(self, interface):
+        interface['type'] = interface.pop('proto', None)
+        interface['vtep'] = interface.pop('peeraddr', None)
+        interface['vni'] = interface.pop('vid', None)
+        interface['port'] = interface['port']
+        return self.type_cast(interface, schema=self._vxlan_schema)
 
     def __netjson_address(self, address, interface):
         ip = ip_interface(address)
