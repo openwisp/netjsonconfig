@@ -133,6 +133,7 @@ class Interfaces(OpenWrtConverter):
     def _intermediate_modem_manager(self, interface):
         interface['proto'] = 'modemmanager'
         interface['pincode'] = interface.pop('pin', None)
+        return interface
 
     def _intermediate_wireguard(self, interface):
         interface['proto'] = 'wireguard'
@@ -320,7 +321,7 @@ class Interfaces(OpenWrtConverter):
         interface['type'] = 'dialup'
         return interface
 
-    _modem_manager_schema = schema['definitions']['modemmanager_interface']
+    _modem_manager_schema = schema['definitions']['modemmanager_interface']['allOf'][0]
 
     def _netjson_modem_manager(self, interface):
         del interface['proto']
