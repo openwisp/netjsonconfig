@@ -168,47 +168,58 @@ schema = merge_config(
                 "type": "object",
                 "title": "Modem manager interface",
                 "required": ["name", "device"],
-                "properties": {
-                    "name": interface_settings["name"],
-                    "mtu": interface_settings["mtu"],
-                    "autostart": interface_settings["autostart"],
-                    "disabled": interface_settings["disabled"],
-                    "type": {
-                        "type": "string",
-                        "enum": ["modem-manager"],
-                        "default": "dialup",
-                        "propertyOrder": 1,
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["modem-manager"],
+                                "default": "dialup",
+                                "propertyOrder": 1,
+                            },
+                            "apn": {
+                                "type": "string",
+                                "title": "APN",
+                                "propertyOrder": 1.1,
+                            },
+                            "pin": {
+                                "type": "string",
+                                "title": "PIN code",
+                                "propertyOrder": 1.2,
+                            },
+                            "device": {
+                                "type": "string",
+                                "description": "Leave blank to use the hardware default",
+                                "propertyOrder": 1.3,
+                            },
+                            "username": {"type": "string", "propertyOrder": 1.4},
+                            "password": {"type": "string", "propertyOrder": 1.5},
+                            "metric": {
+                                "type": "integer",
+                                "default": 50,
+                                "propertyOrder": 1.6,
+                            },
+                            "iptype": {
+                                "type": "string",
+                                "title": "IP type",
+                                "default": "ipv4",
+                                "enum": ["ipv4", "ipv6", "ipv4v6"],
+                                "options": {
+                                    "enum_titles": ["IPv4", "IPv6", "IPv4 and IPv6"]
+                                },
+                                "propertyOrder": 1.7,
+                            },
+                            "lowpower": {
+                                "type": "boolean",
+                                "title": "Low power mode",
+                                "format": "checkbox",
+                                "default": False,
+                                "propertyOrder": 1.8,
+                            },
+                        }
                     },
-                    "apn": {"type": "string", "title": "APN", "propertyOrder": 1.1},
-                    "pin": {
-                        "type": "string",
-                        "title": "PIN code",
-                        "propertyOrder": 1.2,
-                    },
-                    "device": {
-                        "type": "string",
-                        "description": "Leave blank to use the hardware default",
-                        "propertyOrder": 1.3,
-                    },
-                    "username": {"type": "string", "propertyOrder": 1.4},
-                    "password": {"type": "string", "propertyOrder": 1.5},
-                    "metric": {"type": "integer", "default": 50, "propertyOrder": 1.6},
-                    "iptype": {
-                        "type": "string",
-                        "title": "IP type",
-                        "default": "ipv4",
-                        "enum": ["ipv4", "ipv6", "ipv4v6"],
-                        "options": {"enum_titles": ["IPv4", "IPv6", "IPv4 and IPv6"]},
-                        "propertyOrder": 1.7,
-                    },
-                    "lowpower": {
-                        "type": "boolean",
-                        "title": "Low power mode",
-                        "format": "checkbox",
-                        "default": False,
-                        "propertyOrder": 1.8,
-                    },
-                },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
             },
             "wireguard_interface": {
                 "type": "object",
