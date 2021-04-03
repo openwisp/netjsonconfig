@@ -5,6 +5,7 @@ from pkg_resources import iter_entry_points
 from .backends.openvpn.openvpn import OpenVpn  # noqa
 from .backends.openwisp.openwisp import OpenWisp  # noqa
 from .backends.openwrt.openwrt import OpenWrt  # noqa
+from .backends.wireguard.wireguard import Wireguard  # noqa
 from .version import VERSION, __version__, get_version  # noqa
 
 
@@ -13,6 +14,7 @@ def get_backends():
         'openwrt': OpenWrt,
         'openwisp': OpenWisp,
         'openvpn': OpenVpn,
+        'wireguard': Wireguard,
     }
     logger = logging.getLogger(__name__)
 

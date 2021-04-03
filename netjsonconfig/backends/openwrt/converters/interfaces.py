@@ -45,6 +45,8 @@ class Interfaces(OpenWrtConverter):
         converts NetJSON address to
         UCI intermediate data structure
         """
+        if interface.get('proto') == 'wireguard':
+            return self.__intermediate_wg_addresses(interface)
         address_list = self.get_copy(interface, 'addresses')
         # do not ignore interfaces if they do not contain any address
         if not address_list:
@@ -83,14 +85,20 @@ class Interfaces(OpenWrtConverter):
             result += dhcp
         return result
 
+    def __intermediate_wg_addresses(self, interface):
+        address_list = interface.pop('wg_addresses')
+        static = {'addresses': address_list, 'proto': interface['proto']}
+        return [static]
+
     def __intermediate_interface(self, interface, uci_name):
         """
         converts NetJSON interface to
         UCI intermediate data structure
         """
-        interface.update(
-            {'.type': 'interface', '.name': uci_name, 'ifname': interface.pop('name')}
-        )
+        interface.update({'.type': 'interface', '.name': uci_name})
+        name = interface.pop('name')
+        if interface.get('proto') != 'wireguard':
+            interface['ifname'] = name
         if 'network' in interface:
             del interface['network']
         if 'mac' in interface:

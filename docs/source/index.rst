@@ -59,6 +59,7 @@ Contents:
    /backends/openwrt
    /backends/openwisp
    /backends/openvpn
+   /backends/wireguard
    /backends/create_your_backend
    /general/commandline_utility
    /general/running_tests
