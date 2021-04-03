@@ -4,7 +4,6 @@ from ipaddress import ip_address, ip_interface
 
 from ..schema import schema
 from .base import OpenWrtConverter
-from ..schema import schema
 
 
 class Interfaces(OpenWrtConverter):
@@ -46,8 +45,9 @@ class Interfaces(OpenWrtConverter):
         converts NetJSON address to
         UCI intermediate data structure
         """
-        if interface.get('proto') == 'wireguard':
-            return self.__intermediate_wg_addresses(interface)
+        # wireguard interfaces need a different format
+        if interface.get('type') == 'wireguard':
+            return self.__intermediate_wireguard_addresses(interface)
         address_list = self.get_copy(interface, 'addresses')
         # do not ignore interfaces if they do not contain any address
         if not address_list:
@@ -86,9 +86,15 @@ class Interfaces(OpenWrtConverter):
             result += dhcp
         return result
 
-    def __intermediate_wg_addresses(self, interface):
-        address_list = interface.pop('wg_addresses')
-        static = {'addresses': address_list, 'proto': interface['proto']}
+    def __intermediate_wireguard_addresses(self, interface):
+        addresses = interface.pop('addresses')
+        address_list = []
+        for address_dict in addresses:
+            address = address_dict['address']
+            if 'mask' in address_dict:
+                address = f'{address}/{address_dict["mask"]}'
+            address_list.append(address)
+        static = {'addresses': address_list, 'proto': 'wireguard'}
         return [static]
 
     def __intermediate_interface(self, interface, uci_name):
@@ -97,9 +103,7 @@ class Interfaces(OpenWrtConverter):
         UCI intermediate data structure
         """
         interface.update({'.type': 'interface', '.name': uci_name})
-        name = interface.pop('name')
-        if interface.get('proto') != 'wireguard':
-            interface['ifname'] = name
+        interface['ifname'] = interface.pop('name')
         if 'network' in interface:
             del interface['network']
         if 'mac' in interface:
@@ -129,6 +133,12 @@ class Interfaces(OpenWrtConverter):
     def _intermediate_modem_manager(self, interface):
         interface['proto'] = 'modemmanager'
         interface['pincode'] = interface.pop('pin', None)
+
+    def _intermediate_wireguard(self, interface):
+        interface['proto'] = 'wireguard'
+        interface['listen_port'] = interface.pop('port', None)
+        del interface['ifname']
+        return interface
 
     def _intermediate_vxlan(self, interface):
         interface['proto'] = 'vxlan'
@@ -319,6 +329,25 @@ class Interfaces(OpenWrtConverter):
         return self.type_cast(interface, schema=self._modem_manager_schema)
 
     _netjson_modemmanager = _netjson_modem_manager
+
+    _wireguard_schema = schema['definitions']['wireguard_interface']['allOf'][0]
+
+    def _netjson_wireguard(self, interface):
+        interface['type'] = interface.pop('proto', None)
+        interface['port'] = interface.pop('listen_port', None)
+        addresses = []
+        for address in interface['addresses']:
+            cidr = ip_interface(address)
+            addresses.append(
+                {
+                    'address': str(cidr.ip),
+                    'mask': cidr.network.prefixlen,
+                    'proto': 'static',
+                    'family': f'ipv{cidr.ip.version}',
+                }
+            )
+        interface['addresses'] = addresses
+        return self.type_cast(interface, schema=self._wireguard_schema)
 
     _vxlan_schema = schema['definitions']['vxlan_interface']['allOf'][0]
 

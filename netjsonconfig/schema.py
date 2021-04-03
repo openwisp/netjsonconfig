@@ -30,7 +30,6 @@ schema = {
             "properties": {
                 "address": {"type": "string", "propertyOrder": 3},
                 "mask": {"type": "integer", "propertyOrder": 4},
-                "gateway": {"type": "string", "propertyOrder": 5},
             },
         },
         "ipv4_address": {
@@ -51,9 +50,11 @@ schema = {
                         },
                         "mask": {"minimum": 8, "maxmium": 32, "default": 24},
                         "gateway": {
+                            "type": "string",
                             "title": "ipv4 gateway",
                             "description": "optional ipv4 gateway",
                             "maxLength": 16,
+                            "propertyOrder": 5,
                         },
                     },
                 },
@@ -79,9 +80,11 @@ schema = {
                         },
                         "mask": {"minimum": 4, "maxmium": 128, "default": 64},
                         "gateway": {
+                            "type": "string",
                             "title": "ipv6 gateway",
                             "description": "optional ipv6 gateway",
                             "maxLength": 45,
+                            "propertyOrder": 5,
                         },
                     },
                 },
@@ -100,9 +103,9 @@ schema = {
                 },
             ],
         },
-        "interface_settings": {
+        "base_interface_settings": {
             "type": "object",
-            "title": "Interface settings",
+            "title": "Base Interface settings",
             "additionalProperties": True,
             "required": ["name", "type"],
             "properties": {
@@ -120,6 +123,19 @@ schema = {
                     "minimum": 68,
                     "propertyOrder": 2,
                 },
+                "disabled": {
+                    "type": "boolean",
+                    "description": "disable this interface without deleting its configuration",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 6,
+                },
+            },
+        },
+        "interface_settings": {
+            "type": "object",
+            "title": "Interface settings",
+            "properties": {
                 "mac": {
                     "type": "string",
                     "title": "MAC address",
@@ -135,13 +151,6 @@ schema = {
                     "default": True,
                     "format": "checkbox",
                     "propertyOrder": 5,
-                },
-                "disabled": {
-                    "type": "boolean",
-                    "description": "disable this interface without deleting its configuration",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 6,
                 },
                 "addresses": {
                     "type": "array",
@@ -172,6 +181,7 @@ schema = {
                         }
                     }
                 },
+                {"$ref": "#/definitions/base_interface_settings"},
                 {"$ref": "#/definitions/interface_settings"},
             ],
         },
@@ -199,6 +209,7 @@ schema = {
                         },
                     }
                 },
+                {"$ref": "#/definitions/base_interface_settings"},
                 {"$ref": "#/definitions/interface_settings"},
             ],
         },
@@ -229,11 +240,12 @@ schema = {
                             "items": {
                                 "title": "bridged interface",
                                 "type": "string",
-                                "$ref": "#/definitions/interface_settings/properties/name",
+                                "$ref": "#/definitions/base_interface_settings/properties/name",
                             },
                         },
                     }
                 },
+                {"$ref": "#/definitions/base_interface_settings"},
                 {"$ref": "#/definitions/interface_settings"},
             ],
         },

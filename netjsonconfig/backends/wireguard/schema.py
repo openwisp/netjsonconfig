@@ -42,7 +42,6 @@ base_wireguard_schema = {
                     "private_key": {
                         "title": "private key",
                         "type": "string",
-                        "minLength": 44,
                         "maxLength": 44,
                         "pattern": "^[^\\s]*$",
                         "propertyOrder": 3,
@@ -61,28 +60,43 @@ base_wireguard_schema = {
                                 "public_key": {
                                     "title": "public key",
                                     "type": "string",
-                                    "minLength": 44,
                                     "maxLength": 44,
                                     "pattern": "^[^\\s]*$",
                                     "propertyOrder": 1,
                                 },
                                 "allowed_ips": {
-                                    "title": "public key",
+                                    "title": "allowed IP addresses",
                                     "type": "string",
                                     "propertyOrder": 2,
                                 },
-                                "endpoint": {
-                                    "title": "public key",
+                                "endpoint_host": {
+                                    "title": "endpoint host",
                                     "type": "string",
                                     "propertyOrder": 3,
                                 },
+                                "endpoint_port": {
+                                    "title": "endpoint port",
+                                    "type": "integer",
+                                    "description": (
+                                        "Wireguard port. Will be ignored if "
+                                        "\"endpoint host\" is left empty."
+                                    ),
+                                    "default": 51820,
+                                    "maximum": 65535,
+                                    "minimum": 1,
+                                    "propertyOrder": 4,
+                                },
                                 "preshared_key": {
                                     "title": "pre-shared key",
+                                    "description": (
+                                        "Optional shared secret, to provide an "
+                                        "additional layer of symmetric-key cryptography "
+                                        "for post-quantum resistance"
+                                    ),
                                     "type": "string",
-                                    "minLength": 44,
                                     "maxLength": 44,
                                     "pattern": "^[^\\s]*$",
-                                    "propertyOrder": 4,
+                                    "propertyOrder": 5,
                                 },
                             },
                         },

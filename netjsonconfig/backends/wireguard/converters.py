@@ -24,7 +24,10 @@ class Wireguard(BaseConverter):
         for peer in peers:
             peer['AllowedIPs'] = peer.pop('allowed_ips')
             peer['PublicKey'] = peer.pop('public_key')
-            peer['Endpoint'] = peer.pop('endpoint', None)
             peer['PreSharedKey'] = peer.pop('preshared_key', None)
+            host = peer.pop('endpoint_host', None)
+            port = peer.pop('endpoint_port', None)
+            if host and port:
+                peer['Endpoint'] = f'{host}:{port}'
             peer_list.append(self.sorted_dict(peer))
         return peer_list

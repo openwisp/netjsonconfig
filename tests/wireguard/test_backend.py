@@ -15,7 +15,9 @@ class TestBackend(unittest.TestCase):
     def test_test_schema(self):
         with self.assertRaises(ValidationError) as context_manager:
             Wireguard({}).validate()
-        self.assertIn("'wireguard' is a required property", str(context_manager.exception))
+        self.assertIn(
+            "'wireguard' is a required property", str(context_manager.exception)
+        )
 
     def test_confs(self):
         c = Wireguard(
@@ -65,7 +67,8 @@ PrivateKey = AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
                                 "public_key": "94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=",
                                 "allowed_ips": "10.0.0.4/32",
                                 "preshared_key": "xisFXck9KfEZga4hlkproH6+86S8ki1tmLtMtqVipjg=",
-                                "endpoint": "192.168.1.35:4908",
+                                "endpoint_host": "192.168.1.35",
+                                "endpoint_port": 4908,
                             },
                         ],
                     }
