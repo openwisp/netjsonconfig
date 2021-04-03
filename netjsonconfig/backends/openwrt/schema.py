@@ -726,7 +726,11 @@ schema = merge_config(
                             "title": "allowed IPs",
                             "propertyOrder": 2,
                             "uniqueItems": True,
-                            "items": {"type": "string", "title": "IP/prefix"},
+                            "items": {
+                                "type": "string",
+                                "title": "IP/prefix",
+                                "minLength": 1,
+                            },
                         },
                         "endpoint_host": wireguard_peers["endpoint_host"],
                         "endpoint_port": wireguard_peers["endpoint_port"],
