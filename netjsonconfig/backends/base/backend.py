@@ -333,3 +333,39 @@ class BaseBackend(object):
         del self.intermediate_data
         self.intermediate_data = self._intermediate_copy
         del self._intermediate_copy
+
+
+class BaseVpnBackend(BaseBackend):
+    """
+    Shared logic between VPN backends
+    Requires setting the following attributes:
+
+    - vpn_pattern
+    - config_suffix
+    """
+
+    def _generate_contents(self, tar):
+        """
+        Adds configuration files to tarfile instance.
+
+        :param tar: tarfile instance
+        :returns: None
+        """
+        text = self.render(files=False)
+        # create a list with all the packages (and remove empty entries)
+        vpn_instances = self.vpn_pattern.split(text)
+        if '' in vpn_instances:
+            vpn_instances.remove('')
+        # create a file for each VPN
+        for vpn in vpn_instances:
+            lines = vpn.split('\n')
+            vpn_name = lines[0]
+            text_contents = '\n'.join(lines[2:])
+            # do not end with double new line
+            if text_contents.endswith('\n\n'):
+                text_contents = text_contents[0:-1]
+            self._add_file(
+                tar=tar,
+                name='{0}{1}'.format(vpn_name, self.config_suffix),
+                contents=text_contents,
+            )
