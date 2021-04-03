@@ -4,19 +4,21 @@ OpenWrt specific JSON-Schema definition
 from ...schema import schema as default_schema
 from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
+from ..wireguard.schema import base_wireguard_schema
 from .timezones import timezones
 
 default_radio_driver = "mac80211"
-_interface_properties = default_schema["definitions"]["interface_settings"][
-    "properties"
-]
+
+wireguard = base_wireguard_schema["properties"]["wireguard"]["items"]["properties"]
+wireguard_peers = wireguard["peers"]["items"]["properties"]
+interface_settings = default_schema["definitions"]["interface_settings"]["properties"]
 
 
 schema = merge_config(
     default_schema,
     {
         "definitions": {
-            "interface_settings": {
+            "base_interface_settings": {
                 "properties": {
                     "network": {
                         "type": "string",
@@ -42,7 +44,7 @@ schema = merge_config(
                                 "items": {
                                     "title": "network",
                                     "type": "string",
-                                    "$ref": "#/definitions/interface_settings/properties/network",
+                                    "$ref": "#/definitions/base_interface_settings/properties/network",
                                 },
                                 "propertyOrder": 19,
                             }
@@ -158,6 +160,7 @@ schema = merge_config(
                             },
                         }
                     },
+                    {"$ref": "#/definitions/base_interface_settings"},
                     {"$ref": "#/definitions/interface_settings"},
                 ],
             },
@@ -166,10 +169,10 @@ schema = merge_config(
                 "title": "Modem manager interface",
                 "required": ["name", "device"],
                 "properties": {
-                    "name": _interface_properties["name"],
-                    "mtu": _interface_properties["mtu"],
-                    "autostart": _interface_properties["autostart"],
-                    "disabled": _interface_properties["disabled"],
+                    "name": interface_settings["name"],
+                    "mtu": interface_settings["mtu"],
+                    "autostart": interface_settings["autostart"],
+                    "disabled": interface_settings["disabled"],
                     "type": {
                         "type": "string",
                         "enum": ["modem-manager"],
@@ -206,6 +209,142 @@ schema = merge_config(
                         "propertyOrder": 1.8,
                     },
                 },
+            },
+            "wireguard_interface": {
+                "type": "object",
+                "title": "Wireguard interface",
+                "required": ["private_key"],
+                "additionalProperties": True,
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["wireguard"],
+                                "default": "wireguard",
+                                "propertyOrder": 1,
+                            },
+                            "private_key": wireguard["private_key"],
+                            "port": wireguard["port"],
+                            "mtu": {
+                                "type": "integer",
+                                "default": 1420,
+                                "propertyOrder": 1.1,
+                            },
+                            "nohostroute": {
+                                "type": "boolean",
+                                "format": "checkbox",
+                                "default": False,
+                                "title": "no host route",
+                                "description": (
+                                    "Do not add routes to ensure the tunnel "
+                                    "endpoints are routed via non-tunnel device"
+                                ),
+                                "propertyOrder": 3,
+                            },
+                            "fwmark": {
+                                "type": "string",
+                                "title": "firewall mark",
+                                "description": (
+                                    "Firewall mark to apply to tunnel endpoint packets, "
+                                    "will be automatically determined if left blank"
+                                ),
+                                "propertyOrder": 3.1,
+                            },
+                            "ip6prefix": {
+                                "title": "IPv6 prefixes",
+                                "description": "IPv6 prefixes to delegate to other interfaces",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "title": "IPv6 prefix",
+                                    "uniqueItems": True,
+                                },
+                                "propertyOrder": 9,
+                            },
+                            # unfortunately some duplication with the base IP address
+                            # definition is needed to achieve functional usability and
+                            # consistency with the rest of the schema because the
+                            # wireguard OpenWRT package uses a different configuration
+                            # format for addresses
+                            "addresses": {
+                                "type": "array",
+                                "title": "addresses",
+                                "uniqueItems": True,
+                                "propertyOrder": 20,
+                                "items": {
+                                    "required": ["proto", "family", "address", "mask"],
+                                    "title": "address",
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "title": "ipv4",
+                                            "properties": {
+                                                "proto": {
+                                                    "title": "protocol",
+                                                    "type": "string",
+                                                    "propertyOrder": 1,
+                                                    "enum": ["static"],
+                                                },
+                                                "family": {
+                                                    "title": "family",
+                                                    "type": "string",
+                                                    "propertyOrder": 2,
+                                                    "enum": ["ipv4"],
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "title": "ipv4 address",
+                                                    "minLength": 7,
+                                                    "format": "ipv4",
+                                                    "propertyOrder": 3,
+                                                },
+                                                "mask": {
+                                                    "type": "number",
+                                                    "minimum": 8,
+                                                    "maxmium": 32,
+                                                    "default": 32,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            "type": "object",
+                                            "title": "ipv6",
+                                            "properties": {
+                                                "proto": {
+                                                    "title": "protocol",
+                                                    "type": "string",
+                                                    "propertyOrder": 1,
+                                                    "enum": ["static"],
+                                                },
+                                                "family": {
+                                                    "title": "family",
+                                                    "type": "string",
+                                                    "propertyOrder": 2,
+                                                    "enum": ["ipv6"],
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "title": "ipv6 address",
+                                                    "minLength": 3,
+                                                    "format": "ipv6",
+                                                    "propertyOrder": 3,
+                                                },
+                                                "mask": {
+                                                    "type": "number",
+                                                    "minimum": 4,
+                                                    "maxmium": 128,
+                                                    "default": 128,
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
             },
             "vxlan_interface": {
                 "title": "VXLAN interface",
@@ -271,9 +410,10 @@ schema = merge_config(
                                 "default": 64,
                                 "propertyOrder": 3,
                             },
+                            "mac": interface_settings["mac"],
                         }
                     },
-                    {"$ref": "#/definitions/interface_settings"},
+                    {"$ref": "#/definitions/base_interface_settings"},
                 ],
             },
             "base_radio_settings": {
@@ -335,6 +475,7 @@ schema = merge_config(
                         {"$ref": "#/definitions/dialup_interface"},
                         {"$ref": "#/definitions/modemmanager_interface"},
                         {"$ref": "#/definitions/vxlan_interface"},
+                        {"$ref": "#/definitions/wireguard_interface"},
                     ]
                 }
             },
@@ -556,6 +697,61 @@ schema = merge_config(
                         "interval": {"type": "integer", "propertyOrder": 8},
                         "message": {"type": "string", "propertyOrder": 9},
                         "mode": {"type": "string", "propertyOrder": 10},
+                    },
+                },
+            },
+            "wireguard_peers": {
+                "type": "array",
+                "title": "Wireguard Peers",
+                "uniqueItems": True,
+                "propertyOrder": 13,
+                "items": {
+                    "type": "object",
+                    "title": "Wireguard peer",
+                    "additionalProperties": True,
+                    "required": ["interface", "public_key", "allowed_ips"],
+                    "properties": {
+                        "interface": {
+                            "type": "string",
+                            "title": "interface",
+                            "description": "name of the wireguard interface",
+                            "minLength": 2,
+                            "maxLength": 15,
+                            "pattern": "^[^\\s]*$",
+                            "propertyOrder": 0,
+                        },
+                        "public_key": wireguard_peers["public_key"],
+                        "allowed_ips": {
+                            "type": "array",
+                            "title": "allowed IPs",
+                            "propertyOrder": 2,
+                            "uniqueItems": True,
+                            "items": {"type": "string", "title": "IP/prefix"},
+                        },
+                        "endpoint_host": wireguard_peers["endpoint_host"],
+                        "endpoint_port": wireguard_peers["endpoint_port"],
+                        "preshared_key": wireguard_peers["preshared_key"],
+                        "persistent_keepalive": {
+                            "type": "integer",
+                            "title": "keep alive",
+                            "description": (
+                                "Number of second between keepalive "
+                                "messages, 0 means disabled"
+                            ),
+                            "default": 0,
+                            "propertyOrder": 6,
+                        },
+                        "route_allowed_ips": {
+                            "type": "boolean",
+                            "format": "checkbox",
+                            "title": "route allowed IPs",
+                            "description": (
+                                "Automatically create a route for "
+                                "each Allowed IPs for this peer"
+                            ),
+                            "default": False,
+                            "propertyOrder": 7,
+                        },
                     },
                 },
             },

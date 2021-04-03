@@ -8,6 +8,7 @@ from .radios import Radios
 from .routes import Routes
 from .rules import Rules
 from .switch import Switch
+from .wireguard_peers import WireguardPeers
 from .wireless import Wireless
 
 __all__ = [
@@ -21,5 +22,6 @@ __all__ = [
     'Routes',
     'Rules',
     'Switch',
+    'WireguardPeers',
     'Wireless',
 ]
