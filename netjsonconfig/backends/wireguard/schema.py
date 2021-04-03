@@ -61,12 +61,14 @@ base_wireguard_schema = {
                                     "title": "public key",
                                     "type": "string",
                                     "maxLength": 44,
+                                    "minLength": 1,
                                     "pattern": "^[^\\s]*$",
                                     "propertyOrder": 1,
                                 },
                                 "allowed_ips": {
                                     "title": "allowed IP addresses",
                                     "type": "string",
+                                    "minLength": 1,
                                     "propertyOrder": 2,
                                 },
                                 "endpoint_host": {
