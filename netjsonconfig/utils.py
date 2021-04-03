@@ -105,7 +105,7 @@ def evaluate_vars(data, context=None):
             else:
                 pattern = var_pattern
             if var in context:
-                data = re.sub(pattern, context[var], data)
+                data = re.sub(pattern, str(context[var]), data)
     return data
 
 
