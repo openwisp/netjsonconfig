@@ -94,4 +94,5 @@ base_wireguard_schema = {
 }
 
 schema = deepcopy(base_wireguard_schema)
+schema['required'] = ['wireguard']
 schema['properties']['files'] = default_schema['properties']['files']

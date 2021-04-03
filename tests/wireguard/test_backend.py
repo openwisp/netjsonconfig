@@ -2,6 +2,7 @@ import tarfile
 import unittest
 
 from netjsonconfig import Wireguard
+from netjsonconfig.exceptions import ValidationError
 
 
 class TestBackend(unittest.TestCase):
@@ -10,6 +11,11 @@ class TestBackend(unittest.TestCase):
     """
 
     maxDiff = None
+
+    def test_test_schema(self):
+        with self.assertRaises(ValidationError) as context_manager:
+            Wireguard({}).validate()
+        self.assertIn("'wireguard' is a required property", str(context_manager.exception))
 
     def test_confs(self):
         c = Wireguard(

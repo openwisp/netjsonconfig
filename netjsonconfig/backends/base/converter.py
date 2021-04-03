@@ -51,6 +51,10 @@ class BaseConverter(object):
                 json_type = properties[key]['type']
             except KeyError:
                 json_type = None
+            # if multiple types are supported, the first
+            # one takes precedence when parsing
+            if isinstance(json_type, list) and json_type:
+                json_type = json_type[0]
             if json_type == 'integer' and not isinstance(value, int):
                 value = int(value)
             elif json_type == 'boolean' and not isinstance(value, bool):
