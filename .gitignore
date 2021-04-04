@@ -60,3 +60,4 @@ target/
 *.DS_Store*
 .__*
 __DEV
+Pipfile*
