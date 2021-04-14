@@ -16,6 +16,7 @@ class Wireguard(BaseConverter):
     def __intermediate_vpn(self, config, remove=None):
         config['ListenPort'] = config.pop('port')
         config['PrivateKey'] = config.pop('private_key')
+        config['Address'] = config.pop('address')
         config['peers'] = self.__intermediate_peers(config.get('peers', []))
         return self.sorted_dict(config)
 

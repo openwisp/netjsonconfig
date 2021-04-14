@@ -307,7 +307,6 @@ schema = merge_config(
                                                     "type": "string",
                                                     "title": "ipv4 address",
                                                     "minLength": 7,
-                                                    "format": "ipv4",
                                                     "propertyOrder": 3,
                                                 },
                                                 "mask": {
@@ -371,7 +370,6 @@ schema = merge_config(
                             },
                             "vtep": {
                                 "type": "string",
-                                "format": "hostname",
                                 "title": "VTEP",
                                 "description": "VXLAN Tunnel End Point",
                                 "propertyOrder": 1.1,
