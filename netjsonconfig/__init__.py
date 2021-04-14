@@ -5,6 +5,7 @@ from pkg_resources import iter_entry_points
 from .backends.openvpn.openvpn import OpenVpn  # noqa
 from .backends.openwisp.openwisp import OpenWisp  # noqa
 from .backends.openwrt.openwrt import OpenWrt  # noqa
+from .backends.vxlan.vxlan_wireguard import VxlanWireguard  # noqa
 from .backends.wireguard.wireguard import Wireguard  # noqa
 from .version import VERSION, __version__, get_version  # noqa
 

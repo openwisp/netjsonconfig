@@ -27,11 +27,13 @@ class TestBackend(unittest.TestCase):
                         "name": "test1",
                         "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
                         "port": 40842,
+                        "address": "10.0.0.1/24",
                     },
                     {
                         "name": "test2",
                         "private_key": "AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
                         "port": 40843,
+                        "address": "10.0.1.1/24",
                     },
                 ]
             }
@@ -39,12 +41,14 @@ class TestBackend(unittest.TestCase):
         expected = """# wireguard config: test1
 
 [Interface]
+Address = 10.0.0.1/24
 ListenPort = 40842
 PrivateKey = QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
 
 # wireguard config: test2
 
 [Interface]
+Address = 10.0.1.1/24
 ListenPort = 40843
 PrivateKey = AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
 """
@@ -58,6 +62,7 @@ PrivateKey = AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
                         "name": "test1",
                         "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
                         "port": 40842,
+                        "address": "10.0.0.1/24",
                         "peers": [
                             {
                                 "public_key": "jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=",
@@ -78,6 +83,7 @@ PrivateKey = AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
         expected = """# wireguard config: test1
 
 [Interface]
+Address = 10.0.0.1/24
 ListenPort = 40842
 PrivateKey = QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
 
@@ -101,6 +107,7 @@ PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
                         "name": "test1",
                         "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
                         "port": 40842,
+                        "address": "10.0.0.1/24",
                         "peers": [
                             {
                                 "public_key": "jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=",
@@ -117,6 +124,7 @@ PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
         vpn1 = tar.getmember('test1.conf')
         contents = tar.extractfile(vpn1).read().decode()
         expected = """[Interface]
+Address = 10.0.0.1/24
 ListenPort = 40842
 PrivateKey = QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
 
@@ -125,3 +133,46 @@ AllowedIPs = 10.0.0.3/32
 PublicKey = jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=
 """
         self.assertEqual(contents, expected)
+
+    def test_auto_client(self):
+        with self.subTest('No arguments are provided'):
+            expected = {
+                'interface_name': '',
+                'client': {
+                    'port': 51820,
+                    'private_key': '{{private_key}}',
+                    'ip_address': None,
+                },
+                'server': {
+                    'public_key': '',
+                    'endpoint_host': '',
+                    'endpoint_port': 51820,
+                    'allowed_ips': [''],
+                },
+            }
+            self.assertDictEqual(Wireguard.auto_client(), expected)
+        with self.subTest('Required arguments are provided'):
+            expected = {
+                'interface_name': 'wg',
+                'client': {
+                    'port': 51820,
+                    'private_key': '{{private_key}}',
+                    'ip_address': '10.0.0.2',
+                },
+                'server': {
+                    'public_key': 'server_public_key',
+                    'endpoint_host': '0.0.0.0',
+                    'endpoint_port': 51820,
+                    'allowed_ips': ['10.0.0.1/24'],
+                },
+            }
+            self.assertDictEqual(
+                Wireguard.auto_client(
+                    host='0.0.0.0',
+                    public_key='server_public_key',
+                    server={'name': 'wg', 'port': 51820},
+                    server_ip_network='10.0.0.1/24',
+                    ip_address='10.0.0.2',
+                ),
+                expected,
+            )
