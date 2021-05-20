@@ -37,7 +37,7 @@ jobs:
           pip install -U -r requirements-test.txt
 
       - name: Install netjsonconfig
-        run: python setup.py -q develop
+        run: pip install -U -e .
 
       - name: QA checks
         run: ./run-qa-checks
