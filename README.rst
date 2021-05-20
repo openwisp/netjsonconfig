@@ -16,7 +16,7 @@ netjsonconfig
 
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
    :target: http://badge.fury.io/py/netjsonconfig
-   
+
 .. image:: https://pepy.tech/badge/netjsonconfig
    :target: https://pepy.tech/project/netjsonconfig
    :alt: downloads
@@ -43,6 +43,7 @@ Its main features are listed below for your reference:
 * `OpenWRT <http://openwrt.org>`_ / `LEDE <https://www.lede-project.org/>`_ support
 * `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_ support
 * `OpenVPN <https://openvpn.net>`_ support
+* `WireGuard <https://www.wireguard.com/>`_ support
 * Possibility to support more firmwares via custom backends
 * Based on the `NetJSON RFC <http://netjson.org/rfc.html>`_
 * **Validation** based on `JSON-Schema <http://json-schema.org/>`_
