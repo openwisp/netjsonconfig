@@ -527,7 +527,7 @@ key key.pem
 mode p2p
 nobind
 proto udp
-remote vpn1.test.com 1195
+remote vpn1.test.com 1194
 resolv-retry infinite
 """
         self.assertEqual(o.render(), expected)
@@ -610,7 +610,7 @@ nobind
 ns-cert-type server
 proto tcp-client
 pull
-remote vpn1.test.com 1195
+remote vpn1.test.com 1194
 resolv-retry infinite
 tls-client
 
@@ -664,7 +664,7 @@ mode p2p
 nobind
 proto udp
 pull
-remote vpn1.test.com 1195
+remote vpn1.test.com 1194
 resolv-retry infinite
 tls-client
 """

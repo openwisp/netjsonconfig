@@ -54,6 +54,7 @@ class OpenVpn(BaseBackend):
         cert_contents=None,
         key_path=None,
         key_contents=None,
+        **kwargs
     ):
         """
         Returns a configuration dictionary representing an OpenVPN client configuration
@@ -80,7 +81,7 @@ class OpenVpn(BaseBackend):
             "tls_client": True,
         }
         # remote
-        port = server.get('port') or 1195
+        port = kwargs.get('vpn_port', server.get('port', 1194))
         client['remote'] = [{'host': host, 'port': port}]
         # proto
         if server.get('proto') == 'tcp-server':

@@ -285,7 +285,7 @@ Will be rendered as::
     mode p2p
     nobind
     proto udp
-    remote vpn1.test.com 1195
+    remote vpn1.test.com 1194
     resolv-retry
     tls-client
 
