@@ -81,8 +81,8 @@ class OpenVpn(BaseBackend):
             "tls_client": True,
         }
         # remote
-        port = kwargs.get('vpn_port', server.get('port', 1194))
-        client['remote'] = [{'host': host, 'port': port}]
+        port = kwargs.get('vpn_port', server.get('port', '1194'))
+        client['remote'] = [{'host': host, 'port': str(port)}]
         # proto
         if server.get('proto') == 'tcp-server':
             client['proto'] = 'tcp-client'

@@ -489,10 +489,8 @@ base_openvpn_schema = {
                                         "propertyOrder": 1,
                                     },
                                     "port": {
-                                        "type": "integer",
-                                        "default": 1194,
-                                        "maximum": 65535,
-                                        "minimum": 1,
+                                        "type": "string",
+                                        "pattern": "^[0-9]*$",
                                         "propertyOrder": 2,
                                     },
                                 },

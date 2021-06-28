@@ -77,7 +77,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
                 "ns_cert_type": "server",
                 "persist_tun": True,
                 "proto": "tcp-client",
-                "remote": [{"host": "vpn.openwisp.org", "port": 12128}],
+                "remote": [{"host": "vpn.openwisp.org", "port": "12128"}],
                 "script_security": 1,
                 "tls_client": True,
                 "up": "/tmp/owispmanager/openvpn/vpn_2693_script_up.sh",

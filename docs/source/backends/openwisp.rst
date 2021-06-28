@@ -238,7 +238,7 @@ The following example shows a full working *configuration dictionary* for the
                 "remote": [
                     {
                         "host": "vpn.openwisp.org",
-                        "port": 12128
+                        "port": "12128"
                     }
                 ],
                 "tls_client": True,

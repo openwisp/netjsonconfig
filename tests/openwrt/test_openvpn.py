@@ -136,8 +136,8 @@ config openvpn 'test_server'
                 "port": 1195,
                 "proto": "tcp-client",
                 "remote": [
-                    {"host": "vpn1.test.com", "port": 1194},
-                    {"host": "vpn2.test.com", "port": 1195},
+                    {"host": "vpn1.test.com", "port": "1194"},
+                    {"host": "vpn2.test.com", "port": "1195"},
                 ],
                 "resolv_retry": "infinite",
                 "script_security": 1,
