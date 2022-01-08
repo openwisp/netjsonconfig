@@ -543,7 +543,7 @@ schema = {
                             "title": "EAP protocol",
                             "type": "string",
                             "enum": ["tls", "ttls"],
-                            "options": {"enum_titles": ["EAP-TLS", "EAP-PEAP"]},
+                            "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS"]},
                             "propertyOrder": 4,
                         },
                         "identity": {"type": "string", "propertyOrder": 5},
