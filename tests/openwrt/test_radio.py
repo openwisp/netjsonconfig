@@ -530,6 +530,92 @@ config wifi-device 'radio0'
         )
         self.assertEqual(o.render(), expected)
 
+    def test_parse_auto_80211ax_5ghz_channel(self):
+        native = self._tabs(
+            """package wireless
+
+config wifi-device 'radio0'
+    option channel 'auto'
+    option htmode 'HE20'
+    option hwmode '11a'
+    option phy 'phy0'
+    option type 'mac80211'
+"""
+        )
+        expected = {
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11ax",
+                    "channel": 0,
+                    "channel_width": 20,
+                    "hwmode": "11a",
+                }
+            ]
+        }
+        o = OpenWrt(native=native)
+        self.assertEqual(o.config, expected)
+
+    def test_auto_80211ax_2ghz_channel(self):
+        o = OpenWrt(
+            {
+                "radios": [
+                    {
+                        "name": "radio0",
+                        "phy": "phy0",
+                        "driver": "mac80211",
+                        "protocol": "802.11ax",
+                        "channel": 0,
+                        "channel_width": 80,
+                        "hwmode": "11g",
+                    }
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package wireless
+
+config wifi-device 'radio0'
+    option channel 'auto'
+    option htmode 'HE80'
+    option hwmode '11g'
+    option phy 'phy0'
+    option type 'mac80211'
+"""
+        )
+        self.assertEqual(o.render(), expected)
+
+    def test_auto_80211ax_5ghz_channel(self):
+        o = OpenWrt(
+            {
+                "radios": [
+                    {
+                        "name": "radio0",
+                        "phy": "phy0",
+                        "driver": "mac80211",
+                        "protocol": "802.11ax",
+                        "channel": 0,
+                        "channel_width": 160,
+                        "hwmode": "11a",
+                    }
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package wireless
+
+config wifi-device 'radio0'
+    option channel 'auto'
+    option htmode 'HE160'
+    option hwmode '11a'
+    option phy 'phy0'
+    option type 'mac80211'
+"""
+        )
+        self.assertEqual(o.render(), expected)
+
     def test_auto_80211g_channel(self):
         o = OpenWrt(
             {

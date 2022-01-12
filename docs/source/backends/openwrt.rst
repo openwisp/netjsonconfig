@@ -1350,13 +1350,13 @@ Radio object extensions
 In addition to the default *NetJSON Radio object options*, the ``OpenWrt`` backend
 also requires setting the following additional options for each radio in the list:
 
-+--------------+---------+-----------------------------------------------+
-| key name     | type    | allowed values                                |
-+==============+=========+===============================================+
-| ``driver``   | string  | mac80211, atheros, ath5k, ath9k, broadcom     |
-+--------------+---------+-----------------------------------------------+
-| ``protocol`` | string  | 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac  |
-+--------------+---------+-----------------------------------------------+
++--------------+---------+---------------------------------------------------------+
+| key name     | type    | allowed values                                          |
++==============+=========+=========================================================+
+| ``driver``   | string  | mac80211, atheros, ath5k, ath9k, broadcom               |
++--------------+---------+---------------------------------------------------------+
+| ``protocol`` | string  | 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac, 802.11ax  |
++--------------+---------+---------------------------------------------------------+
 
 Radio example
 ~~~~~~~~~~~~~
@@ -1417,7 +1417,7 @@ Automatic channel selection example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you need to use the "automatic channel selection" feature of OpenWRT, you must set
-the channel to ``0`` and, unless you are using neither **802.11n** nor **802.11ac**,
+the channel to ``0`` and, unless you are using neither **802.11n** nor **802.11ac** nor **802.11ax**,
 you must set the ``hwmode`` property to tell OpenWRT which band to use
 (11g for 2.4 Ghz, 11a for 5 GHz).
 
@@ -1497,6 +1497,38 @@ UCI output::
             option hwmode '11a'
             option phy 'phy0'
             option type 'mac80211'
+
+802.11ax example
+~~~~~~~~~~~~~~~~
+
+In the following example we show how to configure an *802.11ax* capable radio:
+
+.. code-block:: python
+
+    {
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11ax",
+                "channel": 36,
+                "channel_width": 80,
+            }
+        ]
+    }
+
+UCI output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel '36'
+            option htmode 'HE80'
+            option hwmode '11a'
+            option phy 'phy0'
+            option type 'mac80211'
+
 
 Static Routes
 -------------
