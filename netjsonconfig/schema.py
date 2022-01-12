@@ -804,7 +804,12 @@ schema = {
         "radio_80211ax_2ghz_settings": {
             "title": "802.11AX (2.4 GHz AX)",
             "allOf": [
-                {"properties": {"protocol": {"enum": ["802.11ax"]}, "hwmode": {"enum": ["11g"]}}},
+                {
+                    "properties": {
+                        "protocol": {"enum": ["802.11ax"]},
+                        "hwmode": {"enum": ["11g"]},
+                    }
+                },
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_2ghz_channels"},
                 {"$ref": "#/definitions/radio_ax_channel_width"},
@@ -813,7 +818,12 @@ schema = {
         "radio_80211ax_5ghz_settings": {
             "title": "802.11ax (5 GHz AX)",
             "allOf": [
-                {"properties": {"protocol": {"enum": ["802.11ax"]}, "hwmode": {"enum": ["11a"]}}},
+                {
+                    "properties": {
+                        "protocol": {"enum": ["802.11ax"]},
+                        "hwmode": {"enum": ["11a"]},
+                    }
+                },
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_ax_channel_width"},
