@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: Python==${{ matrix.python-version }} | ${{ matrix.django-version }}
+    name: Python==${{ matrix.python-version }}
     runs-on: ubuntu-20.04
 
     strategy:
