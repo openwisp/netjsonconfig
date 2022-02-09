@@ -8,9 +8,9 @@ netjsonconfig
 .. image:: https://coveralls.io/repos/openwisp/netjsonconfig/badge.svg
  :target: https://coveralls.io/r/openwisp/netjsonconfig
 
-.. image:: https://requires.io/github/openwisp/netjsonconfig/requirements.svg?branch=master
-  :target: https://requires.io/github/openwisp/netjsonconfig/requirements/?branch=master
-  :alt: Requirements Status
+.. image:: https://img.shields.io/librariesio/release/github/openwisp/netjsonconfig
+   :target: https://libraries.io/github/openwisp/netjsonconfig#repository_dependencies
+   :alt: Dependency monitoring 
 
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
   :target: http://badge.fury.io/py/netjsonconfig
