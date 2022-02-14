@@ -141,8 +141,10 @@ class TestBin(unittest.TestCase, _TabsMixin):
                 ],
             }
         )
-        command = "netjsonconfig --config '{0}' -b openwrt -m render -a files=False".format(
-            config
+        command = (
+            "netjsonconfig --config '{0}' -b openwrt -m render -a files=False".format(
+                config
+            )
         )
         output = subprocess.check_output(command, shell=True).decode()
         self.assertNotIn('test.txt', output)
