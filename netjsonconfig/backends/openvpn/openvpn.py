@@ -160,10 +160,6 @@ class OpenVpn(BaseVpnBackend):
         if key_path and key_contents:
             client['key'] = key_path
             files.append(
-                dict(
-                    path=key_path,
-                    contents=key_contents,
-                    mode=X509_FILE_MODE,
-                )
+                dict(path=key_path, contents=key_contents, mode=X509_FILE_MODE,)
             )
         return files

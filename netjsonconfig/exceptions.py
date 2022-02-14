@@ -20,10 +20,7 @@ class NetJsonConfigException(Exception):
     """
 
     def __str__(self):
-        message = "%s %s\n" % (
-            self.__class__.__name__,
-            self.details,
-        )
+        message = "%s %s\n" % (self.__class__.__name__, self.details,)
         errors = _list_errors(self.details)
         separator = '\nAgainst schema %s\n%s\n'
         details = reduce(lambda x, y: x + separator % y, errors, '')
