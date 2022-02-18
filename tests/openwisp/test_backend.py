@@ -229,7 +229,7 @@ config 'system' 'system'
         tar.close()
 
     def test_checksum(self):
-        """ ensures checksum of same config doesn't change """
+        """ensures checksum of same config doesn't change"""
         o = OpenWisp({"general": {"hostname": "test"}})
         # md5 is good enough and won't slow down test execution too much
         checksum1 = md5(o.generate().getvalue()).hexdigest()
