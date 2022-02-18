@@ -471,6 +471,12 @@ schema = merge_config(
             "radio_80211ac_5ghz_settings": {
                 "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
             },
+            "radio_80211ax_2ghz_settings": {
+                "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
+            },
+            "radio_80211ax_5ghz_settings": {
+                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+            },
         },
         "properties": {
             "general": {
