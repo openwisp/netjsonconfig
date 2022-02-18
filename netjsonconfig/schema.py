@@ -744,6 +744,9 @@ schema = {
         "radio_ac_channel_width": {
             "properties": {"channel_width": {"enum": [20, 40, 80, 160]}}
         },
+        "radio_ax_channel_width": {
+            "properties": {"channel_width": {"enum": [20, 40, 80, 160]}}
+        },
         "radio_80211bg_settings": {
             "title": "802.11b/g (2.4 GHz legacy)",
             "allOf": [
@@ -796,6 +799,34 @@ schema = {
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_ac_channel_width"},
+            ],
+        },
+        "radio_80211ax_2ghz_settings": {
+            "title": "802.11AX (2.4 GHz AX)",
+            "allOf": [
+                {
+                    "properties": {
+                        "protocol": {"enum": ["802.11ax"]},
+                        "hwmode": {"enum": ["11g"]},
+                    }
+                },
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"$ref": "#/definitions/radio_2ghz_channels"},
+                {"$ref": "#/definitions/radio_ax_channel_width"},
+            ],
+        },
+        "radio_80211ax_5ghz_settings": {
+            "title": "802.11ax (5 GHz AX)",
+            "allOf": [
+                {
+                    "properties": {
+                        "protocol": {"enum": ["802.11ax"]},
+                        "hwmode": {"enum": ["11a"]},
+                    }
+                },
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"$ref": "#/definitions/radio_5ghz_channels"},
+                {"$ref": "#/definitions/radio_ax_channel_width"},
             ],
         },
     },
@@ -856,6 +887,8 @@ schema = {
                     {"$ref": "#/definitions/radio_80211an_settings"},
                     {"$ref": "#/definitions/radio_80211ac_2ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ax_2ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ax_5ghz_settings"},
                     {"$ref": "#/definitions/radio_80211bg_settings"},
                     {"$ref": "#/definitions/radio_80211a_settings"},
                 ],

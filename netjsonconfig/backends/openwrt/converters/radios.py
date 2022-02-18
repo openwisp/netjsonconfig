@@ -66,6 +66,8 @@ class Radios(OpenWrtConverter):
             return 'HT{0}'.format(channel_width)
         elif protocol == '802.11ac':
             return 'VHT{0}'.format(channel_width)
+        elif protocol == '802.11ax':
+            return 'HE{0}'.format(channel_width)
         # disables n
         return 'NONE'
 
@@ -98,6 +100,8 @@ class Radios(OpenWrtConverter):
             return '802.11n'
         elif htmode.startswith('VHT'):
             return '802.11ac'
+        elif htmode.startswith('HE'):
+            return '802.11ax'
         return '802.{0}'.format(hwmode)
 
     def __netjson_channel(self, radio):
@@ -118,7 +122,7 @@ class Radios(OpenWrtConverter):
         htmode = radio.pop('htmode')
         if htmode == 'NONE':
             return 20
-        channel_width = htmode.replace('VHT', '').replace('HT', '')
+        channel_width = htmode.replace('VHT', '').replace('HT', '').replace('HE', '')
         # we need to override htmode
         if '+' in channel_width or '-' in channel_width:
             radio['htmode'] = htmode
