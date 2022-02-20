@@ -361,6 +361,7 @@ schema = {
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wpa3_2_personal"},
+                        {"$ref": "#/definitions/encryption_wpa3_2_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wps"},
@@ -381,6 +382,7 @@ schema = {
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wpa3_2_personal"},
+                        {"$ref": "#/definitions/encryption_wpa3_2_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wep"},
@@ -620,6 +622,17 @@ schema = {
                 }
             }
         },
+        "encryption_wpa3_2_enterprise_base_settings": {
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "enum": ["wpa2_enterprise_mixed"],
+                    "options": {"enum_titles": ["WPA3/WPA2 Enterprise Mixed Mode"]},
+                    "propertyOrder": 1,
+                }
+            }
+        },
         "encryption_wpa3_enterprise_ap": {
             "title": "WPA3 only Enterprise (access point)",
             "allOf": [
@@ -630,6 +643,16 @@ schema = {
                 {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
             ],
         },
+        "encryption_wpa3_2_enterprise_ap": {
+            "title": "WPA3/WPA2 Enterprise (access point)",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property_optional"},
+                {"$ref": "#/definitions/encryption_wpa3_2_enterprise_base_settings"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
+            ],
+        },
         "encryption_wpa3_enterprise_sta": {
             "title": "WPA3 only Enterprise (client)",
             "additionalProperties": True,
@@ -637,6 +660,16 @@ schema = {
                 {"$ref": "#/definitions/encryption_cipher_property"},
                 {"$ref": "#/definitions/encryption_mfp_property_required"},
                 {"$ref": "#/definitions/encryption_wpa3_enterprise_base_settings"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
+            ],
+        },
+        "encryption_wpa3_2_enterprise_sta": {
+            "title": "WPA3/WPA2 Enterprise (client)",
+            "additionalProperties": True,
+            "allOf": [
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property_optional"},
+                {"$ref": "#/definitions/encryption_wpa3_2_enterprise_base_settings"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
             ],
         },
