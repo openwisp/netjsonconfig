@@ -20,6 +20,7 @@ class TestEncryption(unittest.TestCase, _TabsMixin):
                         "protocol": "wpa2_personal",
                         "cipher": "tkip+ccmp",
                         "key": "passphrase012345",
+                        "ieee80211w": "2",
                     },
                 },
             }
@@ -36,6 +37,7 @@ package wireless
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'psk2+tkip+ccmp'
+    option ieee80211w '2'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
@@ -65,6 +67,7 @@ config wifi-iface 'wifi_wlan0'
                         "protocol": "wpa_personal_mixed",
                         "cipher": "ccmp",
                         "key": "passphrase012345",
+                        "ieee80211w": "0",
                     },
                 },
             }
@@ -81,6 +84,7 @@ package wireless
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'psk-mixed+ccmp'
+    option ieee80211w '0'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
@@ -309,6 +313,7 @@ config wifi-iface 'wifi_wlan0'
                         "eap_type": "tls",
                         "identity": "test-identity",
                         "password": "test-password",
+                        "ieee80211w": "1",
                     },
                 },
             }
@@ -328,6 +333,7 @@ config wifi-iface 'wifi_wlan0'
     option eap_type 'tls'
     option encryption 'wpa2'
     option identity 'test-identity'
+    option ieee80211w '1'
     option ifname 'wlan0'
     option mode 'sta'
     option network 'wlan0'
