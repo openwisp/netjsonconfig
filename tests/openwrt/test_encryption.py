@@ -7,6 +7,53 @@ from netjsonconfig.utils import _TabsMixin
 class TestEncryption(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
+    _wpa3_personal_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "wpa3-personal",
+                    "encryption": {
+                        "protocol": "wpa3_personal",
+                        "cipher": "ccmp",
+                        "key": "passphrase012345",
+                        "ieee80211w": "2",
+                    },
+                },
+            }
+        ]
+    }
+    _wpa3_personal_uci = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option device 'radio0'
+    option encryption 'sae+ccmp'
+    option ieee80211w '2'
+    option ifname 'wlan0'
+    option key 'passphrase012345'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'wpa3-personal'
+"""
+
+    def test_render_wpa3_personal(self):
+        o = OpenWrt(self._wpa3_personal_netjson)
+        expected = self._tabs(self._wpa3_personal_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_wpa3_personal(self):
+        o = OpenWrt(native=self._wpa3_personal_uci)
+        self.assertEqual(o.config, self._wpa3_personal_netjson)
+
     _wpa2_personal_netjson = {
         "interfaces": [
             {
@@ -660,3 +707,48 @@ config wifi-iface 'wifi_wlan0'
     def test_parse_wps_ap(self):
         o = OpenWrt(native=self._wps_ap_uci)
         self.assertEqual(o.config, self._wps_ap_netjson)
+
+    def test_render_ieee80211w(self):
+        _netjson_wpa3_personal_cipher_tkip = {
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wpa3-personal",
+                        "encryption": {
+                            "protocol": "wpa3_personal",
+                            "cipher": "tkip",
+                            "key": "passphrase012345",
+                            "ieee80211w": "2",
+                        },
+                    },
+                }
+            ]
+        }
+        _uci_wpa3_personal_cipher_tkip = self._tabs(
+            """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option device 'radio0'
+    option encryption 'sae+ccmp'
+    option ieee80211w '2'
+    option ifname 'wlan0'
+    option key 'passphrase012345'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'wpa3-personal'
+"""
+        )
+        self.assertEqual(
+            OpenWrt(_netjson_wpa3_personal_cipher_tkip).render(),
+            _uci_wpa3_personal_cipher_tkip,
+        )

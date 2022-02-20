@@ -358,6 +358,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wps"},
@@ -375,6 +376,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wep"},
@@ -453,6 +455,35 @@ schema = {
                     "propertyOrder": 4,
                 }
             }
+        },
+        "encryption_mfp_property_required": {
+            "required": ["ieee80211w"],
+            "properties": {
+                "ieee80211w": {
+                    "type": "string",
+                    "title": "management frame protection",
+                    "enum": ["2"],
+                    "options": {"enum_titles": ["required"]},
+                    "propertyOrder": 4,
+                }
+            },
+        },
+        "encryption_wpa3_personal": {
+            "title": "WPA3 only Personal",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "enum": ["wpa3_personal"],
+                            "options": {"enum_titles": ["WPA3 Personal"]},
+                        },
+                        "key": {"minLength": 8},
+                    }
+                },
+            ],
         },
         "encryption_wpa_personal": {
             "title": "WPA2/WPA Personal",
