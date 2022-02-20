@@ -360,6 +360,7 @@ schema = {
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_ap"},
+                        {"$ref": "#/definitions/encryption_wpa3_2_personal"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wps"},
@@ -379,6 +380,7 @@ schema = {
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_sta"},
+                        {"$ref": "#/definitions/encryption_wpa3_2_personal"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wep"},
@@ -470,6 +472,18 @@ schema = {
                 }
             },
         },
+        "encryption_mfp_property_optional": {
+            "required": ["ieee80211w"],
+            "properties": {
+                "ieee80211w": {
+                    "type": "string",
+                    "title": "management frame protection",
+                    "enum": ["1", "2"],
+                    "options": {"enum_titles": ["optional", "required"]},
+                    "propertyOrder": 4,
+                }
+            },
+        },
         "encryption_wpa3_personal": {
             "title": "WPA3 only Personal",
             "allOf": [
@@ -481,6 +495,25 @@ schema = {
                         "protocol": {
                             "enum": ["wpa3_personal"],
                             "options": {"enum_titles": ["WPA3 Personal"]},
+                        },
+                        "key": {"minLength": 8},
+                    }
+                },
+            ],
+        },
+        "encryption_wpa3_2_personal": {
+            "title": "WPA3/WPA2 Personal",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property_optional"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "enum": ["wpa2_personal_mixed"],
+                            "options": {
+                                "enum_titles": ["WPA3/WPA2 Personal Mixed Mode"]
+                            },
                         },
                         "key": {"minLength": 8},
                     }
@@ -504,7 +537,7 @@ schema = {
                             "options": {
                                 "enum_titles": [
                                     "WPA2 Personal",
-                                    "WPA Personal Mixed Mode",
+                                    "WPA2/WPA Personal Mixed Mode",
                                     "WPA Personal",
                                 ]
                             },
@@ -620,7 +653,7 @@ schema = {
                     "options": {
                         "enum_titles": [
                             "WPA2 Enterprise",
-                            "WPA Enterprise Mixed Mode",
+                            "WPA2/WPA Enterprise Mixed Mode",
                             "WPA Enterprise",
                         ]
                     },
