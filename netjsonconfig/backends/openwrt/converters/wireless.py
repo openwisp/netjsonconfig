@@ -249,6 +249,9 @@ class Wireless(OpenWrtConverter):
             if key.startswith('s:'):
                 key = key[2:]
             settings['key'] = key
+        # Management Frame Protection
+        if 'ieee80211w' in wifi:
+            settings['ieee80211w'] = wifi.pop('ieee80211w')
         # create NetJSON encryption object
         wifi['encryption'] = self.__netjson_encryption_typecast(settings)
 

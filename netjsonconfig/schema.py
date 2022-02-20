@@ -443,11 +443,23 @@ schema = {
                 }
             }
         },
+        "encryption_mfp_property": {
+            "properties": {
+                "ieee80211w": {
+                    "type": "string",
+                    "title": "management frame protection",
+                    "enum": ["0", "1", "2"],
+                    "options": {"enum_titles": ["disabled", "optional", "required"]},
+                    "propertyOrder": 4,
+                }
+            }
+        },
         "encryption_wpa_personal": {
             "title": "WPA2/WPA Personal",
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
                 {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property"},
                 {
                     "properties": {
                         "protocol": {
@@ -495,6 +507,7 @@ schema = {
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
                 {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
                 {
                     "required": ["server"],
@@ -536,6 +549,7 @@ schema = {
             "additionalProperties": True,
             "allOf": [
                 {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
                 {
                     "properties": {
