@@ -86,6 +86,7 @@ class Wireless(OpenWrtConverter):
             'wpa_personal_mixed': 'psk-mixed',
             'wpa_enterprise': 'wpa',
             'wpa2_enterprise': 'wpa2',
+            'wpa3_enterprise': 'wpa3',
             'wpa_enterprise_mixed': 'wpa-mixed',
             'wps': 'psk',
         }
@@ -111,7 +112,7 @@ class Wireless(OpenWrtConverter):
             uci['key'] = encryption['key']
         # add ciphers
         cipher = encryption.get('cipher')
-        if protocol == 'wpa3_personal':
+        if protocol == 'wpa3_personal' or protocol == 'wpa3_enterprise':
             cipher = 'ccmp'
         if cipher and protocol.startswith('wpa') and cipher != 'auto':
             uci['encryption'] += '+{0}'.format(cipher)
@@ -239,6 +240,7 @@ class Wireless(OpenWrtConverter):
                 'psk-mixed': 'wpa_personal_mixed',
                 'wpa': 'wpa_enterprise',
                 'wpa2': 'wpa2_enterprise',
+                'wpa3': 'wpa3_enterprise',
                 'wpa-mixed': 'wpa_enterprise_mixed',
             }
             settings['protocol'] = protocol_mapping[protocol]

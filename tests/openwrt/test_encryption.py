@@ -193,6 +193,65 @@ config wifi-iface 'wifi_wlan0'
         o = OpenWrt(native=self._wpa_personal_uci)
         self.assertEqual(o.config, self._wpa_personal_netjson)
 
+    _wpa3_enterprise_ap_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "wpa3-enterprise",
+                    "encryption": {
+                        "protocol": "wpa3_enterprise",
+                        "cipher": "ccmp",
+                        "key": "radius_secret",
+                        "server": "192.168.0.1",
+                        "port": 1812,
+                        "acct_server": "192.168.0.2",
+                        "acct_port": 1813,
+                        "nasid": "2",
+                        "wpa_group_rekey": "350",
+                        "ieee80211w": "2",
+                    },
+                },
+            }
+        ]
+    }
+    _wpa3_enterprise_ap_uci = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option acct_port '1813'
+    option acct_server '192.168.0.2'
+    option device 'radio0'
+    option encryption 'wpa3+ccmp'
+    option ieee80211w '2'
+    option ifname 'wlan0'
+    option key 'radius_secret'
+    option mode 'ap'
+    option nasid '2'
+    option network 'wlan0'
+    option port '1812'
+    option server '192.168.0.1'
+    option ssid 'wpa3-enterprise'
+    option wpa_group_rekey '350'
+"""
+
+    def test_render_wpa3_enterprise(self):
+        o = OpenWrt(self._wpa3_enterprise_ap_netjson)
+        expected = self._tabs(self._wpa3_enterprise_ap_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_wpa3_enterprise(self):
+        o = OpenWrt(native=self._wpa3_enterprise_ap_uci)
+        self.assertEqual(o.config, self._wpa3_enterprise_ap_netjson)
+
     _wpa2_enterprise_ap_netjson = {
         "interfaces": [
             {
@@ -343,6 +402,60 @@ config wifi-iface 'wifi_wlan0'
     def test_parse_wpa_enterprise_ap(self):
         o = OpenWrt(native=self._wpa_enterprise_ap_uci)
         self.assertEqual(o.config, self._wpa_enterprise_ap_netjson)
+
+    _wpa3_enterprise_client_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "station",
+                    "ssid": "enterprise-client",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "wpa3_enterprise",
+                        "cipher": "ccmp",
+                        "eap_type": "tls",
+                        "identity": "test-identity",
+                        "password": "test-password",
+                        "ieee80211w": "2",
+                    },
+                },
+            }
+        ]
+    }
+
+    _wpa3_enterprise_client_uci = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option bssid '00:26:b9:20:5f:09'
+    option device 'radio0'
+    option eap_type 'tls'
+    option encryption 'wpa3+ccmp'
+    option identity 'test-identity'
+    option ieee80211w '2'
+    option ifname 'wlan0'
+    option mode 'sta'
+    option network 'wlan0'
+    option password 'test-password'
+    option ssid 'enterprise-client'
+"""
+
+    def test_render_wpa3_enterprise_client(self):
+        o = OpenWrt(self._wpa3_enterprise_client_netjson)
+        expected = self._tabs(self._wpa3_enterprise_client_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_wpa3_enterprise_client(self):
+        o = OpenWrt(native=self._wpa3_enterprise_client_uci)
+        self.assertEqual(o.config, self._wpa3_enterprise_client_netjson)
 
     _wpa2_enterprise_client_netjson = {
         "interfaces": [
@@ -751,4 +864,60 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(
             OpenWrt(_netjson_wpa3_personal_cipher_tkip).render(),
             _uci_wpa3_personal_cipher_tkip,
+        )
+
+        _netjson_wpa3_enterprise_cipher_tkip = {
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "wpa3-enterprise",
+                        "encryption": {
+                            "protocol": "wpa3_enterprise",
+                            "cipher": "tkip",
+                            "key": "radius_secret",
+                            "server": "192.168.0.1",
+                            "port": 1812,
+                            "acct_server": "192.168.0.2",
+                            "acct_port": 1813,
+                            "nasid": "2",
+                            "wpa_group_rekey": "350",
+                            "ieee80211w": "2",
+                        },
+                    },
+                }
+            ]
+        }
+        _uci_wpa3_enterprise_cipher_tkip = self._tabs(
+            """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option acct_port '1813'
+    option acct_server '192.168.0.2'
+    option device 'radio0'
+    option encryption 'wpa3+ccmp'
+    option ieee80211w '2'
+    option ifname 'wlan0'
+    option key 'radius_secret'
+    option mode 'ap'
+    option nasid '2'
+    option network 'wlan0'
+    option port '1812'
+    option server '192.168.0.1'
+    option ssid 'wpa3-enterprise'
+    option wpa_group_rekey '350'
+"""
+        )
+        self.assertEqual(
+            OpenWrt(_netjson_wpa3_enterprise_cipher_tkip).render(),
+            _uci_wpa3_enterprise_cipher_tkip,
         )

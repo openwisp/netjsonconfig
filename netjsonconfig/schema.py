@@ -359,6 +359,7 @@ schema = {
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wps"},
@@ -377,6 +378,7 @@ schema = {
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wep"},
@@ -512,6 +514,99 @@ schema = {
                 },
             ],
         },
+        "encryption_wpa_enterprise_ap_base_settings": {
+            "required": ["server"],
+            "properties": {
+                "server": {
+                    "type": "string",
+                    "minLength": 3,
+                    "title": "radius server",
+                    "propertyOrder": 4,
+                },
+                "key": {"title": "shared secret", "minLength": 4, "propertyOrder": 5},
+                "port": {
+                    "type": "integer",
+                    "title": "radius port",
+                    "default": 1812,
+                    "propertyOrder": 6,
+                },
+                "acct_server": {
+                    "type": "string",
+                    "title": "accounting server",
+                    "propertyOrder": 7,
+                },
+                "acct_server_port": {
+                    "type": "integer",
+                    "title": "accounting port",
+                    "default": 1813,
+                    "propertyOrder": 8,
+                },
+            },
+        },
+        "encryption_wpa_enterprise_sta_base_settings": {
+            "properties": {
+                "eap_type": {
+                    "title": "EAP protocol",
+                    "type": "string",
+                    "enum": ["tls", "ttls"],
+                    "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS"]},
+                    "propertyOrder": 4,
+                },
+                "identity": {"type": "string", "propertyOrder": 5},
+                "password": {"type": "string", "propertyOrder": 6},
+                "ca_cert": {
+                    "type": "string",
+                    "title": "CA certificate (path)",
+                    "propertyOrder": 7,
+                },
+                "client_cert": {
+                    "type": "string",
+                    "title": "client certificate (path)",
+                    "propertyOrder": 8,
+                },
+                "priv_key": {
+                    "type": "string",
+                    "title": "private key (path)",
+                    "propertyOrder": 9,
+                },
+                "priv_key_pwd": {
+                    "type": "string",
+                    "title": "private key password",
+                    "propertyOrder": 10,
+                },
+            },
+        },
+        "encryption_wpa3_enterprise_base_settings": {
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "enum": ["wpa3_enterprise"],
+                    "options": {"enum_titles": ["WPA3 Enterprise"]},
+                    "propertyOrder": 1,
+                }
+            }
+        },
+        "encryption_wpa3_enterprise_ap": {
+            "title": "WPA3 only Enterprise (access point)",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {"$ref": "#/definitions/encryption_wpa3_enterprise_base_settings"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
+            ],
+        },
+        "encryption_wpa3_enterprise_sta": {
+            "title": "WPA3 only Enterprise (client)",
+            "additionalProperties": True,
+            "allOf": [
+                {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {"$ref": "#/definitions/encryption_wpa3_enterprise_base_settings"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
+            ],
+        },
         "encryption_wpa_enterprise_base_settings": {
             "properties": {
                 "protocol": {
@@ -540,39 +635,7 @@ schema = {
                 {"$ref": "#/definitions/encryption_cipher_property"},
                 {"$ref": "#/definitions/encryption_mfp_property"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
-                {
-                    "required": ["server"],
-                    "properties": {
-                        "server": {
-                            "type": "string",
-                            "minLength": 3,
-                            "title": "radius server",
-                            "propertyOrder": 4,
-                        },
-                        "key": {
-                            "title": "shared secret",
-                            "minLength": 4,
-                            "propertyOrder": 5,
-                        },
-                        "port": {
-                            "type": "integer",
-                            "title": "radius port",
-                            "default": 1812,
-                            "propertyOrder": 6,
-                        },
-                        "acct_server": {
-                            "type": "string",
-                            "title": "accounting server",
-                            "propertyOrder": 7,
-                        },
-                        "acct_server_port": {
-                            "type": "integer",
-                            "title": "accounting port",
-                            "default": 1813,
-                            "propertyOrder": 8,
-                        },
-                    },
-                },
+                {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
             ],
         },
         "encryption_wpa_enterprise_sta": {
@@ -582,39 +645,7 @@ schema = {
                 {"$ref": "#/definitions/encryption_cipher_property"},
                 {"$ref": "#/definitions/encryption_mfp_property"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
-                {
-                    "properties": {
-                        "eap_type": {
-                            "title": "EAP protocol",
-                            "type": "string",
-                            "enum": ["tls", "ttls"],
-                            "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS"]},
-                            "propertyOrder": 4,
-                        },
-                        "identity": {"type": "string", "propertyOrder": 5},
-                        "password": {"type": "string", "propertyOrder": 6},
-                        "ca_cert": {
-                            "type": "string",
-                            "title": "CA certificate (path)",
-                            "propertyOrder": 7,
-                        },
-                        "client_cert": {
-                            "type": "string",
-                            "title": "client certificate (path)",
-                            "propertyOrder": 8,
-                        },
-                        "priv_key": {
-                            "type": "string",
-                            "title": "private key (path)",
-                            "propertyOrder": 9,
-                        },
-                        "priv_key_pwd": {
-                            "type": "string",
-                            "title": "private key password",
-                            "propertyOrder": 10,
-                        },
-                    }
-                },
+                {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
             ],
         },
         "encryption_wep": {
