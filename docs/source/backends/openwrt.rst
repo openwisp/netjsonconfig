@@ -1443,7 +1443,9 @@ The following example sets "automatic channel selection" for two radios, the fir
                 "driver": "mac80211",
                 "protocol": "802.11ac",
                 "channel": 0,  # 0 stands for auto
-                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band
+                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band,
+                                  # but this is optional for "802.11ac" because it only
+                                  # support 5 GHz band. 
                 "channel_width": 80
             }
         ]
