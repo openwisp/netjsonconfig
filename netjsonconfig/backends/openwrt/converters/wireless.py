@@ -125,13 +125,6 @@ class Wireless(OpenWrtConverter):
             uci['key'] = encryption['key']
         # add ciphers
         cipher = encryption.get('cipher')
-        if (
-            protocol == 'wpa3_personal'
-            or protocol == 'wpa3_enterprise'
-            or protocol == 'wpa2_personal_mixed'
-            or protocol == 'wpa2_enterprise_mixed'
-        ):
-            cipher = 'ccmp'
         if cipher and protocol.startswith('wpa') and cipher != 'auto':
             uci['encryption'] += '+{0}'.format(cipher)
         return uci
