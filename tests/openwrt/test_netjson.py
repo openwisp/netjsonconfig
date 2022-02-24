@@ -27,7 +27,7 @@ netjson_example = {
         {
             "name": "radio0",
             "protocol": "802.11ac",
-            "channel": 1,
+            "channel": 132,
             "channel_width": 80,
             "phy": "phy0",
             "country": "US",

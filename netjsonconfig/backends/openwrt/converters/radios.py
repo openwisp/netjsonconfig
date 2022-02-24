@@ -43,6 +43,8 @@ class Radios(OpenWrtConverter):
         if protocol in ['802.11a', '802.11b', '802.11g']:
             # return 11a, 11b or 11g
             return protocol[4:]
+        if protocol == '802.11ac':
+            return '11a'
         # determine hwmode depending on channel used
         if radio['channel'] == 0:
             # when using automatic channel selection, we need an

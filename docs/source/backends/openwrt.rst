@@ -1417,9 +1417,8 @@ Automatic channel selection example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you need to use the "automatic channel selection" feature of OpenWRT, you must set
-the channel to ``0`` and, unless you are using neither **802.11n** nor **802.11ac** nor **802.11ax**,
-you must set the ``hwmode`` property to tell OpenWRT which band to use
-(11g for 2.4 Ghz, 11a for 5 GHz).
+the channel to ``0``. You must also set the ``hwmode`` property to tell OpenWRT which
+band to use (11g for 2.4 Ghz, 11a for 5 GHz).
 
 The following example sets "automatic channel selection" for two radios, the first radio uses
 **802.11n** in the 2.4 GHz band, while the second uses **802.11ac** in the 5 GHz band.
@@ -1443,7 +1442,9 @@ The following example sets "automatic channel selection" for two radios, the fir
                 "driver": "mac80211",
                 "protocol": "802.11ac",
                 "channel": 0,  # 0 stands for auto
-                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band
+                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band,
+                                  # but this is optional for "802.11ac" because it only
+                                  # support 5 GHz band.
                 "channel_width": 80
             }
         ]

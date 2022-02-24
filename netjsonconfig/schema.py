@@ -783,15 +783,6 @@ schema = {
                 {"$ref": "#/definitions/radio_n_channel_width"},
             ],
         },
-        "radio_80211ac_2ghz_settings": {
-            "title": "802.11ac (2.4 GHz AC)",
-            "allOf": [
-                {"properties": {"protocol": {"enum": ["802.11ac"]}}},
-                {"$ref": "#/definitions/base_radio_settings"},
-                {"$ref": "#/definitions/radio_2ghz_channels"},
-                {"$ref": "#/definitions/radio_ac_channel_width"},
-            ],
-        },
         "radio_80211ac_5ghz_settings": {
             "title": "802.11ac (5 GHz AC)",
             "allOf": [
@@ -875,7 +866,6 @@ schema = {
                 "oneOf": [
                     {"$ref": "#/definitions/radio_80211gn_settings"},
                     {"$ref": "#/definitions/radio_80211an_settings"},
-                    {"$ref": "#/definitions/radio_80211ac_2ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ax_2ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ax_5ghz_settings"},
