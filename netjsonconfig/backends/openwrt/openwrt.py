@@ -54,47 +54,6 @@ class OpenWrt(BaseBackend):
                 contents=text_contents,
             )
 
-    def _wireless_auto_add_interface(self):
-        """
-        Automatically attaches a WiFi interface to a bridge it's
-        physical interface is a member of.
-        """
-        # Create a mapping of physical interface to bride interface name
-        bridge_map = {}
-        for interface in self.intermediate_data.get('network', []):
-            if interface.get('type', None) != 'bridge':
-                continue
-            # Get list of bridge members
-            try:
-                bridge_members = interface.get('ifname', None).split(' ')
-            except AttributeError:
-                # Bridge interface does not contain bridge members.
-                # Bridge is empty.
-                continue
-            bridge_name = interface['.name']
-            for physical_interface in bridge_members:
-                # A physical interface can be a member of multiple
-                # bridges. Hence, we create a list of bridge interfaces
-                # for every physical interface.
-                if physical_interface not in bridge_map:
-                    bridge_map[physical_interface] = [bridge_name]
-                elif bridge_name not in bridge_map[physical_interface]:
-                    bridge_map[physical_interface].append(bridge_name)
-
-        # Add network to the wireless interface
-        for interface in self.intermediate_data.get('wireless', []):
-            network = interface.get('network', None)
-            ifname = interface.get('ifname', '')
-            # If "network" option is not provided for a wireless interface,
-            # it's physical address0
-            if network == ifname and ifname in bridge_map:
-                network = ' '.join(bridge_map[ifname] + [network])
-                interface['network'] = network
-
-    def to_intermediate(self):
-        super().to_intermediate()
-        self._wireless_auto_add_interface()
-
     @classmethod
     def wireguard_auto_client(cls, **kwargs):
         data = Wireguard.auto_client(**kwargs)

@@ -667,7 +667,6 @@ config wifi-iface 'wifi_wlan0'
                 "wireless": {
                     "mode": "station",
                     "radio": "radio0",
-                    "network": ["wds_bridge"],
                     "ssid": "FreeRomaWifi",
                     "bssid": "C0:4A:00:2D:05:FD",
                     "wds": True,
@@ -680,7 +679,6 @@ config wifi-iface 'wifi_wlan0'
                 "wireless": {
                     "mode": "access_point",
                     "radio": "radio1",
-                    "network": ["wds_bridge"],
                     "ssid": "FreeRomaWifi",
                 },
             },
@@ -746,7 +744,6 @@ config wifi-iface 'wifi_wlan1'
                     "radio": "radio0",
                     "mode": "802.11s",
                     "mesh_id": "ninux",
-                    "network": ["lan"],
                 },
             },
             {
@@ -987,3 +984,52 @@ config wifi-iface 'arbitrary_id'
     def test_parse_wifi_custom_id(self):
         o = OpenWrt(native=self._custom_id_uci)
         self.assertEqual(o.config, self._custom_id_netjson)
+
+    _wifi_simplified_bridge_netjson = {
+        "interfaces": [
+            {
+                "name": "br-lan",
+                "network": "lan",
+                "type": "bridge",
+                "bridge_members": ["eth0", "wlan0"],
+            },
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "open",
+                },
+            },
+        ]
+    }
+    _wifi_simplified_bridge_uci = """package network
+
+config interface 'lan'
+    option ifname 'eth0 wlan0'
+    option proto 'none'
+    option type 'bridge'
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option device 'radio0'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'lan'
+    option ssid 'open'
+"""
+
+    def test_render_simplified_wifi_bridge(self):
+        o = OpenWrt(self._wifi_simplified_bridge_netjson)
+        expected = self._tabs(self._wifi_simplified_bridge_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_simplified_wifi_bridge(self):
+        o = OpenWrt(native=self._wifi_simplified_bridge_uci)
+        self.assertEqual(o.config, self._wifi_simplified_bridge_netjson)

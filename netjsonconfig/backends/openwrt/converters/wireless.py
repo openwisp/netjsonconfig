@@ -6,6 +6,46 @@ class Wireless(OpenWrtConverter):
     intermediate_key = 'wireless'
     _uci_types = ['wifi-iface']
 
+    def __init__(self, backend):
+        super().__init__(backend)
+        self._wireless_interface_bridges = {}
+        self._set_wireless_interface_bridges()
+
+    def _set_wireless_interface_bridges(self, intermediate_data=None):
+        """
+        Automatically attaches a WiFi interface to a bridge it's
+        physical interface is a member of.
+        """
+        if not intermediate_data:
+            intermediate_data = self.intermediate_data
+        interfaces = intermediate_data.get('network', [])
+        # Create a mapping of physical interface to bride interface name
+        # bridge_map = {}
+        for interface in interfaces:
+            if interface.get('type', None) != 'bridge':
+                continue
+            # Get list of bridge members
+            try:
+                bridge_members = interface.get('ifname', None).split(' ')
+            except AttributeError:
+                # Bridge interface does not contain bridge members.
+                # Bridge is empty.
+                continue
+            bridge_name = interface['.name']
+            for physical_interface in bridge_members:
+                # A physical interface can be a member of multiple
+                # bridges. Hence, we create a list of bridge interfaces
+                # for every physical interface.
+                if physical_interface not in self._wireless_interface_bridges:
+                    self._wireless_interface_bridges[physical_interface] = [bridge_name]
+                elif (
+                    bridge_name
+                    not in self._wireless_interface_bridges[physical_interface]
+                ):
+                    self._wireless_interface_bridges[physical_interface].append(
+                        bridge_name
+                    )
+
     def to_intermediate_loop(self, block, result, index=None):
         wireless = self.__intermediate_wireless(block)
         if wireless:
@@ -63,8 +103,13 @@ class Wireless(OpenWrtConverter):
         # but this behaviour can be overridden
         if not wireless.get('network'):
             # get network, default to ifname
-            network = interface.get('network', interface['name'])
-            wireless['network'] = [network]
+            try:
+                bridges = self._wireless_interface_bridges[interface['name']]
+            except KeyError:
+                network = [interface.get('network', interface['name'])]
+            else:
+                network = bridges
+            wireless['network'] = network
         wireless['network'] = (
             ' '.join(wireless['network']).replace('.', '_').replace('-', '_')
         )
@@ -269,3 +314,16 @@ class Wireless(OpenWrtConverter):
             if interface['name'] == wifi['ifname']:
                 interface['type'] = 'wireless'
                 return interface
+
+    def to_netjson_clean(self, intermediate_data):
+        result = super().to_netjson_clean(intermediate_data)
+        self._set_wireless_interface_bridges(self.backend._intermediate_copy)
+        for index, interface in enumerate(result):
+            try:
+                bridges = self._wireless_interface_bridges[interface['ifname']]
+            except KeyError:
+                continue
+            else:
+                if bridges == interface.get('network', '').split(' '):
+                    del result[index]['network']
+        return result
