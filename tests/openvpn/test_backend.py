@@ -20,6 +20,7 @@ class TestBackend(unittest.TestCase):
                     {
                         "auth": "SHA1",
                         "auth_user_pass_verify": "",
+                        "auth_nocache": True,
                         "ca": "ca.pem",
                         "cert": "cert.pem",
                         "cipher": "BF-CBC",
@@ -70,6 +71,7 @@ class TestBackend(unittest.TestCase):
         expected = """# openvpn config: test-server
 
 auth SHA1
+auth-nocache
 ca ca.pem
 cert cert.pem
 cipher BF-CBC
@@ -109,6 +111,7 @@ verb 3
                     {
                         "auth": "SHA256",
                         "auth_user_pass": "",
+                        "auth_nocache": True,
                         "ca": "ca.pem",
                         "cert": "cert.pem",
                         "cipher": "AES-128-CBC",
@@ -161,6 +164,7 @@ verb 3
         expected = """# openvpn config: test-client
 
 auth SHA256
+auth-nocache
 ca ca.pem
 cert cert.pem
 cipher AES-128-CBC

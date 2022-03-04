@@ -445,6 +445,17 @@ base_openvpn_schema = {
                     "description": "Set output verbosity for logging and debugging",
                     "propertyOrder": 52,
                 },
+                "auth_nocache": {
+                    "title": "auth nocache",
+                    "description": (
+                        "Cause OpenVPN to immediately forget username/password"
+                        "inputs after they are used"
+                    ),
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 53,
+                },
             },
         },
         "client": {
