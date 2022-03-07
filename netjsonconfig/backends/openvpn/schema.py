@@ -404,6 +404,17 @@ base_openvpn_schema = {
                     "format": "checkbox",
                     "propertyOrder": 43,
                 },
+                "auth_nocache": {
+                    "title": "auth nocache",
+                    "description": (
+                        "Immediately forget username/password"
+                        "inputs after they are used"
+                    ),
+                    "type": "boolean",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 49,
+                },
                 "fast_io": {
                     "title": "fast IO",
                     "description": "(Experimental) Optimize TUN/TAP/UDP I/O writes by avoiding a "
@@ -444,17 +455,6 @@ base_openvpn_schema = {
                     "default": 1,
                     "description": "Set output verbosity for logging and debugging",
                     "propertyOrder": 52,
-                },
-                "auth_nocache": {
-                    "title": "auth nocache",
-                    "description": (
-                        "Cause OpenVPN to immediately forget username/password"
-                        "inputs after they are used"
-                    ),
-                    "type": "boolean",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 53,
                 },
             },
         },
