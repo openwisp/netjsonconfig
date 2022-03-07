@@ -106,6 +106,7 @@ class OpenVpn(BaseVpnBackend):
             'float',
             'fast_io',
             'verb',
+            "auth_nocache",
         ]
         for key in copy_keys:
             if key in server:
