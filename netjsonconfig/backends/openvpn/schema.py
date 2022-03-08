@@ -456,6 +456,16 @@ base_openvpn_schema = {
                     "description": "Set output verbosity for logging and debugging",
                     "propertyOrder": 52,
                 },
+                "tls_auth": {
+                    "title": "TLS Auth",
+                    "description": (
+                        "Adds an additional layer of HMAC authentication on top of "
+                        "the TLS control channel to mitigate DoS attacks and "
+                        "attacks on the TLS stack"
+                    ),
+                    "type": "string",
+                    "propertyOrder": 53,
+                },
             },
         },
         "client": {

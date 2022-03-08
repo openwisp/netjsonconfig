@@ -58,6 +58,7 @@ class TestBackend(unittest.TestCase):
                         "status": "/var/log/openvpn.status 10",
                         "status_version": 1,
                         "tls_server": True,
+                        "tls_auth": "tls_auth.key 0",
                         "tun_ipv6": False,
                         "up": "",
                         "up_delay": 0,
@@ -98,6 +99,7 @@ proto udp
 script-security 0
 status /var/log/openvpn.status 10
 status-version 1
+tls-auth tls_auth.key 0
 tls-server
 user nobody
 verb 3
@@ -151,6 +153,7 @@ verb 3
                         "status": "/var/log/openvpn.status 30",
                         "status_version": 1,
                         "tls_client": True,
+                        "tls_auth": "tls_auth.key 1",
                         "topology": "p2p",
                         "tun_ipv6": True,
                         "up": "/home/user/up-command.sh",
@@ -193,6 +196,7 @@ resolv-retry infinite
 script-security 1
 status /var/log/openvpn.status 30
 status-version 1
+tls-auth tls_auth.key 1
 tls-client
 topology p2p
 tun-ipv6
@@ -742,3 +746,79 @@ tls-client
         o = OpenVpn(self._simple_conf, templates=[template])
         # ensure dummy values in template have been overridden
         self.assertDictEqual(o.config, self._simple_conf)
+
+    _openvpn_server_tls_auth_config = {
+        "openvpn": [
+            {
+                "name": "test",
+                "ca": "/etc/openvpn/ca.pem",
+                "cert": "/etc/openvpn/cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "/etc/openvpn/dh.pem",
+                "key": "/etc/openvpn/key.pem",
+                "mode": "server",
+                "proto": "udp",
+                "status": "",
+                "status_version": 1,
+                "tls_server": True,
+                "tls_auth": "tls-auth-key",
+            }
+        ],
+    }
+
+    _openvpn_server_tls_auth_render = """# openvpn config: test
+
+ca /etc/openvpn/ca.pem
+cert /etc/openvpn/cert.pem
+dev tap0
+dev-type tap
+dh /etc/openvpn/dh.pem
+key /etc/openvpn/key.pem
+mode server
+proto udp
+tls-auth /etc/openvpn/tls_auth.key 0
+tls-server
+
+# ---------- files ---------- #
+
+# path: /etc/openvpn/tls_auth.key
+# mode: 0600
+
+tls-auth-key
+
+"""
+
+    _openvpn_client_tls_auth_render = """# openvpn config: test
+
+ca /etc/openvpn/ca.pem
+cert /etc/openvpn/cert.pem
+dev tap0
+dev-type tap
+key /etc/openvpn/key.pem
+mode p2p
+nobind
+proto udp
+remote vpn1.test.com 1195
+resolv-retry infinite
+tls-auth /etc/openvpn/tls_auth.key 1
+tls-client
+
+# ---------- files ---------- #
+
+# path: /etc/openvpn/tls_auth.key
+# mode: 0600
+
+tls-auth-key
+
+"""
+
+    def test_tls_auth_key_present(self):
+        server = OpenVpn(self._openvpn_server_tls_auth_config)
+        self.assertEqual(server.render(), self._openvpn_server_tls_auth_render)
+        client_config = OpenVpn.auto_client(
+            'vpn1.test.com',
+            self._openvpn_server_tls_auth_config['openvpn'][0],
+        )
+        client = OpenVpn(client_config)
+        self.assertEqual(client.render(), self._openvpn_client_tls_auth_render)
