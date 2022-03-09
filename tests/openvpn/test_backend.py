@@ -762,7 +762,13 @@ tls-client
                 "status": "",
                 "status_version": 1,
                 "tls_server": True,
-                "tls_auth": "tls-auth-key",
+                "tls_auth": (
+                    "#\n"
+                    "# 2048 bit OpenVPN static key\n"
+                    "#\n-----BEGIN OpenVPN Static key V1-----\n"
+                    "tls-auth-key\n"
+                    "-----END OpenVPN Static key V1-----"
+                ),
             },
             {
                 "name": "test2",
@@ -777,7 +783,13 @@ tls-client
                 "status": "",
                 "status_version": 1,
                 "tls_server": True,
-                "tls_auth": "tls-auth-key2",
+                "tls_auth": (
+                    "#\n"
+                    "# 2048 bit OpenVPN static key\n"
+                    "#\n-----BEGIN OpenVPN Static key V1-----\n"
+                    "tls-auth-key2\n"
+                    "-----END OpenVPN Static key V1-----"
+                ),
             },
         ],
     }
@@ -813,12 +825,22 @@ tls-server
 # path: /etc/openvpn/test_tls_auth.key
 # mode: 0600
 
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
 tls-auth-key
+-----END OpenVPN Static key V1-----
 
 # path: /etc/openvpn/test2_tls_auth.key
 # mode: 0600
 
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
 tls-auth-key2
+-----END OpenVPN Static key V1-----
 
 """
 
@@ -842,7 +864,12 @@ tls-client
 # path: /etc/openvpn/test_tls_auth.key
 # mode: 0600
 
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
 tls-auth-key
+-----END OpenVPN Static key V1-----
 
 """
 

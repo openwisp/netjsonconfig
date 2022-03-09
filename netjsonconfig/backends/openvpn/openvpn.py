@@ -78,15 +78,15 @@ class OpenVpn(BaseVpnBackend):
         client['remote_cert_tls'] = remote_cert_tls[server.get('remote_cert_tls')]
         tls_auth = server.get('tls_auth')
         if tls_auth:
-            if len(tls_auth.split(' ')) == 1:
+            if len(tls_auth.strip().split(' ')) == 2:
+                # The field contains path to auth key and direction.
+                # auto_client does not support such format.
+                pass
+            else:
                 # The TLS Auth key is present in the field.
                 # Copy the TLS Auth key. Convertor will handle
                 # parsing it into file.
                 client['tls_auth'] = tls_auth
-            else:
-                # The field contains path to auth key and direction.
-                # auto_client does not support such format.
-                pass
         copy_keys = [
             'name',
             'dev_type',

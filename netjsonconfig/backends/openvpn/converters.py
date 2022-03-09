@@ -55,7 +55,11 @@ class OpenVpn(BaseConverter):
         if not tls_auth:
             return config
         tls_auth = tls_auth.strip()
-        if len(tls_auth.split(' ')) == 1:
+        if len(tls_auth.split(' ')) == 2:
+            # The field already contains path to auth key
+            # and TLS Auth direction. No operation is required.
+            pass
+        else:
             # The TLS Auth key is present in the field.
             # Determine TLS Auth key file path from CA's file path.
             ca_path = config.get('ca', '')
@@ -76,10 +80,6 @@ class OpenVpn(BaseConverter):
                 self.netjson['files'].append(file_data)
             except KeyError:
                 self.netjson['files'] = [file_data]
-        else:
-            # The field already contains path to auth key
-            # and TLS Auth direction. No operation is required.
-            pass
         return config
 
     def to_netjson_loop(self, block, result, index):
