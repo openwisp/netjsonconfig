@@ -464,6 +464,7 @@ base_openvpn_schema = {
                         "attacks on the TLS stack"
                     ),
                     "type": "string",
+                    "format": "textarea",
                     "propertyOrder": 53,
                 },
             },

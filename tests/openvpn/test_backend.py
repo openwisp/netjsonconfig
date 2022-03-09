@@ -763,7 +763,22 @@ tls-client
                 "status_version": 1,
                 "tls_server": True,
                 "tls_auth": "tls-auth-key",
-            }
+            },
+            {
+                "name": "test2",
+                "ca": "/etc/openvpn/ca2.pem",
+                "cert": "/etc/openvpn/cert2.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "/etc/openvpn/dh2.pem",
+                "key": "/etc/openvpn/key2.pem",
+                "mode": "server",
+                "proto": "udp",
+                "status": "",
+                "status_version": 1,
+                "tls_server": True,
+                "tls_auth": "tls-auth-key2",
+            },
         ],
     }
 
@@ -777,15 +792,33 @@ dh /etc/openvpn/dh.pem
 key /etc/openvpn/key.pem
 mode server
 proto udp
-tls-auth /etc/openvpn/tls_auth.key 0
+tls-auth /etc/openvpn/test_tls_auth.key 0
+tls-server
+
+# openvpn config: test2
+
+ca /etc/openvpn/ca2.pem
+cert /etc/openvpn/cert2.pem
+dev tap0
+dev-type tap
+dh /etc/openvpn/dh2.pem
+key /etc/openvpn/key2.pem
+mode server
+proto udp
+tls-auth /etc/openvpn/test2_tls_auth.key 0
 tls-server
 
 # ---------- files ---------- #
 
-# path: /etc/openvpn/tls_auth.key
+# path: /etc/openvpn/test_tls_auth.key
 # mode: 0600
 
 tls-auth-key
+
+# path: /etc/openvpn/test2_tls_auth.key
+# mode: 0600
+
+tls-auth-key2
 
 """
 
@@ -801,12 +834,12 @@ nobind
 proto udp
 remote vpn1.test.com 1195
 resolv-retry infinite
-tls-auth /etc/openvpn/tls_auth.key 1
+tls-auth /etc/openvpn/test_tls_auth.key 1
 tls-client
 
 # ---------- files ---------- #
 
-# path: /etc/openvpn/tls_auth.key
+# path: /etc/openvpn/test_tls_auth.key
 # mode: 0600
 
 tls-auth-key

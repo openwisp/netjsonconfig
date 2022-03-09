@@ -57,8 +57,10 @@ class OpenVpn(BaseConverter):
         tls_auth = tls_auth.strip()
         if len(tls_auth.split(' ')) == 1:
             # The TLS Auth key is present in the field.
+            # Determine TLS Auth key file path from CA's file path.
             ca_path = config.get('ca', '')
-            tls_auth_path = '/'.join(ca_path.split('/')[:-1] + ['tls_auth.key'])
+            name = config.get('name', '')
+            tls_auth_path = '/'.join(ca_path.split('/')[:-1] + [f'{name}_tls_auth.key'])
             if config.get('mode') == 'server':
                 tls_auth_direction = 0
             else:
