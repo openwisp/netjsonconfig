@@ -1,6 +1,7 @@
 import gzip
 import ipaddress
 import json
+import re
 import tarfile
 from collections import OrderedDict
 from copy import deepcopy
@@ -12,6 +13,8 @@ from jsonschema.exceptions import ValidationError as JsonSchemaError
 from ...exceptions import ValidationError
 from ...schema import DEFAULT_FILE_MODE
 from ...utils import evaluate_vars, merge_config
+
+_host_name_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9\.\-]{1,255}$")
 
 
 class BaseBackend(object):
@@ -129,6 +132,24 @@ class BaseBackend(object):
             ipaddress.ip_network(value)
         except ValueError as e:
             assert False, str(e)
+        return True
+
+    @draft4_format_checker.checks('hostname', JsonSchemaError)
+    def _is_hostname(value):
+        """
+        The hostname validation has been taken from jsonschema~=3.2.0
+        (jsonschema._format.is_host_name). The newer versions of
+        jsonschema enforces FQDN validation which is not always
+        required in OpenWISP. E.g. setting up hostname of a device.
+        """
+        if not isinstance(value, str):
+            return True
+        if not _host_name_re.match(value):
+            return False
+        components = value.split(".")
+        for component in components:
+            if len(component) > 63:
+                return False
         return True
 
     def validate(self):
