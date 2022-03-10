@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+from ...schema import X509_FILE_MODE
 from ..base.converter import BaseConverter
 from .schema import schema
 
@@ -46,7 +47,40 @@ class OpenVpn(BaseConverter):
         # do not display status-version if status directive not present
         if 'status' not in config and 'status_version' in config:
             del config['status_version']
+        config = self.__add_tls_auth_key(config)
         return self.sorted_dict(config)
+
+    def __add_tls_auth_key(self, config):
+        tls_auth = config.get('tls_auth', None)
+        if not tls_auth:
+            return config
+        tls_auth = tls_auth.strip()
+        if len(tls_auth.split(' ')) == 2:
+            # The field already contains path to auth key
+            # and TLS Auth direction. No operation is required.
+            pass
+        else:
+            # The TLS Auth key is present in the field.
+            # Determine TLS Auth key file path from CA's file path.
+            ca_path = config.get('ca', '')
+            dev = config.get('dev', '')
+            tls_auth_path = '/'.join(ca_path.split('/')[:-1] + [f'{dev}_tls_auth.key'])
+            if config.get('mode') == 'server':
+                tls_auth_direction = 0
+            else:
+                tls_auth_direction = 1
+            config['tls_auth'] = f'{tls_auth_path} {tls_auth_direction}'
+            # Add TLS Auth key file
+            file_data = {
+                'path': tls_auth_path,
+                'mode': X509_FILE_MODE,
+                'contents': tls_auth,
+            }
+            try:
+                self.netjson['files'].append(file_data)
+            except KeyError:
+                self.netjson['files'] = [file_data]
+        return config
 
     def to_netjson_loop(self, block, result, index):
         vpn = self.__netjson_vpn(block)

@@ -190,6 +190,17 @@ base_openvpn_schema = {
                     "pattern": "^(\\S*)$",
                     "propertyOrder": 17,
                 },
+                "tls_auth": {
+                    "title": "TLS Auth",
+                    "description": (
+                        "Adds an additional layer of HMAC authentication on top of "
+                        "the TLS control channel to mitigate DoS attacks and "
+                        "attacks on the TLS stack"
+                    ),
+                    "type": "string",
+                    "format": "textarea",
+                    "propertyOrder": 18,
+                },
                 "ns_cert_type": {
                     "title": "NS cert type",
                     "type": "string",
