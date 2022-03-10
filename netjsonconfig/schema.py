@@ -939,6 +939,7 @@ schema = {
                         "type": "string",
                         "description": "filesystem path",
                         "propertyOrder": 1,
+                        "minLength": 2,
                     },
                     "mode": {
                         "type": "string",

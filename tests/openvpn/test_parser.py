@@ -3,7 +3,7 @@ import unittest
 from copy import deepcopy
 
 from netjsonconfig import OpenVpn
-from netjsonconfig.exceptions import ParseError
+from netjsonconfig.exceptions import ParseError, ValidationError
 
 
 class TestParser(unittest.TestCase):
@@ -159,3 +159,10 @@ tls-server
         OpenVpn(native=open('/tmp/test.tar.gz'))
         os.remove('/tmp/test.tar.gz')
         self.assertDictEqual(o.config, self._multiple_vpn)
+
+    def test_file_path_min_length(self):
+        conf = deepcopy(self._multiple_vpn)
+        conf.update({"files": [{"path": ".", "mode": "0644", "contents": "testing!"}]})
+        with self.assertRaises(ValidationError) as err:
+            OpenVpn(conf).generate()
+        self.assertEqual("'.' is too short", err.exception.message)
