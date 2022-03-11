@@ -199,7 +199,7 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'br_lan wlan0'
+    option network 'br_lan'
     option ssid 'open'
 """
 
@@ -211,10 +211,6 @@ config wifi-iface 'wifi_wlan0'
     def test_parse_wifi_bridge(self):
         o = OpenWrt(native=self._wifi_bridge_uci)
         wifi_bridge_netjson = self._wifi_bridge_netjson.copy()
-        wifi_bridge_netjson['interfaces'][1]['wireless']['network'] = [
-            'br_lan',
-            'wlan0',
-        ]
         self.assertEqual(o.config, wifi_bridge_netjson)
 
     _wifi_networks_netjson = {
