@@ -1,12 +1,12 @@
 from ...schema import X509_FILE_MODE
-from ..base.backend import BaseBackend
+from ..base.backend import BaseVpnBackend
 from . import converters
 from .parser import OpenVpnParser, config_suffix, vpn_pattern
 from .renderer import OpenVpnRenderer
 from .schema import schema
 
 
-class OpenVpn(BaseBackend):
+class OpenVpn(BaseVpnBackend):
     """
     OpenVPN 2.x Configuration Backend
     """
@@ -16,32 +16,9 @@ class OpenVpn(BaseBackend):
     parser = OpenVpnParser
     renderer = OpenVpnRenderer
     list_identifiers = ['name']
-
-    def _generate_contents(self, tar):
-        """
-        Adds configuration files to tarfile instance.
-
-        :param tar: tarfile instance
-        :returns: None
-        """
-        text = self.render(files=False)
-        # create a list with all the packages (and remove empty entries)
-        vpn_instances = vpn_pattern.split(text)
-        if '' in vpn_instances:
-            vpn_instances.remove('')
-        # create a file for each VPN
-        for vpn in vpn_instances:
-            lines = vpn.split('\n')
-            vpn_name = lines[0]
-            text_contents = '\n'.join(lines[2:])
-            # do not end with double new line
-            if text_contents.endswith('\n\n'):
-                text_contents = text_contents[0:-1]
-            self._add_file(
-                tar=tar,
-                name='{0}{1}'.format(vpn_name, config_suffix),
-                contents=text_contents,
-            )
+    # BaseVpnBackend attributes
+    vpn_pattern = vpn_pattern
+    config_suffix = config_suffix
 
     @classmethod
     def auto_client(
@@ -99,6 +76,17 @@ class OpenVpn(BaseBackend):
         # remote_cert_tls
         remote_cert_tls = {None: '', '': '', 'client': 'server'}
         client['remote_cert_tls'] = remote_cert_tls[server.get('remote_cert_tls')]
+        tls_auth = server.get('tls_auth')
+        if tls_auth:
+            if len(tls_auth.strip().split(' ')) == 2:
+                # The field contains path to auth key and direction.
+                # auto_client does not support such format.
+                pass
+            else:
+                # The TLS Auth key is present in the field.
+                # Copy the TLS Auth key. Convertor will handle
+                # parsing it into file.
+                client['tls_auth'] = tls_auth
         copy_keys = [
             'name',
             'dev_type',
@@ -129,6 +117,7 @@ class OpenVpn(BaseBackend):
             'float',
             'fast_io',
             'verb',
+            "auth_nocache",
         ]
         for key in copy_keys:
             if key in server:
@@ -171,6 +160,10 @@ class OpenVpn(BaseBackend):
         if key_path and key_contents:
             client['key'] = key_path
             files.append(
-                dict(path=key_path, contents=key_contents, mode=X509_FILE_MODE,)
+                dict(
+                    path=key_path,
+                    contents=key_contents,
+                    mode=X509_FILE_MODE,
+                )
             )
         return files

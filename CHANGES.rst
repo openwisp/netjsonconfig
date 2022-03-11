@@ -1,6 +1,14 @@
 Change log
 ==========
 
+Version 0.9.1 [2020-02-15]
+--------------------------
+
+- [fix] Removed ``mtu_disc`` from ``auto_client`` method because it causes
+  issues on most OpenWRT systems
+- [fix] Avoided maxLength on PIN property to allow configuration variables
+- [change] Add missing TLS ciphers to OpenVPN
+
 Version 0.9.0 [2020-11-18]
 --------------------------
 

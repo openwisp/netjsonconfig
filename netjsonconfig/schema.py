@@ -30,7 +30,6 @@ schema = {
             "properties": {
                 "address": {"type": "string", "propertyOrder": 3},
                 "mask": {"type": "integer", "propertyOrder": 4},
-                "gateway": {"type": "string", "propertyOrder": 5},
             },
         },
         "ipv4_address": {
@@ -51,9 +50,11 @@ schema = {
                         },
                         "mask": {"minimum": 8, "maxmium": 32, "default": 24},
                         "gateway": {
+                            "type": "string",
                             "title": "ipv4 gateway",
                             "description": "optional ipv4 gateway",
                             "maxLength": 16,
+                            "propertyOrder": 5,
                         },
                     },
                 },
@@ -79,9 +80,11 @@ schema = {
                         },
                         "mask": {"minimum": 4, "maxmium": 128, "default": 64},
                         "gateway": {
+                            "type": "string",
                             "title": "ipv6 gateway",
                             "description": "optional ipv6 gateway",
                             "maxLength": 45,
+                            "propertyOrder": 5,
                         },
                     },
                 },
@@ -100,9 +103,9 @@ schema = {
                 },
             ],
         },
-        "interface_settings": {
+        "base_interface_settings": {
             "type": "object",
-            "title": "Interface settings",
+            "title": "Base Interface settings",
             "additionalProperties": True,
             "required": ["name", "type"],
             "properties": {
@@ -120,6 +123,19 @@ schema = {
                     "minimum": 68,
                     "propertyOrder": 2,
                 },
+                "disabled": {
+                    "type": "boolean",
+                    "description": "disable this interface without deleting its configuration",
+                    "default": False,
+                    "format": "checkbox",
+                    "propertyOrder": 6,
+                },
+            },
+        },
+        "interface_settings": {
+            "type": "object",
+            "title": "Interface settings",
+            "properties": {
                 "mac": {
                     "type": "string",
                     "title": "MAC address",
@@ -135,13 +151,6 @@ schema = {
                     "default": True,
                     "format": "checkbox",
                     "propertyOrder": 5,
-                },
-                "disabled": {
-                    "type": "boolean",
-                    "description": "disable this interface without deleting its configuration",
-                    "default": False,
-                    "format": "checkbox",
-                    "propertyOrder": 6,
                 },
                 "addresses": {
                     "type": "array",
@@ -172,6 +181,7 @@ schema = {
                         }
                     }
                 },
+                {"$ref": "#/definitions/base_interface_settings"},
                 {"$ref": "#/definitions/interface_settings"},
             ],
         },
@@ -199,6 +209,7 @@ schema = {
                         },
                     }
                 },
+                {"$ref": "#/definitions/base_interface_settings"},
                 {"$ref": "#/definitions/interface_settings"},
             ],
         },
@@ -229,11 +240,12 @@ schema = {
                             "items": {
                                 "title": "bridged interface",
                                 "type": "string",
-                                "$ref": "#/definitions/interface_settings/properties/name",
+                                "$ref": "#/definitions/base_interface_settings/properties/name",
                             },
                         },
                     }
                 },
+                {"$ref": "#/definitions/base_interface_settings"},
                 {"$ref": "#/definitions/interface_settings"},
             ],
         },
@@ -531,7 +543,7 @@ schema = {
                             "title": "EAP protocol",
                             "type": "string",
                             "enum": ["tls", "ttls"],
-                            "options": {"enum_titles": ["EAP-TLS", "EAP-PEAP"]},
+                            "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS"]},
                             "propertyOrder": 4,
                         },
                         "identity": {"type": "string", "propertyOrder": 5},
@@ -732,6 +744,9 @@ schema = {
         "radio_ac_channel_width": {
             "properties": {"channel_width": {"enum": [20, 40, 80, 160]}}
         },
+        "radio_ax_channel_width": {
+            "properties": {"channel_width": {"enum": [20, 40, 80, 160]}}
+        },
         "radio_80211bg_settings": {
             "title": "802.11b/g (2.4 GHz legacy)",
             "allOf": [
@@ -768,15 +783,6 @@ schema = {
                 {"$ref": "#/definitions/radio_n_channel_width"},
             ],
         },
-        "radio_80211ac_2ghz_settings": {
-            "title": "802.11ac (2.4 GHz AC)",
-            "allOf": [
-                {"properties": {"protocol": {"enum": ["802.11ac"]}}},
-                {"$ref": "#/definitions/base_radio_settings"},
-                {"$ref": "#/definitions/radio_2ghz_channels"},
-                {"$ref": "#/definitions/radio_ac_channel_width"},
-            ],
-        },
         "radio_80211ac_5ghz_settings": {
             "title": "802.11ac (5 GHz AC)",
             "allOf": [
@@ -784,6 +790,24 @@ schema = {
                 {"$ref": "#/definitions/base_radio_settings"},
                 {"$ref": "#/definitions/radio_5ghz_channels"},
                 {"$ref": "#/definitions/radio_ac_channel_width"},
+            ],
+        },
+        "radio_80211ax_2ghz_settings": {
+            "title": "802.11ax (2.4 GHz AX)",
+            "allOf": [
+                {"properties": {"protocol": {"enum": ["802.11ax"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"$ref": "#/definitions/radio_2ghz_channels"},
+                {"$ref": "#/definitions/radio_ax_channel_width"},
+            ],
+        },
+        "radio_80211ax_5ghz_settings": {
+            "title": "802.11ax (5 GHz AX)",
+            "allOf": [
+                {"properties": {"protocol": {"enum": ["802.11ax"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"$ref": "#/definitions/radio_5ghz_channels"},
+                {"$ref": "#/definitions/radio_ax_channel_width"},
             ],
         },
     },
@@ -842,8 +866,9 @@ schema = {
                 "oneOf": [
                     {"$ref": "#/definitions/radio_80211gn_settings"},
                     {"$ref": "#/definitions/radio_80211an_settings"},
-                    {"$ref": "#/definitions/radio_80211ac_2ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ax_2ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ax_5ghz_settings"},
                     {"$ref": "#/definitions/radio_80211bg_settings"},
                     {"$ref": "#/definitions/radio_80211a_settings"},
                 ],
@@ -914,6 +939,7 @@ schema = {
                         "type": "string",
                         "description": "filesystem path",
                         "propertyOrder": 1,
+                        "minLength": 2,
                     },
                     "mode": {
                         "type": "string",

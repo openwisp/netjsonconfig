@@ -1,6 +1,7 @@
 import gzip
 import ipaddress
 import json
+import re
 import tarfile
 from collections import OrderedDict
 from copy import deepcopy
@@ -12,6 +13,8 @@ from jsonschema.exceptions import ValidationError as JsonSchemaError
 from ...exceptions import ValidationError
 from ...schema import DEFAULT_FILE_MODE
 from ...utils import evaluate_vars, merge_config
+
+_host_name_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9\.\-]{1,255}$")
 
 
 class BaseBackend(object):
@@ -129,6 +132,24 @@ class BaseBackend(object):
             ipaddress.ip_network(value)
         except ValueError as e:
             assert False, str(e)
+        return True
+
+    @draft4_format_checker.checks('hostname', JsonSchemaError)
+    def _is_hostname(value):
+        """
+        The hostname validation has been taken from jsonschema~=3.2.0
+        (jsonschema._format.is_host_name). The newer versions of
+        jsonschema enforces FQDN validation which is not always
+        required in OpenWISP. E.g. setting up hostname of a device.
+        """
+        if not isinstance(value, str):
+            return True
+        if not _host_name_re.match(value):
+            return False
+        components = value.split(".")
+        for component in components:
+            if len(component) > 63:
+                return False
         return True
 
     def validate(self):
@@ -333,3 +354,39 @@ class BaseBackend(object):
         del self.intermediate_data
         self.intermediate_data = self._intermediate_copy
         del self._intermediate_copy
+
+
+class BaseVpnBackend(BaseBackend):
+    """
+    Shared logic between VPN backends
+    Requires setting the following attributes:
+
+    - vpn_pattern
+    - config_suffix
+    """
+
+    def _generate_contents(self, tar):
+        """
+        Adds configuration files to tarfile instance.
+
+        :param tar: tarfile instance
+        :returns: None
+        """
+        text = self.render(files=False)
+        # create a list with all the packages (and remove empty entries)
+        vpn_instances = self.vpn_pattern.split(text)
+        if '' in vpn_instances:
+            vpn_instances.remove('')
+        # create a file for each VPN
+        for vpn in vpn_instances:
+            lines = vpn.split('\n')
+            vpn_name = lines[0]
+            text_contents = '\n'.join(lines[2:])
+            # do not end with double new line
+            if text_contents.endswith('\n\n'):
+                text_contents = text_contents[0:-1]
+            self._add_file(
+                tar=tar,
+                name='{0}{1}'.format(vpn_name, self.config_suffix),
+                contents=text_contents,
+            )

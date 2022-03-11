@@ -1350,13 +1350,13 @@ Radio object extensions
 In addition to the default *NetJSON Radio object options*, the ``OpenWrt`` backend
 also requires setting the following additional options for each radio in the list:
 
-+--------------+---------+-----------------------------------------------+
-| key name     | type    | allowed values                                |
-+==============+=========+===============================================+
-| ``driver``   | string  | mac80211, madwifi, ath5k, ath9k, broadcom     |
-+--------------+---------+-----------------------------------------------+
-| ``protocol`` | string  | 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac  |
-+--------------+---------+-----------------------------------------------+
++--------------+---------+---------------------------------------------------------+
+| key name     | type    | allowed values                                          |
++==============+=========+=========================================================+
+| ``driver``   | string  | mac80211, atheros, ath5k, ath9k, broadcom               |
++--------------+---------+---------------------------------------------------------+
+| ``protocol`` | string  | 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac, 802.11ax  |
++--------------+---------+---------------------------------------------------------+
 
 Radio example
 ~~~~~~~~~~~~~
@@ -1417,9 +1417,8 @@ Automatic channel selection example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you need to use the "automatic channel selection" feature of OpenWRT, you must set
-the channel to ``0`` and, unless you are using neither **802.11n** nor **802.11ac**,
-you must set the ``hwmode`` property to tell OpenWRT which band to use
-(11g for 2.4 Ghz, 11a for 5 GHz).
+the channel to ``0``. You must also set the ``hwmode`` property to tell OpenWRT which
+band to use (11g for 2.4 Ghz, 11a for 5 GHz).
 
 The following example sets "automatic channel selection" for two radios, the first radio uses
 **802.11n** in the 2.4 GHz band, while the second uses **802.11ac** in the 5 GHz band.
@@ -1443,7 +1442,9 @@ The following example sets "automatic channel selection" for two radios, the fir
                 "driver": "mac80211",
                 "protocol": "802.11ac",
                 "channel": 0,  # 0 stands for auto
-                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band
+                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band,
+                                  # but this is optional for "802.11ac" because it only
+                                  # support 5 GHz band.
                 "channel_width": 80
             }
         ]
@@ -1497,6 +1498,38 @@ UCI output::
             option hwmode '11a'
             option phy 'phy0'
             option type 'mac80211'
+
+802.11ax example
+~~~~~~~~~~~~~~~~
+
+In the following example we show how to configure an *802.11ax* capable radio:
+
+.. code-block:: python
+
+    {
+        "radios": [
+            {
+                "name": "radio0",
+                "phy": "phy0",
+                "driver": "mac80211",
+                "protocol": "802.11ax",
+                "channel": 36,
+                "channel_width": 80,
+            }
+        ]
+    }
+
+UCI output::
+
+    package wireless
+
+    config wifi-device 'radio0'
+            option channel '36'
+            option htmode 'HE80'
+            option hwmode '11a'
+            option phy 'phy0'
+            option type 'mac80211'
+
 
 Static Routes
 -------------
@@ -2284,6 +2317,289 @@ Will be rendered as follows::
             option mode 'server'
             option proto 'udp'
             option tls_server '1'
+
+WireGuard
+---------
+
+This backend includes the schema of the ``Wireguard`` backend, inheriting its features.
+
+For details regarding the **WireGuard** schema please see :ref:`wireguard_backend_schema`.
+
+Schema additions
+~~~~~~~~~~~~~~~~
+
+The ``OpenWrt`` backend adds a few properties to the WireGuard schema, see below.
+
++-----------------+---------+--------------+-------------------------------------------------------------+
+| key name        | type    | default      | description                                                 |
++=================+=========+==============+=============================================================+
+| ``network``     | string  | ``None``     | logical interface name (UCI specific),                      |
+|                 |         |              |                                                             |
+|                 |         |              | 2 to 15 alphanumeric characters, dashes and underscores     |
++-----------------+---------+--------------+-------------------------------------------------------------+
+| ``nohostroute`` | boolean | ``False``    | do not add routes to ensure the tunnel endpoints are routed |
+|                 |         |              | via non-tunnel device                                       |
++-----------------+---------+--------------+-------------------------------------------------------------+
+| ``fwmark``      | string  | ``None``     | firewall mark to apply to tunnel endpoint packets           |
++-----------------+---------+--------------+-------------------------------------------------------------+
+| ``ip6prefix``   | list    | ``[]``       | IPv6 prefixes to delegate to other interfaces               |
++-----------------+---------+--------------+-------------------------------------------------------------+
+| ``addresses``   | list    | ``[]``       | list of unique IPv4 or IPv6 addresses                       |
++-----------------+---------+--------------+-------------------------------------------------------------+
+
+The ``OpenWrt`` backend also adds ``wireguard_peers`` option for sepecifying a list of
+WireGuard Peers. It add the following properties to the ``wireguard_peers`` property of
+WireGuard schema.
+
++-----------------------+---------+-----------+------------------------------------------------------------------------+
+| key name              | type    | default   | description                                                            |
++=======================+=========+===========+========================================================================+
+| ``interface``         | string  | ``None``  | name of the wireguard interface,                                       |
+|                       |         |           |                                                                        |
+|                       |         |           | 2 to 15 alphanumeric characters, dashes and underscores                |
++-----------------------+---------+-----------+------------------------------------------------------------------------+
+| ``route_allowed_ips`` | boolean | ``False`` | automatically create a route for each of the Allowed IPs for this peer |
++-----------------------+---------+-----------+------------------------------------------------------------------------+
+
+WireGuard example
+~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wg",
+                "type": "wireguard",
+                "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
+                "port": 51820,
+                "mtu": 1420,
+                "nohostroute": False,
+                "fwmark": "",
+                "ip6prefix": [],
+                "addresses": [
+                    {
+                        "proto": "static",
+                        "family": "ipv4",
+                        "address": "10.0.0.5/32",
+                        "mask": 32,
+                    }
+                ],
+                "network": "",
+            }
+        ],
+        "wireguard_peers": [
+            {
+                "interface": "wg",
+                "public_key": "94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=",
+                "allowed_ips": ["10.0.0.1/32"],
+                "endpoint_host": "wireguard.test.com",
+                "endpoint_port": 51820,
+                "preshared_key": "",
+                "persistent_keepalive": 60,
+                "route_allowed_ips": True,
+            }
+        ]
+    }
+
+Will be rendered as follows:
+
+.. code-block:: text
+
+    package network
+
+    config interface 'wg'
+            list addresses '10.0.0.5/32/32'
+            option listen_port '51820'
+            option mtu '1420'
+            option nohostroute '0'
+            option private_key 'QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI='
+            option proto 'wireguard'
+
+    config wireguard_wg 'wgpeer'
+            list allowed_ips '10.0.0.1/32'
+            option endpoint_host 'wireguard.test.com'
+            option endpoint_port '51820'
+            option persistent_keepalive '60'
+            option public_key '94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE='
+            option route_allowed_ips '1'
+
+VXLAN
+-----
+
+``OpenWrt`` backend includes the schema requied for generating VXLAN
+interface configouration. This is useful of setting up layer 2 tunnels.
+
+
+VXLAN Settings
+~~~~~~~~~~~~~~
+
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| key name    | type              | default      | description                                                 |
++=============+===================+==============+=============================================================+
+| ``network`` | string            |  ``None``    | name of interface,                                          |
+|             |                   |              |                                                             |
+|             |                   |              | 2 to 15 alphanumeric characters, dashes and underscores     |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``vtep``    | string            | ``False``    | VXLAN tunnel endpoint                                       |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``port``    | integer           | ``4789``     | port for VXLAN connection                                   |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``vni``     | integer or string |  ``None``    | VXLAN Network Identifier                                    |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``tunlink`` | list              | ``[]``       | interface to which the VXLAN tunnel will be bound           |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``rxcsum``  | boolean           | ``True``     | use checksum validation in RX direction                     |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``txcsum``  | boolean           | ``True``     | use checksum validation in TX direction                     |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``mtu``     | integer           | ``1280``     | MTU for route, only numbers are allowed                     |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+| ``ttl``     | integer           | ``64``       | TTL of the encapsulation packets                            |
++-------------+-------------------+--------------+-------------------------------------------------------------+
+
+VXLAN example
+~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "vxlan",
+                "type": "vxlan",
+                "vtep": "10.0.0.1",
+                "port": 4789,
+                "vni": 1,
+                "tunlink": "",
+                "rxcsum": True,
+                "txcsum": True,
+                "mtu": 1280,
+                "ttl": 64,
+                "mac": "",
+                "disabled": False,
+                "network": "",
+            },
+        ]
+    }
+
+Will be rendered as follows:
+
+.. code-block:: text
+
+    package network
+
+    config interface 'vxlan'
+            option enabled '0'
+            option ifname 'vxlan'
+            option mtu '1280'
+            option peeraddr '10.0.0.1'
+            option port '4789'
+            option proto 'vxlan'
+            option rxcsum '1'
+            option ttl '64'
+            option txcsum '1'
+            option vid '1'
+
+VXLAN over WireGuard example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since a layer 2 tunnel can be encapsulated in a layer 3 tunnel, here is an
+example configuration for setting up a VXLAN tunnel over WireGuard.
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wgvxlan",
+                "type": "wireguard",
+                "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
+                "port": 51820,
+                "mtu": 1420,
+                "nohostroute": False,
+                "fwmark": "",
+                "ip6prefix": [],
+                "addresses": [
+                    {
+                        "proto": "static",
+                        "family": "ipv4",
+                        "address": "10.0.0.5/32",
+                        "mask": 32,
+                    }
+                ],
+                "network": "",
+            },
+            {
+                "name": "vxlan",
+                "type": "vxlan",
+                "vtep": "10.0.0.1",
+                "port": 4789,
+                "vni": 1,
+                "tunlink": "wgvxlan",
+                "rxcsum": True,
+                "txcsum": True,
+                "mtu": 1280,
+                "ttl": 64,
+                "mac": "",
+                "disabled": False,
+                "network": "",
+            },
+        ],
+        "wireguard_peers": [
+            {
+                "interface": "wgvxlan",
+                "public_key": "94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=",
+                "allowed_ips": ["10.0.0.1/32"],
+                "endpoint_host": "wireguard.test.com",
+                "endpoint_port": 51820,
+                "preshared_key": "",
+                "persistent_keepalive": 60,
+                "route_allowed_ips": True,
+            }
+        ]
+    }
+
+Will be rendered as follows:
+
+.. code-block:: text
+
+    package network
+
+    config interface 'wgvxlan'
+            list addresses '10.0.0.5/32/32'
+            option listen_port '51820'
+            option mtu '1420'
+            option nohostroute '0'
+            option private_key 'QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI='
+            option proto 'wireguard'
+
+    config interface 'vxlan'
+            option enabled '1'
+            option ifname 'vxlan'
+            option mtu '1280'
+            option peeraddr '10.0.0.1'
+            option port '4789'
+            option proto 'vxlan'
+            option rxcsum '1'
+            option ttl '64'
+            option tunlink 'wgvxlan'
+            option txcsum '1'
+            option vid '1'
+
+    config wireguard_wgvxlan 'wgpeer'
+            list allowed_ips '10.0.0.1/32'
+            option endpoint_host 'wireguard.test.com'
+            option endpoint_port '51820'
+            option persistent_keepalive '60'
+            option public_key '94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE='
+            option route_allowed_ips '1'
 
 All the other settings
 ----------------------

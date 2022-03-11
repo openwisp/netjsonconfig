@@ -20,7 +20,7 @@ def merge_config(template, config, list_identifiers=None):
     :param list_identifiers: ``list`` or ``None``
     :returns: merged ``dict``
     """
-    result = template.copy()
+    result = deepcopy(template)
     for key, value in config.items():
         if isinstance(value, dict):
             node = result.get(key, OrderedDict())
@@ -105,7 +105,7 @@ def evaluate_vars(data, context=None):
             else:
                 pattern = var_pattern
             if var in context:
-                data = re.sub(pattern, context[var], data)
+                data = re.sub(pattern, str(context[var]), data)
     return data
 
 

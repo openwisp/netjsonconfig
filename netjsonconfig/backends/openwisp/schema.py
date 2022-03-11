@@ -42,3 +42,20 @@ schema = merge_config(
         }
     },
 )
+
+schema['definitions']['tunnel']['properties']['comp_lzo']['enum'] = [
+    'adaptive',
+    '1',
+    'yes',
+    '0',
+    'no',
+]
+schema['definitions']['tunnel']['properties']['comp_lzo']['options'] = {
+    "enum_titles": [
+        "adaptive",
+        "enabled (legacy, OpenVPN <= 2.0)",
+        "yes (OpenVPN > 2.0)",
+        "disabled (legacy, OpenVPN <= 2.0)",
+        "no (OpenVPN > 2.0)",
+    ]
+}

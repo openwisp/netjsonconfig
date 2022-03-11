@@ -8,12 +8,12 @@ from .base import OpenWrtConverter
 class Default(OpenWrtConverter):
     @classmethod
     def should_run_forward(cls, config):
-        """ Always runs """
+        """Always runs"""
         return True
 
     @classmethod
     def should_run_backward(cls, intermediate_data):
-        """ Always runs """
+        """Always runs"""
         return True
 
     def to_intermediate(self):

@@ -3,20 +3,20 @@ netjsonconfig
 =============
 
 .. image:: https://travis-ci.org/openwisp/netjsonconfig.svg
-  :target: https://travis-ci.org/openwisp/netjsonconfig
+   :target: https://travis-ci.org/openwisp/netjsonconfig
 
 .. image:: https://coveralls.io/repos/openwisp/netjsonconfig/badge.svg
- :target: https://coveralls.io/r/openwisp/netjsonconfig
+   :target: https://coveralls.io/r/openwisp/netjsonconfig
 
-.. image:: https://requires.io/github/openwisp/netjsonconfig/requirements.svg?branch=master
-  :target: https://requires.io/github/openwisp/netjsonconfig/requirements/?branch=master
-  :alt: Requirements Status
+.. image:: https://img.shields.io/librariesio/release/github/openwisp/netjsonconfig
+   :target: https://libraries.io/github/openwisp/netjsonconfig#repository_dependencies
+   :alt: Dependency monitoring
 
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
-  :target: http://badge.fury.io/py/netjsonconfig
+   :target: http://badge.fury.io/py/netjsonconfig
 
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
-  :target: https://gitter.im/openwisp/general
+   :target: https://gitter.im/openwisp/general
 
 Netjsonconfig is part of the `OpenWISP project <http://openwrt.org>`_ and it's the official
 configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwisp2>`_.
@@ -36,6 +36,7 @@ Its main features are:
     * `OpenWRT <http://openwrt.org>`_ / `LEDE <https://www.lede-project.org/>`_ support
     * `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_ support
     * `OpenVPN <https://openvpn.net>`_ support
+    * `Wireguard <https://www.wireguard.com/>`_ support
     * Plugin interface for external backends, support more firmwares with an external package
 
       * :doc:`Create your backend </backends/create_your_backend>` as a plugin
@@ -58,7 +59,7 @@ Contents:
    /general/basics
    /backends/openwrt
    /backends/openwisp
-   /backends/openvpn
+   /backends/vpn
    /backends/create_your_backend
    /general/commandline_utility
    /general/running_tests

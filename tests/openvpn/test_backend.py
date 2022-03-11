@@ -20,6 +20,7 @@ class TestBackend(unittest.TestCase):
                     {
                         "auth": "SHA1",
                         "auth_user_pass_verify": "",
+                        "auth_nocache": True,
                         "ca": "ca.pem",
                         "cert": "cert.pem",
                         "cipher": "BF-CBC",
@@ -57,6 +58,7 @@ class TestBackend(unittest.TestCase):
                         "status": "/var/log/openvpn.status 10",
                         "status_version": 1,
                         "tls_server": True,
+                        "tls_auth": "tls_auth.key 0",
                         "tun_ipv6": False,
                         "up": "",
                         "up_delay": 0,
@@ -70,6 +72,7 @@ class TestBackend(unittest.TestCase):
         expected = """# openvpn config: test-server
 
 auth SHA1
+auth-nocache
 ca ca.pem
 cert cert.pem
 cipher BF-CBC
@@ -96,6 +99,7 @@ proto udp
 script-security 0
 status /var/log/openvpn.status 10
 status-version 1
+tls-auth tls_auth.key 0
 tls-server
 user nobody
 verb 3
@@ -109,6 +113,7 @@ verb 3
                     {
                         "auth": "SHA256",
                         "auth_user_pass": "",
+                        "auth_nocache": True,
                         "ca": "ca.pem",
                         "cert": "cert.pem",
                         "cipher": "AES-128-CBC",
@@ -148,6 +153,7 @@ verb 3
                         "status": "/var/log/openvpn.status 30",
                         "status_version": 1,
                         "tls_client": True,
+                        "tls_auth": "tls_auth.key 1",
                         "topology": "p2p",
                         "tun_ipv6": True,
                         "up": "/home/user/up-command.sh",
@@ -161,6 +167,7 @@ verb 3
         expected = """# openvpn config: test-client
 
 auth SHA256
+auth-nocache
 ca ca.pem
 cert cert.pem
 cipher AES-128-CBC
@@ -189,6 +196,7 @@ resolv-retry infinite
 script-security 1
 status /var/log/openvpn.status 30
 status-version 1
+tls-auth tls_auth.key 1
 tls-client
 topology p2p
 tun-ipv6
@@ -738,3 +746,139 @@ tls-client
         o = OpenVpn(self._simple_conf, templates=[template])
         # ensure dummy values in template have been overridden
         self.assertDictEqual(o.config, self._simple_conf)
+
+    _openvpn_server_tls_auth_config = {
+        "openvpn": [
+            {
+                "name": "test",
+                "ca": "/etc/openvpn/ca.pem",
+                "cert": "/etc/openvpn/cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "/etc/openvpn/dh.pem",
+                "key": "/etc/openvpn/key.pem",
+                "mode": "server",
+                "proto": "udp",
+                "status": "",
+                "status_version": 1,
+                "tls_server": True,
+                "tls_auth": (
+                    "#\n"
+                    "# 2048 bit OpenVPN static key\n"
+                    "#\n-----BEGIN OpenVPN Static key V1-----\n"
+                    "tls-auth-key\n"
+                    "-----END OpenVPN Static key V1-----"
+                ),
+            },
+            {
+                "name": "test2",
+                "ca": "/etc/openvpn/ca2.pem",
+                "cert": "/etc/openvpn/cert2.pem",
+                "dev": "tap1",
+                "dev_type": "tap",
+                "dh": "/etc/openvpn/dh2.pem",
+                "key": "/etc/openvpn/key2.pem",
+                "mode": "server",
+                "proto": "udp",
+                "status": "",
+                "status_version": 1,
+                "tls_server": True,
+                "tls_auth": (
+                    "#\n"
+                    "# 2048 bit OpenVPN static key\n"
+                    "#\n-----BEGIN OpenVPN Static key V1-----\n"
+                    "tls-auth-key2\n"
+                    "-----END OpenVPN Static key V1-----"
+                ),
+            },
+        ],
+    }
+
+    _openvpn_server_tls_auth_render = """# openvpn config: test
+
+ca /etc/openvpn/ca.pem
+cert /etc/openvpn/cert.pem
+dev tap0
+dev-type tap
+dh /etc/openvpn/dh.pem
+key /etc/openvpn/key.pem
+mode server
+proto udp
+tls-auth /etc/openvpn/tap0_tls_auth.key 0
+tls-server
+
+# openvpn config: test2
+
+ca /etc/openvpn/ca2.pem
+cert /etc/openvpn/cert2.pem
+dev tap1
+dev-type tap
+dh /etc/openvpn/dh2.pem
+key /etc/openvpn/key2.pem
+mode server
+proto udp
+tls-auth /etc/openvpn/tap1_tls_auth.key 0
+tls-server
+
+# ---------- files ---------- #
+
+# path: /etc/openvpn/tap0_tls_auth.key
+# mode: 0600
+
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+tls-auth-key
+-----END OpenVPN Static key V1-----
+
+# path: /etc/openvpn/tap1_tls_auth.key
+# mode: 0600
+
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+tls-auth-key2
+-----END OpenVPN Static key V1-----
+
+"""
+
+    _openvpn_client_tls_auth_render = """# openvpn config: test
+
+ca /etc/openvpn/ca.pem
+cert /etc/openvpn/cert.pem
+dev tap0
+dev-type tap
+key /etc/openvpn/key.pem
+mode p2p
+nobind
+proto udp
+remote vpn1.test.com 1195
+resolv-retry infinite
+tls-auth /etc/openvpn/tap0_tls_auth.key 1
+tls-client
+
+# ---------- files ---------- #
+
+# path: /etc/openvpn/tap0_tls_auth.key
+# mode: 0600
+
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+tls-auth-key
+-----END OpenVPN Static key V1-----
+
+"""
+
+    def test_tls_auth_key_present(self):
+        server = OpenVpn(self._openvpn_server_tls_auth_config)
+        self.assertEqual(server.render(), self._openvpn_server_tls_auth_render)
+        client_config = OpenVpn.auto_client(
+            'vpn1.test.com',
+            self._openvpn_server_tls_auth_config['openvpn'][0],
+        )
+        client = OpenVpn(client_config)
+        self.assertEqual(client.render(), self._openvpn_client_tls_auth_render)

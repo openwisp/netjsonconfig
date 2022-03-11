@@ -18,8 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - 3.6
           - 3.7
+          - 3.8
+          - 3.9
 
     steps:
       - uses: actions/checkout@v2
@@ -33,11 +34,11 @@ jobs:
 
       - name: Install python dependencies
         run: |
-          pip install -U "pip==20.2.4" wheel setuptools
+          pip install -U pip wheel setuptools
           pip install -U -r requirements-test.txt
 
       - name: Install netjsonconfig
-        run: python setup.py -q develop
+        run: pip install -U -e .
 
       - name: QA checks
         run: ./run-qa-checks

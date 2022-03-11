@@ -4,19 +4,21 @@ OpenWrt specific JSON-Schema definition
 from ...schema import schema as default_schema
 from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
+from ..wireguard.schema import base_wireguard_schema
 from .timezones import timezones
 
 default_radio_driver = "mac80211"
-_interface_properties = default_schema["definitions"]["interface_settings"][
-    "properties"
-]
+
+wireguard = base_wireguard_schema["properties"]["wireguard"]["items"]["properties"]
+wireguard_peers = wireguard["peers"]["items"]["properties"]
+interface_settings = default_schema["definitions"]["interface_settings"]["properties"]
 
 
 schema = merge_config(
     default_schema,
     {
         "definitions": {
-            "interface_settings": {
+            "base_interface_settings": {
                 "properties": {
                     "network": {
                         "type": "string",
@@ -42,7 +44,7 @@ schema = merge_config(
                                 "items": {
                                     "title": "network",
                                     "type": "string",
-                                    "$ref": "#/definitions/interface_settings/properties/network",
+                                    "$ref": "#/definitions/base_interface_settings/properties/network",
                                 },
                                 "propertyOrder": 19,
                             }
@@ -158,6 +160,7 @@ schema = merge_config(
                             },
                         }
                     },
+                    {"$ref": "#/definitions/base_interface_settings"},
                     {"$ref": "#/definitions/interface_settings"},
                 ],
             },
@@ -165,53 +168,268 @@ schema = merge_config(
                 "type": "object",
                 "title": "Modem manager interface",
                 "required": ["name", "device"],
-                "properties": {
-                    "name": _interface_properties["name"],
-                    "mtu": _interface_properties["mtu"],
-                    "autostart": _interface_properties["autostart"],
-                    "disabled": _interface_properties["disabled"],
-                    "type": {
-                        "type": "string",
-                        "enum": ["modem-manager"],
-                        "default": "dialup",
-                        "propertyOrder": 1,
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["modem-manager"],
+                                "default": "dialup",
+                                "propertyOrder": 1,
+                            },
+                            "apn": {
+                                "type": "string",
+                                "title": "APN",
+                                "propertyOrder": 1.1,
+                            },
+                            "pin": {
+                                "type": "string",
+                                "title": "PIN code",
+                                "propertyOrder": 1.2,
+                            },
+                            "device": {
+                                "type": "string",
+                                "description": "Leave blank to use the hardware default",
+                                "propertyOrder": 1.3,
+                            },
+                            "username": {"type": "string", "propertyOrder": 1.4},
+                            "password": {"type": "string", "propertyOrder": 1.5},
+                            "metric": {
+                                "type": "integer",
+                                "default": 50,
+                                "propertyOrder": 1.6,
+                            },
+                            "iptype": {
+                                "type": "string",
+                                "title": "IP type",
+                                "default": "ipv4",
+                                "enum": ["ipv4", "ipv6", "ipv4v6"],
+                                "options": {
+                                    "enum_titles": ["IPv4", "IPv6", "IPv4 and IPv6"]
+                                },
+                                "propertyOrder": 1.7,
+                            },
+                            "lowpower": {
+                                "type": "boolean",
+                                "title": "Low power mode",
+                                "format": "checkbox",
+                                "default": False,
+                                "propertyOrder": 1.8,
+                            },
+                        }
                     },
-                    "apn": {"type": "string", "title": "APN", "propertyOrder": 1.1},
-                    "pin": {
-                        "type": "string",
-                        "title": "PIN code",
-                        "propertyOrder": 1.2,
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
+            },
+            "wireguard_interface": {
+                "type": "object",
+                "title": "Wireguard interface",
+                "required": ["private_key"],
+                "additionalProperties": True,
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["wireguard"],
+                                "default": "wireguard",
+                                "propertyOrder": 1,
+                            },
+                            "private_key": wireguard["private_key"],
+                            "port": wireguard["port"],
+                            "mtu": {
+                                "type": "integer",
+                                "default": 1420,
+                                "propertyOrder": 1.1,
+                            },
+                            "nohostroute": {
+                                "type": "boolean",
+                                "format": "checkbox",
+                                "default": False,
+                                "title": "no host route",
+                                "description": (
+                                    "Do not add routes to ensure the tunnel "
+                                    "endpoints are routed via non-tunnel device"
+                                ),
+                                "propertyOrder": 3,
+                            },
+                            "fwmark": {
+                                "type": "string",
+                                "title": "firewall mark",
+                                "description": (
+                                    "Firewall mark to apply to tunnel endpoint packets, "
+                                    "will be automatically determined if left blank"
+                                ),
+                                "propertyOrder": 3.1,
+                            },
+                            "ip6prefix": {
+                                "title": "IPv6 prefixes",
+                                "description": "IPv6 prefixes to delegate to other interfaces",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "title": "IPv6 prefix",
+                                    "uniqueItems": True,
+                                },
+                                "propertyOrder": 9,
+                            },
+                            # unfortunately some duplication with the base IP address
+                            # definition is needed to achieve functional usability and
+                            # consistency with the rest of the schema because the
+                            # wireguard OpenWRT package uses a different configuration
+                            # format for addresses
+                            "addresses": {
+                                "type": "array",
+                                "title": "addresses",
+                                "uniqueItems": True,
+                                "propertyOrder": 20,
+                                "items": {
+                                    "required": ["proto", "family", "address", "mask"],
+                                    "title": "address",
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "title": "ipv4",
+                                            "properties": {
+                                                "proto": {
+                                                    "title": "protocol",
+                                                    "type": "string",
+                                                    "propertyOrder": 1,
+                                                    "enum": ["static"],
+                                                },
+                                                "family": {
+                                                    "title": "family",
+                                                    "type": "string",
+                                                    "propertyOrder": 2,
+                                                    "enum": ["ipv4"],
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "title": "ipv4 address",
+                                                    "minLength": 7,
+                                                    "propertyOrder": 3,
+                                                },
+                                                "mask": {
+                                                    "type": "number",
+                                                    "minimum": 8,
+                                                    "maxmium": 32,
+                                                    "default": 32,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            "type": "object",
+                                            "title": "ipv6",
+                                            "properties": {
+                                                "proto": {
+                                                    "title": "protocol",
+                                                    "type": "string",
+                                                    "propertyOrder": 1,
+                                                    "enum": ["static"],
+                                                },
+                                                "family": {
+                                                    "title": "family",
+                                                    "type": "string",
+                                                    "propertyOrder": 2,
+                                                    "enum": ["ipv6"],
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "title": "ipv6 address",
+                                                    "minLength": 3,
+                                                    "format": "ipv6",
+                                                    "propertyOrder": 3,
+                                                },
+                                                "mask": {
+                                                    "type": "number",
+                                                    "minimum": 4,
+                                                    "maxmium": 128,
+                                                    "default": 128,
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            },
+                        }
                     },
-                    "device": {
-                        "type": "string",
-                        "description": "Leave blank to use the hardware default",
-                        "propertyOrder": 1.3,
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
+            },
+            "vxlan_interface": {
+                "title": "VXLAN interface",
+                "required": ["vtep", "port", "vni", "tunlink"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["vxlan"],
+                                "default": "vxlan",
+                                "propertyOrder": 1,
+                            },
+                            "vtep": {
+                                "type": "string",
+                                "title": "VTEP",
+                                "description": "VXLAN Tunnel End Point",
+                                "propertyOrder": 1.1,
+                            },
+                            "port": {
+                                "type": "integer",
+                                "propertyOrder": 1.2,
+                                "default": 4789,
+                                "minimum": 1,
+                                "maximum": 65535,
+                            },
+                            "vni": {
+                                "type": ["integer", "string"],
+                                "title": "VNI",
+                                "description": "VXLAN Network Identifier",
+                                "propertyOrder": 1.3,
+                                "minimum": 1,
+                                "maximum": 16777216,
+                            },
+                            "tunlink": {
+                                "type": "string",
+                                "title": "TUN link",
+                                "description": "Interface to which the VXLAN tunnel will be bound",
+                                "propertyOrder": 1.4,
+                            },
+                            "rxcsum": {
+                                "type": "boolean",
+                                "title": "RX checksum validation",
+                                "description": "Use checksum validation in RX (receiving) direction",
+                                "default": True,
+                                "format": "checkbox",
+                                "propertyOrder": 1.5,
+                            },
+                            "txcsum": {
+                                "type": "boolean",
+                                "title": "TX checksum validation",
+                                "description": "Use checksum validation in TX (transmission) direction",
+                                "default": True,
+                                "format": "checkbox",
+                                "propertyOrder": 1.6,
+                            },
+                            "mtu": {"type": "integer", "default": 1280},
+                            "ttl": {
+                                "type": "integer",
+                                "title": "TTL",
+                                "description": "TTL of the encapsulation packets",
+                                "default": 64,
+                                "propertyOrder": 3,
+                            },
+                            "mac": interface_settings["mac"],
+                        }
                     },
-                    "username": {"type": "string", "propertyOrder": 1.4},
-                    "password": {"type": "string", "propertyOrder": 1.5},
-                    "metric": {"type": "integer", "default": 50, "propertyOrder": 1.6},
-                    "iptype": {
-                        "type": "string",
-                        "title": "IP type",
-                        "default": "ipv4",
-                        "enum": ["ipv4", "ipv6", "ipv4v6"],
-                        "options": {"enum_titles": ["IPv4", "IPv6", "IPv4 and IPv6"]},
-                        "propertyOrder": 1.7,
-                    },
-                    "lowpower": {
-                        "type": "boolean",
-                        "title": "Low power mode",
-                        "format": "checkbox",
-                        "default": False,
-                        "propertyOrder": 1.8,
-                    },
-                },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
             },
             "base_radio_settings": {
                 "properties": {
                     "driver": {
                         "type": "string",
-                        "enum": ["mac80211", "madwifi", "ath5k", "ath9k", "broadcom"],
+                        "enum": ["mac80211", "atheros", "ath5k", "ath9k", "broadcom"],
                         "default": default_radio_driver,
                         "propertyOrder": 2,
                     }
@@ -247,10 +465,13 @@ schema = merge_config(
             "radio_80211an_settings": {
                 "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
             },
-            "radio_80211ac_2ghz_settings": {
+            "radio_80211ac_5ghz_settings": {
+                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+            },
+            "radio_80211ax_2ghz_settings": {
                 "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
             },
-            "radio_80211ac_5ghz_settings": {
+            "radio_80211ax_5ghz_settings": {
                 "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
             },
         },
@@ -265,6 +486,8 @@ schema = merge_config(
                     "oneOf": [
                         {"$ref": "#/definitions/dialup_interface"},
                         {"$ref": "#/definitions/modemmanager_interface"},
+                        {"$ref": "#/definitions/vxlan_interface"},
+                        {"$ref": "#/definitions/wireguard_interface"},
                     ]
                 }
             },
@@ -486,6 +709,65 @@ schema = merge_config(
                         "interval": {"type": "integer", "propertyOrder": 8},
                         "message": {"type": "string", "propertyOrder": 9},
                         "mode": {"type": "string", "propertyOrder": 10},
+                    },
+                },
+            },
+            "wireguard_peers": {
+                "type": "array",
+                "title": "Wireguard Peers",
+                "uniqueItems": True,
+                "propertyOrder": 13,
+                "items": {
+                    "type": "object",
+                    "title": "Wireguard peer",
+                    "additionalProperties": True,
+                    "required": ["interface", "public_key", "allowed_ips"],
+                    "properties": {
+                        "interface": {
+                            "type": "string",
+                            "title": "interface",
+                            "description": "name of the wireguard interface",
+                            "minLength": 2,
+                            "maxLength": 15,
+                            "pattern": "^[^\\s]*$",
+                            "propertyOrder": 0,
+                        },
+                        "public_key": wireguard_peers["public_key"],
+                        "allowed_ips": {
+                            "type": "array",
+                            "title": "allowed IPs",
+                            "propertyOrder": 2,
+                            "uniqueItems": True,
+                            "items": {
+                                "type": "string",
+                                "title": "IP/prefix",
+                                "minLength": 1,
+                            },
+                        },
+                        "endpoint_host": wireguard_peers["endpoint_host"],
+                        "endpoint_port": wireguard_peers["endpoint_port"],
+                        "preshared_key": wireguard_peers["preshared_key"],
+                        "persistent_keepalive": {
+                            "type": "integer",
+                            "title": "keep alive",
+                            "description": (
+                                "Number of second between keepalive "
+                                "messages, 0 means disabled"
+                            ),
+                            "default": 0,
+                            "propertyOrder": 6,
+                        },
+                        "route_allowed_ips": {
+                            "type": "boolean",
+                            "format": "checkbox",
+                            "title": "route allowed IPs",
+                            "description": (
+                                "Automatically create a route for "
+                                "each Allowed IPs for this peer"
+                            ),
+                            "default": False,
+                            "propertyOrder": 7,
+                        },
                     },
                 },
             },
