@@ -635,7 +635,7 @@ Some extensions are applicable only when ``mode`` is ``access_point``:
 | ``ft_psk_generate_local``  | boolean | ``False``   | whether to generate FT response locally              |
 |                            |         |             | for PSK networks                                     |
 +----------------------------+---------+-------------+------------------------------------------------------+
-| ``ft_over_ds``             | boolean | ``False``   | whether to enable FT-over-DS                         |
+| ``ft_over_ds``             | boolean | ``True``    | whether to enable FT-over-DS                         |
 +----------------------------+---------+-------------+------------------------------------------------------+
 | ``rsn_preauth``            | boolean | ``False``   | allow pre-authentication for WPA2-EAP networks       |
 +----------------------------+---------+-------------+------------------------------------------------------+
