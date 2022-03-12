@@ -168,10 +168,21 @@ class Wireless(OpenWrtConverter):
         return wifi
 
     def __netjson_wifi_typecast(self, wifi):
-        if 'hidden' in wifi:
-            wifi['hidden'] = wifi['hidden'] == '1'
-        if 'wds' in wifi:
-            wifi['wds'] = wifi['wds'] == '1'
+        for attr in [
+            'hidden',
+            'wds',
+            'ft_over_ds',
+            'ft_psk_generate_local',
+            'ieee80211r',
+            'rsn_preauth',
+        ]:
+            if attr in wifi:
+                wifi[attr] = wifi[attr] == '1'
+        if 'reassociation_deadline' in wifi:
+            try:
+                wifi['reassociation_deadline'] = int(wifi['reassociation_deadline'])
+            except ValueError:
+                del wifi['reassociation_deadline']
 
     _encryption_keys = [
         'key',

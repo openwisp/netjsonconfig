@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import ValidationError
@@ -746,6 +747,7 @@ config wifi-iface 'wifi_wlan1'
                     "ft_psk_generate_local": True,
                     "rsn_preauth": True,
                     "reassociation_deadline": 1000,
+                    "network": ["lan"],
                 },
             }
         ]
@@ -765,7 +767,7 @@ config wifi-iface 'wifi_wlan0'
     option ieee80211r '1'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
+    option network 'lan'
     option reassociation_deadline '1000'
     option rsn_preauth '1'
     option ssid 'MyWifiAP'
@@ -779,6 +781,16 @@ config wifi-iface 'wifi_wlan0'
     def test_parse_access_point_80211r(self):
         o = OpenWrt(native=self._80211r_uci)
         self.assertEqual(o.config, self._80211r_netjson)
+
+        with self.subTest('ignore bogus reassociation_deadline'):
+            bogus_uci = self._80211r_uci
+            bogus_uci = bogus_uci.replace(
+                "reassociation_deadline '1000'", "reassociation_deadline 'bogus'"
+            )
+            o = OpenWrt(native=bogus_uci)
+            netjson_80211r = deepcopy(self._80211r_netjson)
+            del netjson_80211r['interfaces'][0]['wireless']['reassociation_deadline']
+            self.assertEqual(o.config, netjson_80211r)
 
     _80211s_netjson = {
         "interfaces": [
