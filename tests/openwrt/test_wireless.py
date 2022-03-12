@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.exceptions import ValidationError
@@ -731,6 +732,65 @@ config wifi-iface 'wifi_wlan1'
     def test_parse_wds_bridge(self):
         o = OpenWrt(native=self._wds_bridge_uci)
         self.assertEqual(o.config, self._wds_bridge_netjson)
+
+    _80211r_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "MyWifiAP",
+                    "ieee80211r": True,
+                    "ft_over_ds": False,
+                    "ft_psk_generate_local": True,
+                    "rsn_preauth": True,
+                    "reassociation_deadline": 1000,
+                    "network": ["lan"],
+                },
+            }
+        ]
+    }
+    _80211r_uci = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option device 'radio0'
+    option ft_over_ds '0'
+    option ft_psk_generate_local '1'
+    option ieee80211r '1'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'lan'
+    option reassociation_deadline '1000'
+    option rsn_preauth '1'
+    option ssid 'MyWifiAP'
+"""
+
+    def test_render_access_point_80211r(self):
+        o = OpenWrt(self._80211r_netjson)
+        expected = self._tabs(self._80211r_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_access_point_80211r(self):
+        o = OpenWrt(native=self._80211r_uci)
+        self.assertEqual(o.config, self._80211r_netjson)
+
+        with self.subTest('ignore bogus reassociation_deadline'):
+            bogus_uci = self._80211r_uci
+            bogus_uci = bogus_uci.replace(
+                "reassociation_deadline '1000'", "reassociation_deadline 'bogus'"
+            )
+            o = OpenWrt(native=bogus_uci)
+            netjson_80211r = deepcopy(self._80211r_netjson)
+            del netjson_80211r['interfaces'][0]['wireless']['reassociation_deadline']
+            self.assertEqual(o.config, netjson_80211r)
 
     _80211s_netjson = {
         "interfaces": [
