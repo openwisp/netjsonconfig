@@ -745,8 +745,8 @@ UCI output::
 Wireless attached to a different network
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In some cases you might want to attach a wireless interface to a different network,
-for example, you might want to attach a wireless interface to a bridge:
+In most cases you want to bridge a wireless interface to a different network,
+usually the LAN bridge:
 
 .. code-block:: python
 
@@ -763,8 +763,8 @@ for example, you might want to attach a wireless interface to a bridge:
                     "radio": "radio0",
                     "mode": "access_point",
                     "ssid": "wifi service",
-                    # the wireless interface will be attached to the "lan" network
-                    "network": ["lan"]
+                    # "network": ["lan"]  this proeprty can be omitted
+                    # but may be overridden if needed
                 }
             },
             {
@@ -776,9 +776,7 @@ for example, you might want to attach a wireless interface to a bridge:
                 ],
                 "addresses": [
                     {
-                        "address": "192.168.0.2",
-                        "mask": 24,
-                        "proto": "static",
+                        "proto": "dhcp",
                         "family": "ipv4"
                     }
                 ]
@@ -800,9 +798,7 @@ Will be rendered as follows::
 
     config interface 'lan'
             option ifname 'eth0 wlan0'
-            option ipaddr '192.168.0.2'
-            option netmask '255.255.255.0'
-            option proto 'static'
+            option proto 'dhcp'
             option type 'bridge'
 
     package wireless
