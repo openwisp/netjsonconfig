@@ -888,7 +888,8 @@ In the following example we configure roaming options for a wireless access poin
                     "ft_over_ds": False,
                     "ft_psk_generate_local": True,
                     "rsn_preauth": True,
-                    "reassociation_deadline": 1000
+                    "reassociation_deadline": 1000,
+                    "network": ["lan"]
                 }
             }
         ]
@@ -911,7 +912,7 @@ UCI output::
             option ieee80211r '1'
             option ifname 'wlan0'
             option mode 'ap'
-            option network 'wlan0'
+            option network 'lan'
             option reassociation_deadline '1000'
             option rsn_preauth '1'
             option ssid 'MyWifiAP'
