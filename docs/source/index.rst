@@ -3,20 +3,20 @@ netjsonconfig
 =============
 
 .. image:: https://travis-ci.org/openwisp/netjsonconfig.svg
-  :target: https://travis-ci.org/openwisp/netjsonconfig
+   :target: https://travis-ci.org/openwisp/netjsonconfig
 
 .. image:: https://coveralls.io/repos/openwisp/netjsonconfig/badge.svg
- :target: https://coveralls.io/r/openwisp/netjsonconfig
+   :target: https://coveralls.io/r/openwisp/netjsonconfig
 
-.. image:: https://requires.io/github/openwisp/netjsonconfig/requirements.svg?branch=master
-  :target: https://requires.io/github/openwisp/netjsonconfig/requirements/?branch=master
-  :alt: Requirements Status
+.. image:: https://img.shields.io/librariesio/release/github/openwisp/netjsonconfig
+   :target: https://libraries.io/github/openwisp/netjsonconfig#repository_dependencies
+   :alt: Dependency monitoring
 
 .. image:: https://badge.fury.io/py/netjsonconfig.svg
-  :target: http://badge.fury.io/py/netjsonconfig
+   :target: http://badge.fury.io/py/netjsonconfig
 
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
-  :target: https://gitter.im/openwisp/general
+   :target: https://gitter.im/openwisp/general
 
 Netjsonconfig is part of the `OpenWISP project <http://openwrt.org>`_ and it's the official
 configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwisp2>`_.
