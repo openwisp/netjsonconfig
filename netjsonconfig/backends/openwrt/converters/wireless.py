@@ -6,6 +6,10 @@ class Wireless(OpenWrtConverter):
     intermediate_key = 'wireless'
     _uci_types = ['wifi-iface']
 
+    def to_intermediate(self):
+        self._track_bridged_wifi()
+        return super().to_intermediate()
+
     def to_intermediate_loop(self, block, result, index=None):
         wireless = self.__intermediate_wireless(block)
         if wireless:
@@ -62,9 +66,16 @@ class Wireless(OpenWrtConverter):
         # to its defining interface
         # but this behaviour can be overridden
         if not wireless.get('network'):
-            # get network, default to ifname
-            network = interface.get('network', interface['name'])
-            wireless['network'] = [network]
+            # try to automatically determine whether
+            # we should attach this interface to a bridge
+            try:
+                bridges = self._bridged_wifi[interface['name']]
+            except KeyError:
+                # default to the value of "network" or inteface name
+                network = [interface.get('network', interface['name'])]
+            else:
+                network = bridges
+            wireless['network'] = network
         wireless['network'] = (
             ' '.join(wireless['network']).replace('.', '_').replace('-', '_')
         )
@@ -280,3 +291,54 @@ class Wireless(OpenWrtConverter):
             if interface['name'] == wifi['ifname']:
                 interface['type'] = 'wireless'
                 return interface
+
+    def to_netjson_clean(self, intermediate_data):
+        result = super().to_netjson_clean(intermediate_data)
+        return self.__fix_netjson_network(result)
+
+    def __fix_netjson_network(self, result):
+        """
+        Figures out whether it should remove the network attribute
+        From the netjson wifi interface (because it's redundant)
+        """
+        self._track_bridged_wifi(self.backend._intermediate_copy)
+        for index, interface in enumerate(result):
+            try:
+                bridges = self._bridged_wifi[interface['ifname']]
+            except KeyError:
+                continue
+            else:
+                if bridges == interface.get('network', '').split(' '):
+                    del result[index]['network']
+        return result
+
+    def _track_bridged_wifi(self, intermediate_data=None):
+        """
+        Keeps track of wireless interfaces which are members of
+        bridges in order to automatically determine the "network"
+        attribute value of the UCI or NetJSON configuration.
+        """
+        self._bridged_wifi = {}
+        if not intermediate_data:
+            intermediate_data = self.intermediate_data
+        interfaces = intermediate_data.get('network', [])
+        # Create a mapping of physical interface to bride interface name
+        for interface in interfaces:
+            if interface.get('type', None) != 'bridge':
+                continue
+            # Get list of bridge members
+            try:
+                bridge_members = interface.get('ifname', None).split(' ')
+            except AttributeError:
+                # Bridge interface does not contain bridge members.
+                # Bridge is empty.
+                continue
+            bridge_name = interface['.name']
+            for physical_interface in bridge_members:
+                # A physical interface can be a member of multiple
+                # bridges. Hence, we create a list of bridge interfaces
+                # for every physical interface.
+                if physical_interface not in self._bridged_wifi:
+                    self._bridged_wifi[physical_interface] = [bridge_name]
+                elif bridge_name not in self._bridged_wifi[physical_interface]:
+                    self._bridged_wifi[physical_interface].append(bridge_name)
