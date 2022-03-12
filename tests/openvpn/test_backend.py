@@ -146,6 +146,8 @@ verb 3
                         "remote": [
                             {"host": "vpn1.test.com", "port": 1194},
                             {"host": "176.9.43.231", "port": 1195, "proto": "udp4"},
+                            {"host": "176.9.43.232", "port": 1195, "proto": "auto"},
+                            {"host": "176.9.43.233", "port": 1196, "proto": "udp6"},
                         ],
                         "resolv_retry": "infinite",
                         "script_security": 1,
@@ -192,6 +194,8 @@ proto tcp-client
 pull
 remote vpn1.test.com 1194
 remote 176.9.43.231 1195 udp4
+remote 176.9.43.232 1195
+remote 176.9.43.233 1196 udp6
 resolv-retry infinite
 script-security 1
 status /var/log/openvpn.status 30

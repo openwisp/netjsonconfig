@@ -44,7 +44,7 @@ class OpenVpn(BaseConverter):
         if 'remote' in config:
             remote = [
                 '{host} {port} {proto}'.format(**r)
-                if 'proto' in r.keys()
+                if 'proto' in r.keys() and r['proto'] != 'auto'
                 else '{host} {port}'.format(**r)
                 for r in config['remote']
             ]
