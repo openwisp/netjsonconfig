@@ -73,6 +73,50 @@ schema = merge_config(
                                 "format": "checkbox",
                                 "propertyOrder": 9,
                             },
+                            "ieee80211r": {
+                                "type": "boolean",
+                                "title": "roaming",
+                                "description": "enables fast BSS transition (802.11r) support",
+                                "default": False,
+                                "format": "checkbox",
+                                "propertyOrder": 9,
+                            },
+                            "reassociation_deadline": {
+                                "type": "integer",
+                                "title": "reassociation deadline",
+                                "description": (
+                                    "reassociation deadline in time units "
+                                    "(TUs / 1.024 ms, 1000-65535)"
+                                ),
+                                "default": 1000,
+                                "minimum": 1000,
+                                "maximum": 65535,
+                                "propertyOrder": 9,
+                            },
+                            "ft_psk_generate_local": {
+                                "type": "boolean",
+                                "title": "FT PSK generate local",
+                                "description": "whether to generate FT response locally for PSK networks",
+                                "default": False,
+                                "format": "checkbox",
+                                "propertyOrder": 9,
+                            },
+                            "ft_over_ds": {
+                                "type": "boolean",
+                                "title": "FT-over-DS",
+                                "description": "whether to enable FT-over-DS",
+                                "default": True,
+                                "format": "checkbox",
+                                "propertyOrder": 9,
+                            },
+                            "rsn_preauth": {
+                                "type": "boolean",
+                                "title": "WPA2-EAP pre-authentication",
+                                "description": "allow preauthentication for WPA2-EAP networks",
+                                "default": False,
+                                "format": "checkbox",
+                                "propertyOrder": 9,
+                            },
                             "macfilter": {
                                 "type": "string",
                                 "title": "MAC Filter",

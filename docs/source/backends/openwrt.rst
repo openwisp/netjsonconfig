@@ -622,17 +622,29 @@ The ``OpenWrt`` backend NetJSON extensions for wireless interfaces:
 
 Some extensions are applicable only when ``mode`` is ``access_point``:
 
-+---------------+---------+-------------+------------------------------------------------------+
-| key name      | type    | default     | allowed values                                       |
-+===============+=========+=============+======================================================+
-| ``wmm``       | boolean | ``True``    | enables WMM (802.11e) support                        |
-+---------------+---------+-------------+------------------------------------------------------+
-| ``isolate``   | boolean | ``False``   | isolate wireless clients from one another            |
-+---------------+---------+-------------+------------------------------------------------------+
-| ``macfilter`` | string  | ``disable`` | ACL policy, accepts: "disable", "allow" and "deny"   |
-+---------------+---------+-------------+------------------------------------------------------+
-| ``maclist``   | array   | ``[]``      | mac addresses filtered according to macfilter policy |
-+---------------+---------+-------------+------------------------------------------------------+
++----------------------------+---------+-------------+------------------------------------------------------+
+| key name                   | type    | default     | allowed values                                       |
++============================+=========+=============+======================================================+
+| ``wmm``                    | boolean | ``True``    | enables WMM (802.11e) support                        |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``ieee80211r``             | boolean | ``False``   | enables fast BSS transition (802.11r) support        |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``reassociation_deadline`` | integer | ``1000``    | reassociation deadline in time units                 |
+|                            |         |             | (TUs / 1.024 ms, 1000-65535)                         |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``ft_psk_generate_local``  | boolean | ``False``   | whether to generate FT response locally              |
+|                            |         |             | for PSK networks                                     |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``ft_over_ds``             | boolean | ``True``    | whether to enable FT-over-DS                         |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``rsn_preauth``            | boolean | ``False``   | allow pre-authentication for WPA2-EAP networks       |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``isolate``                | boolean | ``False``   | isolate wireless clients from one another            |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``macfilter``              | string  | ``disable`` | ACL policy, accepts: "disable", "allow" and "deny"   |
++----------------------------+---------+-------------+------------------------------------------------------+
+| ``maclist``                | array   | ``[]``      | mac addresses filtered according to macfilter policy |
++----------------------------+---------+-------------+------------------------------------------------------+
 
 These extensions must be used the ``wireless`` object of a wireless interface eg:
 
@@ -850,6 +862,59 @@ UCI output::
             list maclist '42:6c:8f:95:0f:00'
             option mode 'ap'
             option network 'wlan0'
+            option ssid 'MyWifiAP'
+
+Wireless access point with roaming (802.11r)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``OpenWrt`` backend supports custom NetJSON extensions to support
+(802.11r) in wireless access point interfaces (refer
+`"Fast BSS transition options" section in the OpenWRT documentation for Wireless configuration <https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r>`_).
+
+In the following example we configure roaming options for a wireless access point:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "MyWifiAP",
+                    "ieee80211r": True,
+                    "ft_over_ds": False,
+                    "ft_psk_generate_local": True,
+                    "rsn_preauth": True,
+                    "reassociation_deadline": 1000,
+                    "network": ["lan"]
+                }
+            }
+        ]
+    }
+
+UCI output::
+
+    package network
+
+    config interface 'wlan0'
+        option ifname 'wlan0'
+        option proto 'none'
+
+    package wireless
+
+    config wifi-iface 'wifi_wlan0'
+            option device 'radio0'
+            option ft_over_ds '0'
+            option ft_psk_generate_local '1'
+            option ieee80211r '1'
+            option ifname 'wlan0'
+            option mode 'ap'
+            option network 'lan'
+            option reassociation_deadline '1000'
+            option rsn_preauth '1'
             option ssid 'MyWifiAP'
 
 Wireless mesh (802.11s) example
