@@ -42,7 +42,12 @@ class OpenVpn(BaseConverter):
             del config[key]
         # reformat remote list in order for simpler handling in template
         if 'remote' in config:
-            remote = ['{host} {port}'.format(**r) for r in config['remote']]
+            remote = [
+                '{host} {port} {proto}'.format(**r)
+                if 'proto' in r.keys() and r['proto'] != 'auto'
+                else '{host} {port}'.format(**r)
+                for r in config['remote']
+            ]
             config['remote'] = remote
         # do not display status-version if status directive not present
         if 'status' not in config and 'status_version' in config:
@@ -95,7 +100,12 @@ class OpenVpn(BaseConverter):
         if 'remote' in vpn:
             remote = []
             for r in vpn['remote']:
-                host, port = r.split()
-                remote.append(dict(host=host, port=int(port)))
+                items = r.split()
+                if len(items) == 3:
+                    remote.append(
+                        dict(host=items[0], port=int(items[1]), proto=items[2])
+                    )
+                else:
+                    remote.append(dict(host=items[0], port=int(items[1])))
             vpn['remote'] = remote
         return vpn
