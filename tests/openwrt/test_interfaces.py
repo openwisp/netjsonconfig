@@ -716,6 +716,8 @@ config interface 'mobile0'
                 "name": "br-lan",
                 "type": "bridge",
                 "bridge_members": ["eth0", "eth1"],
+                "mac": "E8:94:F6:33:8C:00",
+                "vlan_filtering": True,
             },
         ]
     }
@@ -730,15 +732,19 @@ config interface 'eth1'
     option proto 'none'
 
 config device 'device_lan'
+    option macaddr 'E8:94:F6:33:8C:00'
     option name 'br-lan'
     list ports 'eth0'
     list ports 'eth1'
     option type 'bridge'
+    option vlan_filtering '1'
 
 config interface 'lan'
     option ifname 'eth0 eth1'
+    option macaddr 'E8:94:F6:33:8C:00'
     option proto 'none'
     option type 'bridge'
+    option vlan_filtering '1'
 """
 
     def test_render_simple_bridge(self):
@@ -850,6 +856,7 @@ config interface 'lan_2'
             """package network
 
 config device 'device_lan'
+    option bridge_empty '1'
     option name 'br-lan'
     option type 'bridge'
 
@@ -943,9 +950,11 @@ config device 'device_lan'
     option proto 'none'
     list ports 'eth0'
     list ports 'eth1'
+    option vlan_filtering '1'
+    option macaddr 'E8:94:F6:33:8C:00'
 """
 
-    def test_parse_bridge_21_bridge(self):
+    def test_parse_bridge_21(self):
         o = OpenWrt(native=self._bridge_21_bridge_uci)
         self.assertEqual(o.config, self._simple_bridge_netjson)
 
@@ -963,6 +972,8 @@ config interface 'lan'
     option ifname 'eth0 eth1'
     option proto 'none'
     option type 'bridge'
+    option vlan_filtering '1'
+    option macaddr 'E8:94:F6:33:8C:00'
 """
 
     def test_parse_old_bridge(self):
@@ -1484,6 +1495,10 @@ config interface 'br_lan'
         with self.assertRaises(ValidationError):
             o.validate()
 
+        stp_disabled_netjson = deepcopy(self._spanning_tree_bridge_netjson)
+        stp_disabled_netjson['interfaces'][0]['stp'] = False
+        self.assertNotIn('option max_age', OpenWrt(stp_disabled_netjson).render())
+
     def test_parse_spanning_tree_bridge(self):
         o = OpenWrt(native=self._spanning_tree_bridge_uci)
         self.assertEqual(o.config, self._spanning_tree_bridge_netjson)
@@ -1522,6 +1537,7 @@ config device 'device_br_lan'
     list ports 'eth0'
     list ports 'eth1'
     option query_interval '12500'
+    option query_response_interval '1000'
     option robustness '2'
     option type 'bridge'
 
@@ -1547,6 +1563,12 @@ config interface 'br_lan'
         o.config['interfaces'][0]['igmp_snooping'] = 'wrong'
         with self.assertRaises(ValidationError):
             o.validate()
+
+        igmp_snooping_disabled_netjson = deepcopy(self._igmp_bridge_netjson)
+        igmp_snooping_disabled_netjson['interfaces'][0]['igmp_snooping'] = False
+        self.assertNotIn(
+            'option robustness', OpenWrt(igmp_snooping_disabled_netjson).render()
+        )
 
     def test_parse_igmp_bridge(self):
         o = OpenWrt(native=self._igmp_bridge_uci)

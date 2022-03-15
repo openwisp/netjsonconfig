@@ -161,8 +161,7 @@ schema = merge_config(
                                 "type": "boolean",
                                 "title": "IGMP multicast querier",
                                 "description": (
-                                    "enables the bridge as a mutlicast querier,"
-                                    " which keeps the multicast group to port mappings current."
+                                    "enables the bridge as a multicast querier"
                                 ),
                                 "default": True,
                                 "format": "checkbox",
@@ -192,7 +191,7 @@ schema = merge_config(
                                 "type": "integer",
                                 "title": "IGMP last member interval",
                                 "description": (
-                                    "The max response time in centiseconds inserted into"
+                                    "the maximum response time in centiseconds inserted into"
                                     " group-specific queries sent in response to leave group messages."
                                 ),
                                 "default": 100,
@@ -216,8 +215,8 @@ schema = merge_config(
                                 "type": "integer",
                                 "title": "STP forward delay",
                                 "description": (
-                                    "Time in seconds to spend in listening"
-                                    " and learning states",
+                                    "time in seconds to spend in listening"
+                                    " and learning states"
                                 ),
                                 "default": 4,
                                 "minimum": 2,
@@ -268,8 +267,9 @@ schema = merge_config(
                             "vlan_filtering": {
                                 "type": "boolean",
                                 "title": "VLAN filtering",
-                                "description": "enabled VLAN aware bridge mode",
+                                "description": "enables VLAN aware bridge mode",
                                 "default": False,
+                                "format": "checkbox",
                                 "propertyOrder": 5,
                             },
                         }

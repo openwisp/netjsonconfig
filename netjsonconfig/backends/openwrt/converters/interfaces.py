@@ -10,6 +10,26 @@ class Interfaces(OpenWrtConverter):
     netjson_key = 'interfaces'
     intermediate_key = 'network'
     _uci_types = ['interface', 'globals']
+    _bridge_interface_options = {
+        'stp': [
+            'stp',
+            'forward_delay',
+            'hello_time',
+            'priority',
+            'ageing_time',
+            'max_age',
+        ],
+        'igmp_snooping': [
+            'igmp_snooping',
+            'multicast_querier',
+            'query_interval',
+            'query_response_interval',
+            'last_member_interval',
+            'hash_max',
+            'robustness',
+        ],
+        'all': ['vlan_filtering', 'macaddr'],
+    }
 
     def to_intermediate_loop(self, block, result, index=None):
         result.setdefault('network', [])
@@ -178,21 +198,6 @@ class Interfaces(OpenWrtConverter):
 
         if interface['type'] != 'bridge':
             return
-        stp_options = [
-            'forward_delay',
-            'hello_time',
-            'priority',
-            'ageing_time',
-            'max_age',
-        ]
-        igmp_snooping_options = [
-            'multicast_querier',
-            'query_interval',
-            'last_member_interval',
-            'hash_max',
-            'robustness',
-        ]
-        bridge_options = ['vlan_filtering']
         bridge = {
             '.type': 'device',
             '.name': 'device_{}'.format(interface['.name']),
@@ -200,21 +205,37 @@ class Interfaces(OpenWrtConverter):
             'type': 'bridge',
         }
         # Only add STP options if STP is enabled
-        _add_additional_options('stp', stp_options, bridge, interface)
+        _add_additional_options(
+            'stp', self._bridge_interface_options['stp'], bridge, interface
+        )
 
         # Only add IGMP snooping options if IGMP snooping is enabled
         _add_additional_options(
-            'igmp_snooping', igmp_snooping_options, bridge, interface
+            'igmp_snooping',
+            self._bridge_interface_options['igmp_snooping'],
+            bridge,
+            interface,
         )
 
-        for option in bridge_options:
-            if interface.get(option):
+        for option in self._bridge_interface_options['all']:
+            if option in interface:
                 bridge[option] = interface[option]
-        bridge['ports'] = interface.get('bridge_members')
-        if bridge['ports'] is None:
+        bridge['ports'] = interface.get('bridge_members', [])
+        if bridge['ports'] == []:
             bridge['bridge_empty'] = True
             del bridge['ports']
         return self.sorted_dict(bridge)
+
+    def __clean_intermediate_bridge(self, interface):
+        """
+        Removes options that are not required in the configuration.
+        """
+        if not interface.get('igmp_snooping', False):
+            for option in self._bridge_interface_options['igmp_snooping']:
+                interface.pop(option, None)
+        if not interface.get('stp', False):
+            for option in self._bridge_interface_options['stp']:
+                interface.pop(option, None)
 
     def __intermediate_bridge(self, interface, i):
         """
@@ -231,6 +252,7 @@ class Interfaces(OpenWrtConverter):
             else:
                 interface['bridge_empty'] = True
                 del interface['ifname']
+            self.__clean_intermediate_bridge(interface)
         # bridge has already been defined
         # but we need to add more references to it
         elif interface['type'] == 'bridge' and i >= 2:
@@ -240,7 +262,12 @@ class Interfaces(OpenWrtConverter):
             if 'br-' not in interface['ifname']:
                 interface['ifname'] = 'br-{ifname}'.format(**interface)
             # do not repeat bridge attributes (they have already been processed)
-            for attr in ['type', 'bridge_members', 'stp', 'gateway']:
+            repeated_options = (
+                ['type', 'bridge_members', 'gateway']
+                + self._bridge_interface_options['stp']
+                + self._bridge_interface_options['igmp_snooping']
+            )
+            for attr in repeated_options:
                 if attr in interface:
                     del interface[attr]
         elif interface['type'] != 'bridge':
@@ -366,7 +393,12 @@ class Interfaces(OpenWrtConverter):
             interface['name'] = 'br-{0}'.format(interface['network'])
             # cleanup automatically generated "br_" network prefix
             interface['name'] = interface['name'].replace('br_', '')
-            for option in ['stp', 'igmp_snooping', 'multicast_querier']:
+            for option in [
+                'stp',
+                'igmp_snooping',
+                'multicast_querier',
+                'vlan_filtering',
+            ]:
                 if option in interface:
                     interface[option] = interface[option] == '1'
             for option in [
