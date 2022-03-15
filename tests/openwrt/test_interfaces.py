@@ -729,6 +729,12 @@ config interface 'eth1'
     option ifname 'eth1'
     option proto 'none'
 
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'eth0'
+    list ports 'eth1'
+    option type 'bridge'
+
 config interface 'lan'
     option ifname 'eth0 eth1'
     option proto 'none'
@@ -785,6 +791,13 @@ config interface 'eth1'
     option ifname 'eth1'
     option proto 'none'
 
+config device 'device_lan'
+    option name 'lan'
+    list ports 'eth0'
+    list ports 'eth1'
+    option stp '1'
+    option type 'bridge'
+
 config interface 'lan'
     option gateway '10.0.0.10'
     option ifname 'eth0 eth1'
@@ -835,6 +848,10 @@ config interface 'lan_2'
         )
         expected = self._tabs(
             """package network
+
+config device 'device_lan'
+    option name 'br-lan'
+    option type 'bridge'
 
 config interface 'lan'
     option bridge_empty '1'
@@ -909,6 +926,48 @@ config interface 'lan'
         # ensure fix works
         o.config['interfaces'][0]['bridge_members'][0] = 'eth1'
         o.validate()
+
+    _bridge_21_bridge_uci = """package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'none'
+
+config device 'device_lan'
+    option type 'bridge'
+    option name 'lan'
+    option proto 'none'
+    list ports 'eth0'
+    list ports 'eth1'
+"""
+
+    def test_parse_bridge_21_bridge(self):
+        o = OpenWrt(native=self._bridge_21_bridge_uci)
+        self.assertEqual(o.config, self._simple_bridge_netjson)
+
+    _old_bridge_uci = """package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'none'
+
+config interface 'lan'
+    option ifname 'eth0 eth1'
+    option proto 'none'
+    option type 'bridge'
+"""
+
+    def test_parse_old_bridge(self):
+        o = OpenWrt(native=self._bridge_21_bridge_uci)
+        self.assertEqual(o.config, self._simple_bridge_netjson)
 
     def test_render_dns(self):
         o = OpenWrt(
@@ -1249,6 +1308,12 @@ config interface 'lan_0'
         expected = self._tabs(
             """package network
 
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'eth0'
+    list ports 'eth1'
+    option type 'bridge'
+
 config interface 'lan'
     option ifname 'eth0 eth1'
     option proto 'none'
@@ -1372,63 +1437,127 @@ config interface 'eth0'
         )
         self.assertEqual(o.render(), expected)
 
-    def test_spanning_tree(self):
-        o = OpenWrt(
+    _spanning_tree_bridge_netjson = {
+        "interfaces": [
             {
-                "interfaces": [
-                    {
-                        "name": "br-lan",
-                        "type": "bridge",
-                        "stp": True,
-                        "bridge_members": ["eth0", "eth1"],
-                    }
-                ]
+                "name": "br-lan",
+                "type": "bridge",
+                "stp": True,
+                "hello_time": 2,
+                "forward_delay": 15,
+                "max_age": 20,
+                "priority": 32767,
+                "bridge_members": ["eth0", "eth1"],
             }
-        )
-        expected = self._tabs(
-            """package network
+        ]
+    }
+    _spanning_tree_bridge_uci = """package network
+
+config device 'device_br_lan'
+    option forward_delay '15'
+    option hello_time '2'
+    option max_age '20'
+    option name 'br-lan'
+    list ports 'eth0'
+    list ports 'eth1'
+    option priority '32767'
+    option stp '1'
+    option type 'bridge'
 
 config interface 'br_lan'
+    option forward_delay '15'
+    option hello_time '2'
     option ifname 'eth0 eth1'
+    option max_age '20'
+    option priority '32767'
     option proto 'none'
     option stp '1'
     option type 'bridge'
 """
-        )
+
+    def test_render_spanning_tree_bridge(self):
+        o = OpenWrt(self._spanning_tree_bridge_netjson)
+        expected = self._tabs(self._spanning_tree_bridge_uci)
         self.assertEqual(o.render(), expected)
         # try entering an invalid value
         o.config['interfaces'][0]['stp'] = 'wrong'
         with self.assertRaises(ValidationError):
             o.validate()
 
-    def test_igmp(self):
-        o = OpenWrt(
-            {
-                "interfaces": [
-                    {
-                        "name": "br-lan",
-                        "type": "bridge",
-                        "igmp_snooping": True,
-                        "bridge_members": ["eth0", "eth1"],
-                    }
-                ]
-            }
+    def test_parse_spanning_tree_bridge(self):
+        o = OpenWrt(native=self._spanning_tree_bridge_uci)
+        self.assertEqual(o.config, self._spanning_tree_bridge_netjson)
+
+        # try invalid option values
+        bogus_uci = self._spanning_tree_bridge_uci.replace(
+            "option forward_delay '15'", "option forward_delay 'wrong'"
         )
-        expected = self._tabs(
-            """package network
+        o = OpenWrt(native=bogus_uci)
+        self.assertNotIn('forward_delay', o.config['interfaces'][0])
+
+    _igmp_bridge_netjson = {
+        "interfaces": [
+            {
+                "name": "br-lan",
+                "type": "bridge",
+                "igmp_snooping": True,
+                "multicast_querier": True,
+                "query_interval": 12500,
+                "query_response_interval": 1000,
+                "last_member_interval": 100,
+                "hash_max": 512,
+                "robustness": 2,
+                "bridge_members": ["eth0", "eth1"],
+            }
+        ]
+    }
+    _igmp_bridge_uci = """package network
+
+config device 'device_br_lan'
+    option hash_max '512'
+    option igmp_snooping '1'
+    option last_member_interval '100'
+    option multicast_querier '1'
+    option name 'br-lan'
+    list ports 'eth0'
+    list ports 'eth1'
+    option query_interval '12500'
+    option robustness '2'
+    option type 'bridge'
 
 config interface 'br_lan'
+    option hash_max '512'
     option ifname 'eth0 eth1'
     option igmp_snooping '1'
+    option last_member_interval '100'
+    option multicast_querier '1'
     option proto 'none'
+    option query_interval '12500'
+    option query_response_interval '1000'
+    option robustness '2'
     option type 'bridge'
 """
-        )
+
+    def test_render_igmp_bridge(self):
+        o = OpenWrt(self._igmp_bridge_netjson)
+        expected = self._tabs(self._igmp_bridge_uci)
         self.assertEqual(o.render(), expected)
+
         # try entering an invalid value
         o.config['interfaces'][0]['igmp_snooping'] = 'wrong'
         with self.assertRaises(ValidationError):
             o.validate()
+
+    def test_parse_igmp_bridge(self):
+        o = OpenWrt(native=self._igmp_bridge_uci)
+        self.assertEqual(o.config, self._igmp_bridge_netjson)
+
+        # try invalid option value
+        bogus_uci = self._igmp_bridge_uci.replace(
+            "option robustness '2'", "option robustness 'wrong'"
+        )
+        o = OpenWrt(native=bogus_uci)
+        self.assertNotIn('robustness', o.config['interfaces'][0])
 
     def test_render_autostart_false(self):
         o = OpenWrt(

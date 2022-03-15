@@ -187,6 +187,12 @@ config interface 'wlan0'
     option ifname 'wlan0'
     option proto 'none'
 
+config device 'device_br_lan'
+    option name 'br-lan'
+    list ports 'eth0.1'
+    list ports 'wlan0'
+    option type 'bridge'
+
 config interface 'br_lan'
     option ifname 'eth0.1 wlan0'
     option ipaddr '192.168.1.1'
@@ -699,6 +705,12 @@ config interface 'wlan1'
     option ifname 'wlan1'
     option proto 'none'
 
+config device 'device_wds_bridge'
+    option name 'br-wds_bridge'
+    list ports 'wlan0'
+    list ports 'wlan1'
+    option type 'bridge'
+
 config interface 'wds_bridge'
     option ifname 'wlan0 wlan1'
     option proto 'dhcp'
@@ -823,6 +835,11 @@ config wifi-iface 'wifi_wlan0'
 config interface 'mesh0'
     option ifname 'mesh0'
     option proto 'none'
+
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'mesh0'
+    option type 'bridge'
 
 config interface 'lan'
     option ifname 'mesh0'
@@ -1061,6 +1078,12 @@ config wifi-iface 'arbitrary_id'
         ]
     }
     _wifi_simplified_bridge_uci = """package network
+
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'eth0'
+    list ports 'wlan0'
+    option type 'bridge'
 
 config interface 'lan'
     option ifname 'eth0 wlan0'
