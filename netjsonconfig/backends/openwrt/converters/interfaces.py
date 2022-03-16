@@ -245,6 +245,7 @@ class Interfaces(OpenWrtConverter):
         # ensure type "bridge" is only given to one logical interface
         if interface['type'] == 'bridge' and i < 2:
             bridge_members = ' '.join(interface.pop('bridge_members'))
+            interface['device'] = interface['ifname']
             # put bridge members in ifname attribute
             if bridge_members:
                 interface['ifname'] = bridge_members
@@ -380,6 +381,7 @@ class Interfaces(OpenWrtConverter):
         This method parses bridge members from both syntaxes.
         It also cleans "name" and "network" field for OpenWrt 21 syntax.
         """
+        interface.pop('device', None)
         if interface.pop('bridge_21', False):
             interface['bridge_members'] = interface.pop('ports', [])
             interface['name'] = interface['name'].lstrip('device_')

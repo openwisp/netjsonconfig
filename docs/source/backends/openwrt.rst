@@ -600,7 +600,7 @@ The following *configuration dictionary*:
                 "type": "ethernet"
             },
             {
-                "name": "lan_bridge",  # will be named "br-lan_bridge" by OpenWRT
+                "name": "br-lan",
                 "type": "bridge",
                 "stp": True,  # enable spanning tree protocol
                 "igmp_snooping": True,  # enable imgp snooping
@@ -632,15 +632,16 @@ Will be rendered as follows::
             option ifname 'eth0.2'
             option proto 'none'
 
-    config device 'device_lan_bridge'
+    config device 'device_br_lan'
             option igmp_snooping '1'
-            option name 'lan_bridge'
+            option name 'br-lan'
             list ports 'eth0.1'
             list ports 'eth0.2'
             option stp '1'
             option type 'bridge'
 
-    config interface 'lan_bridge'
+    config interface 'br_lan'
+            option device 'br-lan'
             option ifname 'eth0.1 eth0.2'
             option igmp_snooping '1'
             option ipaddr '172.17.0.2'
