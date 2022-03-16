@@ -196,6 +196,24 @@ class Interfaces(OpenWrtConverter):
                     if interface.get(option):
                         bridge[option] = interface[option]
 
+        def _add_l2_options(bridge, interface):
+            l2_options = [
+                'rpfilter',
+                'txqueuelen',
+                'neighreachabletime',
+                'neighgcstaletime',
+                'neighlocktime',
+                'igmpversion',
+                'mldversion',
+                'promisc',
+                'acceptlocal',
+                'sendredirects',
+                'multicast',
+            ]
+            for option in l2_options:
+                if option in interface:
+                    bridge[option] = interface.pop(option)
+
         if interface['type'] != 'bridge':
             return
         bridge = {
@@ -216,6 +234,9 @@ class Interfaces(OpenWrtConverter):
             bridge,
             interface,
         )
+
+        # Add L2 options added in OpenWrt 21
+        _add_l2_options(bridge, interface)
 
         for option in self._bridge_interface_options['all']:
             if option in interface:
@@ -374,7 +395,7 @@ class Interfaces(OpenWrtConverter):
             interface = method(interface)
         return interface
 
-    def __clean_bridge(self, interface):
+    def __clean_netjson_bridge(self, interface):
         """
         The two bridge declaration syntaxes (pre and post OpenWrt 21)
         defines bridge members differently.
@@ -386,12 +407,37 @@ class Interfaces(OpenWrtConverter):
             interface['bridge_members'] = interface.pop('ports', [])
             interface['name'] = interface['name'].lstrip('device_')
             interface['network'] = interface['network'].lstrip('device_')
+            # Parse L2 config options added in OpenWrt 21
+            for option in [
+                'txqueuelen',
+                'neighreachabletime',
+                'neighgcstaletime',
+                'neighlocktime',
+                'igmpversion',
+                'mldversion',
+            ]:
+                try:
+                    interface[option] = int(interface[option])
+                except ValueError:
+                    del interface[option]
+                except KeyError:
+                    continue
+            for option in [
+                'promisc',
+                'acceptlocal',
+                'sendredirects',
+                'multicast',
+            ]:
+                try:
+                    interface[option] = interface[option] == '1'
+                except KeyError:
+                    continue
         else:
             interface['bridge_members'] = interface['name'].split()
 
     def __netjson_type(self, interface):
         if 'type' in interface and interface['type'] == 'bridge':
-            self.__clean_bridge(interface)
+            self.__clean_netjson_bridge(interface)
             interface['name'] = 'br-{0}'.format(interface['network'])
             # cleanup automatically generated "br_" network prefix
             interface['name'] = interface['name'].replace('br_', '')

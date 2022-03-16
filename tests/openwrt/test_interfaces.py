@@ -983,6 +983,78 @@ config interface 'lan'
         o = OpenWrt(native=self._bridge_21_bridge_uci)
         self.assertEqual(o.config, self._simple_bridge_netjson)
 
+    _l2_options_bridge_netjson = {
+        "interfaces": [
+            {"name": "eth0", "type": "ethernet"},
+            {"name": "eth1", "type": "ethernet"},
+            {
+                "network": "lan",
+                "name": "br-lan",
+                "type": "bridge",
+                "bridge_members": ["eth0", "eth1"],
+                "mac": "E8:94:F6:33:8C:00",
+                "vlan_filtering": True,
+                'rpfilter': 'strict',
+                'txqueuelen': 1000,
+                'neighreachabletime': 30000,
+                'neighgcstaletime': 3000,
+                'neighlocktime': 3000,
+                'igmpversion': 2,
+                'mldversion': 2,
+                'promisc': True,
+                'acceptlocal': True,
+                'sendredirects': True,
+                'multicast': True,
+            },
+        ]
+    }
+    _l2_options_bridge_uci = """package network
+
+config interface 'eth0'
+    option ifname 'eth0'
+    option proto 'none'
+
+config interface 'eth1'
+    option ifname 'eth1'
+    option proto 'none'
+
+config device 'device_lan'
+    option acceptlocal '1'
+    option igmpversion '2'
+    option macaddr 'E8:94:F6:33:8C:00'
+    option mldversion '2'
+    option multicast '1'
+    option name 'br-lan'
+    option neighgcstaletime '3000'
+    option neighlocktime '3000'
+    option neighreachabletime '30000'
+    list ports 'eth0'
+    list ports 'eth1'
+    option promisc '1'
+    option rpfilter 'strict'
+    option sendredirects '1'
+    option txqueuelen '1000'
+    option type 'bridge'
+    option vlan_filtering '1'
+
+config interface 'lan'
+    option device 'br-lan'
+    option ifname 'eth0 eth1'
+    option macaddr 'E8:94:F6:33:8C:00'
+    option proto 'none'
+    option type 'bridge'
+    option vlan_filtering '1'
+"""
+
+    def test_render_l2_options_bridge(self):
+        o = OpenWrt(self._l2_options_bridge_netjson)
+        expected = self._tabs(self._l2_options_bridge_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_l2_options_bridge(self):
+        o = OpenWrt(native=self._l2_options_bridge_uci)
+        self.assertEqual(o.config, self._l2_options_bridge_netjson)
+
     def test_render_dns(self):
         o = OpenWrt(
             {
