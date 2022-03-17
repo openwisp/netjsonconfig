@@ -816,6 +816,7 @@ config interface 'lan'
     option type 'bridge'
 
 config interface 'lan_2'
+    option device 'lan'
     option ifname 'br-lan'
     option proto 'dhcp'
 """
@@ -837,6 +838,7 @@ config interface 'lan_2'
                 "network": "lan_2",
                 "type": "ethernet",
                 "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                "device": "lan",
             }
         )
         self.assertEqual(o.config, netjson)
@@ -1054,6 +1056,38 @@ config interface 'lan'
     def test_parse_l2_options_bridge(self):
         o = OpenWrt(native=self._l2_options_bridge_uci)
         self.assertEqual(o.config, self._l2_options_bridge_netjson)
+
+    _l2_options_interface_netjson = {
+        "interfaces": [
+            {
+                "name": "wan",
+                "type": "ethernet",
+                "macaddr": "00:11:22:33:44:55",
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+            }
+        ]
+    }
+    _l2_options_interface_uci = """package network
+
+config device 'device_wan'
+    option macaddr '00:11:22:33:44:55'
+    option name 'wan'
+
+config interface 'wan'
+    option device 'wan'
+	option ifname 'wan'
+	option macaddr '00:11:22:33:44:55'
+	option proto 'dhcp'
+"""
+
+    def test_render_l2_options_interface(self):
+        o = OpenWrt(self._l2_options_interface_netjson)
+        expected = self._tabs(self._l2_options_interface_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_l2_options_interface(self):
+        o = OpenWrt(native=self._l2_options_interface_uci)
+        self.assertEqual(o.config, self._l2_options_interface_netjson)
 
     def test_render_dns(self):
         o = OpenWrt(
@@ -1701,7 +1735,12 @@ config interface 'eth0'
         expected = self._tabs(
             """package network
 
+config device 'device_eth0'
+    option macaddr 'E8:94:F6:33:8C:00'
+    option name 'eth0'
+
 config interface 'eth0'
+    option device 'eth0'
     option ifname 'eth0'
     option macaddr 'E8:94:F6:33:8C:00'
     option proto 'none'
