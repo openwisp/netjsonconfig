@@ -153,7 +153,7 @@ schema = merge_config(
                                 "type": "boolean",
                                 "title": "IGMP snooping",
                                 "description": "sets the \"multicast_snooping\" kernel setting for a bridge",
-                                "default": True,
+                                "default": False,
                                 "format": "checkbox",
                                 "propertyOrder": 5,
                             },
@@ -163,7 +163,7 @@ schema = merge_config(
                                 "description": (
                                     "enables the bridge as a multicast querier"
                                 ),
-                                "default": True,
+                                "default": False,
                                 "format": "checkbox",
                                 "propertyOrder": 5,
                             },

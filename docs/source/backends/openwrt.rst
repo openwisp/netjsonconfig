@@ -539,9 +539,9 @@ The ``OpenWrt`` backend NetJSON extensions for bridge interfaces:
 +=============================+=========+===========+=============================================================+
 | ``bridge_members``          | list    | ``[]``    | list of interface names for creating bridge                 |
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``igmp_snooping``           | boolean | ``True``  | sets the ``multicast_snooping`` kernel setting for a bridge |
+| ``igmp_snooping``           | boolean | ``False`` | sets the ``multicast_snooping`` kernel setting for a bridge |
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``multicast_querier``       | boolean | ``True``  | enables the bridge as a multicast querier                   |
+| ``multicast_querier``       | boolean | ``False`` | enables the bridge as a multicast querier                   |
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
 | ``query_interval``          | integer | ``12500`` | time interval in centiseconds between multicast general     |
 |                             |         |           | queries                                                     |
@@ -568,6 +568,8 @@ The ``OpenWrt`` backend NetJSON extensions for bridge interfaces:
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
 | ``ageing_time``             | integer | ``300``   | expiration time in seconds for dynamic MAC                  |
 |                             |         |           | entries in the filtering DB" (range 10-1000000)             |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``max_age``                 | integer | ``20``    | timeout in seconds until topology updates on link loss      |
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
 | ``vlan_filtering``          | boolean | ``False`` | enables VLAN aware bridge mode                              |
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
