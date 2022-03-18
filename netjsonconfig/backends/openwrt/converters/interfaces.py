@@ -187,39 +187,12 @@ class Interfaces(OpenWrtConverter):
         """
         Converts NetJSON bridge to intermediate
         data structure compatible with new syntax
-        introduced in OpenWrt 21.
+        introduced in OpenWrt 21.02.
         """
 
-        def _add_additional_options(property_name, property_options, device, interface):
-            if interface.get(property_name, False):
-                device[property_name] = True
-                for option in property_options:
-                    if interface.get(option):
-                        device[option] = interface[option]
-
-        def _add_l2_options(device, interface):
-            l2_options = [
-                'rpfilter',
-                'txqueuelen',
-                'neighreachabletime',
-                'neighgcstaletime',
-                'neighlocktime',
-                'igmpversion',
-                'mldversion',
-                'promisc',
-                'acceptlocal',
-                'sendredirects',
-                'multicast',
-            ]
-            for option in l2_options:
-                if option in interface:
-                    device[option] = interface.pop(option)
-            if interface.get('macaddr', None):
-                device['macaddr'] = interface['macaddr']
-
         device = {}
-        # Add L2 options added in OpenWrt 21
-        _add_l2_options(device, interface)
+        # Add L2 options (needed for > OpenWrt 21.02)
+        self._add_l2_options(device, interface)
 
         if interface.get('type') != 'bridge' and device == {}:
             # No L2 options were present in the configuration.
@@ -239,11 +212,11 @@ class Interfaces(OpenWrtConverter):
             return device
         device['type'] = 'bridge'
         # Add STP options only if STP is enabled
-        _add_additional_options(
+        self._add_options(
             'stp', self._bridge_interface_options['stp'], device, interface
         )
         # Add IGMP snooping options only if IGMP snooping is enabled
-        _add_additional_options(
+        self._add_options(
             'igmp_snooping',
             self._bridge_interface_options['igmp_snooping'],
             device,
@@ -257,6 +230,35 @@ class Interfaces(OpenWrtConverter):
             device['bridge_empty'] = True
             del device['ports']
         return self.sorted_dict(device)
+
+    @staticmethod
+    def _add_options(property_name, property_options, device, interface):
+        if interface.get(property_name, False):
+            device[property_name] = True
+            for option in property_options:
+                if interface.get(option):
+                    device[option] = interface[option]
+
+    @staticmethod
+    def _add_l2_options(device, interface):
+        l2_options = [
+            'rpfilter',
+            'txqueuelen',
+            'neighreachabletime',
+            'neighgcstaletime',
+            'neighlocktime',
+            'igmpversion',
+            'mldversion',
+            'promisc',
+            'acceptlocal',
+            'sendredirects',
+            'multicast',
+        ]
+        for option in l2_options:
+            if option in interface:
+                device[option] = interface.pop(option)
+        if interface.get('macaddr', None):
+            device['macaddr'] = interface['macaddr']
 
     def __clean_intermediate_bridge(self, interface):
         """
@@ -350,7 +352,7 @@ class Interfaces(OpenWrtConverter):
     def __update_existing_netjson_bridge(self, interface, result):
         """
         The UCI configuration might contain configuration
-        for bridge in both syntaxes (pre and post OpenWrt 21).
+        for bridge in both syntaxes (pre and post OpenWrt 21.02).
         This method updates the existing bridge NetJSON if it
         finds a repetitive bridge definition.
         Returns "True" if the method updated an existing bridge.
@@ -454,7 +456,7 @@ class Interfaces(OpenWrtConverter):
 
     def __clean_netjson_bridge(self, interface):
         """
-        The two bridge declaration syntaxes (pre and post OpenWrt 21)
+        The two bridge declaration syntaxes (pre and post OpenWrt 21.02)
         defines bridge members differently.
         This method parses bridge members from both syntaxes.
         """
@@ -479,36 +481,39 @@ class Interfaces(OpenWrtConverter):
             interface['name'] = 'br-{0}'.format(interface['network'])
             # cleanup automatically generated "br_" network prefix
             interface['name'] = interface['name'].replace('br_', '')
-            for option in [
-                'stp',
-                'igmp_snooping',
-                'multicast_querier',
-                'vlan_filtering',
-            ]:
-                if option in interface:
-                    interface[option] = interface[option] == '1'
-            for option in [
-                'forward_delay',
-                'hello_time',
-                'max_age',
-                'priority',
-                'query_interval',
-                'query_response_interval',
-                'last_member_interval',
-                'hash_max',
-                'robustness',
-            ]:
-                if option in interface:
-                    try:
-                        interface[option] = int(interface[option])
-                    except ValueError:
-                        del interface[option]
+            self.__netjson_bridge_typecast(interface)
             if interface.pop('bridge_empty', None) == '1':
                 interface['bridge_members'] = []
             return 'bridge'
         if interface['name'] in ['lo', 'lo0', 'loopback']:
             return 'loopback'
         return 'ethernet'
+
+    def __netjson_bridge_typecast(self, interface):
+        for option in [
+            'stp',
+            'igmp_snooping',
+            'multicast_querier',
+            'vlan_filtering',
+        ]:
+            if option in interface:
+                interface[option] = interface[option] == '1'
+        for option in [
+            'forward_delay',
+            'hello_time',
+            'max_age',
+            'priority',
+            'query_interval',
+            'query_response_interval',
+            'last_member_interval',
+            'hash_max',
+            'robustness',
+        ]:
+            if option in interface:
+                try:
+                    interface[option] = int(interface[option])
+                except ValueError:
+                    del interface[option]
 
     def __netjson_addresses(self, interface):
         proto = interface.get('proto', 'none')

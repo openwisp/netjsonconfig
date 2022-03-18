@@ -1075,9 +1075,9 @@ config device 'device_wan'
 
 config interface 'wan'
     option device 'wan'
-	option ifname 'wan'
-	option macaddr '00:11:22:33:44:55'
-	option proto 'dhcp'
+    option ifname 'wan'
+    option macaddr '00:11:22:33:44:55'
+    option proto 'dhcp'
 """
 
     def test_render_l2_options_interface(self):
