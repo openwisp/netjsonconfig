@@ -924,4 +924,4 @@ tls-auth-key
         try:
             client.render()
         except ValidationError:
-            self.fail(f'ValidationError raised!')
+            self.fail('ValidationError raised!')

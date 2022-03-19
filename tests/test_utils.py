@@ -138,3 +138,14 @@ class TestUtils(unittest.TestCase):
 
     def test_get_copy_default(self):
         self.assertEqual('test', get_copy({}, key='hello', default='test'))
+
+    def test_merge_common_items(self):
+        conf1 = [
+            {
+                "ca": "/etc/x509/ca.pem",
+                "cert": "cert.pem",
+            }
+        ]
+        conf2 = [{"ca": "/etc/x509/ca.pem", "cert": "cert2.pem", "key": "key.pem"}]
+        result = merge_list(conf1, conf2)
+        self.assertEqual(result, conf2)
