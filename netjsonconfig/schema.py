@@ -597,8 +597,8 @@ schema = {
                 "eap_type": {
                     "title": "EAP protocol",
                     "type": "string",
-                    "enum": ["tls", "ttls"],
-                    "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS"]},
+                    "enum": ["tls", "ttls", "peap"],
+                    "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS", "EAP-PEAP"]},
                     "propertyOrder": 4,
                 },
                 "auth": {
