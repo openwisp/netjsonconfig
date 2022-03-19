@@ -138,3 +138,12 @@ class TestUtils(unittest.TestCase):
 
     def test_get_copy_default(self):
         self.assertEqual('test', get_copy({}, key='hello', default='test'))
+
+    def test_merge_list_skip_duplicates(self):
+        conf1 = [{"mode": "0644", "contents": "test"}]
+        conf2 = [
+            {"mode": "0644", "contents": "test"},
+            [{"mode": "0644", "contents": "test2"}],
+        ]
+        result = merge_list(conf1, conf2)
+        self.assertEqual(result, conf2)

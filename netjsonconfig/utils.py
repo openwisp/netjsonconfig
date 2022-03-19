@@ -55,6 +55,13 @@ def merge_list(list1, list2, identifiers=None):
         for el in list_:
             # merge by internal python id by default
             key = id(el)
+            # Detect identical elements present in both lists
+            # avoid adding the duplicate to the result.
+            # This is needed because some templates may share
+            # one or multiple common files and these do not
+            # not have to be duplicated.
+            if counter == 2 and el in dict_map['list1'].values():
+                continue
             # if el is a dict, merge by keys specified in ``identifiers``
             if isinstance(el, dict):
                 for id_key in identifiers:

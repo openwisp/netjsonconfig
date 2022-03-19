@@ -886,3 +886,42 @@ tls-auth-key
         )
         client = OpenVpn(client_config)
         self.assertEqual(client.render(), self._openvpn_client_tls_auth_render)
+
+    def test_ca_same_file_path_for_same_device(self):
+        conf = {
+            "ca": "/etc/x509/ca.pem",
+            "cert": "cert.pem",
+            "dev": "tap0",
+            "dev_type": "tap",
+            "dh": "dh.pem",
+            "key": "key.pem",
+            "mode": "server",
+            "name": "test-1",
+            "proto": "udp",
+            "tls_server": True,
+        }
+        ca_file = {"path": "/etc/x509/ca.pem", "mode": "0644", "contents": "testing!"}
+        template1 = {
+            "openvpn": [{**conf}],
+            "files": [ca_file],
+        }
+        template2 = {
+            "openvpn": [
+                {
+                    **conf,
+                    "name": "test-2",
+                    "cert": "cert2.pem",
+                }
+            ],
+            "files": [ca_file],
+        }
+        client = OpenVpn(
+            {
+                "openvpn": [conf],
+            },
+            templates=[template1, template2],
+        )
+        try:
+            client.render()
+        except ValidationError:
+            self.fail('ValidationError raised!')
