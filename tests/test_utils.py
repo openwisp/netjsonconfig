@@ -140,6 +140,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual('test', get_copy({}, key='hello', default='test'))
 
     def test_merge_list_skip_duplicates(self):
-        conf = [{"path": "/etc/x509/ca.pem", "mode": "0644", "contents": "test"}]
-        result = merge_list(conf, conf)
-        self.assertEqual(result, conf)
+        conf1 = [{"mode": "0644", "contents": "test"}]
+        conf2 = [
+            {"mode": "0644", "contents": "test"},
+            [{"mode": "0644", "contents": "test2"}],
+        ]
+        result = merge_list(conf1, conf2)
+        self.assertEqual(result, conf2)
