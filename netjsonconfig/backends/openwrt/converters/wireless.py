@@ -93,10 +93,14 @@ class Wireless(OpenWrtConverter):
             'wep_shared': 'wep-shared',
             'wpa_personal': 'psk',
             'wpa2_personal': 'psk2',
+            'wpa3_personal': 'sae',
             'wpa_personal_mixed': 'psk-mixed',
+            'wpa2_personal_mixed': 'sae-mixed',
             'wpa_enterprise': 'wpa',
             'wpa2_enterprise': 'wpa2',
+            'wpa3_enterprise': 'wpa3',
             'wpa_enterprise_mixed': 'wpa-mixed',
+            'wpa2_enterprise_mixed': 'wpa3-mixed',
             'wps': 'psk',
         }
         # if encryption disabled return empty dict
@@ -254,10 +258,14 @@ class Wireless(OpenWrtConverter):
                 'wep-shared': 'wep_shared',
                 'psk': 'wpa_personal',
                 'psk2': 'wpa2_personal',
+                'sae': 'wpa3_personal',
                 'psk-mixed': 'wpa_personal_mixed',
+                'sae-mixed': 'wpa2_personal_mixed',
                 'wpa': 'wpa_enterprise',
                 'wpa2': 'wpa2_enterprise',
+                'wpa3': 'wpa3_enterprise',
                 'wpa-mixed': 'wpa_enterprise_mixed',
+                'wpa3-mixed': 'wpa2_enterprise_mixed',
             }
             settings['protocol'] = protocol_mapping[protocol]
             settings['cipher'] = cipher
@@ -271,6 +279,9 @@ class Wireless(OpenWrtConverter):
             if key.startswith('s:'):
                 key = key[2:]
             settings['key'] = key
+        # Management Frame Protection
+        if 'ieee80211w' in wifi:
+            settings['ieee80211w'] = wifi.pop('ieee80211w')
         # create NetJSON encryption object
         wifi['encryption'] = self.__netjson_encryption_typecast(settings)
 

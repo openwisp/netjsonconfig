@@ -358,6 +358,10 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_ap"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_ap_mixed"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wps"},
@@ -375,6 +379,10 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_sta"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
+                        {"$ref": "#/definitions/encryption_wpa3_enterprise_sta_mixed"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wpa_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wep"},
@@ -443,11 +451,97 @@ schema = {
                 }
             }
         },
+        "encryption_cipher_ccmp_required": {
+            "required": ["cipher"],
+            "properties": {
+                "cipher": {
+                    "type": "string",
+                    "enum": ["ccmp"],
+                    "options": {"enum_titles": ["Force CCMP (AES)"]},
+                    "readOnly": True,
+                    "propertyOrder": 3,
+                }
+            },
+        },
+        "encryption_mfp_property": {
+            "properties": {
+                "ieee80211w": {
+                    "type": "string",
+                    "title": "management frame protection",
+                    "enum": ["0", "1", "2"],
+                    "options": {"enum_titles": ["disabled", "optional", "required"]},
+                    "propertyOrder": 4,
+                }
+            }
+        },
+        "encryption_mfp_property_required": {
+            "required": ["ieee80211w"],
+            "properties": {
+                "ieee80211w": {
+                    "type": "string",
+                    "title": "management frame protection",
+                    "enum": ["2"],
+                    "readOnly": True,
+                    "options": {"enum_titles": ["required"]},
+                    "propertyOrder": 4,
+                }
+            },
+        },
+        "encryption_mfp_property_optional": {
+            "required": ["ieee80211w"],
+            "properties": {
+                "ieee80211w": {
+                    "type": "string",
+                    "title": "management frame protection",
+                    "enum": ["1"],
+                    "readOnly": True,
+                    "options": {"enum_titles": ["optional", "required"]},
+                    "propertyOrder": 4,
+                }
+            },
+        },
+        "encryption_wpa3_personal": {
+            "title": "WPA3 Personal",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
+                {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "enum": ["wpa3_personal"],
+                            "options": {"enum_titles": ["WPA3 Personal"]},
+                        },
+                        "key": {"minLength": 8},
+                    }
+                },
+            ],
+        },
+        "encryption_wpa3_personal_mixed": {
+            "title": "WPA3/WPA2 Personal Mixed Mode",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
+                {"$ref": "#/definitions/encryption_mfp_property_optional"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "enum": ["wpa2_personal_mixed"],
+                            "options": {
+                                "enum_titles": ["WPA3/WPA2 Personal Mixed Mode"]
+                            },
+                        },
+                        "key": {"minLength": 8},
+                    }
+                },
+            ],
+        },
         "encryption_wpa_personal": {
             "title": "WPA2/WPA Personal",
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
                 {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property"},
                 {
                     "properties": {
                         "protocol": {
@@ -459,7 +553,7 @@ schema = {
                             "options": {
                                 "enum_titles": [
                                     "WPA2 Personal",
-                                    "WPA Personal Mixed Mode",
+                                    "WPA2/WPA Personal Mixed Mode",
                                     "WPA Personal",
                                 ]
                             },
@@ -467,6 +561,134 @@ schema = {
                         "key": {"minLength": 8},
                     }
                 },
+            ],
+        },
+        "encryption_wpa_enterprise_ap_base_settings": {
+            "required": ["server"],
+            "properties": {
+                "server": {
+                    "type": "string",
+                    "minLength": 3,
+                    "title": "radius server",
+                    "propertyOrder": 4,
+                },
+                "key": {"title": "shared secret", "minLength": 4, "propertyOrder": 5},
+                "port": {
+                    "type": "integer",
+                    "title": "radius port",
+                    "default": 1812,
+                    "propertyOrder": 6,
+                },
+                "acct_server": {
+                    "type": "string",
+                    "title": "accounting server",
+                    "propertyOrder": 7,
+                },
+                "acct_server_port": {
+                    "type": "integer",
+                    "title": "accounting port",
+                    "default": 1813,
+                    "propertyOrder": 8,
+                },
+            },
+        },
+        "encryption_wpa_enterprise_sta_base_settings": {
+            "properties": {
+                "eap_type": {
+                    "title": "EAP protocol",
+                    "type": "string",
+                    "enum": ["tls", "ttls"],
+                    "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS"]},
+                    "propertyOrder": 4,
+                },
+                "identity": {"type": "string", "propertyOrder": 5},
+                "password": {"type": "string", "propertyOrder": 6},
+                "ca_cert": {
+                    "type": "string",
+                    "title": "CA certificate (path)",
+                    "propertyOrder": 7,
+                },
+                "client_cert": {
+                    "type": "string",
+                    "title": "client certificate (path)",
+                    "propertyOrder": 8,
+                },
+                "priv_key": {
+                    "type": "string",
+                    "title": "private key (path)",
+                    "propertyOrder": 9,
+                },
+                "priv_key_pwd": {
+                    "type": "string",
+                    "title": "private key password",
+                    "propertyOrder": 10,
+                },
+            },
+        },
+        "encryption_wpa3_enterprise_base_settings": {
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "enum": ["wpa3_enterprise"],
+                    "options": {"enum_titles": ["WPA3 Enterprise"]},
+                    "propertyOrder": 1,
+                }
+            }
+        },
+        "encryption_wpa3_enterprise_mixed_base_settings": {
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "title": "encryption protocol",
+                    "enum": ["wpa2_enterprise_mixed"],
+                    "options": {"enum_titles": ["WPA3/WPA2 Enterprise Mixed Mode"]},
+                    "propertyOrder": 1,
+                }
+            }
+        },
+        "encryption_wpa3_enterprise_ap": {
+            "title": "WPA3 Enterprise (access point)",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
+                {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {"$ref": "#/definitions/encryption_wpa3_enterprise_base_settings"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
+            ],
+        },
+        "encryption_wpa3_enterprise_ap_mixed": {
+            "title": "WPA3/WPA2 Enterprise (access point) Mixed Mode",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
+                {"$ref": "#/definitions/encryption_mfp_property_optional"},
+                {
+                    "$ref": "#/definitions/encryption_wpa3_enterprise_mixed_base_settings"
+                },
+                {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
+            ],
+        },
+        "encryption_wpa3_enterprise_sta": {
+            "title": "WPA3 Enterprise (client)",
+            "additionalProperties": True,
+            "allOf": [
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
+                {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {"$ref": "#/definitions/encryption_wpa3_enterprise_base_settings"},
+                {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
+            ],
+        },
+        "encryption_wpa3_enterprise_sta_mixed": {
+            "title": "WPA3/WPA2 Enterprise (client)",
+            "additionalProperties": True,
+            "allOf": [
+                {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
+                {"$ref": "#/definitions/encryption_mfp_property_optional"},
+                {
+                    "$ref": "#/definitions/encryption_wpa3_enterprise_mixed_base_settings"
+                },
+                {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
             ],
         },
         "encryption_wpa_enterprise_base_settings": {
@@ -482,7 +704,7 @@ schema = {
                     "options": {
                         "enum_titles": [
                             "WPA2 Enterprise",
-                            "WPA Enterprise Mixed Mode",
+                            "WPA2/WPA Enterprise Mixed Mode",
                             "WPA Enterprise",
                         ]
                     },
@@ -495,40 +717,9 @@ schema = {
             "allOf": [
                 {"$ref": "#/definitions/encryption_base_settings"},
                 {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
-                {
-                    "required": ["server"],
-                    "properties": {
-                        "server": {
-                            "type": "string",
-                            "minLength": 3,
-                            "title": "radius server",
-                            "propertyOrder": 4,
-                        },
-                        "key": {
-                            "title": "shared secret",
-                            "minLength": 4,
-                            "propertyOrder": 5,
-                        },
-                        "port": {
-                            "type": "integer",
-                            "title": "radius port",
-                            "default": 1812,
-                            "propertyOrder": 6,
-                        },
-                        "acct_server": {
-                            "type": "string",
-                            "title": "accounting server",
-                            "propertyOrder": 7,
-                        },
-                        "acct_server_port": {
-                            "type": "integer",
-                            "title": "accounting port",
-                            "default": 1813,
-                            "propertyOrder": 8,
-                        },
-                    },
-                },
+                {"$ref": "#/definitions/encryption_wpa_enterprise_ap_base_settings"},
             ],
         },
         "encryption_wpa_enterprise_sta": {
@@ -536,40 +727,9 @@ schema = {
             "additionalProperties": True,
             "allOf": [
                 {"$ref": "#/definitions/encryption_cipher_property"},
+                {"$ref": "#/definitions/encryption_mfp_property"},
                 {"$ref": "#/definitions/encryption_wpa_enterprise_base_settings"},
-                {
-                    "properties": {
-                        "eap_type": {
-                            "title": "EAP protocol",
-                            "type": "string",
-                            "enum": ["tls", "ttls"],
-                            "options": {"enum_titles": ["EAP-TLS", "EAP-TTLS"]},
-                            "propertyOrder": 4,
-                        },
-                        "identity": {"type": "string", "propertyOrder": 5},
-                        "password": {"type": "string", "propertyOrder": 6},
-                        "ca_cert": {
-                            "type": "string",
-                            "title": "CA certificate (path)",
-                            "propertyOrder": 7,
-                        },
-                        "client_cert": {
-                            "type": "string",
-                            "title": "client certificate (path)",
-                            "propertyOrder": 8,
-                        },
-                        "priv_key": {
-                            "type": "string",
-                            "title": "private key (path)",
-                            "propertyOrder": 9,
-                        },
-                        "priv_key_pwd": {
-                            "type": "string",
-                            "title": "private key password",
-                            "propertyOrder": 10,
-                        },
-                    }
-                },
+                {"$ref": "#/definitions/encryption_wpa_enterprise_sta_base_settings"},
             ],
         },
         "encryption_wep": {

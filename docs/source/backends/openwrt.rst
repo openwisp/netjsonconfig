@@ -1273,6 +1273,171 @@ UCI Output::
             option password 'test-password'
             option ssid 'enterprise-client'
 
+WPA3 Personal (Simultaneous Authentication of Equals)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows a typical wireless access
+point using *WPA3 Personal (SAE)* encryption:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "wpa3-personal",
+                    "encryption": {
+                        "protocol": "wpa3_personal",
+                        # WPA3 only supports ccmp
+                        "cipher": "ccmp",
+                        "key": "passphrase012345",
+                        # Management Frame Protection is required for WPA3
+                        "ieee80211w": "2",
+                    }
+                }
+            }
+        ]
+    }
+
+UCI output::
+
+    package network
+
+    config interface `'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface 'wifi_wlan0'
+            option device 'radio0'
+            option encryption 'sae+ccmp'
+            option ieee80211w '2'
+            option ifname 'wlan0'
+            option key 'passphrase012345'
+            option mode 'ap'
+            option network 'wlan0'
+            option ssid 'wpa3-personal'
+
+WPA3 Enterprise (802.1x) ap
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example shows a typical wireless access
+point using *WPA3 Enterprise (802.1x)* security on **OpenWRT**,
+you can use this type of configuration for networks like
+`eduroam <https://www.eduroam.org/>`_:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "eduroam",
+                    "encryption": {
+                        "protocol": "wpa3_enterprise",
+                        # WPA3 only supports ccmp
+                        "cipher": "ccmp",
+                        "key": "radius_secret",
+                        "server": "192.168.0.1",
+                        "port": 1812,
+                        "acct_server": "192.168.0.2",
+                        "acct_port": 1813,
+                        "nasid": "hostname",
+                        "ieee80211w": "2",
+                    }
+                }
+            }
+        ]
+    }
+
+UCI Output::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface 'wifi_wlan0'
+            option acct_port '1813'
+            option acct_server '192.168.0.2'
+            option device 'radio0'
+            option encryption 'wpa3+ccmp'
+            option ieee80211w '2'
+            option ifname 'wlan0'
+            option key 'radius_secret'
+            option mode 'ap'
+            option nasid 'hostname'
+            option network 'wlan0'
+            option port '1812'
+            option server '192.168.0.1'
+            option ssid 'eduroam'
+
+WPA3 Enterprise (802.1x) client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*WPA3 Enterprise (802.1x)* client example:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "station",
+                    "ssid": "enterprise-client",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "wpa3_enterprise",
+                        # WPA3 only supports ccmp
+                        "cipher": "ccmp",
+                        "eap_type": "tls",
+                        "identity": "test-identity",
+                        "password": "test-password",
+                        "ieee80211w": "2",
+                    }
+                }
+            }
+        ]
+    }
+
+UCI Output::
+
+    package network
+
+    config interface 'wlan0'
+            option ifname 'wlan0'
+            option proto 'none'
+
+    package wireless
+
+    config wifi-iface 'wifi_wlan0'
+            option bssid '00:26:b9:20:5f:09'
+            option device 'radio0'
+            option eap_type 'tls'
+            option encryption 'wpa3+ccmp'
+            option identity 'test-identity'
+            option ieee80211w '2'
+            option ifname 'wlan0'
+            option mode 'sta'
+            option network 'wlan0'
+            option password 'test-password'
+            option ssid 'enterprise-client'
+
 Dialup settings
 ---------------
 
