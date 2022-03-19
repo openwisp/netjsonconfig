@@ -32,29 +32,6 @@ def merge_config(template, config, list_identifiers=None):
     return result
 
 
-def get_common_keys(list1, list2):  # noqa: C901
-    """
-    Returns a list of common keys which have same values.
-    """
-    key_value_set = set()
-    common_keys = []
-    for el in list1:
-        if isinstance(el, dict):
-            for key, value in el.items():
-                if isinstance(value, (dict, list)):
-                    continue
-                if key not in key_value_set:
-                    key_value_set.add((key, el[key]))
-    for el in list2:
-        if isinstance(el, dict):
-            for key, value in el.items():
-                if isinstance(value, (dict, list)):
-                    continue
-                if (key, value) in key_value_set:
-                    common_keys.append(key)
-    return common_keys
-
-
 def merge_list(list1, list2, identifiers=None):
     """
     Merges ``list2`` on top of ``list1``.
@@ -71,7 +48,6 @@ def merge_list(list1, list2, identifiers=None):
     :returns: merged ``list``
     """
     identifiers = identifiers or []
-    identifiers.extend(get_common_keys(list1, list2))
     dict_map = {'list1': OrderedDict(), 'list2': OrderedDict()}
     counter = 1
     for list_ in [list1, list2]:
@@ -79,6 +55,13 @@ def merge_list(list1, list2, identifiers=None):
         for el in list_:
             # merge by internal python id by default
             key = id(el)
+            # Detect identical elements present in both lists
+            # avoid adding the duplicate to the result.
+            # This is needed because some templates may share
+            # one or multiple common files and these do not
+            # not have to be duplicated.
+            if counter == 2 and el in dict_map['list1'].values():
+                continue
             # if el is a dict, merge by keys specified in ``identifiers``
             if isinstance(el, dict):
                 for id_key in identifiers:
