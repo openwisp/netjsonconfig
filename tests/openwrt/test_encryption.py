@@ -554,7 +554,7 @@ config wifi-iface 'wifi_wlan0'
         o = OpenWrt(native=self._wpa3_enterprise_client_uci)
         self.assertEqual(o.config, self._wpa3_enterprise_client_netjson)
 
-    _wpa2_enterprise_client_netjson = {
+    _wpa2_enterprise_tls_client_netjson = {
         "interfaces": [
             {
                 "name": "wlan0",
@@ -599,13 +599,115 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_enterprise_client(self):
-        o = OpenWrt(self._wpa2_enterprise_client_netjson)
+        o = OpenWrt(self._wpa2_enterprise_tls_client_netjson)
         expected = self._tabs(self._wpa2_enterprise_client_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_enterprise_client(self):
         o = OpenWrt(native=self._wpa2_enterprise_client_uci)
-        self.assertEqual(o.config, self._wpa2_enterprise_client_netjson)
+        self.assertEqual(o.config, self._wpa2_enterprise_tls_client_netjson)
+
+    _wpa2_enterprise_ttls_client_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "station",
+                    "ssid": "enterprise-client",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "wpa2_enterprise",
+                        "cipher": "auto",
+                        "eap_type": "ttls",
+                        "auth": "MSCHAPV2",
+                        "identity": "test-identity",
+                        "password": "test-password",
+                    },
+                },
+            }
+        ]
+    }
+    _wpa2_enterprise_ttls_client_uci = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option auth 'MSCHAPV2'
+    option bssid '00:26:b9:20:5f:09'
+    option device 'radio0'
+    option eap_type 'ttls'
+    option encryption 'wpa2'
+    option identity 'test-identity'
+    option ifname 'wlan0'
+    option mode 'sta'
+    option network 'wlan0'
+    option password 'test-password'
+    option ssid 'enterprise-client'
+"""
+
+    def test_render_wpa2_enterprise_ttls_client(self):
+        o = OpenWrt(self._wpa2_enterprise_ttls_client_netjson)
+        expected = self._tabs(self._wpa2_enterprise_ttls_client_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_wpa2_enterprise_ttls_client(self):
+        o = OpenWrt(native=self._wpa2_enterprise_ttls_client_uci)
+        self.assertEqual(o.config, self._wpa2_enterprise_ttls_client_netjson)
+
+    _wpa2_enterprise_tls_client_auth_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "station",
+                    "ssid": "enterprise-client",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "wpa2_enterprise",
+                        "cipher": "auto",
+                        "eap_type": "tls",
+                        "auth": "MSCHAPV2",
+                        "identity": "test-identity",
+                        "password": "test-password",
+                    },
+                },
+            }
+        ]
+    }
+
+    _wpa2_enterprise_tls_client_auth_uci = """package network
+
+config interface 'wlan0'
+    option ifname 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option bssid '00:26:b9:20:5f:09'
+    option device 'radio0'
+    option eap_type 'tls'
+    option encryption 'wpa2'
+    option identity 'test-identity'
+    option ifname 'wlan0'
+    option mode 'sta'
+    option network 'wlan0'
+    option password 'test-password'
+    option ssid 'enterprise-client'
+"""
+
+    def test_render_wpa2_enterprise_tls_client_auth(self):
+        o = OpenWrt(self._wpa2_enterprise_tls_client_auth_netjson)
+        expected = self._tabs(self._wpa2_enterprise_tls_client_auth_uci)
+        self.assertEqual(o.render(), expected)
 
     _wep_open_netjson = {
         "interfaces": [
