@@ -128,6 +128,8 @@ class Wireless(OpenWrtConverter):
                 and uci['eap_type'] == 'tls'
                 and 'auth' in uci
             ):
+                # remove auth if not needed
+                # (not applicable to EAP-TLS)
                 del uci['auth']
             if 'key' in encryption:
                 uci['key'] = encryption['key']

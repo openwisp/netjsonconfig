@@ -626,6 +626,11 @@ schema = {
                             "EAP-TLS",
                         ]
                     },
+                    "default": "MSCHAPV2",
+                    "description": (
+                        "Defines the phase 2 (inner) authentication method,"
+                        "only applicable if EAP protocol is EAP-PEAP or EAP-TTLS."
+                    ),
                     "propertyOrder": 5,
                 },
                 "identity": {"type": "string", "propertyOrder": 6},
