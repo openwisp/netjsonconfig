@@ -1225,7 +1225,7 @@ UCI Output::
 WPA2 Enterprise (802.1x) client
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*WPA2 Enterprise (802.1x)* client example:
+*WPA2 Enterprise (802.1x)* client with EAP-TLS example:
 
 .. code-block:: python
 
@@ -1437,6 +1437,106 @@ UCI Output::
             option network 'wlan0'
             option password 'test-password'
             option ssid 'enterprise-client'
+
+*WPA2 Enterprise (802.1x)* client with EAP-TTLS example:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "station",
+                    "ssid": "enterprise-client",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "wpa2_enterprise",
+                        "cipher": "auto",
+                        "eap_type": "ttls",
+                        "auth": "MSCHAPV2",
+                        "identity": "test-identity",
+                        "password": "test-password",
+                    },
+                },
+            }
+        ]
+    }
+
+UCI Output::
+
+    package network
+
+    config interface 'wlan0'
+        option ifname 'wlan0'
+        option proto 'none'
+
+    package wireless
+
+    config wifi-iface 'wifi_wlan0'
+        option auth 'MSCHAPV2'
+        option bssid '00:26:b9:20:5f:09'
+        option device 'radio0'
+        option eap_type 'ttls'
+        option encryption 'wpa2'
+        option identity 'test-identity'
+        option ifname 'wlan0'
+        option mode 'sta'
+        option network 'wlan0'
+        option password 'test-password'
+        option ssid 'enterprise-client'
+
+*WPA2 Enterprise (802.1x)* client with EAP-PEAP example:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "station",
+                    "ssid": "enterprise-client",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "wpa2_enterprise",
+                        "cipher": "auto",
+                        "eap_type": "peap",
+                        "auth": "EAP-MSCHAPV2",
+                        "identity": "test-identity",
+                        "password": "test-password",
+                    },
+                },
+            }
+        ]
+    }
+
+UCI Output::
+
+    package network
+
+    config interface 'wlan0'
+        option ifname 'wlan0'
+        option proto 'none'
+
+    package wireless
+
+    config wifi-iface 'wifi_wlan0'
+        option auth 'EAP-MSCHAPV2'
+        option bssid '00:26:b9:20:5f:09'
+        option device 'radio0'
+        option eap_type 'peap'
+        option encryption 'wpa2'
+        option identity 'test-identity'
+        option ifname 'wlan0'
+        option mode 'sta'
+        option network 'wlan0'
+        option password 'test-password'
+        option ssid 'enterprise-client'
 
 Dialup settings
 ---------------

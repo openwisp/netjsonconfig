@@ -121,8 +121,16 @@ class Wireless(OpenWrtConverter):
             # tell hostapd/wpa_supplicant key is not hex format
             if protocol == 'wep_open':
                 uci['key1'] = 's:{0}'.format(uci['key1'])
-        elif 'key' in encryption:
-            uci['key'] = encryption['key']
+        else:
+            if (
+                'enterprise' in protocol
+                and 'eap_type' in uci
+                and uci['eap_type'] == 'tls'
+                and 'auth' in uci
+            ):
+                del uci['auth']
+            if 'key' in encryption:
+                uci['key'] = encryption['key']
         # add ciphers
         cipher = encryption.get('cipher')
         if cipher and protocol.startswith('wpa') and cipher != 'auto':
