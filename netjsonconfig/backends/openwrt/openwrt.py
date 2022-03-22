@@ -31,6 +31,10 @@ class OpenWrt(BaseBackend):
     renderer = OpenWrtRenderer
     list_identifiers = ['name', 'config_value', 'id']
 
+    def __init__(self, dsa=True, *args, **kwargs):
+        self.dsa = dsa
+        super().__init__(*args, **kwargs)
+
     def _generate_contents(self, tar):
         """
         Adds configuration files to tarfile instance.
