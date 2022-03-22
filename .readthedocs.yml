@@ -1,0 +1,13 @@
+version: 2
+
+# Build all formats
+formats:
+  - epub
+
+python:
+  version: 3.8
+  install:
+    - requirements: requirements-test.txt
+    - method: pip
+      path: .
+  system_packages: true
