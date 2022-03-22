@@ -32,7 +32,7 @@ class TestInterfaces(unittest.TestCase, _TabsMixin):
             """package network
 
 config interface 'lo'
-    option ifname 'lo'
+    option device 'lo'
     option ipaddr '127.0.0.1'
     option netmask '255.0.0.0'
     option proto 'static'
@@ -45,7 +45,7 @@ config interface 'lo'
             """package network
 
 config interface 'lo'
-    option ifname 'lo'
+    option device 'lo'
     option ipaddr '127.0.0.1'
     option netmask '255.0.0.0'
     option proto 'static'
@@ -75,7 +75,7 @@ config interface 'lo'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '192.168.1.2/24'
     option proto 'static'
     option gateway '192.168.1.1'
@@ -106,7 +106,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
 """
         )
         expected = {"interfaces": [{"name": "eth0", "type": "ethernet"}]}
@@ -118,7 +118,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '/'
 """
         )
@@ -131,7 +131,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '/'
     option netmask '255.255.255.0'
 """
@@ -178,7 +178,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '192.168.1.1'
     option proto 'static'
 """
@@ -191,7 +191,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '192.168.1.1/'
     option proto 'static'
 """
@@ -204,7 +204,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     list ipaddr '192.168.1.1'
     option proto 'static'
 """
@@ -217,7 +217,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option ip6addr '2aa1:4aaa:2aaa:1d::5/64'
     option proto 'static'
 """
@@ -230,7 +230,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     list ipaddr '192.168.1.1/'
     list ipaddr '192.168.2.1/24'
     list ipaddr '/'
@@ -305,7 +305,7 @@ config interface 'eth0'
 config interface 'eth0_1'
     option auto '1'
     option gateway '192.168.1.1'
-    option ifname 'eth0.1'
+    option device 'eth0.1'
     list ip6addr 'fd87::2/64'
     list ip6addr 'fd87::3/64'
     option ip6gw 'fd87::1'
@@ -346,7 +346,7 @@ config interface 'eth0_1'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option ip6addr 'fd87::2/64'
     option proto 'static'
 """
@@ -369,7 +369,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 """
         )
@@ -380,7 +380,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 """
         )
@@ -401,7 +401,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcpv6'
 """
         )
@@ -436,11 +436,11 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 
 config interface 'eth0_2'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcpv6'
 """
         )
@@ -451,11 +451,11 @@ config interface 'eth0_2'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 
 config interface 'eth0_2'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcpv6'
 """
         )
@@ -507,13 +507,13 @@ config interface 'eth0_2'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     list ipaddr '192.168.1.1/24'
     list ipaddr '192.168.2.1/24'
     option proto 'static'
 
 config interface 'eth0_2'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 """
         )
@@ -524,13 +524,13 @@ config interface 'eth0_2'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     list ipaddr '192.168.1.1/24'
     list ipaddr '192.168.2.1/24'
     option proto 'static'
 
 config interface 'eth0_2'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 """
         )
@@ -587,7 +587,7 @@ config interface 'eth0_2'
 
 config interface 'ppp0'
     option device '/dev/usb/modem1'
-    option ifname 'ppp0'
+    option device 'ppp0'
     option ipv6 '1'
     option keepalive '3'
     option password 'pwd0123'
@@ -603,7 +603,7 @@ config interface 'ppp0'
 
 config interface 'custom_if0'
     option device '/dev/usb/modem1'
-    option ifname 'custom_if0'
+    option device 'custom_if0'
     option ipv6 '1'
     option keepalive '3'
     option proto 'custom'
@@ -633,7 +633,7 @@ config interface 'custom_if0'
 
 config interface 'eth0'
     option enabled '0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -645,7 +645,7 @@ config interface 'eth0'
 
 config interface 'eth0'
     option enabled '0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -675,7 +675,7 @@ config interface 'eth0'
 
 config interface 'mobile0'
     option custom_attr 'yes'
-    option ifname 'mobile0'
+    option device 'mobile0'
     option mtu '1400'
     option proto '3g'
 """
@@ -688,7 +688,7 @@ config interface 'mobile0'
 
 config interface 'mobile0'
     option custom_attr 'yes'
-    option ifname 'mobile0'
+    option device 'mobile0'
     option mtu '1400'
     option proto 'exotic'
 """
@@ -724,11 +724,11 @@ config interface 'mobile0'
     _simple_bridge_uci = """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 
 config interface 'eth1'
-    option ifname 'eth1'
+    option device 'eth1'
     option proto 'none'
 
 config device 'device_lan'
@@ -737,15 +737,10 @@ config device 'device_lan'
     list ports 'eth0'
     list ports 'eth1'
     option type 'bridge'
-    option vlan_filtering '1'
 
 config interface 'lan'
     option device 'br-lan'
-    option ifname 'eth0 eth1'
-    option macaddr 'E8:94:F6:33:8C:00'
     option proto 'none'
-    option type 'bridge'
-    option vlan_filtering '1'
 """
 
     def test_render_simple_bridge(self):
@@ -791,11 +786,11 @@ config interface 'lan'
     _complex_bridge_uci = """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 
 config interface 'eth1'
-    option ifname 'eth1'
+    option device 'eth1'
     option proto 'none'
 
 config device 'device_lan'
@@ -808,16 +803,12 @@ config device 'device_lan'
 config interface 'lan'
     option device 'lan'
     option gateway '10.0.0.10'
-    option ifname 'eth0 eth1'
     list ipaddr '192.168.1.1/24'
     list ipaddr '10.0.0.1/24'
     option proto 'static'
-    option stp '1'
-    option type 'bridge'
 
 config interface 'lan_2'
     option device 'lan'
-    option ifname 'br-lan'
     option proto 'dhcp'
 """
 
@@ -865,10 +856,8 @@ config device 'device_lan'
     option type 'bridge'
 
 config interface 'lan'
-    option bridge_empty '1'
     option device 'br-lan'
     option proto 'none'
-    option type 'bridge'
 """
         )
         self.assertEqual(o.render(), expected)
@@ -877,10 +866,14 @@ config interface 'lan'
         native = self._tabs(
             """package network
 
-config interface 'lan'
+config device 'device_lan'
     option bridge_empty '1'
-    option proto 'none'
+    option name 'br-lan'
     option type 'bridge'
+
+config interface 'lan'
+    option device 'br-lan'
+    option proto 'none'
 """
         )
         expected = {
@@ -942,11 +935,11 @@ config interface 'lan'
     _bridge_21_bridge_uci = """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 
 config interface 'eth1'
-    option ifname 'eth1'
+    option device 'eth1'
     option proto 'none'
 
 config device 'device_lan'
@@ -955,33 +948,15 @@ config device 'device_lan'
     option proto 'none'
     list ports 'eth0'
     list ports 'eth1'
-    option vlan_filtering '1'
     option macaddr 'E8:94:F6:33:8C:00'
+    option vlan_filtering '1'
+
+config interface 'lan'
+    option device 'lan'
+    option proto 'none'
 """
 
     def test_parse_bridge_21(self):
-        o = OpenWrt(native=self._bridge_21_bridge_uci)
-        self.assertEqual(o.config, self._simple_bridge_netjson)
-
-    _old_bridge_uci = """package network
-
-config interface 'eth0'
-    option ifname 'eth0'
-    option proto 'none'
-
-config interface 'eth1'
-    option ifname 'eth1'
-    option proto 'none'
-
-config interface 'lan'
-    option ifname 'eth0 eth1'
-    option proto 'none'
-    option type 'bridge'
-    option vlan_filtering '1'
-    option macaddr 'E8:94:F6:33:8C:00'
-"""
-
-    def test_parse_old_bridge(self):
         o = OpenWrt(native=self._bridge_21_bridge_uci)
         self.assertEqual(o.config, self._simple_bridge_netjson)
 
@@ -1013,11 +988,11 @@ config interface 'lan'
     _l2_options_bridge_uci = """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 
 config interface 'eth1'
-    option ifname 'eth1'
+    option device 'eth1'
     option proto 'none'
 
 config device 'device_lan'
@@ -1041,11 +1016,7 @@ config device 'device_lan'
 
 config interface 'lan'
     option device 'br-lan'
-    option ifname 'eth0 eth1'
-    option macaddr 'E8:94:F6:33:8C:00'
     option proto 'none'
-    option type 'bridge'
-    option vlan_filtering '1'
 """
 
     def test_render_l2_options_bridge(self):
@@ -1075,8 +1046,6 @@ config device 'device_wan'
 
 config interface 'wan'
     option device 'wan'
-    option ifname 'wan'
-    option macaddr '00:11:22:33:44:55'
     option proto 'dhcp'
 """
 
@@ -1116,7 +1085,7 @@ config interface 'wan'
 config interface 'eth0'
     option dns '10.11.12.13 8.8.8.8'
     option dns_search 'netjson.org openwisp.org'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
@@ -1150,7 +1119,7 @@ config interface 'eth0'
 config interface 'eth0'
     option dns '10.11.12.13 8.8.8.8'
     option dns_search 'netjson.org openwisp.org'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
@@ -1168,7 +1137,7 @@ config interface 'eth0'
     list dns '8.8.8.8'
     list dns_search 'netjson.org'
     list dns_search 'openwisp.org'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
@@ -1196,7 +1165,7 @@ config interface 'eth0'
 
 config interface 'eth0'
     option dns_search 'netjson.org openwisp.org'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 """
         )
@@ -1221,7 +1190,7 @@ config interface 'eth0'
 
 config interface 'eth0'
     option dns_search 'netjson.org openwisp.org'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcpv6'
 """
         )
@@ -1239,7 +1208,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -1251,7 +1220,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -1329,13 +1298,13 @@ config interface 'eth0'
             """package network
 
 config interface 'lan'
-    option ifname 'eth0'
+    option device 'eth0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
 
 config interface 'lan_2'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
 """
         )
@@ -1346,7 +1315,7 @@ config interface 'lan_2'
             """package network
 
 config interface 'lan'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'static'
 """
         )
@@ -1364,7 +1333,7 @@ config interface 'lan'
             """package network
 
 config interface 'lan_1'
-    option ifname 'eth0.1'
+    option device 'eth0.1'
     option proto 'none'
 """
         )
@@ -1378,7 +1347,7 @@ config interface 'lan_1'
             """package network
 
 config interface 'lan_0'
-    option ifname 'eth-0'
+    option device 'eth-0'
     option proto 'none'
 """
         )
@@ -1436,9 +1405,7 @@ config device 'device_lan'
 
 config interface 'lan'
     option device 'br-lan'
-    option ifname 'eth0 eth1'
     option proto 'none'
-    option type 'bridge'
 """
         )
         self.assertEqual(o.render(), expected)
@@ -1459,7 +1426,7 @@ config interface 'lan'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     list ip6class 'wan6'
     list ip6class 'backbone'
     option proto 'none'
@@ -1485,7 +1452,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'dhcp'
     list reqopts '43'
     list reqopts '54'
@@ -1498,7 +1465,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     list ip6class 'wan6'
     list ip6class 'backbone'
     option proto 'none'
@@ -1527,7 +1494,7 @@ config interface 'eth0'
 config interface 'eth0'
     list dns '8.8.8.8'
     list dns '8.8.4.4'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -1552,7 +1519,7 @@ config interface 'eth0'
 config interface 'eth0'
     list dns_search 'openwisp.org'
     list dns_search 'netjson.org'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -1587,14 +1554,7 @@ config device 'device_br_lan'
 
 config interface 'br_lan'
     option device 'br-lan'
-    option forward_delay '15'
-    option hello_time '2'
-    option ifname 'eth0 eth1'
-    option max_age '20'
-    option priority '32767'
     option proto 'none'
-    option stp '1'
-    option type 'bridge'
 """
 
     def test_render_spanning_tree_bridge(self):
@@ -1654,16 +1614,7 @@ config device 'device_br_lan'
 
 config interface 'br_lan'
     option device 'br-lan'
-    option hash_max '512'
-    option ifname 'eth0 eth1'
-    option igmp_snooping '1'
-    option last_member_interval '100'
-    option multicast_querier '1'
     option proto 'none'
-    option query_interval '12500'
-    option query_response_interval '1000'
-    option robustness '2'
-    option type 'bridge'
 """
 
     def test_render_igmp_bridge(self):
@@ -1702,7 +1653,7 @@ config interface 'br_lan'
 
 config interface 'eth0'
     option auto '0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -1714,7 +1665,7 @@ config interface 'eth0'
 
 config interface 'eth0'
     option auto '0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -1741,8 +1692,6 @@ config device 'device_eth0'
 
 config interface 'eth0'
     option device 'eth0'
-    option ifname 'eth0'
-    option macaddr 'E8:94:F6:33:8C:00'
     option proto 'none'
 """
         )
@@ -1753,7 +1702,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option macaddr 'E8:94:F6:33:8C:00'
     option proto 'none'
 """
@@ -1784,7 +1733,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
@@ -1802,7 +1751,7 @@ config interface 'eth0'
             """package network
 
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 """
         )
