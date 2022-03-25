@@ -29,7 +29,8 @@ class TestWireguard(unittest.TestCase, _TabsMixin):
                         ],
                     }
                 ]
-            }
+            },
+            dsa=False,
         )
         expected = self._tabs(
             """package network
@@ -108,6 +109,7 @@ config interface 'wg0'
                 "private_key": "sGQitlaWF8LJjmNJOPoQkm9BVAtMtdfwpFT6zLSixlQ=",
                 "ip_address_8097b09be57a4b278e2ef2ea9ea809f3": "10.0.0.3",
             },
+            dsa=False,
         )
         expected = self._tabs(
             """package network

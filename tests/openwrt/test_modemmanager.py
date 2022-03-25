@@ -42,11 +42,11 @@ config interface 'wwan0'
 """
 
     def test_render_modemmanager_interface(self):
-        result = OpenWrt(self._modemmanager_interface_netjson).render()
+        result = OpenWrt(self._modemmanager_interface_netjson, dsa=False).render()
         expected = self._tabs(self._modemmanager_interface_uci)
         self.assertEqual(result, expected)
 
     def test_parse_modemmanager_interface(self):
-        result = OpenWrt(native=self._modemmanager_interface_uci).config
+        result = OpenWrt(native=self._modemmanager_interface_uci, dsa=False).config
         expected = self._modemmanager_interface_netjson
         self.assertDictEqual(result, expected)

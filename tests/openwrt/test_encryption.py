@@ -47,12 +47,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa3_personal(self):
-        o = OpenWrt(self._wpa3_personal_netjson)
+        o = OpenWrt(self._wpa3_personal_netjson, dsa=False)
         expected = self._tabs(self._wpa3_personal_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa3_personal(self):
-        o = OpenWrt(native=self._wpa3_personal_uci)
+        o = OpenWrt(native=self._wpa3_personal_uci, dsa=False)
         self.assertEqual(o.config, self._wpa3_personal_netjson)
 
     _wpa2_personal_mixed_netjson = {
@@ -94,7 +94,7 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_personal_mixed(self):
-        o = OpenWrt(self._wpa2_personal_mixed_netjson)
+        o = OpenWrt(self._wpa2_personal_mixed_netjson, dsa=False)
         expected = self._tabs(self._wpa2_personal_mixed_uci)
         self.assertEqual(o.render(), expected)
 
@@ -141,12 +141,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_personal(self):
-        o = OpenWrt(self._wpa2_personal_netjson)
+        o = OpenWrt(self._wpa2_personal_netjson, dsa=False)
         expected = self._tabs(self._wpa2_personal_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_personal(self):
-        o = OpenWrt(native=self._wpa2_personal_uci)
+        o = OpenWrt(native=self._wpa2_personal_uci, dsa=False)
         self.assertEqual(o.config, self._wpa2_personal_netjson)
 
     _wpa_personal_mixed_netjson = {
@@ -188,12 +188,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa_personal_mixed(self):
-        o = OpenWrt(self._wpa_personal_mixed_netjson)
+        o = OpenWrt(self._wpa_personal_mixed_netjson, dsa=False)
         expected = self._tabs(self._wpa_personal_mixed_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa_personal_mixed(self):
-        o = OpenWrt(native=self._wpa_personal_mixed_uci)
+        o = OpenWrt(native=self._wpa_personal_mixed_uci, dsa=False)
         self.assertEqual(o.config, self._wpa_personal_mixed_netjson)
 
     _wpa_personal_netjson = {
@@ -233,12 +233,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa_personal(self):
-        o = OpenWrt(self._wpa_personal_netjson)
+        o = OpenWrt(self._wpa_personal_netjson, dsa=False)
         expected = self._tabs(self._wpa_personal_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa_personal(self):
-        o = OpenWrt(native=self._wpa_personal_uci)
+        o = OpenWrt(native=self._wpa_personal_uci, dsa=False)
         self.assertEqual(o.config, self._wpa_personal_netjson)
 
     _wpa2_enterprise_mixed_ap_netjson = {
@@ -282,7 +282,7 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_enterprise_mixed_ap(self):
-        o = OpenWrt(self._wpa2_enterprise_mixed_ap_netjson)
+        o = OpenWrt(self._wpa2_enterprise_mixed_ap_netjson, dsa=False)
         expected = self._tabs(self._wpa2_enterprise_mixed_ap_uci)
         self.assertEqual(o.render(), expected)
 
@@ -341,7 +341,7 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa3_enterprise(self):
-        o = OpenWrt(self._wpa3_enterprise_ap_netjson)
+        o = OpenWrt(self._wpa3_enterprise_ap_netjson, dsa=False)
         expected = self._tabs(self._wpa3_enterprise_ap_uci)
         self.assertEqual(o.render(), expected)
 
@@ -398,12 +398,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_enterprise(self):
-        o = OpenWrt(self._wpa2_enterprise_ap_netjson)
+        o = OpenWrt(self._wpa2_enterprise_ap_netjson, dsa=False)
         expected = self._tabs(self._wpa2_enterprise_ap_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_enterprise(self):
-        o = OpenWrt(native=self._wpa2_enterprise_ap_uci)
+        o = OpenWrt(native=self._wpa2_enterprise_ap_uci, dsa=False)
         self.assertEqual(o.config, self._wpa2_enterprise_ap_netjson)
 
     _wpa_enterprise_mixed_ap_netjson = {
@@ -445,12 +445,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa_enterprise_mixed_ap(self):
-        o = OpenWrt(self._wpa_enterprise_mixed_ap_netjson)
+        o = OpenWrt(self._wpa_enterprise_mixed_ap_netjson, dsa=False)
         expected = self._tabs(self._wpa_enterprise_mixed_ap_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa_enterprise_mixed_ap(self):
-        o = OpenWrt(native=self._wpa_enterprise_mixed_ap_uci)
+        o = OpenWrt(native=self._wpa_enterprise_mixed_ap_uci, dsa=False)
         self.assertEqual(o.config, self._wpa_enterprise_mixed_ap_netjson)
 
     _wpa_enterprise_ap_netjson = {
@@ -492,12 +492,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa_enterprise_ap(self):
-        o = OpenWrt(self._wpa_enterprise_ap_netjson)
+        o = OpenWrt(self._wpa_enterprise_ap_netjson, dsa=False)
         expected = self._tabs(self._wpa_enterprise_ap_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa_enterprise_ap(self):
-        o = OpenWrt(native=self._wpa_enterprise_ap_uci)
+        o = OpenWrt(native=self._wpa_enterprise_ap_uci, dsa=False)
         self.assertEqual(o.config, self._wpa_enterprise_ap_netjson)
 
     _wpa3_enterprise_client_netjson = {
@@ -546,7 +546,7 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa3_enterprise_client(self):
-        o = OpenWrt(self._wpa3_enterprise_client_netjson)
+        o = OpenWrt(self._wpa3_enterprise_client_netjson, dsa=False)
         expected = self._tabs(self._wpa3_enterprise_client_uci)
         self.assertEqual(o.render(), expected)
 
@@ -599,12 +599,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_enterprise_client(self):
-        o = OpenWrt(self._wpa2_enterprise_tls_client_netjson)
+        o = OpenWrt(self._wpa2_enterprise_tls_client_netjson, dsa=False)
         expected = self._tabs(self._wpa2_enterprise_client_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_enterprise_client(self):
-        o = OpenWrt(native=self._wpa2_enterprise_client_uci)
+        o = OpenWrt(native=self._wpa2_enterprise_client_uci, dsa=False)
         self.assertEqual(o.config, self._wpa2_enterprise_tls_client_netjson)
 
     _wpa2_enterprise_ttls_client_netjson = {
@@ -652,12 +652,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_enterprise_ttls_client(self):
-        o = OpenWrt(self._wpa2_enterprise_ttls_client_netjson)
+        o = OpenWrt(self._wpa2_enterprise_ttls_client_netjson, dsa=False)
         expected = self._tabs(self._wpa2_enterprise_ttls_client_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_enterprise_ttls_client(self):
-        o = OpenWrt(native=self._wpa2_enterprise_ttls_client_uci)
+        o = OpenWrt(native=self._wpa2_enterprise_ttls_client_uci, dsa=False)
         self.assertEqual(o.config, self._wpa2_enterprise_ttls_client_netjson)
 
     _wpa2_enterprise_peap_client_netjson = {
@@ -705,12 +705,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_enterprise_peap_client(self):
-        o = OpenWrt(self._wpa2_enterprise_peap_client_netjson)
+        o = OpenWrt(self._wpa2_enterprise_peap_client_netjson, dsa=False)
         expected = self._tabs(self._wpa2_enterprise_peap_client_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_enterprise_peap_client(self):
-        o = OpenWrt(native=self._wpa2_enterprise_peap_client_uci)
+        o = OpenWrt(native=self._wpa2_enterprise_peap_client_uci, dsa=False)
         self.assertEqual(o.config, self._wpa2_enterprise_peap_client_netjson)
 
     _wpa2_enterprise_tls_client_auth_netjson = {
@@ -758,7 +758,7 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_enterprise_tls_client_auth(self):
-        o = OpenWrt(self._wpa2_enterprise_tls_client_auth_netjson)
+        o = OpenWrt(self._wpa2_enterprise_tls_client_auth_netjson, dsa=False)
         expected = self._tabs(self._wpa2_enterprise_tls_client_auth_uci)
         self.assertEqual(o.render(), expected)
 
@@ -800,12 +800,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wep_open(self):
-        o = OpenWrt(self._wep_open_netjson)
+        o = OpenWrt(self._wep_open_netjson, dsa=False)
         expected = self._tabs(self._wep_open_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wep_open(self):
-        o = OpenWrt(native=self._wep_open_uci)
+        o = OpenWrt(native=self._wep_open_uci, dsa=False)
         self.assertEqual(o.config, self._wep_open_netjson)
 
     _wep_shared_netjson = {
@@ -846,12 +846,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wep_shared(self):
-        o = OpenWrt(self._wep_shared_netjson)
+        o = OpenWrt(self._wep_shared_netjson, dsa=False)
         expected = self._tabs(self._wep_shared_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wep_shared(self):
-        o = OpenWrt(native=self._wep_shared_uci)
+        o = OpenWrt(native=self._wep_shared_uci, dsa=False)
         self.assertEqual(o.config, self._wep_shared_netjson)
 
     def test_encryption_disabled(self):
@@ -874,7 +874,8 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            }
+            },
+            dsa=False,
         )
         expected = self._tabs(
             """package network
@@ -911,7 +912,8 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            }
+            },
+            dsa=False,
         )
         expected = self._tabs(
             """package network
@@ -970,12 +972,12 @@ config wifi-iface 'wifi_mesh0'
 """
 
     def test_render_wpa2_80211s(self):
-        o = OpenWrt(self._wpa2_80211s_netjson)
+        o = OpenWrt(self._wpa2_80211s_netjson, dsa=False)
         expected = self._tabs(self._wpa2_80211s_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_80211s(self):
-        o = OpenWrt(native=self._wpa2_80211s_uci)
+        o = OpenWrt(native=self._wpa2_80211s_uci, dsa=False)
         self.assertEqual(o.config, self._wpa2_80211s_netjson)
 
     _wpa2_adhoc_netjson = {
@@ -1017,12 +1019,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wpa2_adhoc(self):
-        o = OpenWrt(self._wpa2_adhoc_netjson)
+        o = OpenWrt(self._wpa2_adhoc_netjson, dsa=False)
         expected = self._tabs(self._wpa2_adhoc_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wpa2_adhoc(self):
-        o = OpenWrt(native=self._wpa2_adhoc_uci)
+        o = OpenWrt(native=self._wpa2_adhoc_uci, dsa=False)
         self.assertEqual(o.config, self._wpa2_adhoc_netjson)
 
     _wps_ap_netjson = {
@@ -1065,12 +1067,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wps_ap(self):
-        o = OpenWrt(self._wps_ap_netjson)
+        o = OpenWrt(self._wps_ap_netjson, dsa=False)
         expected = self._tabs(self._wps_ap_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wps_ap(self):
-        o = OpenWrt(native=self._wps_ap_uci)
+        o = OpenWrt(native=self._wps_ap_uci, dsa=False)
         self.assertEqual(o.config, self._wps_ap_netjson)
 
     def test_render_ieee80211w(self):

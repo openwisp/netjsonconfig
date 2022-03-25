@@ -31,8 +31,8 @@ class OpenWrt(BaseBackend):
     renderer = OpenWrtRenderer
     list_identifiers = ['name', 'config_value', 'id']
 
-    def __init__(self, dsa=True, *args, **kwargs):
-        self.dsa = dsa
+    def __init__(self, *args, **kwargs):
+        self.dsa = kwargs.pop('dsa', True)
         super().__init__(*args, **kwargs)
 
     def _generate_contents(self, tar):

@@ -1,3 +1,4 @@
+import json
 import unittest
 from copy import deepcopy
 
@@ -935,8 +936,6 @@ config interface 'lan'
     option ifname 'eth0 eth1'
     option proto 'none'
     option type 'bridge'
-    option vlan_filtering '1'
-    option macaddr 'E8:94:F6:33:8C:00'
 """
 
     def test_parse_legacy_bridge(self):

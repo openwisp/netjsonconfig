@@ -19,6 +19,7 @@ class BaseConverter(object):
         self.backend = backend
         self.netjson = backend.config
         self.intermediate_data = backend.intermediate_data
+        self.dsa = getattr(backend, 'dsa', None)
 
     @classmethod
     def should_run_forward(cls, config):
