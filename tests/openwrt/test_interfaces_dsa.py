@@ -666,6 +666,9 @@ config interface 'ppp0'
 config device 'device_dev_usb_modem1'
     option name '/dev/usb/modem1'
 
+config device 'device_custom_if0'
+    option name 'custom_if0'
+
 config interface 'custom_if0'
     option device '/dev/usb/modem1'
     option device 'custom_if0'
@@ -919,7 +922,6 @@ config interface 'lan_2'
                 "network": "lan_2",
                 "type": "ethernet",
                 "addresses": [{"proto": "dhcp", "family": "ipv4"}],
-                "device": "lan",
             }
         )
         self.assertEqual(o.config, netjson)
@@ -1041,7 +1043,6 @@ config interface 'eth1'
 config device 'device_lan'
     option type 'bridge'
     option name 'lan'
-    option proto 'none'
     list ports 'eth0'
     list ports 'eth1'
     option macaddr 'E8:94:F6:33:8C:00'
@@ -1135,7 +1136,7 @@ config interface 'lan'
             {
                 "name": "wan",
                 "type": "ethernet",
-                "macaddr": "00:11:22:33:44:55",
+                "mac": "00:11:22:33:44:55",
                 "addresses": [{"proto": "dhcp", "family": "ipv4"}],
             }
         ]
@@ -1779,9 +1780,10 @@ config interface 'br_lan'
 
         igmp_snooping_disabled_netjson = deepcopy(self._igmp_bridge_netjson)
         igmp_snooping_disabled_netjson['interfaces'][0]['igmp_snooping'] = False
-        # self.assertNotIn(
-        #     'option robustness', OpenWrt(igmp_snooping_disabled_netjson).render()
-        # )
+        self.assertIn(
+            "option igmp_snooping '0'",
+            OpenWrt(igmp_snooping_disabled_netjson).render(),
+        )
 
     def test_parse_igmp_bridge(self):
         o = OpenWrt(native=self._igmp_bridge_uci)

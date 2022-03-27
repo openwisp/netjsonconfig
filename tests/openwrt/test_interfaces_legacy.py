@@ -1,4 +1,3 @@
-import json
 import unittest
 from copy import deepcopy
 
