@@ -663,14 +663,10 @@ config interface 'ppp0'
         native = self._tabs(
             """package network
 
-config device 'device_dev_usb_modem1'
-    option name '/dev/usb/modem1'
-
 config device 'device_custom_if0'
     option name 'custom_if0'
 
 config interface 'custom_if0'
-    option device '/dev/usb/modem1'
     option device 'custom_if0'
     option ipv6 '1'
     option keepalive '3'
@@ -683,7 +679,6 @@ config interface 'custom_if0'
                     "name": "custom_if0",
                     "type": "other",
                     "proto": "custom",
-                    "device": "/dev/usb/modem1",
                     "keepalive": '3',
                     "ipv6": '1',
                 }
