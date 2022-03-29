@@ -792,7 +792,6 @@ config interface 'mobile0'
                 "type": "bridge",
                 "bridge_members": ["eth0", "eth1"],
                 "mac": "E8:94:F6:33:8C:00",
-                "vlan_filtering": True,
             },
         ]
     }
@@ -818,7 +817,6 @@ config device 'device_lan'
     list ports 'eth0'
     list ports 'eth1'
     option type 'bridge'
-    option vlan_filtering '1'
 
 config interface 'lan'
     option device 'br-lan'
@@ -1041,7 +1039,6 @@ config device 'device_lan'
     list ports 'eth0'
     list ports 'eth1'
     option macaddr 'E8:94:F6:33:8C:00'
-    option vlan_filtering '1'
 
 config interface 'lan'
     option device 'lan'
@@ -1062,7 +1059,6 @@ config interface 'lan'
                 "type": "bridge",
                 "bridge_members": ["eth0", "eth1"],
                 "mac": "E8:94:F6:33:8C:00",
-                "vlan_filtering": True,
                 'rpfilter': 'strict',
                 'txqueuelen': 1000,
                 'neighreachabletime': 30000,
@@ -1110,7 +1106,6 @@ config device 'device_lan'
     option sendredirects '1'
     option txqueuelen '1000'
     option type 'bridge'
-    option vlan_filtering '1'
 
 config interface 'lan'
     option device 'br-lan'

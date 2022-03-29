@@ -264,14 +264,6 @@ schema = merge_config(
                                 "maximum": 40,
                                 "propertyOrder": 4,
                             },
-                            "vlan_filtering": {
-                                "type": "boolean",
-                                "title": "VLAN filtering",
-                                "description": "enables VLAN aware bridge mode",
-                                "default": False,
-                                "format": "checkbox",
-                                "propertyOrder": 5,
-                            },
                         }
                     }
                 ]
