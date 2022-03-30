@@ -31,13 +31,14 @@ class Interfaces(OpenWrtConverter):
         'all': ['vlan_filtering', 'macaddr'],
     }
     _device_config = {}
+    _custom_protocols = ['ppp']
 
     def to_intermediate_loop(self, block, result, index=None):
         result.setdefault('network', [])
         uci_name = self._get_uci_name(block.get('network') or block['name'])
         address_list = self.__intermediate_addresses(block)
         interface = self.__intermediate_interface(block, uci_name)
-        if self.dsa:
+        if self.dsa and interface.get('proto', None) not in self._custom_protocols:
             uci_device = self.__intermediate_device(interface)
             if uci_device:
                 result['network'].append(self.sorted_dict(uci_device))
@@ -266,7 +267,7 @@ class Interfaces(OpenWrtConverter):
         """
         Removes options that are not required in the configuration.
         """
-        if self.dsa:
+        if self.dsa and interface.get('proto', None) not in self._custom_protocols:
             repeated_options = (
                 ['ifname', 'type', 'bridge_members']
                 + self._bridge_interface_options['stp']
