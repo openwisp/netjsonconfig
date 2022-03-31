@@ -256,6 +256,9 @@ class Interfaces(OpenWrtConverter):
             'acceptlocal',
             'sendredirects',
             'multicast',
+            'mtu',
+            'mtu6',
+            'dadtransmits',
         ]
         for option in l2_options:
             if option in interface:
@@ -445,6 +448,9 @@ class Interfaces(OpenWrtConverter):
             'neighlocktime',
             'igmpversion',
             'mldversion',
+            'mtu',
+            'mtu6',
+            'dadtransmits',
         ]:
             try:
                 value = interface.pop(option)
