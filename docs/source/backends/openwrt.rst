@@ -809,7 +809,7 @@ usually the LAN bridge:
                     "radio": "radio0",
                     "mode": "access_point",
                     "ssid": "wifi service",
-                    # "network": ["lan"]  this proeprty can be omitted
+                    # "network": ["lan"]  this property can be omitted
                     # but may be overridden if needed
                 }
             },

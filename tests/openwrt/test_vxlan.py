@@ -24,8 +24,7 @@ class TestVxlan(unittest.TestCase, _TabsMixin):
                         "ttl": 64,
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         expected = self._tabs(
             """package network
@@ -103,7 +102,6 @@ config interface 'vxlan1'
                 "vtep_e9081f8d67c8470d850ceb9c33bd0314": "10.0.0.2",
                 "vni_e9081f8d67c8470d850ceb9c33bd0314": "2",
             },
-            dsa=False,
         )
         expected = self._tabs(
             """package network

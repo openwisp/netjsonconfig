@@ -32,11 +32,11 @@ config interface 'xdsl'
 """
 
     def test_render_dialup_interface(self):
-        result = OpenWrt(self._dialup_interface_netjson, dsa=False).render()
+        result = OpenWrt(self._dialup_interface_netjson).render()
         expected = self._tabs(self._dialup_interface_uci)
         self.assertEqual(result, expected)
 
     def test_parse_dialup_interface(self):
-        result = OpenWrt(native=self._dialup_interface_uci, dsa=False).config
+        result = OpenWrt(native=self._dialup_interface_uci).config
         expected = self._dialup_interface_netjson
         self.assertDictEqual(result, expected)

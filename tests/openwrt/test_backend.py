@@ -149,7 +149,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     }
 
     def test_generate(self):
-        o = OpenWrt(self._config1, dsa=False)
+        o = OpenWrt(self._config1)
         tar = tarfile.open(fileobj=o.generate(), mode='r')
         self.assertEqual(len(tar.getmembers()), 2)
         # network

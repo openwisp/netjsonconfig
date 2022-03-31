@@ -32,13 +32,26 @@ class Interfaces(OpenWrtConverter):
     }
     _device_config = {}
     _custom_protocols = ['ppp']
+    _interface_dsa_types = ['loopback', 'ethernet', 'bridge']
+
+    def __set_dsa(self, interface):
+        """
+        changes dsa property to manange new syntax introduced in
+        OpenWrt 21.02 by checking supported types and protocols
+        """
+        self.dsa = (
+            self.dsa
+            and interface.get('proto', None) not in self._custom_protocols
+            and interface.get('type', None) in self._interface_dsa_types
+        )
 
     def to_intermediate_loop(self, block, result, index=None):
         result.setdefault('network', [])
         uci_name = self._get_uci_name(block.get('network') or block['name'])
         address_list = self.__intermediate_addresses(block)
         interface = self.__intermediate_interface(block, uci_name)
-        if self.dsa and interface.get('proto', None) not in self._custom_protocols:
+        self.__set_dsa(interface)
+        if self.dsa:
             uci_device = self.__intermediate_device(interface)
             if uci_device:
                 result['network'].append(self.sorted_dict(uci_device))
@@ -270,7 +283,7 @@ class Interfaces(OpenWrtConverter):
         """
         Removes options that are not required in the configuration.
         """
-        if self.dsa and interface.get('proto', None) not in self._custom_protocols:
+        if self.dsa:
             repeated_options = (
                 ['ifname', 'type', 'bridge_members']
                 + self._bridge_interface_options['stp']
@@ -424,7 +437,7 @@ class Interfaces(OpenWrtConverter):
                     for option in device_config:
                         if 'name' in option:
                             continue
-                        # ifname has been renamed to ports in OpenWrt 21.02
+                        # ifname has been renamed to ports in OpenWrt 21.02 bridge
                         if option == 'ports':
                             interface['ifname'] = ' '.join(device_config[option])
                         else:

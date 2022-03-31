@@ -333,7 +333,7 @@ class Wireless(OpenWrtConverter):
                     del result[index]['network']
         return result
 
-    def _track_bridged_wifi(self, intermediate_data=None):
+    def _track_bridged_wifi(self, intermediate_data=None):  # noqa: C901
         """
         Keeps track of wireless interfaces which are members of
         bridges in order to automatically determine the "network"
@@ -349,12 +349,17 @@ class Wireless(OpenWrtConverter):
                 continue
             # Get list of bridge members
             try:
-                bridge_members = interface.get('ifname', None).split(' ')
+                if self.dsa and interface.get('ports', []):
+                    bridge_members = interface.get('ports', [])
+                else:
+                    bridge_members = interface.get('ifname', None).split(' ')
             except AttributeError:
                 # Bridge interface does not contain bridge members.
                 # Bridge is empty.
                 continue
             bridge_name = interface['.name']
+            if self.dsa:
+                bridge_name = bridge_name.lstrip('device_')
             for physical_interface in bridge_members:
                 # A physical interface can be a member of multiple
                 # bridges. Hence, we create a list of bridge interfaces

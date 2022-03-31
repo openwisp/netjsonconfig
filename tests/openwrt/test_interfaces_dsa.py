@@ -739,13 +739,10 @@ config interface 'eth0'
         expected = self._tabs(
             """package network
 
-config device 'device_mobile0'
-    option mtu '1400'
-    option name 'mobile0'
-
 config interface 'mobile0'
     option custom_attr 'yes'
-    option device 'mobile0'
+    option ifname 'mobile0'
+    option mtu '1400'
     option proto '3g'
 """
         )

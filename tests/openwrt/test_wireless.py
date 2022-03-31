@@ -57,12 +57,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wifi_interface(self):
-        o = OpenWrt(self._wifi_netjson, dsa=False)
+        o = OpenWrt(self._wifi_netjson)
         expected = self._tabs(self._wifi_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wifi_interface(self):
-        o = OpenWrt(native=self._wifi_uci, dsa=False)
+        o = OpenWrt(native=self._wifi_uci)
         self.assertEqual(o.config, self._wifi_netjson)
 
     def test_parse_wifi_interface_partial(self):
@@ -75,8 +75,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyWifiAP'
-""",
-            dsa=False,
+"""
         )
         expected = {
             "interfaces": [
@@ -147,12 +146,12 @@ config wifi-iface 'wifi_wlan1'
 """
 
     def test_render_multiple_wifi(self):
-        o = OpenWrt(self._multiple_wifi_netjson, dsa=False)
+        o = OpenWrt(self._multiple_wifi_netjson)
         expected = self._tabs(self._multiple_wifi_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_multiple_wifi(self):
-        o = OpenWrt(native=self._multiple_wifi_uci, dsa=False)
+        o = OpenWrt(native=self._multiple_wifi_uci)
         self.assertEqual(o.config, self._multiple_wifi_netjson)
 
     _wifi_bridge_netjson = {
@@ -180,8 +179,11 @@ config wifi-iface 'wifi_wlan1'
     }
     _wifi_bridge_uci = """package network
 
+config device 'device_eth0_1'
+    option name 'eth0.1'
+
 config interface 'eth0_1'
-    option ifname 'eth0.1'
+    option device 'eth0.1'
     option proto 'none'
 
 config interface 'wlan0'
@@ -206,12 +208,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wifi_bridge(self):
-        o = OpenWrt(self._wifi_bridge_netjson, dsa=False)
+        o = OpenWrt(self._wifi_bridge_netjson)
         expected = self._tabs(self._wifi_bridge_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wifi_bridge(self):
-        o = OpenWrt(native=self._wifi_bridge_uci, dsa=False)
+        o = OpenWrt(native=self._wifi_bridge_uci)
         wifi_bridge_netjson = self._wifi_bridge_netjson.copy()
         self.assertEqual(o.config, wifi_bridge_netjson)
 
@@ -233,8 +235,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wifi_networks_uci = """package network
 
+config device 'device_eth0'
+    option name 'eth0'
+
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 
 config interface 'wlan0'
@@ -252,12 +257,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wifi_networks(self):
-        o = OpenWrt(self._wifi_networks_netjson, dsa=False)
+        o = OpenWrt(self._wifi_networks_netjson)
         expected = self._tabs(self._wifi_networks_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wifi_network(self):
-        o = OpenWrt(native=self._wifi_networks_uci, dsa=False)
+        o = OpenWrt(native=self._wifi_networks_uci)
         self.assertEqual(o.config, self._wifi_networks_netjson)
 
     def test_render_wireless_empty_network_attr(self):
@@ -275,8 +280,7 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         expected = self._tabs(
             """package network
@@ -312,8 +316,7 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         # pattern does not validate
         with self.assertRaises(ValidationError):
@@ -353,12 +356,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_interface_network(self):
-        o = OpenWrt(self._interface_network_netjson, dsa=False)
+        o = OpenWrt(self._interface_network_netjson)
         expected = self._tabs(self._interface_network_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_interface_network(self):
-        o = OpenWrt(native=self._interface_network_uci, dsa=False)
+        o = OpenWrt(native=self._interface_network_uci)
         self.assertEqual(o.config, self._interface_network_netjson)
 
     def test_network_dot_conversion(self):
@@ -376,8 +379,7 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         expected = self._tabs(
             """package network
@@ -413,8 +415,7 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         expected = self._tabs(
             """package network
@@ -474,12 +475,12 @@ config wifi-iface 'wifi_wlan0'
         see issue #35
         https://github.com/openwisp/netjsonconfig/issues/35
         """
-        o = OpenWrt(self._disabled_netjson, dsa=False)
+        o = OpenWrt(self._disabled_netjson)
         expected = self._tabs(self._disabled_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_interface_disabled_full(self):
-        o = OpenWrt(native=self._disabled_uci, dsa=False)
+        o = OpenWrt(native=self._disabled_uci)
         self.assertEqual(o.config, self._disabled_netjson)
 
     def test_parse_interface_disabled_partial(self):
@@ -494,8 +495,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'sta'
     option network 'wlan0'
     option ssid 'mywifi'
-""",
-            dsa=False,
+"""
         )
         self.assertEqual(o.config, self._disabled_netjson)
 
@@ -531,12 +531,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_wds_ap(self):
-        o = OpenWrt(self._wds_netjson, dsa=False)
+        o = OpenWrt(self._wds_netjson)
         expected = self._tabs(self._wds_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wds_ap(self):
-        o = OpenWrt(native=self._wds_uci, dsa=False)
+        o = OpenWrt(native=self._wds_uci)
         self.assertEqual(o.config, self._wds_netjson)
 
     def test_wifi_options_zero(self):
@@ -561,8 +561,7 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         expected = self._tabs(
             """package network
@@ -619,12 +618,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_macfilter(self):
-        o = OpenWrt(self._macfilter_netjson, dsa=False)
+        o = OpenWrt(self._macfilter_netjson)
         expected = self._tabs(self._macfilter_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_macfilter(self):
-        o = OpenWrt(native=self._macfilter_uci, dsa=False)
+        o = OpenWrt(native=self._macfilter_uci)
         self.assertEqual(o.config, self._macfilter_netjson)
 
     def test_maclist_format(self):
@@ -643,8 +642,7 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         o.validate()
         # too short
@@ -732,12 +730,12 @@ config wifi-iface 'wifi_wlan1'
 """
 
     def test_render_wds_bridge(self):
-        o = OpenWrt(self._wds_bridge_netjson, dsa=False)
+        o = OpenWrt(self._wds_bridge_netjson)
         expected = self._tabs(self._wds_bridge_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wds_bridge(self):
-        o = OpenWrt(native=self._wds_bridge_uci, dsa=False)
+        o = OpenWrt(native=self._wds_bridge_uci)
         self.assertEqual(o.config, self._wds_bridge_netjson)
 
     _80211r_netjson = {
@@ -781,12 +779,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_access_point_80211r(self):
-        o = OpenWrt(self._80211r_netjson, dsa=False)
+        o = OpenWrt(self._80211r_netjson)
         expected = self._tabs(self._80211r_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_access_point_80211r(self):
-        o = OpenWrt(native=self._80211r_uci, dsa=False)
+        o = OpenWrt(native=self._80211r_uci)
         self.assertEqual(o.config, self._80211r_netjson)
 
         with self.subTest('ignore bogus reassociation_deadline'):
@@ -794,7 +792,7 @@ config wifi-iface 'wifi_wlan0'
             bogus_uci = bogus_uci.replace(
                 "reassociation_deadline '1000'", "reassociation_deadline 'bogus'"
             )
-            o = OpenWrt(native=bogus_uci, dsa=False)
+            o = OpenWrt(native=bogus_uci)
             netjson_80211r = deepcopy(self._80211r_netjson)
             del netjson_80211r['interfaces'][0]['wireless']['reassociation_deadline']
             self.assertEqual(o.config, netjson_80211r)
@@ -850,12 +848,12 @@ config wifi-iface 'wifi_mesh0'
 """
 
     def test_render_mesh_80211s(self):
-        o = OpenWrt(self._80211s_netjson, dsa=False)
+        o = OpenWrt(self._80211s_netjson)
         expected = self._tabs(self._80211s_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_mesh_80211s(self):
-        o = OpenWrt(native=self._80211s_uci, dsa=False)
+        o = OpenWrt(native=self._80211s_uci)
         self.assertEqual(o.config, self._80211s_netjson)
 
     _bssid_netjson = {
@@ -874,7 +872,7 @@ config wifi-iface 'wifi_mesh0'
     }
 
     def test_bssid_format(self):
-        o = OpenWrt(self._bssid_netjson, dsa=False)
+        o = OpenWrt(self._bssid_netjson)
         o.validate()
         # too short
         o.config['interfaces'][0]['wireless']['bssid'] = '00:11:22:33:44'
@@ -889,7 +887,7 @@ config wifi-iface 'wifi_mesh0'
             o.validate()
 
     def test_bssid_adhoc(self):
-        o = OpenWrt(self._bssid_netjson, dsa=False)
+        o = OpenWrt(self._bssid_netjson)
         # bssid is required
         del o.config['interfaces'][0]['wireless']['bssid']
         with self.assertRaises(ValidationError):
@@ -900,7 +898,7 @@ config wifi-iface 'wifi_mesh0'
             o.validate()
 
     def test_bssid_station(self):
-        o = OpenWrt(self._bssid_netjson, dsa=False)
+        o = OpenWrt(self._bssid_netjson)
         o.config['interfaces'][0]['wireless']['mode'] = 'station'
         o.validate()
         # bssid is not required
@@ -943,12 +941,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_list_option(self):
-        o = OpenWrt(self._list_option_netjson, dsa=False)
+        o = OpenWrt(self._list_option_netjson)
         expected = self._tabs(self._list_option_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_list_option(self):
-        o = OpenWrt(native=self._list_option_uci, dsa=False)
+        o = OpenWrt(native=self._list_option_uci)
         self.assertEqual(o.config, self._list_option_netjson)
 
     def test_isolate(self):
@@ -966,8 +964,7 @@ config wifi-iface 'wifi_wlan0'
                         },
                     }
                 ]
-            },
-            dsa=False,
+            }
         )
         self.assertIn("option isolate '1'", o.render())
         # try entering an invalid value
@@ -1003,12 +1000,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_macaddr_override(self):
-        o = OpenWrt(self._macaddr_netjson, dsa=False)
+        o = OpenWrt(self._macaddr_netjson)
         expected = self._tabs(self._macaddr_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_macaddr_override(self):
-        o = OpenWrt(native=self._macaddr_uci, dsa=False)
+        o = OpenWrt(native=self._macaddr_uci)
         self.assertEqual(o.config, self._macaddr_netjson)
 
     _custom_id_netjson = {
@@ -1042,12 +1039,12 @@ config wifi-iface 'arbitrary_id'
 """
 
     def test_render_wifi_custom_id(self):
-        o = OpenWrt(self._custom_id_netjson, dsa=False)
+        o = OpenWrt(self._custom_id_netjson)
         expected = self._tabs(self._custom_id_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_wifi_custom_id(self):
-        o = OpenWrt(native=self._custom_id_uci, dsa=False)
+        o = OpenWrt(native=self._custom_id_uci)
         self.assertEqual(o.config, self._custom_id_netjson)
 
     _wifi_simplified_bridge_netjson = {
@@ -1071,10 +1068,15 @@ config wifi-iface 'arbitrary_id'
     }
     _wifi_simplified_bridge_uci = """package network
 
-config interface 'lan'
-    option ifname 'eth0 wlan0'
-    option proto 'none'
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'eth0'
+    list ports 'wlan0'
     option type 'bridge'
+
+config interface 'lan'
+    option device 'br-lan'
+    option proto 'none'
 
 config interface 'wlan0'
     option ifname 'wlan0'
@@ -1091,10 +1093,12 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_simplified_wifi_bridge(self):
-        o = OpenWrt(self._wifi_simplified_bridge_netjson, dsa=False)
+        o = OpenWrt(
+            self._wifi_simplified_bridge_netjson,
+        )
         expected = self._tabs(self._wifi_simplified_bridge_uci)
         self.assertEqual(o.render(), expected)
 
     def test_parse_simplified_wifi_bridge(self):
-        o = OpenWrt(native=self._wifi_simplified_bridge_uci, dsa=False)
+        o = OpenWrt(native=self._wifi_simplified_bridge_uci)
         self.assertEqual(o.config, self._wifi_simplified_bridge_netjson)
