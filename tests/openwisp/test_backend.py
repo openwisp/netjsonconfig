@@ -236,3 +236,7 @@ config 'system' 'system'
         sleep(1)
         checksum2 = md5(o.generate().getvalue()).hexdigest()
         self.assertEqual(checksum1, checksum2)
+
+    def test_default_dsa(self):
+        o = OpenWisp({"general": {"hostname": "test"}})
+        self.assertEqual(o.dsa, False)

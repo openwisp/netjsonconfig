@@ -1599,5 +1599,3 @@ config interface 'eth0'
 """
         )
         self.assertEqual(o.render(), expected)
-
-

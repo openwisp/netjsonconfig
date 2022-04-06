@@ -13,6 +13,39 @@ The ``OpenWrt`` backend allows to generate OpenWRT compatible configurations.
     and it is the default configuration system installed on `OpenWRT <http://openwrt.org>`_
     and its fork `LEDE <https://www.lede-project.org/>`_.
 
+.. important::
+
+    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21 <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
+    By default, the netjsonconfig library generates configuration in the new syntax.
+    If you want to generate configuration in the legacy syntax (OpenWrt <=19), then
+    set ``dsa=False`` while instantiating object of ``netjsonconfig.OpenWrt`` class.
+
+    .. code-block:: python
+
+        >>> from netjsonconfig import OpenWrt
+        >>>
+        >>> o = OpenWrt(
+        ...     config = {
+        ...         "interfaces": [
+        ...             {
+        ...                 "name": "eth0",
+        ...                 "type": "ethernet",
+        ...                 "addresses": [
+        ...                     {
+        ...                         "proto": "dhcp",
+        ...                         "family": "ipv4"
+        ...                     }
+        ...                 ]
+        ...             }
+        ...         ]
+        ...     },
+        ...     dsa=False, # This will generate configuration in legacy syntax
+        ... )
+
+    The examples present in this documentation only demonstrates configuration
+    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
+    to check examples of old syntax.
+
 Initialization
 --------------
 
@@ -338,7 +371,7 @@ also supports the following custom options for every type of interface:
         ... )
 
     The examples present in this documentation only demonstrates configuration
-    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/0.9.1/backends/openwrt.html>`_
+    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
     to check examples of old syntax.
 
 In the following sections some examples of the most common use cases are shown.

@@ -31,9 +31,24 @@ class OpenWrt(BaseBackend):
     renderer = OpenWrtRenderer
     list_identifiers = ['name', 'config_value', 'id']
 
-    def __init__(self, *args, **kwargs):
-        self.dsa = kwargs.pop('dsa', True)
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self, config=None, native=None, templates=None, context=None, dsa=True
+    ):
+        """
+        :param config: ``dict`` containing a valid **NetJSON** configuration dictionary
+        :param native: ``str`` or file object representing a native configuration that will
+                       be parsed and converted to a **NetJSON** configuration dictionary
+        :param templates: ``list`` containing **NetJSON** configuration dictionaries that
+                          will be used as a base for the main config
+        :param context: ``dict`` containing configuration variables
+        :param dsa: ``bool`` flag to switch between OpenWrt configuration syntax.
+                    ``True`` generates configuration in OpenWrt >21 syntax.
+                    ``False`` generates configuration in OpenWrt <= 19 syntax.
+        :raises TypeError: raised if ``config`` is not of type ``dict`` or if
+                           ``templates`` is not of type ``list``
+        """
+        self.dsa = dsa
+        super().__init__(config, native, templates, context)
 
     def _generate_contents(self, tar):
         """
