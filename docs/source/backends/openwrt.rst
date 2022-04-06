@@ -308,6 +308,39 @@ also supports the following custom options for every type of interface:
 | ``network``  | string  | logical interface name (UCI specific)         |
 +--------------+---------+-----------------------------------------------+
 
+.. important::
+
+    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21 <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
+    By default, the netjsonconfig library generates configuration in the new syntax.
+    If you want to generate configuration in the legacy syntax (OpenWrt <=19), then
+    set ``dsa=False`` while instantiating object of ``netjsonconfig.OpenWrt`` class.
+
+    .. code-block:: python
+
+        >>> from netjsonconfig import OpenWrt
+        >>>
+        >>> o = OpenWrt(
+        ...     config = {
+        ...         "interfaces": [
+        ...             {
+        ...                 "name": "eth0",
+        ...                 "type": "ethernet",
+        ...                 "addresses": [
+        ...                     {
+        ...                         "proto": "dhcp",
+        ...                         "family": "ipv4"
+        ...                     }
+        ...                 ]
+        ...             }
+        ...         ]
+        ...     },
+        ...     dsa=False, # This will generate configuration in legacy syntax
+        ... )
+
+    The examples present in this documentation only demonstrates configuration
+    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/0.9.1/backends/openwrt.html>`_
+    to check examples of old syntax.
+
 In the following sections some examples of the most common use cases are shown.
 
 Loopback interface example
@@ -571,14 +604,6 @@ The ``OpenWrt`` backend NetJSON extensions for bridge interfaces:
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
 | ``max_age``                 | integer | ``20``    | timeout in seconds until topology updates on link loss      |
 +-----------------------------+---------+-----------+-------------------------------------------------------------+
-
-.. important::
-
-    OpenWrt introduced a new syntax for defining bridge interfaces in `OpenWrt 21.02 <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
-    The netjsonconfig library generates bridge configuration in both old and new syntaxes
-    at the same time. It is done because OpenWrt to only uses the configuration block
-    in the supported syntax while rejecting the other one.
-
 
 Bridge interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~

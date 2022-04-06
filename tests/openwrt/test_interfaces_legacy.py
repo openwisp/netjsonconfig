@@ -921,7 +921,7 @@ config interface 'lan'
         o.config['interfaces'][0]['bridge_members'][0] = 'eth1'
         o.validate()
 
-    _old_bridge_uci = """package network
+    _bridge_uci = """package network
 
 config interface 'eth0'
     option ifname 'eth0'
@@ -937,8 +937,8 @@ config interface 'lan'
     option type 'bridge'
 """
 
-    def test_parse_legacy_bridge(self):
-        o = OpenWrt(native=self._old_bridge_uci, dsa=False)
+    def test_parse_bridge(self):
+        o = OpenWrt(native=self._bridge_uci, dsa=False)
         self.assertEqual(o.config, self._simple_bridge_netjson)
 
     def test_render_dns(self):
@@ -1599,3 +1599,5 @@ config interface 'eth0'
 """
         )
         self.assertEqual(o.render(), expected)
+
+

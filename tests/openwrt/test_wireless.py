@@ -1093,9 +1093,7 @@ config wifi-iface 'wifi_wlan0'
 """
 
     def test_render_simplified_wifi_bridge(self):
-        o = OpenWrt(
-            self._wifi_simplified_bridge_netjson,
-        )
+        o = OpenWrt(self._wifi_simplified_bridge_netjson)
         expected = self._tabs(self._wifi_simplified_bridge_uci)
         self.assertEqual(o.render(), expected)
 
