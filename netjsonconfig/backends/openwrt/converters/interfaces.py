@@ -468,7 +468,7 @@ class Interfaces(OpenWrtConverter):
             try:
                 value = interface.pop(option)
                 interface[option] = int(value)
-            except (KeyError):
+            except KeyError:
                 continue
 
         for option in [
@@ -481,7 +481,7 @@ class Interfaces(OpenWrtConverter):
                 value = interface.pop(option)
                 assert value is not None
                 interface[option] = value == '1'
-            except (KeyError):
+            except KeyError:
                 continue
         self._device_config[interface['name']] = interface
 
