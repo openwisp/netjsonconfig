@@ -83,7 +83,7 @@ class OpenWrtParser(BaseParser):
                     block[key] = block.get(key, []) + [value]
             # The new bridge syntax of OpenWrt moved "bridges"
             # under "device" config_type. netjsonconfig
-            # process bridges using the interface convertor,
+            # process bridges using the interface converter,
             # therefore we need to update block type here.
             if block['.type'] == 'device':
                 block['.type'] = 'interface'
