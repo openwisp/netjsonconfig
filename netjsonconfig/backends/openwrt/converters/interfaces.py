@@ -34,12 +34,12 @@ class Interfaces(OpenWrtConverter):
     _custom_protocols = ['ppp']
     _interface_dsa_types = ['loopback', 'ethernet', 'bridge']
 
-    def __set_dsa(self, interface):
+    def __set_dsa_interface(self, interface):
         """
-        changes dsa property to manange new syntax introduced in
-        OpenWrt 21.02 by checking supported types and protocols
+        sets dsa interface property to manage new syntax introduced
+        in OpenWrt 21.02 by checking supported types and protocols
         """
-        self.dsa = (
+        self.dsa_interface = (
             self.dsa
             and interface.get('proto', None) not in self._custom_protocols
             and interface.get('type', None) in self._interface_dsa_types
@@ -50,8 +50,8 @@ class Interfaces(OpenWrtConverter):
         uci_name = self._get_uci_name(block.get('network') or block['name'])
         address_list = self.__intermediate_addresses(block)
         interface = self.__intermediate_interface(block, uci_name)
-        self.__set_dsa(interface)
-        if self.dsa:
+        self.__set_dsa_interface(interface)
+        if self.dsa_interface:
             uci_device = self.__intermediate_device(interface)
             if uci_device:
                 result['network'].append(self.sorted_dict(uci_device))
@@ -283,7 +283,7 @@ class Interfaces(OpenWrtConverter):
         """
         Removes options that are not required in the configuration.
         """
-        if self.dsa:
+        if self.dsa_interface:
             repeated_options = (
                 ['ifname', 'type', 'bridge_members']
                 + self._bridge_interface_options['stp']
@@ -302,7 +302,7 @@ class Interfaces(OpenWrtConverter):
         # ensure type "bridge" is only given to one logical interface
         if interface['type'] == 'bridge' and i < 2:
             bridge_members = ' '.join(interface.pop('bridge_members'))
-            if self.dsa:
+            if self.dsa_interface:
                 interface['device'] = interface['ifname']
             else:
                 if bridge_members:

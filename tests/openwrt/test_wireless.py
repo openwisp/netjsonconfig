@@ -190,12 +190,17 @@ config interface 'wlan0'
     option ifname 'wlan0'
     option proto 'none'
 
+config device 'device_br_lan'
+    option name 'br-lan'
+    list ports 'eth0.1'
+    list ports 'wlan0'
+    option type 'bridge'
+
 config interface 'br_lan'
-    option ifname 'eth0.1 wlan0'
+    option device 'br-lan'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
-    option type 'bridge'
 
 package wireless
 
@@ -705,10 +710,15 @@ config interface 'wlan1'
     option ifname 'wlan1'
     option proto 'none'
 
-config interface 'wds_bridge'
-    option ifname 'wlan0 wlan1'
-    option proto 'dhcp'
+config device 'device_wds_bridge'
+    option name 'br-wds_bridge'
+    list ports 'wlan0'
+    list ports 'wlan1'
     option type 'bridge'
+
+config interface 'wds_bridge'
+    option device 'br-wds_bridge'
+    option proto 'dhcp'
 
 package wireless
 
@@ -830,12 +840,16 @@ config interface 'mesh0'
     option ifname 'mesh0'
     option proto 'none'
 
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'mesh0'
+    option type 'bridge'
+
 config interface 'lan'
-    option ifname 'mesh0'
+    option device 'br-lan'
     option ipaddr '192.168.0.1'
     option netmask '255.255.255.0'
     option proto 'static'
-    option type 'bridge'
 
 package wireless
 
