@@ -179,20 +179,28 @@ config wifi-iface 'wifi_wlan1'
     }
     _wifi_bridge_uci = """package network
 
+config device 'device_eth0_1'
+    option name 'eth0.1'
+
 config interface 'eth0_1'
-    option ifname 'eth0.1'
+    option device 'eth0.1'
     option proto 'none'
 
 config interface 'wlan0'
     option ifname 'wlan0'
     option proto 'none'
 
+config device 'device_br_lan'
+    option name 'br-lan'
+    list ports 'eth0.1'
+    list ports 'wlan0'
+    option type 'bridge'
+
 config interface 'br_lan'
-    option ifname 'eth0.1 wlan0'
+    option device 'br-lan'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
-    option type 'bridge'
 
 package wireless
 
@@ -232,8 +240,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wifi_networks_uci = """package network
 
+config device 'device_eth0'
+    option name 'eth0'
+
 config interface 'eth0'
-    option ifname 'eth0'
+    option device 'eth0'
     option proto 'none'
 
 config interface 'wlan0'
@@ -699,10 +710,15 @@ config interface 'wlan1'
     option ifname 'wlan1'
     option proto 'none'
 
-config interface 'wds_bridge'
-    option ifname 'wlan0 wlan1'
-    option proto 'dhcp'
+config device 'device_wds_bridge'
+    option name 'br-wds_bridge'
+    list ports 'wlan0'
+    list ports 'wlan1'
     option type 'bridge'
+
+config interface 'wds_bridge'
+    option device 'br-wds_bridge'
+    option proto 'dhcp'
 
 package wireless
 
@@ -824,12 +840,16 @@ config interface 'mesh0'
     option ifname 'mesh0'
     option proto 'none'
 
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'mesh0'
+    option type 'bridge'
+
 config interface 'lan'
-    option ifname 'mesh0'
+    option device 'br-lan'
     option ipaddr '192.168.0.1'
     option netmask '255.255.255.0'
     option proto 'static'
-    option type 'bridge'
 
 package wireless
 
@@ -1062,10 +1082,15 @@ config wifi-iface 'arbitrary_id'
     }
     _wifi_simplified_bridge_uci = """package network
 
-config interface 'lan'
-    option ifname 'eth0 wlan0'
-    option proto 'none'
+config device 'device_lan'
+    option name 'br-lan'
+    list ports 'eth0'
+    list ports 'wlan0'
     option type 'bridge'
+
+config interface 'lan'
+    option device 'br-lan'
+    option proto 'none'
 
 config interface 'wlan0'
     option ifname 'wlan0'

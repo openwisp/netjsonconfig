@@ -10,11 +10,51 @@ class Interfaces(OpenWrtConverter):
     netjson_key = 'interfaces'
     intermediate_key = 'network'
     _uci_types = ['interface', 'globals']
+    _bridge_interface_options = {
+        'stp': [
+            'stp',
+            'forward_delay',
+            'hello_time',
+            'priority',
+            'ageing_time',
+            'max_age',
+        ],
+        'igmp_snooping': [
+            'igmp_snooping',
+            'multicast_querier',
+            'query_interval',
+            'query_response_interval',
+            'last_member_interval',
+            'hash_max',
+            'robustness',
+        ],
+        'all': ['vlan_filtering', 'macaddr'],
+    }
+    _device_config = {}
+    _custom_protocols = ['ppp']
+    _interface_dsa_types = ['loopback', 'ethernet', 'bridge']
+
+    def __set_dsa_interface(self, interface):
+        """
+        sets dsa interface property to manage new syntax introduced
+        in OpenWrt 21.02 by checking supported types and protocols
+        """
+        self.dsa_interface = (
+            self.dsa
+            and interface.get('proto', None) not in self._custom_protocols
+            and interface.get('type', None) in self._interface_dsa_types
+        )
 
     def to_intermediate_loop(self, block, result, index=None):
+        result.setdefault('network', [])
         uci_name = self._get_uci_name(block.get('network') or block['name'])
         address_list = self.__intermediate_addresses(block)
         interface = self.__intermediate_interface(block, uci_name)
+        self.__set_dsa_interface(interface)
+        if self.dsa_interface:
+            uci_device = self.__intermediate_device(interface)
+            if uci_device:
+                result['network'].append(self.sorted_dict(uci_device))
         # create one or more "config interface" UCI blocks
         i = 1
         for address in address_list:
@@ -158,6 +198,102 @@ class Interfaces(OpenWrtConverter):
                 del address[key]
         return address
 
+    def __intermediate_device(self, interface):
+        """
+        Converts NetJSON bridge to intermediate
+        data structure compatible with new syntax
+        introduced in OpenWrt 21.02.
+        """
+
+        device = {}
+        # Add L2 options (needed for > OpenWrt 21.02)
+        self._add_l2_options(device, interface)
+        device.update(
+            {
+                '.type': 'device',
+                '.name': 'device_{}'.format(interface['.name']),
+                'name': interface['ifname'],
+            }
+        )
+        # Add 'device' option in related interface configuration
+        interface['device'] = device['name']
+
+        if interface['type'] != 'bridge':
+            # A non-bridge interface that contains L2 options.
+            return device
+        device['type'] = 'bridge'
+        # Add STP options only if STP is enabled
+        self._add_options(
+            'stp', self._bridge_interface_options['stp'], device, interface
+        )
+        # Add IGMP snooping options only if IGMP snooping is enabled
+        self._add_options(
+            'igmp_snooping',
+            self._bridge_interface_options['igmp_snooping'],
+            device,
+            interface,
+        )
+        device_options = (
+            self._bridge_interface_options['all']
+            + self._bridge_interface_options['stp']
+            + self._bridge_interface_options['igmp_snooping']
+        )
+        for option in device_options:
+            if option in interface:
+                device[option] = interface.pop(option, None)
+        device['ports'] = interface.get('bridge_members', [])
+        if device['ports'] == []:
+            device['bridge_empty'] = True
+            del device['ports']
+        return self.sorted_dict(device)
+
+    @staticmethod
+    def _add_options(property_name, property_options, device, interface):
+        if interface.get(property_name, False):
+            device[property_name] = True
+            for option in property_options:
+                if interface.get(option):
+                    device[option] = interface[option]
+
+    @staticmethod
+    def _add_l2_options(device, interface):
+        l2_options = [
+            'rpfilter',
+            'txqueuelen',
+            'neighreachabletime',
+            'neighgcstaletime',
+            'neighlocktime',
+            'igmpversion',
+            'mldversion',
+            'promisc',
+            'acceptlocal',
+            'sendredirects',
+            'multicast',
+            'mtu',
+            'mtu6',
+            'dadtransmits',
+        ]
+        for option in l2_options:
+            if option in interface:
+                device[option] = interface.pop(option)
+        if interface.get('macaddr', None):
+            device['macaddr'] = interface.pop('macaddr')
+
+    def __clean_intermediate_bridge(self, interface):
+        """
+        Removes options that are not required in the configuration.
+        """
+        if self.dsa_interface:
+            repeated_options = (
+                ['ifname', 'type', 'bridge_members']
+                + self._bridge_interface_options['stp']
+                + self._bridge_interface_options['igmp_snooping']
+                + self._bridge_interface_options['all']
+            )
+            for attr in repeated_options:
+                if attr in interface:
+                    del interface[attr]
+
     def __intermediate_bridge(self, interface, i):
         """
         converts NetJSON bridge to
@@ -166,13 +302,15 @@ class Interfaces(OpenWrtConverter):
         # ensure type "bridge" is only given to one logical interface
         if interface['type'] == 'bridge' and i < 2:
             bridge_members = ' '.join(interface.pop('bridge_members'))
-            # put bridge members in ifname attribute
-            if bridge_members:
-                interface['ifname'] = bridge_members
-            # if no members, this is an empty bridge
+            if self.dsa_interface:
+                interface['device'] = interface['ifname']
             else:
-                interface['bridge_empty'] = True
-                del interface['ifname']
+                if bridge_members:
+                    interface['ifname'] = bridge_members
+                # if no members, this is an empty bridge
+                else:
+                    interface['bridge_empty'] = True
+                    del interface['ifname']
         # bridge has already been defined
         # but we need to add more references to it
         elif interface['type'] == 'bridge' and i >= 2:
@@ -182,11 +320,17 @@ class Interfaces(OpenWrtConverter):
             if 'br-' not in interface['ifname']:
                 interface['ifname'] = 'br-{ifname}'.format(**interface)
             # do not repeat bridge attributes (they have already been processed)
-            for attr in ['type', 'bridge_members', 'stp', 'gateway']:
+            repeated_options = (
+                ['type', 'bridge_members', 'gateway']
+                + self._bridge_interface_options['stp']
+                + self._bridge_interface_options['igmp_snooping']
+            )
+            for attr in repeated_options:
                 if attr in interface:
                     del interface[attr]
         elif interface['type'] != 'bridge':
             del interface['type']
+        self.__clean_intermediate_bridge(interface)
         return interface
 
     def __intermediate_proto(self, interface, address):
@@ -229,6 +373,12 @@ class Interfaces(OpenWrtConverter):
         if dns_search:
             return ' '.join(dns_search)
 
+    def __is_device_config(self, interface):
+        """
+        determines if the configuration is a device from NetJSON
+        """
+        return interface.get('type', None) == 'device'
+
     def to_netjson_loop(self, block, result, index):
         _type = block.get('.type')
         if _type == 'globals':
@@ -239,10 +389,13 @@ class Interfaces(OpenWrtConverter):
                 if _name != 'globals':
                     result['general']['globals_id'] = _name
         elif _type == 'interface':
-            interface = self.__netjson_interface(block)
-            self.__netjson_dns(interface, result)
-            result.setdefault('interfaces', [])
-            result['interfaces'].append(interface)
+            if self.dsa:
+                block = self.__netjson_dsa_interface(block)
+            if not self.__is_device_config(block) and not block.get('bridge_21', None):
+                interface = self.__netjson_interface(block)
+                self.__netjson_dns(interface, result)
+                result.setdefault('interfaces', [])
+                result['interfaces'].append(interface)
         return result
 
     def __netjson_interface(self, interface):
@@ -267,20 +420,110 @@ class Interfaces(OpenWrtConverter):
             interface = method(interface)
         return interface
 
+    def __netjson_dsa_interface(self, interface):
+        if self.__is_device_config(interface) or interface.get('bridge_21', None):
+            self.__netjson_device(interface)
+        else:
+            device = interface.get('device')
+            # adding device property to interface
+            if self._device_config.get(device, None):
+                device_config = self._device_config[device]
+                # ifname has been renamed to device in OpenWrt 21.02
+                if device_config.get('type') == 'bridge':
+                    interface['ifname'] = 'br-{}'.format(interface.pop('device'))
+                else:
+                    interface['ifname'] = interface.pop('device')
+                if device_config.pop('bridge_21', None):
+                    for option in device_config:
+                        if 'name' in option:
+                            continue
+                        # ifname has been renamed to ports in OpenWrt 21.02 bridge
+                        if option == 'ports':
+                            interface['ifname'] = ' '.join(device_config[option])
+                        else:
+                            interface[option] = device_config[option]
+                # Merging L2 options to interface
+                for options in (
+                    self._bridge_interface_options['all']
+                    + self._bridge_interface_options['stp']
+                    + self._bridge_interface_options['igmp_snooping']
+                ):
+                    if options in device_config:
+                        interface[options] = device_config.pop(options)
+        return interface
+
+    def __netjson_device(self, interface):
+        interface['network'] = interface.pop('.name').lstrip('device_')
+        for option in [
+            'txqueuelen',
+            'neighreachabletime',
+            'neighgcstaletime',
+            'neighlocktime',
+            'igmpversion',
+            'mldversion',
+            'mtu',
+            'mtu6',
+            'dadtransmits',
+        ]:
+            try:
+                value = interface.pop(option)
+                interface[option] = int(value)
+            except KeyError:
+                continue
+
+        for option in [
+            'promisc',
+            'acceptlocal',
+            'sendredirects',
+            'multicast',
+        ]:
+            try:
+                value = interface.pop(option)
+                assert value is not None
+                interface[option] = value == '1'
+            except KeyError:
+                continue
+        self._device_config[interface['name']] = interface
+
     def __netjson_type(self, interface):
         if 'type' in interface and interface['type'] == 'bridge':
             interface['bridge_members'] = interface['name'].split()
             interface['name'] = 'br-{0}'.format(interface['network'])
             # cleanup automatically generated "br_" network prefix
             interface['name'] = interface['name'].replace('br_', '')
-            if 'stp' in interface:
-                interface['stp'] = interface['stp'] == '1'
+            self.__netjson_bridge_typecast(interface)
             if interface.pop('bridge_empty', None) == '1':
                 interface['bridge_members'] = []
             return 'bridge'
         if interface['name'] in ['lo', 'lo0', 'loopback']:
             return 'loopback'
         return 'ethernet'
+
+    def __netjson_bridge_typecast(self, interface):
+        for option in [
+            'stp',
+            'igmp_snooping',
+            'multicast_querier',
+            'vlan_filtering',
+        ]:
+            if option in interface:
+                interface[option] = interface[option] == '1'
+        for option in [
+            'forward_delay',
+            'hello_time',
+            'max_age',
+            'priority',
+            'query_interval',
+            'query_response_interval',
+            'last_member_interval',
+            'hash_max',
+            'robustness',
+        ]:
+            if option in interface:
+                try:
+                    interface[option] = int(interface[option])
+                except ValueError:
+                    del interface[option]
 
     def __netjson_addresses(self, interface):
         proto = interface.get('proto', 'none')

@@ -153,10 +153,117 @@ schema = merge_config(
                                 "type": "boolean",
                                 "title": "IGMP snooping",
                                 "description": "sets the \"multicast_snooping\" kernel setting for a bridge",
-                                "default": True,
+                                "default": False,
                                 "format": "checkbox",
+                                "propertyOrder": 5,
+                            },
+                            "multicast_querier": {
+                                "type": "boolean",
+                                "title": "IGMP multicast querier",
+                                "description": (
+                                    "enables the bridge as a multicast querier"
+                                ),
+                                "default": False,
+                                "format": "checkbox",
+                                "propertyOrder": 5,
+                            },
+                            "query_interval": {
+                                "type": "integer",
+                                "title": "IGMP query interval",
+                                "description": (
+                                    "time interval in centiseconds between"
+                                    " multicast general queries"
+                                ),
+                                "default": 12500,
+                                "propertyOrder": 5,
+                            },
+                            "query_response_interval": {
+                                "type": "integer",
+                                "title": "IGMP query response interval",
+                                "description": (
+                                    "the max response time in centiseconds inserted into"
+                                    " the periodic general queries"
+                                ),
+                                "default": 1000,
+                                "propertyOrder": 5,
+                            },
+                            "last_member_interval": {
+                                "type": "integer",
+                                "title": "IGMP last member interval",
+                                "description": (
+                                    "the maximum response time in centiseconds inserted into"
+                                    " group-specific queries sent in response to leave group messages."
+                                ),
+                                "default": 100,
+                                "propertyOrder": 5,
+                            },
+                            "hash_max": {
+                                "type": "integer",
+                                "title": "IGMP hash max",
+                                "description": "size of kernel multicast hash table",
+                                "default": 512,
+                                "propertyOrder": 5,
+                            },
+                            "robustness": {
+                                "type": "integer",
+                                "title": "IGMP Robustness",
+                                "description": "sets Startup Query Count and Last Member Count",
+                                "default": 2,
+                                "propertyOrder": 5,
+                            },
+                            "forward_delay": {
+                                "type": "integer",
+                                "title": "STP forward delay",
+                                "description": (
+                                    "time in seconds to spend in listening"
+                                    " and learning states"
+                                ),
+                                "default": 4,
+                                "minimum": 2,
+                                "maximum": 30,
                                 "propertyOrder": 4,
-                            }
+                            },
+                            "hello_time": {
+                                "type": "integer",
+                                "title": "STP hello time",
+                                "description": "time interval in seconds for STP hello packets",
+                                "default": 2,
+                                "minimum": 1,
+                                "maximum": 10,
+                                "propertyOrder": 4,
+                            },
+                            "priority": {
+                                "type": "integer",
+                                "title": "STP priority",
+                                "description": "STP bridge priority",
+                                "default": 32767,
+                                "minimum": 0,
+                                "maximum": 65535,
+                                "propertyOrder": 4,
+                            },
+                            "ageing_time": {
+                                "type": "integer",
+                                "title": "STP ageing time",
+                                "description": (
+                                    "expiration time in seconds for dynamic MAC"
+                                    " entries in the filtering DB"
+                                ),
+                                "default": 300,
+                                "minimum": 10,
+                                "maximum": 1000000,
+                                "propertyOrder": 4,
+                            },
+                            "max_age": {
+                                "type": "integer",
+                                "title": "STP max age",
+                                "description": (
+                                    "timeout in seconds until topology updates on link loss"
+                                ),
+                                "default": 20,
+                                "minimum": 0,
+                                "maximum": 40,
+                                "propertyOrder": 4,
+                            },
                         }
                     }
                 ]

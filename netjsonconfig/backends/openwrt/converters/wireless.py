@@ -349,12 +349,14 @@ class Wireless(OpenWrtConverter):
                 continue
             # Get list of bridge members
             try:
-                bridge_members = interface.get('ifname', None).split(' ')
+                bridge_members = self.__get_bridge_members(interface)
             except AttributeError:
                 # Bridge interface does not contain bridge members.
                 # Bridge is empty.
                 continue
             bridge_name = interface['.name']
+            if self.dsa:
+                bridge_name = bridge_name.lstrip('device_')
             for physical_interface in bridge_members:
                 # A physical interface can be a member of multiple
                 # bridges. Hence, we create a list of bridge interfaces
@@ -363,3 +365,8 @@ class Wireless(OpenWrtConverter):
                     self._bridged_wifi[physical_interface] = [bridge_name]
                 elif bridge_name not in self._bridged_wifi[physical_interface]:
                     self._bridged_wifi[physical_interface].append(bridge_name)
+
+    def __get_bridge_members(self, interface):
+        if self.dsa and interface.get('ports', []):
+            return interface.get('ports', [])
+        return interface.get('ifname', None).split(' ')

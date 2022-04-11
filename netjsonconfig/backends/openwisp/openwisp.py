@@ -15,6 +15,11 @@ class OpenWisp(OpenWrt):
     schema = schema
     renderer = OpenWrtRenderer
 
+    def __init__(
+        self, config=None, native=None, templates=None, context=None, dsa=False
+    ):
+        super().__init__(config, native, templates, context, dsa)
+
     def validate(self):
         self._sanitize_radios()
         super().validate()

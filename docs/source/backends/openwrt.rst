@@ -13,6 +13,39 @@ The ``OpenWrt`` backend allows to generate OpenWRT compatible configurations.
     and it is the default configuration system installed on `OpenWRT <http://openwrt.org>`_
     and its fork `LEDE <https://www.lede-project.org/>`_.
 
+.. important::
+
+    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21 <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
+    By default, the netjsonconfig library generates configuration in the new syntax.
+    If you want to generate configuration in the legacy syntax (OpenWrt <=19), then
+    set ``dsa=False`` while instantiating object of ``netjsonconfig.OpenWrt`` class.
+
+    .. code-block:: python
+
+        >>> from netjsonconfig import OpenWrt
+        >>>
+        >>> o = OpenWrt(
+        ...     config = {
+        ...         "interfaces": [
+        ...             {
+        ...                 "name": "eth0",
+        ...                 "type": "ethernet",
+        ...                 "addresses": [
+        ...                     {
+        ...                         "proto": "dhcp",
+        ...                         "family": "ipv4"
+        ...                     }
+        ...                 ]
+        ...             }
+        ...         ]
+        ...     },
+        ...     dsa=False, # This will generate configuration in legacy syntax
+        ... )
+
+    The examples present in this documentation only demonstrates configuration
+    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
+    to check examples of old syntax.
+
 Initialization
 --------------
 
@@ -308,6 +341,39 @@ also supports the following custom options for every type of interface:
 | ``network``  | string  | logical interface name (UCI specific)         |
 +--------------+---------+-----------------------------------------------+
 
+.. important::
+
+    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21 <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
+    By default, the netjsonconfig library generates configuration in the new syntax.
+    If you want to generate configuration in the legacy syntax (OpenWrt <=19), then
+    set ``dsa=False`` while instantiating object of ``netjsonconfig.OpenWrt`` class.
+
+    .. code-block:: python
+
+        >>> from netjsonconfig import OpenWrt
+        >>>
+        >>> o = OpenWrt(
+        ...     config = {
+        ...         "interfaces": [
+        ...             {
+        ...                 "name": "eth0",
+        ...                 "type": "ethernet",
+        ...                 "addresses": [
+        ...                     {
+        ...                         "proto": "dhcp",
+        ...                         "family": "ipv4"
+        ...                     }
+        ...                 ]
+        ...             }
+        ...         ]
+        ...     },
+        ...     dsa=False, # This will generate configuration in legacy syntax
+        ... )
+
+    The examples present in this documentation only demonstrates configuration
+    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
+    to check examples of old syntax.
+
 In the following sections some examples of the most common use cases are shown.
 
 Loopback interface example
@@ -530,18 +596,47 @@ Will be rendered as follows::
 Bridge settings
 ---------------
 
-Interfaces of type ``bridge`` can contain a few options that are specific for network bridges:
-
-* ``bridge_members``: interfaces that are members of the bridge
-* ``stp``: spanning tree protocol
+Interfaces of type ``bridge`` contains options that are specific for network bridges.
 
 The ``OpenWrt`` backend NetJSON extensions for bridge interfaces:
 
-+-------------------+---------+-------------+-------------------------------------------------------------+
-| key name          | type    | default     | allowed values                                              |
-+===================+=========+=============+=============================================================+
-| ``igmp_snooping`` | boolean | ``True``    | sets the ``multicast_snooping`` kernel setting for a bridge |
-+-------------------+---------+-------------+-------------------------------------------------------------+
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| key name                    | type    | default   | allowed values                                              |
++=============================+=========+===========+=============================================================+
+| ``bridge_members``          | list    | ``[]``    | list of interface names for creating bridge                 |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``igmp_snooping``           | boolean | ``False`` | sets the ``multicast_snooping`` kernel setting for a bridge |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``multicast_querier``       | boolean | ``False`` | enables the bridge as a multicast querier                   |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``query_interval``          | integer | ``12500`` | time interval in centiseconds between multicast general     |
+|                             |         |           | queries                                                     |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``query_response_interval`` | integer | ``1000``  | the max response time in centiseconds inserted into         |
+|                             |         |           | the periodic general queries                                |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``last_member_interval``    | integer | ``100``   | the maximum response time in centiseconds inserted into     |
+|                             |         |           | group-specific queries sent in response to leave            |
+|                             |         |           | group messages.                                             |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``hash_max``                | integer | ``512``   | size of kernel multicast hash table                         |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``robustness``              | integer | ``2``     | sets Startup Query Count and Last Member Count              |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``stp``                     | boolean | ``False`` | enables the spanning tree protocol                          |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``forward_delay``           | integer | ``4``     | time in seconds to spend in listening                       |
+|                             |         |           | and learning states (range between 2-30)                    |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``hello_time``              | integer | ``2``     | time interval in seconds for STP hello packets (range 1-10) |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``priority``                | integer | ``32767`` | sets the STP bridge priority (range 0-65535)                |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``ageing_time``             | integer | ``300``   | expiration time in seconds for dynamic MAC                  |
+|                             |         |           | entries in the filtering DB" (range 10-1000000)             |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
+| ``max_age``                 | integer | ``20``    | timeout in seconds until topology updates on link loss      |
++-----------------------------+---------+-----------+-------------------------------------------------------------+
 
 Bridge interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -563,7 +658,7 @@ The following *configuration dictionary*:
                 "type": "ethernet"
             },
             {
-                "name": "lan_bridge",  # will be named "br-lan_bridge" by OpenWRT
+                "name": "br-lan",
                 "type": "bridge",
                 "stp": True,  # enable spanning tree protocol
                 "igmp_snooping": True,  # enable imgp snooping
@@ -595,7 +690,16 @@ Will be rendered as follows::
             option ifname 'eth0.2'
             option proto 'none'
 
-    config interface 'lan_bridge'
+    config device 'device_br_lan'
+            option igmp_snooping '1'
+            option name 'br-lan'
+            list ports 'eth0.1'
+            list ports 'eth0.2'
+            option stp '1'
+            option type 'bridge'
+
+    config interface 'br_lan'
+            option device 'br-lan'
             option ifname 'eth0.1 eth0.2'
             option igmp_snooping '1'
             option ipaddr '172.17.0.2'
@@ -763,7 +867,7 @@ usually the LAN bridge:
                     "radio": "radio0",
                     "mode": "access_point",
                     "ssid": "wifi service",
-                    # "network": ["lan"]  this proeprty can be omitted
+                    # "network": ["lan"]  this property can be omitted
                     # but may be overridden if needed
                 }
             },
@@ -795,6 +899,12 @@ Will be rendered as follows::
     config interface 'wlan0'
             option ifname 'wlan0'
             option proto 'none'
+
+    config device 'device_lan'
+            option name 'lan'
+            list ports 'eth0'
+            list ports 'wlan0'
+            option type 'bridge'
 
     config interface 'lan'
             option ifname 'eth0 wlan0'
@@ -970,6 +1080,12 @@ UCI output::
             option ifname 'mesh0'
             option proto 'none'
 
+    config device 'device_lan'
+            option name 'lan'
+            list ports 'eth0'
+            list ports 'mesh0'
+            option type 'bridge'
+
     config interface 'lan'
             option ifname 'eth0 mesh0'
             option ipaddr '192.168.0.1'
@@ -1092,9 +1208,14 @@ Will result in::
             option ifname 'wlan1'
             option proto 'none'
 
-    config interface 'br_wds'
+    config device 'device_wds_bridge'
+            option name 'br-wds'
+            list ports 'wlan0'
+            list ports 'wlan1'
+            option type 'bridge'
+
+    config interface 'wds_bridge'
             option ifname 'wlan0 wlan1'
-            option network 'wds_bridge'
             option proto 'dhcp'
             option type 'bridge'
 
