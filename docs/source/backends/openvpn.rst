@@ -1,8 +1,8 @@
-===================
-OpenVPN 2.3 Backend
-===================
+===============
+OpenVPN Backend
+===============
 
-The ``OpenVpn`` backend allows to generate OpenVPN 2.3.x compatible configurations.
+The ``OpenVpn`` backend allows to generate OpenVPN 2.x.x compatible configurations.
 
 Its schema is limited to a subset of the features available in OpenVPN and it doesn't recognize
 interfaces, radios, wireless settings and so on.
