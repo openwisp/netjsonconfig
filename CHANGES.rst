@@ -1,7 +1,90 @@
 Change log
 ==========
 
-Version 0.9.1 [2020-02-15]
+Version 1.0.0 [2022-04-20]
+--------------------------
+
+Features
+~~~~~~~~
+
+- Added support for the new
+  `DSA bridge syntax to the OpenWrt backend
+  <http://netjsonconfig.openwisp.org/en/latest/backends/openwrt.html#openwrt-backend>`_
+- Added support for
+  `Wireguard
+  <http://netjsonconfig.openwisp.org/en/latest/backends/wireguard.html>`_
+  and `Wireguard/VXLAN
+  <http://netjsonconfig.openwisp.org/en/latest/backends/vxlan_over_wireguard.html>`_
+- Added support for
+  `Wireguard interfaces in OpenWrt backend <http://netjsonconfig.openwisp.org/en/latest/backends/openwrt.html#wireguard>`_
+- Added support for
+  `VXLAN interfaces in OpenWrt backend <http://netjsonconfig.openwisp.org/en/latest/backends/openwrt.html#vxlan>`_
+- Added ``auth_nocache`` proprety to the ``OpenVpn`` backend
+- Added support for OpenVPN tls-auth option,
+  the OpenVPN backend will automatically create a file for the
+  key present in "tls_auth" field and update the value of the
+  "tls-auth" parameter
+- Added ``proto`` to remote setting of the ``OpenVpn`` backend
+- Added support for IEEE 802.11w configurations to the ``OpenWrt`` backend
+- Added support for Wifi6 / IEEE 802.11ax to the ``OpenWrt`` backend
+- Added support for basic IEEE 802.11r options to the ``OpenWrt`` backend
+- Added support for WPA3 to the ``OpenWrt`` backend
+- Added support for EAP-PEAP as ``auth`` method in WPA2 enterprise
+  wifi client configuration of ``OpenWrt`` backend
+- Removed option of 2.4GHz radio for 802.11ac from the ``OpenWrt`` backend
+
+Changes
+~~~~~~~
+
+Backward incompatible changes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- By default, the ``OpenWrt`` backend now generates bridge syntax
+  in the new DSA compatible format, to override this, ``dsa=False``
+  must be passed during the initialization of the backend
+
+Dependencies
+^^^^^^^^^^^^
+
+- Dropped support for Python 3.6
+- Added support for Python 3.8 and 3.9
+- Upgraded Jinja to 3.0
+- Upgraded jsonschema to 3.2.x
+- Upgraded to openwisp-utils 1.0.x and reformatted code
+  with latest version of the black formatter
+
+Other changes
+^^^^^^^^^^^^^
+
+- Simplified bridging of wifi interfaces in the OpenWrt backend:
+  users can now simply add a wifi interface to a bridge and forget
+  about having to update also the attached networks of the
+  OpenWrt configuration
+
+Bugfixes
+~~~~~~~~
+
+- Ensured values are always deep copied when using ``merge_config``,
+  without this change the different schemas remain interwined
+  and a dynamic change to one part which is reused by other
+  schemas will affect different backends inadvertently
+- The file ``path`` is not allowed to be an empty string anymore
+- Ignored duplicate list elements when merging templates:
+  detect identical elements present in both lists
+  to avoid adding the duplicate to the result;
+  this is needed because some templates may share
+  one or multiple common files and these do not
+  not have to be duplicated
+- Fixed typo in EAP TTLS protocol ``enum_title``
+  of ``OpenWrt`` backend:
+  it was showing EAP-PEAP even though TTLS was set
+- Fixed madwifi driver for legacy systems
+- Fixed comp-lzo option for legacy OpenVPN in OpenWisp1 backend
+- Fixed UCI format backward compatibility with OpenWISP 1
+  This fix is needed to allow workarounds in the code of
+  OpenWISP-Firmware to keep working also with OpenWISP 2
+
+Version 0.9.1 [2021-02-15]
 --------------------------
 
 - [fix] Removed ``mtu_disc`` from ``auto_client`` method because it causes
