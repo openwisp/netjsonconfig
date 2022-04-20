@@ -2,8 +2,6 @@
 Command line utility
 ====================
 
-.. include:: ../_github.rst
-
 netjsonconfig ships a command line utility that can be
 used from the interactive shell, bash scripts or other programming
 languages.

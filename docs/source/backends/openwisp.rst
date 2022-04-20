@@ -2,8 +2,6 @@
 OpenWISP 1.x Backend
 ====================
 
-.. include:: ../_github.rst
-
 The OpenWISP 1.x Backend is based on the OpenWRT backend, therefore it inherits all
 its features with some differences that are explained in this page.
 

@@ -2,8 +2,6 @@
 VPN Backends
 ============
 
-.. include:: ../_github.rst
-
 ``netjsonconfig`` currently supports three VPN backends:
 
 .. toctree::

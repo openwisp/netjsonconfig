@@ -2,8 +2,6 @@
 Setup
 =====
 
-.. include:: ../_github.rst
-
 Install stable version from pypi
 --------------------------------
 

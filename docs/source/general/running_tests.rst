@@ -2,8 +2,6 @@
 Running tests
 =============
 
-.. include:: ../_github.rst
-
 Running the test suite is really straightforward!
 
 Using runtests.py

@@ -2,8 +2,6 @@
 WireGuard Backend
 =================
 
-.. include:: ../_github.rst
-
 The ``WireGuard`` backend allows to generate WireGuard configurations.
 
 Its schema is limited to a subset of the features available in WireGuard and it doesn't recognize

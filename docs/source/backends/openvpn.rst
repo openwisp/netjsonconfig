@@ -2,8 +2,6 @@
 OpenVPN 2.3 Backend
 ===================
 
-.. include:: ../_github.rst
-
 The ``OpenVpn`` backend allows to generate OpenVPN 2.3.x compatible configurations.
 
 Its schema is limited to a subset of the features available in OpenVPN and it doesn't recognize

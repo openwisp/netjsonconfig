@@ -24,8 +24,6 @@ configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwis
 .. image:: ./images/openwisp.org.svg
   :target: http://openwisp.org
 
-.. include:: _github.rst
-
 **netjsonconfig** is a python library that converts `NetJSON <http://netjson.org>`_
 *DeviceConfiguration* objects into real router configurations that can be installed
 on systems like `OpenWRT <http://openwrt.org>`_, `LEDE <https://www.lede-project.org/>`_

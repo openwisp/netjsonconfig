@@ -2,9 +2,7 @@
 Create your backend
 ===================
 
-.. include:: ../_github.rst
-
-Every backend is based on the common ground of some elements provided by the 
+Every backend is based on the common ground of some elements provided by the
 netjsonconfig library. The ``BaseBackend``, ``BaseConverter``, ``BaseParser`` and
 ``BaseRenderer`` are a battle proven set of tools that can be extended when
 creating you backend.
@@ -23,7 +21,7 @@ project root directory.
 
     # example_backend/setup.py
     from setuptools import setup, find_packages
-    
+
     setup(
         name='example_backend',
         version='0.0.0',
@@ -86,9 +84,9 @@ The previous example can be used with the following class definition
         from netjsonconfig.backends.base.backend import BaseBackend
         from netjsonconfig.backends.base.renderer import BaseRenderer
         from netjsonconfig.backends.base.parser import BaseParser
-        
+
         from netjsonconfig.schema import schema as default_schema
-        
+
         class ExampleBackend(BaseBackend):
             schema = default_schema
             converter = []

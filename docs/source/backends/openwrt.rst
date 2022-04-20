@@ -2,8 +2,6 @@
 OpenWRT Backend
 ===============
 
-.. include:: ../_github.rst
-
 The ``OpenWrt`` backend allows to generate OpenWRT compatible configurations.
 
 .. note::

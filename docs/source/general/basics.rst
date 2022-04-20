@@ -2,8 +2,6 @@
 Basic concepts
 ==============
 
-.. include:: ../_github.rst
-
 Before starting, let's quickly introduce the main concepts used in netjsonconfig:
 
 * :ref:`configuration_dictionary`: python dictionary representing the configuration of a router

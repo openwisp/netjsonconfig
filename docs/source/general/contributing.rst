@@ -2,8 +2,6 @@
 Contributing
 ============
 
-.. include:: ../_github.rst
-
 Thank you for taking the time to contribute to netjsonconfig.
 
 Follow these guidelines to speed up the process.
