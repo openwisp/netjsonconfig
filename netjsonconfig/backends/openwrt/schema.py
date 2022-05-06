@@ -367,6 +367,12 @@ schema = merge_config(
                                 "default": False,
                                 "propertyOrder": 1.8,
                             },
+                            "signalrate": {
+                                "type": "integer",
+                                "title": "Signal refresh rate",
+                                "propertyOrder": 1.9,
+                                "description": "singal refresh rate in seconds",
+                            },
                         }
                     },
                     {"$ref": "#/definitions/base_interface_settings"},
