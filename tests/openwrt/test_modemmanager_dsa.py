@@ -21,6 +21,7 @@ class TestModemManager(unittest.TestCase, _TabsMixin):
                 "iptype": "ipv4v6",
                 "lowpower": False,
                 "mtu": 1500,
+                "signalrate": 5,
             }
         ]
     }
@@ -40,6 +41,7 @@ config interface 'wwan0'
     option password 'pwd123456'
     option pincode '1234'
     option proto 'modemmanager'
+    option signalrate '5'
     option username 'user123'
 """
 
@@ -51,7 +53,4 @@ config interface 'wwan0'
     def test_parse_modemmanager_interface(self):
         result = OpenWrt(native=self._modemmanager_interface_uci).config
         expected = self._modemmanager_interface_netjson
-        from pprint import pprint
-
-        pprint(result)
         self.assertEqual(result, expected)

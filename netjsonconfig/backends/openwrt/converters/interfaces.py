@@ -427,7 +427,17 @@ class Interfaces(OpenWrtConverter):
         name = interface.get('name')
         if not name and interface.get('proto') in self._dsa_supported_custom_proto:
             name = interface.get('.name')
-        return self._device_config.get(device, self._device_config.get(name))
+        device_config = self._device_config.get(device, self._device_config.get(name))
+        if not device_config:
+            return device_config
+        if interface.get('proto') in self._dsa_supported_custom_proto:
+            del device_config['type']
+        # ifname has been renamed to device in OpenWrt 21.02
+        if device_config.get('type') == 'bridge':
+            interface['ifname'] = 'br-{}'.format(interface.pop('device'))
+        elif interface.get('proto') not in self._dsa_supported_custom_proto:
+            interface['ifname'] = interface.pop('device')
+        return device_config
 
     def __netjson_dsa_interface(self, interface):
         if self.__is_device_config(interface) or interface.get('bridge_21', None):
@@ -435,17 +445,10 @@ class Interfaces(OpenWrtConverter):
         else:
             device_config = self.__get_device_config_for_interface(interface)
             if device_config:
-                # ifname has been renamed to device in OpenWrt 21.02
-                if device_config.get('type') == 'bridge':
-                    interface['ifname'] = 'br-{}'.format(interface.pop('device'))
-                elif interface.get('proto') not in self._dsa_supported_custom_proto:
-                    interface['ifname'] = interface.pop('device')
                 if (
                     device_config.pop('bridge_21', None)
                     or interface.get('proto') in self._dsa_supported_custom_proto
                 ):
-                    if interface.get('proto') in self._dsa_supported_custom_proto:
-                        del device_config['type']
                     for option in device_config:
                         if 'name' in option:
                             continue
@@ -496,7 +499,6 @@ class Interfaces(OpenWrtConverter):
             except KeyError:
                 continue
         name = interface.get('name')
-        print(name)
         self._device_config[name] = interface
 
     def __netjson_type(self, interface):

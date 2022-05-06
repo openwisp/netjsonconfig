@@ -21,6 +21,7 @@ class TestModemManager(unittest.TestCase, _TabsMixin):
                 "iptype": "ipv4v6",
                 "lowpower": False,
                 "mtu": 1500,
+                "signalrate": 5,
             }
         ]
     }
@@ -38,6 +39,7 @@ config interface 'wwan0'
     option password 'pwd123456'
     option pincode '1234'
     option proto 'modemmanager'
+    option signalrate '5'
     option username 'user123'
 """
 
