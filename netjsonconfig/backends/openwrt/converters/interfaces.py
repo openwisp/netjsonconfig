@@ -32,7 +32,8 @@ class Interfaces(OpenWrtConverter):
     }
     _device_config = {}
     _custom_protocols = ['ppp']
-    _interface_dsa_types = ['loopback', 'ethernet', 'bridge']
+    _dsa_supported_custom_proto = ['modemmanager', 'modem-manager']
+    _interface_dsa_types = ['loopback', 'ethernet', 'bridge', 'modem-manager']
 
     def __set_dsa_interface(self, interface):
         """
@@ -216,7 +217,8 @@ class Interfaces(OpenWrtConverter):
             }
         )
         # Add 'device' option in related interface configuration
-        interface['device'] = device['name']
+        if not interface.get('device', None):
+            interface['device'] = device['name']
 
         if interface['type'] != 'bridge':
             # A non-bridge interface that contains L2 options.
@@ -420,20 +422,30 @@ class Interfaces(OpenWrtConverter):
             interface = method(interface)
         return interface
 
+    def __get_device_config_for_interface(self, interface):
+        device = interface.get('device')
+        name = interface.get('name')
+        if not name and interface.get('proto') in self._dsa_supported_custom_proto:
+            name = interface.get('.name')
+        return self._device_config.get(device, self._device_config.get(name))
+
     def __netjson_dsa_interface(self, interface):
         if self.__is_device_config(interface) or interface.get('bridge_21', None):
             self.__netjson_device(interface)
         else:
-            device = interface.get('device')
-            # adding device property to interface
-            if self._device_config.get(device, None):
-                device_config = self._device_config[device]
+            device_config = self.__get_device_config_for_interface(interface)
+            if device_config:
                 # ifname has been renamed to device in OpenWrt 21.02
                 if device_config.get('type') == 'bridge':
                     interface['ifname'] = 'br-{}'.format(interface.pop('device'))
-                else:
+                elif interface.get('proto') not in self._dsa_supported_custom_proto:
                     interface['ifname'] = interface.pop('device')
-                if device_config.pop('bridge_21', None):
+                if (
+                    device_config.pop('bridge_21', None)
+                    or interface.get('proto') in self._dsa_supported_custom_proto
+                ):
+                    if interface.get('proto') in self._dsa_supported_custom_proto:
+                        del device_config['type']
                     for option in device_config:
                         if 'name' in option:
                             continue
@@ -483,7 +495,9 @@ class Interfaces(OpenWrtConverter):
                 interface[option] = value == '1'
             except KeyError:
                 continue
-        self._device_config[interface['name']] = interface
+        name = interface.get('name')
+        print(name)
+        self._device_config[name] = interface
 
     def __netjson_type(self, interface):
         if 'type' in interface and interface['type'] == 'bridge':
