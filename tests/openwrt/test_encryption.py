@@ -29,8 +29,11 @@ class TestEncryption(unittest.TestCase, _TabsMixin):
     }
     _wpa3_personal_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -76,8 +79,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_personal_mixed_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -123,8 +129,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_personal_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -170,8 +179,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa_personal_mixed_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -216,8 +228,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa_personal_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -263,8 +278,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_enterprise_mixed_ap_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -317,8 +335,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa3_enterprise_ap_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -375,8 +396,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_enterprise_ap_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -427,8 +451,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa_enterprise_mixed_ap_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -474,8 +501,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa_enterprise_ap_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -525,8 +555,11 @@ config wifi-iface 'wifi_wlan0'
 
     _wpa3_enterprise_client_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -578,8 +611,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_enterprise_client_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -631,8 +667,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_enterprise_ttls_client_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -684,8 +723,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_enterprise_peap_client_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -738,8 +780,11 @@ config wifi-iface 'wifi_wlan0'
 
     _wpa2_enterprise_tls_client_auth_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -782,8 +827,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wep_open_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -828,8 +876,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wep_shared_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -879,8 +930,11 @@ config wifi-iface 'wifi_wlan0'
         expected = self._tabs(
             """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -916,8 +970,11 @@ config wifi-iface 'wifi_wlan0'
         expected = self._tabs(
             """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -953,8 +1010,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wpa2_80211s_uci = """package network
 
+config device 'device_mesh0'
+    option name 'mesh0'
+
 config interface 'mesh0'
-    option ifname 'mesh0'
+    option device 'mesh0'
     option proto 'none'
 
 package wireless
@@ -999,8 +1059,11 @@ config wifi-iface 'wifi_mesh0'
     }
     _wpa2_adhoc_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless
@@ -1046,8 +1109,11 @@ config wifi-iface 'wifi_wlan0'
     }
     _wps_ap_uci = """package network
 
+config device 'device_wlan0'
+    option name 'wlan0'
+
 config interface 'wlan0'
-    option ifname 'wlan0'
+    option device 'wlan0'
     option proto 'none'
 
 package wireless

@@ -33,7 +33,12 @@ class Interfaces(OpenWrtConverter):
     _device_config = {}
     _custom_protocols = ['ppp']
     _proto_dsa_conflict = ['modemmanager', 'modem-manager']
-    _interface_dsa_types = ['loopback', 'ethernet', 'bridge'] + _proto_dsa_conflict
+    _interface_dsa_types = [
+        'loopback',
+        'ethernet',
+        'bridge',
+        'wireless',
+    ] + _proto_dsa_conflict
 
     def __set_dsa_interface(self, interface):
         """
