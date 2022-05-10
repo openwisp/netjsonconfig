@@ -1713,27 +1713,29 @@ that are specific to modem-manager interfaces (2G, 3G, 4G, LTE, etc).
 
 These are the ``OpenWrt`` backend NetJSON extensions for Modem Manager interfaces:
 
-+--------------+---------+-----------------+--------------------------------------------+
-| key name     | type    | default         | allowed values                             |
-+==============+=========+=================+============================================+
-| ``proto``    | string  | ``modemanager`` | ``modemanager``                            |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``apn``      | string  | empty           | APN, can be left blank                     |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``pin``      | string  | empty           | PIN code, can be left blank                |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``device``   | string  | empty           | path to device (see note below)            |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``password`` | string  | empty           | password, can be left blank                |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``username`` | string  | empty           | username, can be left blank                |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``metric``   | integer | ``50``          | metric, can be left blank                  |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``iptype``   | string  | ``ipv4``        | One of ``ipv4``, ``ipv6``, ``ipv4v6``      |
-+--------------+---------+-----------------+--------------------------------------------+
-| ``lowpower`` | boolean | ``False``       | low power mode                             |
-+--------------+---------+-----------------+--------------------------------------------+
++----------------+---------+-----------------+--------------------------------------------+
+| key name       | type    | default         | allowed values                             |
++================+=========+=================+============================================+
+| ``proto``      | string  | ``modemanager`` | ``modemanager``                            |
++----------------+---------+-----------------+--------------------------------------------+
+| ``apn``        | string  | empty           | APN, can be left blank                     |
++----------------+---------+-----------------+--------------------------------------------+
+| ``pin``        | string  | empty           | PIN code, can be left blank                |
++----------------+---------+-----------------+--------------------------------------------+
+| ``device``     | string  | empty           | path to device (see note below)            |
++----------------+---------+-----------------+--------------------------------------------+
+| ``password``   | string  | empty           | password, can be left blank                |
++----------------+---------+-----------------+--------------------------------------------+
+| ``username``   | string  | empty           | username, can be left blank                |
++----------------+---------+-----------------+--------------------------------------------+
+| ``metric``     | integer | ``50``          | metric, can be left blank                  |
++----------------+---------+-----------------+--------------------------------------------+
+| ``iptype``     | string  | ``ipv4``        | One of ``ipv4``, ``ipv6``, ``ipv4v6``      |
++----------------+---------+-----------------+--------------------------------------------+
+| ``lowpower``   | boolean | ``False``       | low power mode                             |
++----------------+---------+-----------------+--------------------------------------------+
+| ``signalrate`` | integer |                 | singal refresh rate in seconds             |
++----------------+---------+-----------------+--------------------------------------------+
 
 .. note::
     ``device`` is a required property but can be left empty so that
@@ -1761,7 +1763,8 @@ The following *configuration dictionary*:
                 "metric": 50,
                 "lowpower": False,
                 "name": "modem0",
-                "mtu": 1500
+                "mtu": 1500,
+                "signalrate": 5,
             }
         ]
     }
@@ -1770,16 +1773,19 @@ Will be rendered as follows::
 
     package network
 
+    config device 'device_modem0'
+            option mtu '1500'
+            option name 'modem0'
+
     config interface 'modem0'
             option apn 'apn.operator.com'
             option device '/sys/devices/platform/ahb/1b000000.usb/usb1/1-1'
-            option ifname 'wwan0'
             option lowpower '0'
             option metric '50'
-            option mtu '1500'
             option password 'pwd123456'
             option pincode '1234'
             option proto 'modemmanager'
+            option signalrate '5'
             option username 'user123'
 
 Radio settings

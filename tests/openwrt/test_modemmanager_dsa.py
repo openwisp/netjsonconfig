@@ -21,23 +21,27 @@ class TestModemManager(unittest.TestCase, _TabsMixin):
                 "iptype": "ipv4v6",
                 "lowpower": False,
                 "mtu": 1500,
+                "signalrate": 5,
             }
         ]
     }
 
     _modemmanager_interface_uci = """package network
 
+config device 'device_wwan0'
+    option mtu '1500'
+    option name 'wwan0'
+
 config interface 'wwan0'
     option apn 'apn.vodafone.com'
     option device '/sys/devices/platform/ahb/1b000000.usb/usb1/1-1'
-    option ifname 'wwan0'
     option iptype 'ipv4v6'
     option lowpower '0'
     option metric '50'
-    option mtu '1500'
     option password 'pwd123456'
     option pincode '1234'
     option proto 'modemmanager'
+    option signalrate '5'
     option username 'user123'
 """
 
@@ -49,4 +53,4 @@ config interface 'wwan0'
     def test_parse_modemmanager_interface(self):
         result = OpenWrt(native=self._modemmanager_interface_uci).config
         expected = self._modemmanager_interface_netjson
-        self.assertDictEqual(result, expected)
+        self.assertEqual(result, expected)
