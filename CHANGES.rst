@@ -1,6 +1,12 @@
 Change log
 ==========
 
+Version 1.0.1 [2022-05-11]
+--------------------------
+
+- Fixed modem-manager configuration for OpenWrt 21
+- Fixed WiFi interface configuration for OpenWrt 21
+
 Version 1.0.0 [2022-04-20]
 --------------------------
 
