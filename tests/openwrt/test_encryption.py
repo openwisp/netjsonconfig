@@ -950,25 +950,21 @@ config wifi-iface 'wifi_wlan0'
         )
         self.assertEqual(o.render(), expected)
 
-    def test_no_encryption(self):
-        o = OpenWrt(
+    _no_encryption_netjson = {
+        "interfaces": [
             {
-                "interfaces": [
-                    {
-                        "name": "wlan0",
-                        "type": "wireless",
-                        "wireless": {
-                            "radio": "radio0",
-                            "mode": "access_point",
-                            "ssid": "open",
-                            "encryption": {"protocol": "none"},
-                        },
-                    }
-                ]
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "open",
+                    "encryption": {"protocol": "none"},
+                },
             }
-        )
-        expected = self._tabs(
-            """package network
+        ]
+    }
+    _no_encryption_uci = """package network
 
 config device 'device_wlan0'
     option name 'wlan0'
@@ -987,8 +983,15 @@ config wifi-iface 'wifi_wlan0'
     option network 'wlan0'
     option ssid 'open'
 """
-        )
+
+    def test_render_no_encryption(self):
+        o = OpenWrt(self._no_encryption_netjson)
+        expected = self._tabs(self._no_encryption_uci)
         self.assertEqual(o.render(), expected)
+
+    def test_parse_no_encryption(self):
+        o = OpenWrt(native=self._no_encryption_uci)
+        self.assertEqual(o.config, self._no_encryption_netjson)
 
     _wpa2_80211s_netjson = {
         "interfaces": [

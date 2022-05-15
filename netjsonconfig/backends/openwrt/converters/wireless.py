@@ -255,7 +255,7 @@ class Wireless(OpenWrtConverter):
         'wps_pin',
     ]
 
-    def __netjson_encryption(self, wifi):
+    def __netjson_encryption(self, wifi):  # noqa: max-complexity: 11
         if 'encryption' not in wifi:
             return
         settings = {}
@@ -268,6 +268,10 @@ class Wireless(OpenWrtConverter):
                     wps = True
         # determine NetJSON protocol and cipher
         protocol = wifi.pop('encryption')
+        # if encryption is diabled just set it to none and return
+        if protocol == 'none':
+            wifi['encryption'] = {'protocol': 'none'}
+            return
         cipher = 'auto'
         if '+' in protocol:
             protocol, cipher = protocol.split('+', 1)
