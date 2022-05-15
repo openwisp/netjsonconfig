@@ -68,6 +68,10 @@ config wifi-iface 'wifi_wlan0'
         o = OpenWrt(native=self._wifi_uci)
         self.assertEqual(o.config, self._wifi_netjson)
 
+    def test_parse_wifi_interface_without_ifname(self):
+        o = OpenWrt(native=self._wifi_uci.replace("    option ifname 'wlan0'\n", ''))
+        self.assertEqual(o.config, self._wifi_netjson)
+
     def test_parse_wifi_interface_partial(self):
         o = OpenWrt(
             native="""package wireless

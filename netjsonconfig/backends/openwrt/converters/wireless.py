@@ -144,13 +144,22 @@ class Wireless(OpenWrtConverter):
         interface = self.__get_netjson_interface(block)
         if not interface:
             is_new = True
-            interface = {'name': block['ifname'], 'type': 'wireless'}
+            ifname = self.__netjson_wifi_get_ifname(block)
+            interface = {'name': ifname, 'type': 'wireless'}
         wifi = self.__netjson_wifi(block, interface)
         interface['wireless'] = wifi
         if is_new:
             result.setdefault('interfaces', [])
             result['interfaces'].append(interface)
         return result
+
+    def __netjson_wifi_get_ifname(self, block):
+        """
+        returns the ifname or alternatively returns
+        the UCI block name as interface name
+        (because ifname in wifi devices is optional)
+        """
+        return block.get('ifname', block['.name'].replace('wifi_', ''))
 
     def __netjson_wifi(self, wifi, interface):
         _name = wifi.pop('.name')
@@ -177,7 +186,7 @@ class Wireless(OpenWrtConverter):
             if uci_key not in wifi:
                 continue
             wifi[netjson_key] = int(wifi.pop(uci_key))
-        ifname = wifi.pop('ifname', None)
+        ifname = wifi.pop('ifname', interface['name'])
         if 'network' in wifi:
             if wifi['network'] in [ifname, interface.get('network')]:
                 del wifi['network']
@@ -309,7 +318,8 @@ class Wireless(OpenWrtConverter):
 
     def __get_netjson_interface(self, wifi):
         for interface in self.netjson.get('interfaces', []):
-            if interface['name'] == wifi['ifname']:
+            ifname = self.__netjson_wifi_get_ifname(wifi)
+            if interface['name'] == ifname:
                 interface['type'] = 'wireless'
                 return interface
 
