@@ -209,6 +209,12 @@ class Wireless(OpenWrtConverter):
             'ft_psk_generate_local',
             'ieee80211r',
             'rsn_preauth',
+            'isolate',
+            'doth',
+            'wmm',
+            'short_preamble',
+            'start_disabled',
+            'default_disabled',
         ]:
             if attr in wifi:
                 wifi[attr] = wifi[attr] == '1'
@@ -255,7 +261,7 @@ class Wireless(OpenWrtConverter):
         'wps_pin',
     ]
 
-    def __netjson_encryption(self, wifi):  # noqa: max-complexity: 11
+    def __netjson_encryption(self, wifi):  # noqa: C901
         if 'encryption' not in wifi:
             return
         settings = {}
