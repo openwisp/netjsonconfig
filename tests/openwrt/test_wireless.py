@@ -30,6 +30,7 @@ class TestWireless(unittest.TestCase, _TabsMixin):
                     "ack_distance": 300,
                     "rts_threshold": 1300,
                     "frag_threshold": 1500,
+                    "isolate": True,
                 },
             }
         ]
@@ -53,6 +54,7 @@ config wifi-iface 'wifi_wlan0'
     option frag '1500'
     option hidden '1'
     option ifname 'wlan0'
+    option isolate '1'
     option mode 'ap'
     option network 'wlan0'
     option rts '1300'
