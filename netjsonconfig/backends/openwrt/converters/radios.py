@@ -13,6 +13,16 @@ class Radios(OpenWrtConverter):
         result['wireless'].append(radio)
         return result
 
+    @property
+    def __band(self):
+        """
+        returns the field name for hardware band according to new syntax
+        introduced in OpenWRT 21.02 in which hwmode is replaced with band
+        """
+        if self.dsa:
+            return 'band'
+        return 'hwmode'
+
     def __intermediate_radio(self, radio):
         radio.update({'.type': 'wifi-device', '.name': radio.pop('name')})
         # rename tx_power to txpower
@@ -21,7 +31,10 @@ class Radios(OpenWrtConverter):
         # rename driver to type
         radio['type'] = radio.pop('driver', default_radio_driver)
         # determine hwmode option
-        radio['hwmode'] = self.__intermediate_hwmode(radio)
+        if self.dsa:
+            radio['band'] = self.__intermediate_band(radio)
+        else:
+            radio['hwmode'] = self.__intermediate_hwmode(radio)
         # check if using channel 0, that means "auto"
         if radio['channel'] == 0:
             radio['channel'] = 'auto'
@@ -54,6 +67,28 @@ class Radios(OpenWrtConverter):
             return '11g'
         else:
             return '11a'
+
+    def __intermediate_band(self, radio):
+        protocol = radio['protocol']
+        if 'hwmode' in radio:
+            radio.pop('hwmode')
+        if protocol in ['802.11b', '802.11g']:
+            return '2g'  # 2.4 GHz
+        if protocol in ['802.11a', '802.11h', '802.11j', '802.11n', '802.11ac']:
+            return '5g'  # 5 GHz
+        if protocol in ['802.11ax']:
+            return '6g'  # 6 GHz
+        if protocol in ['802.11ad', '802.11ay']:
+            return '60g'  # 60 GHz
+        # determine band depending on channel used
+        if radio['channel'] == 0:
+            # when using automatic channel selection, we need an
+            # additional parameter to determine the frequency band
+            return radio.get('hwmode')
+        elif radio['channel'] <= 13:
+            return '2g'
+        else:
+            return '5g'
 
     def __intermediate_htmode(self, radio):
         """
@@ -97,7 +132,7 @@ class Radios(OpenWrtConverter):
         determines NetJSON protocol radio attribute
         """
         htmode = radio.get('htmode')
-        hwmode = radio.get('hwmode', None)
+        hwmode = radio.get(self.__band, None)
         if htmode.startswith('HT'):
             return '802.11n'
         elif htmode.startswith('VHT'):
@@ -112,9 +147,9 @@ class Radios(OpenWrtConverter):
         """
         if radio['channel'] == 'auto':
             return 0
-        # delete hwmode because is needed
+        # delete hwmode or band because is needed
         # only when channel is auto
-        del radio['hwmode']
+        del radio[self.__band]
         return int(radio['channel'])
 
     def __netjson_channel_width(self, radio):
