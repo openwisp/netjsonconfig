@@ -3,7 +3,13 @@ JSON-Schema implementation of NetJSON DeviceConfiguration
 http://netjson.org/rfc.html
 """
 
-from .channels import channels_2and5, channels_2ghz, channels_5ghz
+from .channels import (
+    channels_2and5,
+    channels_2ghz,
+    channels_5ghz,
+    channels_6ghz,
+    channels_60ghz,
+)
 from .countries import countries
 
 DEFAULT_FILE_MODE = '0644'
@@ -945,6 +951,19 @@ schema = {
                 "channel": {"enum": channels_5ghz, "options": {"enum_titles": ['auto']}}
             }
         },
+        "radio_6ghz_channels": {
+            "properties": {
+                "channel": {"enum": channels_6ghz, "options": {"enum_titles": ['auto']}}
+            }
+        },
+        "radio_60ghz_channels": {
+            "properties": {
+                "channel": {
+                    "enum": channels_60ghz,
+                    "options": {"enum_titles": ['auto']},
+                }
+            }
+        },
         "radio_2and5_channels": {
             "properties": {
                 "channel": {
@@ -1024,6 +1043,24 @@ schema = {
                 {"$ref": "#/definitions/radio_ax_channel_width"},
             ],
         },
+        "radio_80211ax_6ghz_settings": {
+            "title": "802.11ax (6 GHz AX)",
+            "allOf": [
+                {"properties": {"protocol": {"enum": ["802.11ax"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"$ref": "#/definitions/radio_6ghz_channels"},
+                {"$ref": "#/definitions/radio_ax_channel_width"},
+            ],
+        },
+        "radio_80211ad_60ghz_settings": {
+            "title": "802.11ad (60 GHz AX)",
+            "allOf": [
+                {"properties": {"protocol": {"enum": ["802.11ad"]}}},
+                {"$ref": "#/definitions/base_radio_settings"},
+                {"$ref": "#/definitions/radio_60ghz_channels"},
+                {"$ref": "#/definitions/radio_ax_channel_width"},
+            ],
+        },
     },
     "properties": {
         "general": {
@@ -1083,6 +1120,8 @@ schema = {
                     {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ax_2ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ax_5ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ax_6ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ad_60ghz_settings"},
                     {"$ref": "#/definitions/radio_80211bg_settings"},
                     {"$ref": "#/definitions/radio_80211a_settings"},
                 ],

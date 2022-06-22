@@ -173,7 +173,7 @@ config interface 'wlan0'
         contents = tar.extractfile(wireless).read().decode()
         expected = self._tabs(
             """config wifi-device 'radio0'
-    option band '5g'
+    option band '2g'
     option channel '3'
     option htmode 'HT20'
     option phy 'phy0'

@@ -8,3 +8,7 @@ channels_5ghz = (
 )
 channels_2and5 = list(channels_2ghz + channels_5ghz)
 channels_5ghz.insert(0, 0)
+channels_6ghz = [channel + 1 for channel in channels_5ghz]
+channels_60ghz = (
+    list(range(1, 7)) + list(range(9, 14)) + list(range(17, 21)) + list(range(25, 28))
+)
