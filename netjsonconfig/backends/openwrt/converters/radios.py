@@ -1,3 +1,4 @@
+from ....channels import channels_6ghz
 from ..schema import default_radio_driver
 from .base import OpenWrtConverter
 
@@ -66,7 +67,7 @@ class Radios(OpenWrtConverter):
         radio.pop('hwmode', None)
         if protocol in ['802.11b', '802.11g']:
             return '2g'  # 2GHz
-        if protocol == '802.11ax' and radio['channel'] % 4 == 1:
+        if protocol == '802.11ax' and radio['channel'] in channels_6ghz:
             return '6g'  # 6GHz
         if protocol in ['802.11a', '802.11ac', '802.11ax']:
             return '5g'  # 5GHz
