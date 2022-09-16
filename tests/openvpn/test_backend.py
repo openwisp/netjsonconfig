@@ -595,6 +595,8 @@ tls-client
             "engine": "dynamic",
             "ns_cert_type": "client",
             "server_bridge": "",
+            "script_security": 1,
+            "log": "/var/log/openvpn/tap0.log",
         }
         client_config = OpenVpn.auto_client(
             'vpn1.test.com',
@@ -617,6 +619,7 @@ comp-lzo yes
 dev tap0
 dev-type tap
 key {{key_path_1}}
+log /var/log/tap0.log
 mode p2p
 nobind
 ns-cert-type server
@@ -624,6 +627,7 @@ proto tcp-client
 pull
 remote vpn1.test.com 1195
 resolv-retry infinite
+script-security 2
 tls-client
 
 # ---------- files ---------- #
