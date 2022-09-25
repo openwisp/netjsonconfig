@@ -105,10 +105,8 @@ class OpenVpn(BaseVpnBackend):
             'persist_tun',
             'mute',
             'persist_key',
-            'script_security',
             'user',
             'group',
-            'log',
             'mute_replay_warnings',
             'secret',
             'reneg_sec',
@@ -122,6 +120,14 @@ class OpenVpn(BaseVpnBackend):
         for key in copy_keys:
             if key in server:
                 client[key] = server[key]
+        if 'script_security' in server:
+            # From OpenWrt 21 onwards, "script_security" of "2"
+            # is required for functioning of OpenVPN tunnels.
+            client['script_security'] = 2
+        if 'log' in server:
+            # The "/var/log/openvpn" directory is not present
+            # on OpenWrt, hence the location of the log is changed.
+            client['log'] = server['log'].replace('/var/log/openvpn/', '/var/log/')
         files = cls._auto_client_files(
             client,
             ca_path,
