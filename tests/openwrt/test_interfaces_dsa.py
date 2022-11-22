@@ -874,21 +874,21 @@ config interface 'eth1'
     option proto 'none'
 
 config device 'device_lan'
-    option name 'lan'
+    option name 'br-lan'
     list ports 'eth0'
     list ports 'eth1'
     option stp '1'
     option type 'bridge'
 
 config interface 'lan'
-    option device 'lan'
+    option device 'br-lan'
     option gateway '10.0.0.10'
     list ipaddr '192.168.1.1/24'
     list ipaddr '10.0.0.1/24'
     option proto 'static'
 
 config interface 'lan_2'
-    option device 'lan'
+    option device 'br-lan'
     option proto 'dhcp'
 """
 

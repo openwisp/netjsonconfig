@@ -229,6 +229,13 @@ class Interfaces(OpenWrtConverter):
             # A non-bridge interface that contains L2 options.
             return device
         device['type'] = 'bridge'
+        if not interface['ifname'].startswith('br-'):
+            # OpenWrt 21 requires the bridge interfaces to start
+            # with "br-"
+            interface['ifname'] = f'br-{interface["ifname"]}'
+        device['name'] = interface['ifname']
+        interface['device'] = device['name']
+
         # Add STP options only if STP is enabled
         self._add_options(
             'stp', self._bridge_interface_options['stp'], device, interface
@@ -439,7 +446,7 @@ class Interfaces(OpenWrtConverter):
             del device_config['type']
         # ifname has been renamed to device in OpenWrt 21.02
         if device_config.get('type') == 'bridge':
-            interface['ifname'] = 'br-{}'.format(interface.pop('device'))
+            interface['ifname'] = interface.pop('device')
         elif interface.get('proto') not in self._proto_dsa_conflict:
             interface['ifname'] = interface.pop('device')
         return device_config
