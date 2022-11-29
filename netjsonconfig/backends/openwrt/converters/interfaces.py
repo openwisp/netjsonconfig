@@ -232,11 +232,14 @@ class Interfaces(OpenWrtConverter):
         if not interface['ifname'].startswith('br-'):
             # Add "br-" prefix to the bridge name
             # for backward compatibility: OpenWrt <= 19
-            # automatically added the "br-" prefix to bridges
-            # later in OpenWrt 21 the bridge logic was changed
-            # and this no longer holds true, for that reason
-            # some old configurations of OpenWISP may break and
-            # to avoid this we add the "br-" prefix automatically.
+            # automatically added the "br-" prefix to bridges,
+            # but later in OpenWrt 21 the bridge logic changed
+            # and that is no longer true, for that reason
+            # old configurations of OpenWISP made for OpenWrt 19
+            # which relied on the bridge names to be prefixed
+            # automatically with "br-" were breaking;
+            # to resolve this backward compatibility issue
+            # we now add the "br-" prefix automatically if needed.
             interface['ifname'] = f'br-{interface["ifname"]}'
         device['name'] = interface['ifname']
         interface['device'] = device['name']
