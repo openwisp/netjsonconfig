@@ -1,8 +1,22 @@
 Change log
 ==========
 
+Version 1.0.2 [2022-12-02]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed parsing of wifi interface without ifname
+- Fixed parsing of wifi with encryption set to none
+- Fixed parsing wifi interface boolean typecasting
+- Fixed bridges renamed on OpenWrt 21
+
 Version 1.0.1 [2022-05-11]
 --------------------------
+
+Bugfixes
+~~~~~~~~
 
 - Fixed modem-manager configuration for OpenWrt 21
 - Fixed WiFi interface configuration for OpenWrt 21
