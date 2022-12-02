@@ -10,7 +10,7 @@ Bugfixes
 - Fixed parsing of wifi interface without ifname
 - Fixed parsing of wifi with encryption set to none
 - Fixed parsing wifi interface boolean typecasting
-- Fixed bridges renamed on OpenWrt 21
+- Fixed a backward compatibility issue with bridges not being prefixed with "br-" on OpenWrt >= 21
 
 Version 1.0.1 [2022-05-11]
 --------------------------
