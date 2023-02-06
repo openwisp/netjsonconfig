@@ -38,6 +38,7 @@ class Interfaces(OpenWrtConverter):
         'ethernet',
         'bridge',
         'wireless',
+        '8021q',
     ] + _proto_dsa_conflict
 
     def __set_dsa_interface(self, interface):
@@ -224,6 +225,15 @@ class Interfaces(OpenWrtConverter):
         # Add 'device' option in related interface configuration
         if not interface.get('device', None):
             interface['device'] = device['name']
+
+        # Make device vlan aware if interface is of type 8021q
+        if interface['type'] == '8021q':
+            device['type'] = '8021q'
+
+            # Also add vlan id to device
+            if interface.get('vid', None):
+                device['vid'] = interface['vid']
+                del interface['vid']
 
         if interface['type'] != 'bridge':
             # A non-bridge interface that contains L2 options.

@@ -176,7 +176,7 @@ schema = {
                     "properties": {
                         "type": {
                             "type": "string",
-                            "enum": ["ethernet", "virtual", "loopback", "other"],
+                            "enum": ["ethernet", "8021q", "virtual", "loopback", "other"],
                             "propertyOrder": 1,
                         }
                     }
