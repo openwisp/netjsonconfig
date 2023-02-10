@@ -358,6 +358,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_owe"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
@@ -379,6 +380,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_owe"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
@@ -415,6 +417,22 @@ schema = {
                     "options": {"enum_titles": ["No encryption"]},
                 }
             },
+        },
+        "encryption_owe": {
+            "title": "OWE",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "type": "string",
+                            "title": "encryption protocol",
+                            "enum": ["owe"],
+                            "options": {"enum_titles": ["OWE"]},
+                        }
+                    }
+                },
+            ],
         },
         "encryption_base_settings": {
             "required": ["key"],
