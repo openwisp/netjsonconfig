@@ -1183,3 +1183,97 @@ config wifi-iface 'wifi_wlan0'
     def test_parse_simplified_wifi_bridge(self):
         o = OpenWrt(native=self._wifi_simplified_bridge_uci)
         self.assertEqual(o.config, self._wifi_simplified_bridge_netjson)
+
+    _wireless_interface_netjson = {
+        "interfaces": [
+            # client
+            {
+                "name": "cpwlan0",
+                "type": "wireless",
+                "wireless": {
+                    "mode": "access_point",
+                    "radio": "radio0",
+                    "ssid": "OpenWISP Test",
+                    "encryption": {"protocol": "none"},
+                    "wmm": True,
+                    "isolate": True,
+                },
+            },
+            {
+                "type": "wireless",
+                "name": "cpwlan1",
+                "wireless": {
+                    "mode": "access_point",
+                    "radio": "radio1",
+                    "ssid": "OpenWISP Test",
+                    "encryption": {"protocol": "none"},
+                    "wmm": True,
+                    "isolate": True,
+                },
+            },
+            # bridge
+            {
+                "name": "br-cpwifi",
+                "network": "cpwifi",
+                "type": "bridge",
+                "bridge_members": ["cpwlan0", "cpwlan1"],
+            },
+        ]
+    }
+    _wireless_interface_uci = """package network
+
+config device 'device_cpwlan0'
+    option name 'cpwlan0'
+
+config interface 'cpwlan0'
+    option device 'cpwlan0'
+    option proto 'none'
+
+config device 'device_cpwlan1'
+    option name 'cpwlan1'
+
+config interface 'cpwlan1'
+    option device 'cpwlan1'
+    option proto 'none'
+
+config device 'device_cpwifi'
+    option name 'br-cpwifi'
+    list ports 'cpwlan0'
+    list ports 'cpwlan1'
+    option type 'bridge'
+
+config interface 'cpwifi'
+    option device 'br-cpwifi'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_cpwlan0'
+    option device 'radio0'
+    option encryption 'none'
+    option ifname 'cpwlan0'
+    option isolate '1'
+    option mode 'ap'
+    option network 'cpwifi'
+    option ssid 'OpenWISP Test'
+    option wmm '1'
+
+config wifi-iface 'wifi_cpwlan1'
+    option device 'radio1'
+    option encryption 'none'
+    option ifname 'cpwlan1'
+    option isolate '1'
+    option mode 'ap'
+    option network 'cpwifi'
+    option ssid 'OpenWISP Test'
+    option wmm '1'
+"""
+
+    def test_render_wireless_interface_name(self):
+        o = OpenWrt(self._wireless_interface_netjson)
+        expected = self._tabs(self._wireless_interface_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_wireless_interface_name(self):
+        o = OpenWrt(native=self._wireless_interface_uci)
+        self.assertEqual(o.config, self._wireless_interface_netjson)

@@ -375,8 +375,8 @@ class Wireless(OpenWrtConverter):
                 # Bridge is empty.
                 continue
             bridge_name = interface['.name']
-            if self.dsa:
-                bridge_name = bridge_name.lstrip('device_')
+            if self.dsa and bridge_name.startswith('device_'):
+                bridge_name = bridge_name[len('device_') :]  # noqa
             for physical_interface in bridge_members:
                 # A physical interface can be a member of multiple
                 # bridges. Hence, we create a list of bridge interfaces
