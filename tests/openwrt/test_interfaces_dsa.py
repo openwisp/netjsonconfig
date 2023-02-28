@@ -1907,3 +1907,70 @@ config interface 'eth0'
 """
         )
         self.assertEqual(o.render(), expected)
+
+    def test_render_vlan(self):
+        o = OpenWrt(
+                {
+    "interfaces": [
+        {
+            "type": "8021q",
+            "name": "vlan",
+            "mtu": 1500,
+            "disabled": False,
+            "network": "",
+            "mac": "",
+            "autostart": True,
+            "addresses": [],
+            "vlan_id": "128"
+        }
+    ]
+}
+        )
+        expected = self._tabs(
+            """package network
+
+config device 'device_vlan'
+	option mtu '1500'
+	option name 'vlan'
+	option type '8021q'
+
+config interface 'vlan'
+	option auto '1'
+	option device 'vlan'
+	option enabled '1'
+	option proto 'none'
+	option vlan_id '128'
+"""
+        )
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_vlan(self):
+        native = self._tabs(
+            """package network
+
+config device 'device_vlan'
+	option mtu '1500'
+	option name 'vlan'
+	option type '8021q'
+	option vid '128'
+
+config interface 'vlan'
+	option auto '1'
+	option device 'vlan'
+	option enabled '1'
+	option proto 'none'
+"""
+        )
+        expected = {
+    "interfaces": [
+        {
+            "type": "8021q",
+            "name": "vlan",
+            "disabled": False,
+            "autostart": True,
+            "vid": "128"
+        }
+    ]
+        }
+        o = OpenWrt(native=native)
+        self.assertEqual(o.config, expected)

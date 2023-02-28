@@ -235,6 +235,11 @@ class Interfaces(OpenWrtConverter):
                 device['vid'] = interface['vid']
                 del interface['vid']
 
+            # Also add ifname to device
+            if interface.get('dev-ifname', None):
+                device['ifname'] = interface['dev-ifname']
+                del interface['dev-ifname']
+
         if interface['type'] != 'bridge':
             # A non-bridge interface that contains L2 options.
             return device
@@ -495,6 +500,13 @@ class Interfaces(OpenWrtConverter):
                 ):
                     if options in device_config:
                         interface[options] = device_config.pop(options)
+                else:
+                    for option in device_config:
+                        if 'name' in option:
+                            continue
+                        if option == 'vid':
+                            interface['vid'] = device_config['vid']
+                            interface['type'] = '8021q'
         return interface
 
     def __netjson_device(self, interface):
@@ -543,6 +555,8 @@ class Interfaces(OpenWrtConverter):
             return 'bridge'
         if interface['name'] in ['lo', 'lo0', 'loopback']:
             return 'loopback'
+        if 'type' in interface and interface['type'] == '8021q':
+            return '8021q'
         return 'ethernet'
 
     def __netjson_bridge_typecast(self, interface):
