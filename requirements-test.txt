@@ -1,6 +1,6 @@
 nose2[coverage_plugin]>=0.6.5
 coveralls
 sphinx
-sphinx_rtd_theme
+openwisp-sphinx-theme~=1.0.0
 # commit message style check
 openwisp-utils[qa] @ https://github.com/openwisp/openwisp-utils/tarball/master
