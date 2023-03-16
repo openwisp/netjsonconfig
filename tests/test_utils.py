@@ -147,3 +147,9 @@ class TestUtils(unittest.TestCase):
         ]
         result = merge_list(conf1, conf2)
         self.assertEqual(result, conf2)
+
+    def test_merge_list_unashable_type(self):
+        conf1 = [{"name": ["walledgarden"], "contents": ""}]
+        conf2 = [{"name": ["walledgarden"], "contents": "test"}]
+        result = merge_list(conf1, conf2, identifiers=['name'])
+        self.assertEqual(result, conf2)

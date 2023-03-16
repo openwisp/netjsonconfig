@@ -68,6 +68,10 @@ def merge_list(list1, list2, identifiers=None):
                     if id_key in el:
                         key = el[id_key]
                         break
+            # if key is a list, convert it to tuple which is
+            # hashable and can be used as a dictionary key
+            if isinstance(key, list):
+                key = tuple(key)
             container[key] = deepcopy(el)
         counter += 1
     merged = merge_config(dict_map['list1'], dict_map['list2'])
