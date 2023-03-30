@@ -7,12 +7,13 @@ from ..openvpn.schema import base_openvpn_schema
 from ..wireguard.schema import base_wireguard_schema
 from .timezones import timezones
 
+QOS_MAPPING_PATTERN = "^[0-9]\d*:[0-9]\d*$"
+
 default_radio_driver = "mac80211"
 
 wireguard = base_wireguard_schema["properties"]["wireguard"]["items"]["properties"]
 wireguard_peers = wireguard["peers"]["items"]["properties"]
 interface_settings = default_schema["definitions"]["interface_settings"]["properties"]
-
 
 schema = merge_config(
     default_schema,
@@ -28,6 +29,49 @@ schema = merge_config(
                         "pattern": "^[a-zA-z0-9_\\.\\-]*$",
                         "propertyOrder": 7,
                     }
+                }
+            },
+            "vlan_interface_settings": {
+                "properties": {
+                    "name": {"title": "Base device"},
+                    "vid": {
+                        "type": "integer",
+                        "title": "VLAN ID",
+                        "propertyOrder": 2,
+                        "minimum": 0,
+                    },
+                    "ingress_qos_mapping": {
+                        "type": "array",
+                        "title": "Ingress QoS mapping",
+                        "description": (
+                            "Defines a mapping of VLAN header priority to the Linux"
+                            " internal packet priority on incoming frames"
+                        ),
+                        "uniqueItems": True,
+                        "additionalItems": False,
+                        "items": {
+                            "title": "Mapping",
+                            "type": "string",
+                            "pattern": QOS_MAPPING_PATTERN,
+                        },
+                        "propertyOrder": 18,
+                    },
+                    "egress_qos_mapping": {
+                        "type": "array",
+                        "title": "Egress QoS mapping",
+                        "description": (
+                            "Defines a mapping of Linux internal packet priority to VLAN header"
+                            " priority but for outgoing frames"
+                        ),
+                        "uniqueItems": True,
+                        "additionalItems": False,
+                        "items": {
+                            "title": "Mapping",
+                            "type": "string",
+                            "pattern": QOS_MAPPING_PATTERN,
+                        },
+                        "propertyOrder": 19,
+                    },
                 }
             },
             "wireless_interface": {
@@ -267,6 +311,46 @@ schema = merge_config(
                         }
                     }
                 ]
+            },
+            "vlan_8021q": {
+                "title": "VLAN (802.1q)",
+                "type": "object",
+                "required": ["type", "vid"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["8021q"],
+                                "default": "8021q",
+                                "propertyOrder": 1,
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                    {"$ref": "#/definitions/interface_settings"},
+                    {"$ref": "#/definitions/vlan_interface_settings"},
+                ],
+            },
+            "vlan_8021ad": {
+                "title": "VLAN (802.1ad)",
+                "type": "object",
+                "required": ["type", "vid"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["8021ad"],
+                                "default": "8021ad",
+                                "propertyOrder": 1,
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                    {"$ref": "#/definitions/interface_settings"},
+                    {"$ref": "#/definitions/vlan_interface_settings"},
+                ],
             },
             "dialup_interface": {
                 "title": "Dialup interface",
@@ -718,6 +802,8 @@ schema = merge_config(
                         {"$ref": "#/definitions/modemmanager_interface"},
                         {"$ref": "#/definitions/vxlan_interface"},
                         {"$ref": "#/definitions/wireguard_interface"},
+                        {"$ref": "#/definitions/vlan_8021q"},
+                        {"$ref": "#/definitions/vlan_8021ad"},
                     ]
                 }
             },

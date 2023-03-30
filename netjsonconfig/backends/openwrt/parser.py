@@ -81,15 +81,18 @@ class OpenWrtParser(BaseParser):
                 # list options
                 else:
                     block[key] = block.get(key, []) + [value]
-            # The new bridge syntax of OpenWrt moved "bridges"
-            # under "device" config_type. netjsonconfig
-            # process bridges using the interface converter,
-            # therefore we need to update block type here.
-            if block['.type'] == 'device':
-                block['.type'] = 'interface'
-                if block.get('type') == 'bridge':
-                    block['bridge_21'] = True
-                else:
-                    block['type'] = 'device'
+            self._set_uci_block_type(block)
             blocks.append(sorted_dict(block))
         return blocks
+
+    def _set_uci_block_type(self, block):
+        # The new bridge syntax of OpenWrt moved "bridges"
+        # under "device" config_type. netjsonconfig
+        # process bridges using the interface converter,
+        # therefore we need to update block type here.
+        if block['.type'] == 'device':
+            block['.type'] = 'interface'
+            if block.get('type') == 'bridge':
+                block['bridge_21'] = True
+            elif not block.get('type', None):
+                block['type'] = 'device'

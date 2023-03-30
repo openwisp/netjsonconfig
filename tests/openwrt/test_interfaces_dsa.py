@@ -1907,3 +1907,71 @@ config interface 'eth0'
 """
         )
         self.assertEqual(o.render(), expected)
+
+    _vlan8021q_netjson = {
+        "interfaces": [
+            {
+                "type": "8021q",
+                "vid": 1,
+                "name": "br-lan",
+                "mac": "E8:6A:64:3E:4A:3A",
+                "mtu": 1500,
+                "ingress_qos_mapping": ["1:1"],
+                "egress_qos_mapping": ["2:2"],
+            }
+        ]
+    }
+
+    _vlan8021q_uci = """package network
+
+config device 'device_br_lan_1'
+    list egress_qos_mapping '2:2'
+    option ifname 'br-lan'
+    list ingress_qos_mapping '1:1'
+    option macaddr 'E8:6A:64:3E:4A:3A'
+    option mtu '1500'
+    option name 'br-lan.1'
+    option type '8021q'
+    option vid '1'
+"""
+
+    def test_render_vlan8021q(self):
+        o = OpenWrt(self._vlan8021q_netjson)
+        expected = self._tabs(self._vlan8021q_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_vlan8021q(self):
+        o = OpenWrt(native=self._tabs(self._vlan8021q_uci))
+        expected = deepcopy(self._vlan8021q_netjson)
+        expected['interfaces'][0]['network'] = 'device_br_lan_1'
+        self.assertEqual(expected, o.config)
+
+    _vlan8021ad_netjson = {
+        "interfaces": [
+            {
+                "type": "8021ad",
+                "vid": 6,
+                "name": "eth0",
+            }
+        ]
+    }
+
+    _vlan8021ad_uci = """package network
+
+config device 'device_eth0_6'
+    option ifname 'eth0'
+    option name 'eth0.6'
+    option type '8021ad'
+    option vid '6'
+"""
+
+    def test_render_vlan8021ad(self):
+        o = OpenWrt(self._vlan8021ad_netjson)
+        expected = self._tabs(self._vlan8021ad_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_vlan8021ad(self):
+        o = OpenWrt(native=self._tabs(self._vlan8021ad_uci))
+        expected = deepcopy(self._vlan8021ad_netjson)
+        expected['interfaces'][0]['network'] = 'device_eth0_6'
+        self.assertEqual(expected, o.config)
