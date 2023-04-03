@@ -308,6 +308,43 @@ schema = merge_config(
                                 "maximum": 40,
                                 "propertyOrder": 4,
                             },
+                            "vlan_filtering": {
+                                "type": "array",
+                                "title": "VLAN Filtering",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "vlan": {
+                                            "title": "VLAN",
+                                            "type": "integer",
+                                            "minimum": 0,
+                                        },
+                                        "ports": {
+                                            "title": "Ports",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "ifname": {
+                                                        "type": "string",
+                                                    },
+                                                    "tagging": {
+                                                        "type": "string",
+                                                        "enum": ["", "t", "u"],
+                                                        "options": {
+                                                            "enum_titles": [
+                                                                "",
+                                                                "Egress tagged",
+                                                                "Egress untagged",
+                                                            ]
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
                         }
                     }
                 ]

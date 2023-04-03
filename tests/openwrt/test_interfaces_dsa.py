@@ -1145,6 +1145,56 @@ config interface 'wan'
         o = OpenWrt(native=self._l2_options_interface_uci)
         self.assertEqual(o.config, self._l2_options_interface_netjson)
 
+    _vlan_filtering_bridge_netjson = {
+        "interfaces": [
+            {
+                "type": "bridge",
+                "bridge_members": ["lan1", "lan2", "lan3"],
+                "name": "br-lan",
+                "vlan_filtering": [
+                    {
+                        "vlan": 1,
+                        "ports": [
+                            {"ifname": "lan1"},
+                            {"ifname": "lan2", "tagging": "t"},
+                            {"ifname": "lan3", "tagging": "u"},
+                        ],
+                    }
+                ],
+            }
+        ]
+    }
+
+    _vlan_filtering_bridge_uci = """package network
+
+config device 'device_br_lan'
+    option name 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2'
+    list ports 'lan3'
+    option type 'bridge'
+    option vlan_filtering '1'
+
+config bridge-vlan 'vlan_br_lan_1'
+    option device 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2:t'
+    list ports 'lan3:u'
+    option vlan '1'
+
+config interface 'vlan_br_lan_1'
+    option device 'br-lan.1'
+    option proto 'none'
+
+config interface 'br_lan'
+    option device 'br-lan'
+    option proto 'none'
+"""
+
+    def test_render_bridge_vlan_filtering(self):
+        o = OpenWrt(self._vlan_filtering_bridge_netjson)
+        self.assertEqual(self._tabs(self._vlan_filtering_bridge_uci), o.render())
+
     def test_render_dns(self):
         o = OpenWrt(
             {
@@ -1933,6 +1983,10 @@ config device 'device_br_lan_1'
     option name 'br-lan.1'
     option type '8021q'
     option vid '1'
+
+config interface 'vlan_br_lan_1'
+    option device 'br-lan.1'
+    option proto 'none'
 """
 
     def test_render_vlan8021q(self):
@@ -1943,7 +1997,7 @@ config device 'device_br_lan_1'
     def test_parse_vlan8021q(self):
         o = OpenWrt(native=self._tabs(self._vlan8021q_uci))
         expected = deepcopy(self._vlan8021q_netjson)
-        expected['interfaces'][0]['network'] = 'device_br_lan_1'
+        expected['interfaces'][0]['network'] = 'vlan_br_lan_1'
         self.assertEqual(expected, o.config)
 
     _vlan8021ad_netjson = {
@@ -1963,6 +2017,10 @@ config device 'device_eth0_6'
     option name 'eth0.6'
     option type '8021ad'
     option vid '6'
+
+config interface 'vlan_eth0_6'
+    option device 'eth0.6'
+    option proto 'none'
 """
 
     def test_render_vlan8021ad(self):
@@ -1973,5 +2031,5 @@ config device 'device_eth0_6'
     def test_parse_vlan8021ad(self):
         o = OpenWrt(native=self._tabs(self._vlan8021ad_uci))
         expected = deepcopy(self._vlan8021ad_netjson)
-        expected['interfaces'][0]['network'] = 'device_eth0_6'
+        expected['interfaces'][0]['network'] = 'vlan_eth0_6'
         self.assertEqual(expected, o.config)

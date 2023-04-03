@@ -90,9 +90,11 @@ class OpenWrtParser(BaseParser):
         # under "device" config_type. netjsonconfig
         # process bridges using the interface converter,
         # therefore we need to update block type here.
-        if block['.type'] == 'device':
+        if block['.type'] in ['device', 'bridge-vlan']:
             block['.type'] = 'interface'
             if block.get('type') == 'bridge':
+                block['bridge_21'] = True
+            elif block.get('vlan') or block.get('type') in ['8021q', '8021ad']:
                 block['bridge_21'] = True
             elif not block.get('type', None):
                 block['type'] = 'device'
