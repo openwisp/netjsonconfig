@@ -1195,6 +1195,10 @@ config interface 'br_lan'
         o = OpenWrt(self._vlan_filtering_bridge_netjson)
         self.assertEqual(self._tabs(self._vlan_filtering_bridge_uci), o.render())
 
+    def test_parse_bridge_vlan_filtering(self):
+        o = OpenWrt(native=self._vlan_filtering_bridge_uci)
+        self.assertEqual(o.config, self._vlan_filtering_bridge_netjson)
+
     def test_render_dns(self):
         o = OpenWrt(
             {

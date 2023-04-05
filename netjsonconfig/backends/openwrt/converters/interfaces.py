@@ -487,11 +487,16 @@ class Interfaces(OpenWrtConverter):
         elif _type == 'interface':
             if self.dsa:
                 block = self.__netjson_dsa_interface(block)
-            if not self.__is_device_config(block) and not block.get('bridge_21', None):
+            if (
+                block
+                and not self.__is_device_config(block)
+                and not block.get('bridge_21', None)
+            ):
                 interface = self.__netjson_interface(block)
-                self.__netjson_dns(interface, result)
-                result.setdefault('interfaces', [])
-                result['interfaces'].append(interface)
+                if interface:
+                    self.__netjson_dns(interface, result)
+                    result.setdefault('interfaces', [])
+                    result['interfaces'].append(interface)
         return result
 
     def __netjson_interface(self, interface):
@@ -519,12 +524,19 @@ class Interfaces(OpenWrtConverter):
         return interface
 
     def __get_device_config_for_interface(self, interface):
-        device = interface.get('device')
+        device = interface.get('device', '')
         name = interface.get('name')
         if not name and interface.get('proto') in self._proto_dsa_conflict:
             name = interface.get('.name')
         device_config = self._device_config.get(device, self._device_config.get(name))
         if not device_config:
+            if '.' in device:
+                cleaned_device, _, _ = device.rpartition('.')
+                device_config = self._device_config.get(cleaned_device)
+            if not device_config:
+                return device_config
+        if interface.get('type') == 'bridge-vlan':
+            print('returning bridge-vlan')
             return device_config
         if interface.get('proto') in self._proto_dsa_conflict:
             del device_config['type']
@@ -536,8 +548,14 @@ class Interfaces(OpenWrtConverter):
         return device_config
 
     def __update_interface_device_config(self, interface, device_config):
-        if interface.get('type') in ['vlan']:
-            self.__netjson_vlan(interface, device_config)
+        if interface.get('type') == 'bridge-vlan':
+            return self.__netjson_vlan(interface, device_config)
+        if '.' in interface.get('ifname', ''):
+            _, _, vlan_id = interface['ifname'].rpartition('.')
+            if device_config.get('vlan_filtering', []):
+                for vlan in device_config['vlan_filtering']:
+                    if vlan['vlan'] == int(vlan_id):
+                        return
         if (
             device_config.pop('bridge_21', None)
             or interface.get('proto') in self._proto_dsa_conflict
@@ -605,7 +623,6 @@ class Interfaces(OpenWrtConverter):
             except KeyError:
                 continue
         name = interface.get('name')
-        interface.pop('vlan_filtering', None)
         self._device_config[name] = interface
 
     def __netjson_vlan(self, vlan, device_config):
@@ -618,7 +635,11 @@ class Interfaces(OpenWrtConverter):
             except IndexError:
                 pass
             netjson_vlan['ports'].append(port)
-        return {}
+        if isinstance(device_config['vlan_filtering'], list):
+            device_config['vlan_filtering'].append(netjson_vlan)
+        else:
+            device_config['vlan_filtering'] = [netjson_vlan]
+        return
 
     def __netjson_type(self, interface):
         if 'type' in interface:
@@ -642,7 +663,6 @@ class Interfaces(OpenWrtConverter):
             'stp',
             'igmp_snooping',
             'multicast_querier',
-            'vlan_filtering',
         ]:
             if option in interface:
                 interface[option] = interface[option] == '1'
