@@ -1199,6 +1199,84 @@ config interface 'br_lan'
         o = OpenWrt(native=self._vlan_filtering_bridge_uci)
         self.assertEqual(o.config, self._vlan_filtering_bridge_netjson)
 
+    _vlan_filtering_bridge_override_netjson = {
+        "interfaces": [
+            {
+                "type": "bridge",
+                "bridge_members": ["lan1", "lan2", "lan3"],
+                "name": "br-lan",
+                "vlan_filtering": [
+                    {
+                        "vlan": 1,
+                        "ports": [
+                            {"ifname": "lan1"},
+                            {"ifname": "lan2", "tagging": "t"},
+                            {"ifname": "lan3", "tagging": "u"},
+                        ],
+                    }
+                ],
+            },
+            {
+                "type": "ethernet",
+                "name": "br-lan.1",
+                "mtu": 1500,
+                "mac": "61:4A:A0:D7:3F:0E",
+                "addresses": [
+                    {
+                        "proto": "static",
+                        "family": "ipv4",
+                        "address": "192.168.2.1",
+                        "mask": 24,
+                    }
+                ],
+            },
+        ]
+    }
+    _vlan_filtering_bridge_override_uci = """package network
+
+config device 'device_br_lan'
+    option name 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2'
+    list ports 'lan3'
+    option type 'bridge'
+    option vlan_filtering '1'
+
+config bridge-vlan 'vlan_br_lan_1'
+    option device 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2:t'
+    list ports 'lan3:u'
+    option vlan '1'
+
+config interface 'vlan_br_lan_1'
+    option device 'br-lan.1'
+    option proto 'none'
+
+config interface 'br_lan'
+    option device 'br-lan'
+    option proto 'none'
+
+config interface 'br_lan_1'
+    option device 'br-lan.1'
+    option ipaddr '192.168.2.1'
+    option netmask '255.255.255.0'
+    option proto 'static'
+"""
+
+    def test_render_bridge_vlan_filtering_override_interface(self):
+        o = OpenWrt(self._vlan_filtering_bridge_override_netjson)
+        self.assertEqual(
+            self._tabs(self._vlan_filtering_bridge_override_uci), o.render()
+        )
+
+    def test_parse_bridge_vlan_filtering_override_interface(self):
+        o = OpenWrt(native=self._vlan_filtering_bridge_override_uci)
+        expected = deepcopy(self._vlan_filtering_bridge_override_netjson)
+        del expected['interfaces'][1]['mtu']
+        del expected['interfaces'][1]['mac']
+        self.assertEqual(o.config, expected)
+
     def test_render_dns(self):
         o = OpenWrt(
             {
