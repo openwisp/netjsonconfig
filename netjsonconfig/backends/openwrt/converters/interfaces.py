@@ -44,6 +44,7 @@ class Interfaces(OpenWrtConverter):
     def __init__(self, backend):
         super().__init__(backend)
         self._device_config = {}
+        self._bridge_vlan_config_uci = []
 
     def __set_dsa_interface(self, interface):
         """
@@ -54,6 +55,8 @@ class Interfaces(OpenWrtConverter):
             self.dsa
             and interface.get('proto', None) not in self._custom_protocols
             and interface.get('type', None) in self._interface_dsa_types
+            and interface.get('ifname', interface.get('device'))
+            not in self._bridge_vlan_config_uci
         )
 
     def to_intermediate_loop(self, block, result, index=None):
@@ -197,6 +200,18 @@ class Interfaces(OpenWrtConverter):
         method = getattr(self, f'_intermediate_{type_}', None)
         if method:
             interface = method(interface)
+        self._check_bridge_vlan(interface)
+        return interface
+
+    def _check_bridge_vlan(self, interface):
+        if self.dsa:
+            if (
+                '.' in interface.get('ifname', '')
+                and interface['ifname'] in self._bridge_vlan_config_uci
+            ):
+                # Cleans L2 options from the interface
+                self._add_l2_options({}, interface)
+                interface['device'] = interface.pop('ifname')
         return interface
 
     def _intermediate_modem_manager(self, interface):
@@ -261,6 +276,7 @@ class Interfaces(OpenWrtConverter):
                 uci_vlan['ports'].append(
                     '{ifname}{tagging}'.format(ifname=port['ifname'], tagging=tagging)
                 )
+        self._bridge_vlan_config_uci.append(uci_vlan_interface['device'])
         return uci_vlan, uci_vlan_interface
 
     def __intermediate_device(self, interface):
@@ -536,7 +552,6 @@ class Interfaces(OpenWrtConverter):
             if not device_config:
                 return device_config
         if interface.get('type') == 'bridge-vlan':
-            print('returning bridge-vlan')
             return device_config
         if interface.get('proto') in self._proto_dsa_conflict:
             del device_config['type']
@@ -550,12 +565,9 @@ class Interfaces(OpenWrtConverter):
     def __update_interface_device_config(self, interface, device_config):
         if interface.get('type') == 'bridge-vlan':
             return self.__netjson_vlan(interface, device_config)
-        if '.' in interface.get('ifname', ''):
-            _, _, vlan_id = interface['ifname'].rpartition('.')
-            if device_config.get('vlan_filtering', []):
-                for vlan in device_config['vlan_filtering']:
-                    if vlan['vlan'] == int(vlan_id):
-                        return
+        interface = self._handle_bridge_vlan(interface, device_config)
+        if not interface:
+            return
         if (
             device_config.pop('bridge_21', None)
             or interface.get('proto') in self._proto_dsa_conflict
@@ -578,6 +590,15 @@ class Interfaces(OpenWrtConverter):
                 interface[options] = device_config.pop(options)
         if device_config.get('type', '').startswith('8021'):
             interface['ifname'] = ''.join(interface['ifname'].split('.')[:-1])
+        return interface
+
+    def _handle_bridge_vlan(self, interface, device_config):
+        if '.' in interface.get('ifname', ''):
+            _, _, vlan_id = interface['ifname'].rpartition('.')
+            if device_config.get('vlan_filtering', []):
+                for vlan in device_config['vlan_filtering']:
+                    if vlan['vlan'] == int(vlan_id):
+                        return
         return interface
 
     def __netjson_dsa_interface(self, interface):
