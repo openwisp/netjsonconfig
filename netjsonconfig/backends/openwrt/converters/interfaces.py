@@ -265,10 +265,15 @@ class Interfaces(OpenWrtConverter):
             uci_vlan['ports'] = []
             for port in vlan.get('ports'):
                 tagging = ''
+                pvid = ''
                 if port.get('tagging'):
                     tagging = ':{tagging}'.format(tagging=port['tagging'])
+                if port.get('primary_vid'):
+                    pvid = '*'
                 uci_vlan['ports'].append(
-                    '{ifname}{tagging}'.format(ifname=port['ifname'], tagging=tagging)
+                    '{ifname}{tagging}{pvid}'.format(
+                        ifname=port['ifname'], tagging=tagging, pvid=pvid
+                    )
                 )
         self._bridge_vlan_config_uci.append(uci_vlan_interface['device'])
         return uci_vlan, uci_vlan_interface
@@ -642,10 +647,16 @@ class Interfaces(OpenWrtConverter):
         for port in vlan.get('ports', []):
             port_config = port.split(':')
             port = {'ifname': port_config[0]}
-            try:
-                port['tagging'] = port_config[1]
-            except IndexError:
-                pass
+            tagging = port_config[1][0]
+            pvid = False
+            if len(port_config[1]) > 1:
+                pvid = True
+            port.update(
+                {
+                    'tagging': tagging,
+                    'primary_vid': pvid,
+                }
+            )
             netjson_vlan['ports'].append(port)
         if isinstance(device_config['vlan_filtering'], list):
             device_config['vlan_filtering'].append(netjson_vlan)
