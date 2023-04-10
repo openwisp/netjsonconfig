@@ -1155,11 +1155,17 @@ config interface 'wan'
                     {
                         "vlan": 1,
                         "ports": [
-                            {"ifname": "lan1"},
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": True},
                             {"ifname": "lan2", "tagging": "t"},
-                            {"ifname": "lan3", "tagging": "u"},
                         ],
-                    }
+                    },
+                    {
+                        "vlan": 2,
+                        "ports": [
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": False},
+                            {"ifname": "lan3", "tagging": "u", "primary_vid": True},
+                        ],
+                    },
                 ],
             }
         ]
@@ -1177,13 +1183,22 @@ config device 'device_br_lan'
 
 config bridge-vlan 'vlan_br_lan_1'
     option device 'br-lan'
-    list ports 'lan1'
+    list ports 'lan1:t*'
     list ports 'lan2:t'
-    list ports 'lan3:u'
     option vlan '1'
+
+config bridge-vlan 'vlan_br_lan_2'
+    option device 'br-lan'
+    list ports 'lan1:t'
+    list ports 'lan3:u*'
+    option vlan '2'
 
 config interface 'vlan_br_lan_1'
     option device 'br-lan.1'
+    option proto 'none'
+
+config interface 'vlan_br_lan_2'
+    option device 'br-lan.2'
     option proto 'none'
 
 config interface 'br_lan'
@@ -1195,9 +1210,28 @@ config interface 'br_lan'
         o = OpenWrt(self._vlan_filtering_bridge_netjson)
         self.assertEqual(self._tabs(self._vlan_filtering_bridge_uci), o.render())
 
+        with self.subTest('Test setting PVID on same port on different VLANS'):
+            netjson = deepcopy(self._vlan_filtering_bridge_netjson)
+            netjson['interfaces'][0]['vlan_filtering'][1]['ports'][0][
+                'primary_vid'
+            ] = True
+            with self.assertRaises(ValidationError) as error:
+                OpenWrt(netjson).validate()
+            self.assertEqual(
+                error.exception.message,
+                (
+                    'Invalid configuration triggered by "#/interfaces/0"'
+                    ' says: Primary VID can be set only one VLAN for a port.'
+                ),
+            )
+
     def test_parse_bridge_vlan_filtering(self):
         o = OpenWrt(native=self._vlan_filtering_bridge_uci)
-        self.assertEqual(o.config, self._vlan_filtering_bridge_netjson)
+        expected = deepcopy(self._vlan_filtering_bridge_netjson)
+        expected['interfaces'][0]['vlan_filtering'][0]['ports'][1][
+            'primary_vid'
+        ] = False
+        self.assertEqual(o.config, expected)
 
     _vlan_filtering_bridge_override_netjson = {
         "interfaces": [
@@ -1209,9 +1243,8 @@ config interface 'br_lan'
                     {
                         "vlan": 1,
                         "ports": [
-                            {"ifname": "lan1"},
-                            {"ifname": "lan2", "tagging": "t"},
-                            {"ifname": "lan3", "tagging": "u"},
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": False},
+                            {"ifname": "lan2", "tagging": "u", "primary_vid": False},
                         ],
                     }
                 ],
@@ -1244,9 +1277,8 @@ config device 'device_br_lan'
 
 config bridge-vlan 'vlan_br_lan_1'
     option device 'br-lan'
-    list ports 'lan1'
-    list ports 'lan2:t'
-    list ports 'lan3:u'
+    list ports 'lan1:t'
+    list ports 'lan2:u'
     option vlan '1'
 
 config interface 'vlan_br_lan_1'

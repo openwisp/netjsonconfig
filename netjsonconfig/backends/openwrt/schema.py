@@ -324,20 +324,25 @@ schema = merge_config(
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
+                                                "required": ["ifname", "tagging"],
                                                 "properties": {
                                                     "ifname": {
                                                         "type": "string",
                                                     },
                                                     "tagging": {
                                                         "type": "string",
-                                                        "enum": ["", "t", "u"],
+                                                        "enum": ["t", "u"],
                                                         "options": {
                                                             "enum_titles": [
-                                                                "",
                                                                 "Egress tagged",
                                                                 "Egress untagged",
                                                             ]
                                                         },
+                                                    },
+                                                    "primary_vid": {
+                                                        "type": "boolean",
+                                                        "title": "Primary VID",
+                                                        "format": "checkbox",
                                                     },
                                                 },
                                             },

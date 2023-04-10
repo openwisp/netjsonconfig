@@ -1,5 +1,6 @@
-from jsonschema.exceptions import ValidationError
+from jsonschema import ValidationError as JsonSchemaError
 
+from ...exceptions import ValidationError
 from ..base.backend import BaseBackend
 from ..vxlan.vxlan_wireguard import VxlanWireguard
 from ..wireguard.wireguard import Wireguard
@@ -53,6 +54,26 @@ class OpenWrt(BaseBackend):
         """
         self.dsa = dsa
         super().__init__(config, native, templates, context)
+
+    def validate(self):
+        super().validate()
+        # When VLAN filtering is enabled on a "bridge" interfaces,
+        # primary VLAN ID can be set for only one VLAN.
+        for index, interface in enumerate(self.config.get('interfaces', [])):
+            pvid_mapping = []
+            if interface.get('type') != 'bridge':
+                continue
+            for vlan in interface.get('vlan_filtering', []):
+                for port in vlan.get('ports', []):
+                    if port.get('primary_vid', False):
+                        if port['ifname'] in pvid_mapping:
+                            raise ValidationError(
+                                JsonSchemaError(
+                                    f'Invalid configuration triggered by "#/interfaces/{index}"'
+                                    ' says: Primary VID can be set only one VLAN for a port.'
+                                )
+                            )
+                        pvid_mapping.append(port['ifname'])
 
     def _generate_contents(self, tar):
         """
