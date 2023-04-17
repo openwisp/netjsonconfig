@@ -218,7 +218,10 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(rule)
 
     def __netjson_zone(self, zone):
-        network = zone["network"]
+        if "network" in zone:
+            network = zone["network"]
+        else:
+            network = []
         # network may be specified as a list in a single string e.g.
         #     option network 'wan wan6'
         # Here we ensure that network is always a list.
