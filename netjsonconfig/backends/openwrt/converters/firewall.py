@@ -68,7 +68,7 @@ class Firewall(OpenWrtConverter):
             )
             # If network contains only a single value, force the use of a UCI "option"
             # rather than "list"".
-            network = zone["network"]
+            network =  zone["network"] if "network" in zone else []
             if len(network) == 1:
                 zone["network"] = network[0]
             resultdict.update(zone)
@@ -218,10 +218,7 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(rule)
 
     def __netjson_zone(self, zone):
-        if "network" in zone:
-            network = zone["network"]
-        else:
-            network = []
+        network =  zone["network"] if "network" in zone else []
         # network may be specified as a list in a single string e.g.
         #     option network 'wan wan6'
         # Here we ensure that network is always a list.
