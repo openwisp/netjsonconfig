@@ -23,56 +23,59 @@ class TestDefault(unittest.TestCase, _TabsMixin):
                         "boolean": True,
                     }
                 ],
-                "firewall": [
-                    {
-                        "config_name": "rule",
-                        "name": "Allow-MLD",
-                        "src": "wan",
-                        "proto": "icmp",
-                        "src_ip": "fe80::/10",
-                        "family": "ipv6",
-                        "target": "ACCEPT",
-                        "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
-                    },
-                    {
-                        "config_name": "rule",
-                        "name": "Rule2",
-                        "src": "wan",
-                        "proto": "icmp",
-                        "src_ip": "192.168.1.1/24",
-                        "family": "ipv4",
-                        "target": "ACCEPT",
-                        "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
-                    },
-                ],
+                "firewall": {
+                    "rules": [
+                        {
+                            "name": "Allow-MLD",
+                            "src": "wan",
+                            "proto": ["icmp"],
+                            "src_ip": "fe80::/10",
+                            "family": "ipv6",
+                            "target": "ACCEPT",
+                            "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
+                        },
+                        {
+                            "name": "Rule2",
+                            "src": "wan",
+                            "proto": ["icmp"],
+                            "src_ip": "192.168.1.1/24",
+                            "family": "ipv4",
+                            "target": "ACCEPT",
+                            "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
+                        },
+                    ]
+                },
             }
         )
         expected = self._tabs(
-            """package firewall
+            """\
+package firewall
 
-config rule 'rule_1'
-    option family 'ipv6'
-    list icmp_type '130/0'
-    list icmp_type '131/0'
-    list icmp_type '132/0'
-    list icmp_type '143/0'
+config defaults 'defaults'
+
+config rule 'Allow_MLD'
     option name 'Allow-MLD'
-    option proto 'icmp'
     option src 'wan'
+    option proto 'icmp'
     option src_ip 'fe80::/10'
+    option family 'ipv6'
     option target 'ACCEPT'
-
-config rule 'rule_2'
-    option family 'ipv4'
     list icmp_type '130/0'
     list icmp_type '131/0'
     list icmp_type '132/0'
     list icmp_type '143/0'
+
+config rule 'Rule2'
     option name 'Rule2'
-    option proto 'icmp'
     option src 'wan'
+    option proto 'icmp'
     option src_ip '192.168.1.1/24'
+    option family 'ipv4'
     option target 'ACCEPT'
+    list icmp_type '130/0'
+    list icmp_type '131/0'
+    list icmp_type '132/0'
+    list icmp_type '143/0'
 
 package luci
 
@@ -146,18 +149,19 @@ config custom 'custom'
                     "boolean": "1",
                 }
             ],
-            "firewall": [
-                {
-                    "config_name": "rule",
-                    "name": "Allow-MLD",
-                    "src": "wan",
-                    "proto": "icmp",
-                    "src_ip": "fe80::/10",
-                    "family": "ipv6",
-                    "target": "ACCEPT",
-                    "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
-                }
-            ],
+            "firewall": {
+                "rules": [
+                    {
+                        "family": "ipv6",
+                        "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
+                        "name": "Allow-MLD",
+                        "proto": ["icmp"],
+                        "src": "wan",
+                        "src_ip": "fe80::/10",
+                        "target": "ACCEPT",
+                    }
+                ]
+            },
             "led": [
                 {
                     "name": "USB1",
