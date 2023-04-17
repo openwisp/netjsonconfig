@@ -998,63 +998,72 @@ firewall_definitions = {
             "maxLength": 11,
             "propertyOrder": 4,
         },
-        "src_ip": {
-            "type": ["string","array"],
-            "title": "src_ip",
-            "description": "Match incoming traffic from the specified source ip "
-            "address.",
-            "propertyOrder": 5,
-        },
-        "src_mac": {
+    "src_ip": {
+        "type": ["string", "array"],
+        "title": "src_ip",
+        "description": "Match incoming traffic from the specified source ip "
+        "address.",
+        "items": {
             "type": "string",
-            "title": "src_mac",
-            "description": "Match incoming traffic from the specified MAC address.",
-            "pattern": mac_address_regex,
-            "minLength": 17,
-            "maxLength": 17,
-            "propertyOrder": 6,
+            "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}]
+
         },
-        "src_port": {
+        "propertyOrder": 5,
+    },
+    "src_mac": {
+        "type": "string",
+        "title": "src_mac",
+        "description": "Match incoming traffic from the specified MAC address.",
+        "pattern": mac_address_regex,
+        "minLength": 17,
+        "maxLength": 17,
+        "propertyOrder": 6,
+    },
+    "src_port": {
+        "type": "string",
+        "title": "src_port",
+        "description": "Match incoming traffic originating from the given source "
+        "port or port range on the client host.",
+        "pattern": port_range_regex,
+        "propertyOrder": 7,
+    },
+    "proto": {
+        "type": "array",
+        "title": "proto",
+        "description": "Match incoming traffic using the given protocol. "
+        "Can be one of tcp, udp, tcpudp, udplite, icmp, esp, "
+        "ah, sctp, or all or it can be a numeric value, "
+        "representing one of these protocols or a different one. "
+        "A protocol name from /etc/protocols is also allowed. "
+        "The number 0 is equivalent to all",
+        "default": ["tcp", "udp"],
+        "propertyOrder": 8,
+        "items": {"title": "Protocol type", "type": "string"},
+    },
+    "dest": {
+        "type": "string",
+        "title": "dest",
+        "description": "Specifies the traffic destination zone. Must refer to "
+        "on of the defined zone names. For DNAT target on Attitude Adjustment, "
+        'NAT reflection works only if this is equal to "lan".',
+        "maxLength": 11,
+        "propertyOrder": 9,
+    },
+    "dest_ip": {
+        "type": ["string", "array"],
+        "title": "dest_ip",
+        "description": "For DNAT, redirect matches incoming traffic to the "
+        "specified internal host. For SNAT, it matches traffic directed at "
+        "the given address. For DNAT, if the dest_ip is not specified, the rule "
+        "is translated in a iptables/REDIRECT rule, otherwise it is a "
+        "iptables/DNAT rule.",
+        "items": {
             "type": "string",
-            "title": "src_port",
-            "description": "Match incoming traffic originating from the given source "
-            "port or port range on the client host.",
-            "pattern": port_range_regex,
-            "propertyOrder": 7,
+            "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}]
         },
-        "proto": {
-            "type": "array",
-            "title": "proto",
-            "description": "Match incoming traffic using the given protocol. "
-            "Can be one of tcp, udp, tcpudp, udplite, icmp, esp, "
-            "ah, sctp, or all or it can be a numeric value, "
-            "representing one of these protocols or a different one. "
-            "A protocol name from /etc/protocols is also allowed. "
-            "The number 0 is equivalent to all",
-            "default": ["tcp", "udp"],
-            "propertyOrder": 8,
-            "items": {"title": "Protocol type", "type": "string"},
-        },
-        "dest": {
-            "type": "string",
-            "title": "dest",
-            "description": "Specifies the traffic destination zone. Must refer to "
-            "on of the defined zone names. For DNAT target on Attitude Adjustment, "
-            'NAT reflection works only if this is equal to "lan".',
-            "maxLength": 11,
-            "propertyOrder": 9,
-        },
-        "dest_ip": {
-            "type": "string",
-            "title": "dest_ip",
-            "description": "For DNAT, redirect matches incoming traffic to the "
-            "specified internal host. For SNAT, it matches traffic directed at "
-            "the given address. For DNAT, if the dest_ip is not specified, the rule "
-            "is translated in a iptables/REDIRECT rule, otherwise it is a "
-            "iptables/DNAT rule.",
-            # "format": "ipv4",
-            "propertyOrder": 10,
-        },
+        # "format": "ipv4",
+        "propertyOrder": 10,
+    },
         "dest_port": {
             "type": "string",
             "title": "dest_port",
@@ -1308,8 +1317,7 @@ firewall_rules_properties = {
     "src": {"$ref": "#/definitions/src"},
     "src_ip": {
         "allOf": [
-            {"$ref": "#/definitions/src_ip"},
-            {"oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}]},
+            {"$ref": "#/definitions/src_ip"}
         ],
     },
     "src_mac": {"$ref": "#/definitions/src_mac"},
