@@ -959,45 +959,45 @@ schema = merge_config(
 )
 
 firewall_definitions = {
-        "name": {
-            "type": "string",
-            "title": "name",
-            "description": "Name of redirect",
-            "propertyOrder": 1,
-        },
-        "enabled": {
-            "type": "boolean",
-            "title": "enable",
-            "description": "Enable this configuration entity.",
-            "default": True,
-            "format": "checkbox",
-            "propertyOrder": 2,
-        },
-        "zone_name": {
-            "type": "string",
-            "title": "A Zone name",
-            "description": "A unique zone name. Has a maximum"
-            "length of 11 characters.",
-            "maxLength": 11,
-            "propertyOrder": 3,
-        },
-        "ipv4_cidr": {
-            "type": "string",
-            "pattern": ipv4_cidr_regex,
-        },
-        "ipv4_negatable_cidr": {
-            "type": "string",
-            "pattern": ipv4_negatable_cidr_regex,
-        },
-        "src": {
-            "type": "string",
-            "title": "src",
-            "description": "Specifies the traffic source zone. "
-            "Must refer to one of the defined zone names. "
-            "For typical port forwards this usually is wan.",
-            "maxLength": 11,
-            "propertyOrder": 4,
-        },
+    "name": {
+        "type": "string",
+        "title": "name",
+        "description": "Name of redirect",
+        "propertyOrder": 1,
+    },
+    "enabled": {
+        "type": "boolean",
+        "title": "enable",
+        "description": "Enable this configuration entity.",
+        "default": True,
+        "format": "checkbox",
+        "propertyOrder": 2,
+    },
+    "zone_name": {
+        "type": "string",
+        "title": "A Zone name",
+        "description": "A unique zone name. Has a maximum"
+        "length of 11 characters.",
+        "maxLength": 11,
+        "propertyOrder": 3,
+    },
+    "ipv4_cidr": {
+        "type": "string",
+        "pattern": ipv4_cidr_regex,
+    },
+    "ipv4_negatable_cidr": {
+        "type": "string",
+        "pattern": ipv4_negatable_cidr_regex,
+    },
+    "src": {
+        "type": "string",
+        "title": "src",
+        "description": "Specifies the traffic source zone. "
+        "Must refer to one of the defined zone names. "
+        "For typical port forwards this usually is wan.",
+        "maxLength": 11,
+        "propertyOrder": 4,
+    },
     "src_ip": {
         "type": ["string", "array"],
         "title": "src_ip",
@@ -1064,147 +1064,147 @@ firewall_definitions = {
         # "format": "ipv4",
         "propertyOrder": 10,
     },
-        "dest_port": {
-            "type": "string",
-            "title": "dest_port",
-            "description": "For DNAT, redirect matched incoming traffic to the given "
-            "port on the internal host. For SNAT, match traffic directed at the "
-            "given ports. Only a single port or range can be specified.",
-            "pattern": port_range_regex,
-            "propertyOrder": 11,
-        },
-        "ipset": {
-            "type": "string",
-            "title": "ipset",
-            "description": "Match traffic against the given ipset. The match can be "
-            "inverted by prefixing the value with an exclamation mark.",
-            "propertyOrder": 12,
-        },
-        "mark": {
-            "type": "string",
-            "title": "mark",
-            "description": 'Match traffic against the given firewall mark, e.g. '
-            '"0xFF" to match mark 255 or "0x0/0x1" to match any even mark value. '
-            'The match can be inverted by prefixing the value with an exclamation '
-            'mark, e.g. "!0x10" to match all but mark #16.',
-            "propertyOrder": 13,
-        },
-        "start_date": {
-            "type": "string",
-            "title": "start_date",
-            "description": "Only match traffic after the given date (inclusive).",
-            "pattern": date_regex,
-            # "format": "date", TODO: replace pattern with this
-            # when adopt draft07
-            "propertyOrder": 14,
-        },
-        "stop_date": {
-            "type": "string",
-            "title": "stop_date",
-            "description": "Only match traffic before the given date (inclusive).",
-            "pattern": date_regex,
-            # "format": "date", TODO: replace pattern with this
-            # when adopt draft07
-            "propertyOrder": 15,
-        },
-        "start_time": {
-            "type": "string",
-            "title": "start_time",
-            "description": "Only match traffic after the given time of day "
-            "(inclusive).",
-            "pattern": time_regex,
-            "propertyOrder": 16,
-        },
-        "stop_time": {
-            "type": "string",
-            "title": "stop_time",
-            "description": "Only match traffic before the given time of day "
-            "(inclusive).",
-            "pattern": time_regex,
-            "propertyOrder": 17,
-        },
-        # Note: here we don't support negation of values like
-        # the UCI syntax does, as it's not necessary.
-        "weekdays": {
-            "type": "array",
-            "title": "weekdays",
-            "description": "Only match traffic during the given week days, "
-            'e.g. ["sun", "mon", "thu", "fri"] to only match on Sundays, '
-            "Mondays, Thursdays and Fridays.",
-            "propertyOrder": 18,
-            "items": {
+    "dest_port": {
+        "type": "string",
+        "title": "dest_port",
+        "description": "For DNAT, redirect matched incoming traffic to the given "
+        "port on the internal host. For SNAT, match traffic directed at the "
+        "given ports. Only a single port or range can be specified.",
+        "pattern": port_range_regex,
+        "propertyOrder": 11,
+    },
+    "ipset": {
+        "type": "string",
+        "title": "ipset",
+        "description": "Match traffic against the given ipset. The match can be "
+        "inverted by prefixing the value with an exclamation mark.",
+        "propertyOrder": 12,
+    },
+    "mark": {
+        "type": "string",
+        "title": "mark",
+        "description": 'Match traffic against the given firewall mark, e.g. '
+        '"0xFF" to match mark 255 or "0x0/0x1" to match any even mark value. '
+        'The match can be inverted by prefixing the value with an exclamation '
+        'mark, e.g. "!0x10" to match all but mark #16.',
+        "propertyOrder": 13,
+    },
+    "start_date": {
+        "type": "string",
+        "title": "start_date",
+        "description": "Only match traffic after the given date (inclusive).",
+        "pattern": date_regex,
+        # "format": "date", TODO: replace pattern with this
+        # when adopt draft07
+        "propertyOrder": 14,
+    },
+    "stop_date": {
+        "type": "string",
+        "title": "stop_date",
+        "description": "Only match traffic before the given date (inclusive).",
+        "pattern": date_regex,
+        # "format": "date", TODO: replace pattern with this
+        # when adopt draft07
+        "propertyOrder": 15,
+    },
+    "start_time": {
+        "type": "string",
+        "title": "start_time",
+        "description": "Only match traffic after the given time of day "
+        "(inclusive).",
+        "pattern": time_regex,
+        "propertyOrder": 16,
+    },
+    "stop_time": {
+        "type": "string",
+        "title": "stop_time",
+        "description": "Only match traffic before the given time of day "
+        "(inclusive).",
+        "pattern": time_regex,
+        "propertyOrder": 17,
+    },
+    # Note: here we don't support negation of values like
+    # the UCI syntax does, as it's not necessary.
+    "weekdays": {
+        "type": "array",
+        "title": "weekdays",
+        "description": "Only match traffic during the given week days, "
+        'e.g. ["sun", "mon", "thu", "fri"] to only match on Sundays, '
+        "Mondays, Thursdays and Fridays.",
+        "propertyOrder": 18,
+        "items": {
                 "type": "string",
                 "title": "weekday",
                 "enum": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
-            },
         },
-        # Note: here we don't support negation of values like
-        # the UCI syntax does, as it's not necessary.
-        "monthdays": {
-            "type": "array",
-            "title": "monthdays",
-            "description": "Only match traffic during the given days of the "
-            "month, e.g. [2, 5, 30] to only match on every 2nd, 5th and 30th "
-            "day of the month.",
-            "propertyOrder": 19,
-            "items": {
+    },
+    # Note: here we don't support negation of values like
+    # the UCI syntax does, as it's not necessary.
+    "monthdays": {
+        "type": "array",
+        "title": "monthdays",
+        "description": "Only match traffic during the given days of the "
+        "month, e.g. [2, 5, 30] to only match on every 2nd, 5th and 30th "
+        "day of the month.",
+        "propertyOrder": 19,
+        "items": {
                 "type": "integer",
                 "title": "day of month",
                 "minimum": 1,
                 "maximum": 31,
-            },
         },
-        "utc_time": {
-            "type": "boolean",
-            "title": "utc_time",
-            "description": "Treat all given time values as UTC time instead of local "
-            "time.",
-            "default": False,
-            "propertyOrder": 20,
-        },
-        "family": {
-            "type": "string",
-            "title": "family",
-            "description": "Protocol family (ipv4, ipv6 or any) to generate iptables "
-            "rules for",
-            "enum": ["ipv4", "ipv6", "any"],
-            "default": "any",
-            "propertyOrder": 22,
-        },
-        "limit": {
-            "type": "string",
-            "title": "limit",
-            "description": "Maximum average matching rate; specified as a number, "
-            "with an optional /second, /minute, /hour or /day suffix. "
-            "Examples: 3/second, 3/sec or 3/s.",
-            "propertyOrder": 25,
-        },
-        "limit_burst": {
-            "type": "integer",
-            "title": "limit_burst",
-            "description": "Maximum initial number of packets to match, allowing a "
-            "short-term average above limit.",
-            "default": 5,
-            "propertyOrder": 26,
-        },
-        "firewall_policy": {
-            "type": "string",
-            "enum": ["ACCEPT", "REJECT", "DROP"],
-            "options": {"enum_titles": ["Accept", "Reject", "Drop"]},
-            "default": "REJECT",
-        },
-        "zone_policy": {
-            "type": "string",
-            "enum": ["ACCEPT", "REJECT", "DROP"],
-            "options": {"enum_titles": ["Accept", "Reject", "Drop"]},
-            "default": "REJECT",
-        },
-        "rule_policy": {
-            "type": "string",
-            "enum": ["ACCEPT", "REJECT", "DROP", "MARK", "NOTRACK"],
-            "options": {"enum_titles": ["Accept", "Reject", "Drop", "Mark", "Notrack"]},
-            "default": "REJECT",
-        },
+    },
+    "utc_time": {
+        "type": "boolean",
+        "title": "utc_time",
+        "description": "Treat all given time values as UTC time instead of local "
+        "time.",
+        "default": False,
+        "propertyOrder": 20,
+    },
+    "family": {
+        "type": "string",
+        "title": "family",
+        "description": "Protocol family (ipv4, ipv6 or any) to generate iptables "
+        "rules for",
+        "enum": ["ipv4", "ipv6", "any"],
+        "default": "any",
+        "propertyOrder": 22,
+    },
+    "limit": {
+        "type": "string",
+        "title": "limit",
+        "description": "Maximum average matching rate; specified as a number, "
+        "with an optional /second, /minute, /hour or /day suffix. "
+        "Examples: 3/second, 3/sec or 3/s.",
+        "propertyOrder": 25,
+    },
+    "limit_burst": {
+        "type": "integer",
+        "title": "limit_burst",
+        "description": "Maximum initial number of packets to match, allowing a "
+        "short-term average above limit.",
+        "default": 5,
+        "propertyOrder": 26,
+    },
+    "firewall_policy": {
+        "type": "string",
+        "enum": ["ACCEPT", "REJECT", "DROP"],
+        "options": {"enum_titles": ["Accept", "Reject", "Drop"]},
+        "default": "REJECT",
+    },
+    "zone_policy": {
+        "type": "string",
+        "enum": ["ACCEPT", "REJECT", "DROP"],
+        "options": {"enum_titles": ["Accept", "Reject", "Drop"]},
+        "default": "REJECT",
+    },
+    "rule_policy": {
+        "type": "string",
+        "enum": ["ACCEPT", "REJECT", "DROP", "MARK", "NOTRACK"],
+        "options": {"enum_titles": ["Accept", "Reject", "Drop", "Mark", "Notrack"]},
+        "default": "REJECT",
+    },
 }
 
 firewall_includes_properties = {
@@ -1342,7 +1342,7 @@ firewall_rules_properties = {
         "title": "icmp_type",
         "description": "For protocol icmp select specific icmp types to match. "
         "Values can be either exact icmp type numbers or type names.",
-        "type": "array",
+        "type": ["array","string"],
         "uniqueItems": True,
         "additionalItems": True,
         "propertyOrder": 101,
@@ -1476,7 +1476,7 @@ firewall_zones_properties = {
     },
     "family": {"$ref": "#/definitions/family"},
     "log": {
-        "type": "string", #check if it's an integer
+        "type": "string",  # check if it's an integer
         "title": "Enable logging for the filter and/or mangle table.",
         "description": "Bit field to enable logging in the filter and/or mangle tables, "
         "bit 0 = filter, bit 1 = mangle.",
@@ -1514,7 +1514,7 @@ firewall_defaults = {
         "propertyOrder": 1,
         "allOf": [
             {"$ref": "#/definitions/firewall_policy"},]
-     },
+    },
     "output": {
         "allOf": [
             {"$ref": "#/definitions/firewall_policy"},
@@ -1668,7 +1668,7 @@ firewall_properties = {
             "type": "object",
             "title": "Forwarding",
             "additionalProperties": False,
-            "required": ["src", "dest"], #need to check why openwrt has forwardings without src or dest
+            "required": ["src", "dest"],  # need to check why openwrt has forwardings without src or dest
             "properties": firewall_forwardings_properties,
         },
     },
