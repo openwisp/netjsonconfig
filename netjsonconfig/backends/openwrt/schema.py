@@ -981,6 +981,10 @@ firewall_definitions = {
             "maxLength": 11,
             "propertyOrder": 3,
         },
+        "ipv4_cidr": {
+            "type": "string",
+            "pattern": ipv4_cidr_regex,
+        },
         "ipv4_negatable_cidr": {
             "type": "string",
             "pattern": ipv4_negatable_cidr_regex,
