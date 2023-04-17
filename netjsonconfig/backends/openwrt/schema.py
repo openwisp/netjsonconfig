@@ -959,7 +959,6 @@ schema = merge_config(
 )
 
 firewall_definitions = {
-    "firewall": {
         "name": {
             "type": "string",
             "title": "name",
@@ -1185,21 +1184,20 @@ firewall_definitions = {
             "type": "string",
             "enum": ["ACCEPT", "REJECT", "DROP"],
             "options": {"enum_titles": ["Accept", "Reject", "Drop"]},
-            "default": "DROP",
+            "default": "REJECT",
         },
         "rule_policy": {
             "type": "string",
             "enum": ["ACCEPT", "REJECT", "DROP", "MARK", "NOTRACK"],
             "options": {"enum_titles": ["Accept", "Reject", "Drop", "Mark", "Notrack"]},
-            "default": "DROP",
+            "default": "REJECT",
         },
-    },
 }
 
 firewall_includes_properties = {
-    "name": {"$ref": "#/definitions/firewall/name"},
-    "enabled": {"$ref": "#/definitions/firewall/enabled"},
-    "family": {"$ref": "#/definitions/firewall/family"},
+    "name": {"$ref": "#/definitions/name"},
+    "enabled": {"$ref": "#/definitions/enabled"},
+    "family": {"$ref": "#/definitions/family"},
     "type": {
         "type": "string",
         "title": "The type of the script",
@@ -1227,33 +1225,33 @@ firewall_includes_properties = {
 }
 
 firewall_redirect_properties = {
-    "name": {"$ref": "#/definitions/firewall/name"},
-    "enabled": {"$ref": "#/definitions/firewall/enabled"},
-    "src": {"$ref": "#/definitions/firewall/src"},
+    "name": {"$ref": "#/definitions/name"},
+    "enabled": {"$ref": "#/definitions/enabled"},
+    "src": {"$ref": "#/definitions/src"},
     "src_ip": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/src_ip"},
+            {"$ref": "#/definitions/src_ip"},
             {"pattern": ipv4_cidr_regex},
         ],
     },
-    "src_mac": {"$ref": "#/definitions/firewall/src_mac"},
-    "src_port": {"$ref": "#/definitions/firewall/src_port"},
-    "proto": {"$ref": "#/definitions/firewall/proto"},
-    "dest": {"$ref": "#/definitions/firewall/dest"},
-    "dest_ip": {"$ref": "#/definitions/firewall/dest_ip"},
-    "dest_port": {"$ref": "#/definitions/firewall/dest_port"},
-    "ipset": {"$ref": "#/definitions/firewall/ipset"},
-    "mark": {"$ref": "#/definitions/firewall/mark"},
-    "start_date": {"$ref": "#/definitions/firewall/start_date"},
-    "stop_date": {"$ref": "#/definitions/firewall/stop_date"},
-    "start_time": {"$ref": "#/definitions/firewall/start_time"},
-    "stop_time": {"$ref": "#/definitions/firewall/stop_time"},
-    "weekdays": {"$ref": "#/definitions/firewall/weekdays"},
-    "monthdays": {"$ref": "#/definitions/firewall/monthdays"},
-    "utc_time": {"$ref": "#/definitions/firewall/utc_time"},
-    "family": {"$ref": "#/definitions/firewall/family"},
-    "limit": {"$ref": "#/definitions/firewall/limit"},
-    "limit_burst": {"$ref": "#/definitions/firewall/limit_burst"},
+    "src_mac": {"$ref": "#/definitions/src_mac"},
+    "src_port": {"$ref": "#/definitions/src_port"},
+    "proto": {"$ref": "#/definitions/proto"},
+    "dest": {"$ref": "#/definitions/dest"},
+    "dest_ip": {"$ref": "#/definitions/dest_ip"},
+    "dest_port": {"$ref": "#/definitions/dest_port"},
+    "ipset": {"$ref": "#/definitions/ipset"},
+    "mark": {"$ref": "#/definitions/mark"},
+    "start_date": {"$ref": "#/definitions/start_date"},
+    "stop_date": {"$ref": "#/definitions/stop_date"},
+    "start_time": {"$ref": "#/definitions/start_time"},
+    "stop_time": {"$ref": "#/definitions/stop_time"},
+    "weekdays": {"$ref": "#/definitions/weekdays"},
+    "monthdays": {"$ref": "#/definitions/monthdays"},
+    "utc_time": {"$ref": "#/definitions/utc_time"},
+    "family": {"$ref": "#/definitions/family"},
+    "limit": {"$ref": "#/definitions/limit"},
+    "limit_burst": {"$ref": "#/definitions/limit_burst"},
     "src_dip": {
         "type": "string",
         "title": "src_dip",
@@ -1301,33 +1299,33 @@ firewall_redirect_properties = {
 }
 
 firewall_rules_properties = {
-    "name": {"$ref": "#/definitions/firewall/name"},
-    "enabled": {"$ref": "#/definitions/firewall/enabled"},
-    "src": {"$ref": "#/definitions/firewall/src"},
+    "name": {"$ref": "#/definitions/name"},
+    "enabled": {"$ref": "#/definitions/enabled"},
+    "src": {"$ref": "#/definitions/src"},
     "src_ip": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/src_ip"},
+            {"$ref": "#/definitions/src_ip"},
             {"oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}]},
         ],
     },
-    "src_mac": {"$ref": "#/definitions/firewall/src_mac"},
-    "src_port": {"$ref": "#/definitions/firewall/src_port"},
-    "proto": {"$ref": "#/definitions/firewall/proto"},
-    "dest": {"$ref": "#/definitions/firewall/dest"},
-    "dest_ip": {"$ref": "#/definitions/firewall/dest_ip"},
-    "dest_port": {"$ref": "#/definitions/firewall/dest_port"},
-    "ipset": {"$ref": "#/definitions/firewall/ipset"},
-    "mark": {"$ref": "#/definitions/firewall/mark"},
-    "start_date": {"$ref": "#/definitions/firewall/start_date"},
-    "stop_date": {"$ref": "#/definitions/firewall/stop_date"},
-    "start_time": {"$ref": "#/definitions/firewall/start_time"},
-    "stop_time": {"$ref": "#/definitions/firewall/stop_time"},
-    "weekdays": {"$ref": "#/definitions/firewall/weekdays"},
-    "monthdays": {"$ref": "#/definitions/firewall/monthdays"},
-    "utc_time": {"$ref": "#/definitions/firewall/utc_time"},
-    "family": {"$ref": "#/definitions/firewall/family"},
-    "limit": {"$ref": "#/definitions/firewall/limit"},
-    "limit_burst": {"$ref": "#/definitions/firewall/limit_burst"},
+    "src_mac": {"$ref": "#/definitions/src_mac"},
+    "src_port": {"$ref": "#/definitions/src_port"},
+    "proto": {"$ref": "#/definitions/proto"},
+    "dest": {"$ref": "#/definitions/dest"},
+    "dest_ip": {"$ref": "#/definitions/dest_ip"},
+    "dest_port": {"$ref": "#/definitions/dest_port"},
+    "ipset": {"$ref": "#/definitions/ipset"},
+    "mark": {"$ref": "#/definitions/mark"},
+    "start_date": {"$ref": "#/definitions/start_date"},
+    "stop_date": {"$ref": "#/definitions/stop_date"},
+    "start_time": {"$ref": "#/definitions/start_time"},
+    "stop_time": {"$ref": "#/definitions/stop_time"},
+    "weekdays": {"$ref": "#/definitions/weekdays"},
+    "monthdays": {"$ref": "#/definitions/monthdays"},
+    "utc_time": {"$ref": "#/definitions/utc_time"},
+    "family": {"$ref": "#/definitions/family"},
+    "limit": {"$ref": "#/definitions/limit"},
+    "limit_burst": {"$ref": "#/definitions/limit_burst"},
     "icmp_type": {
         "title": "icmp_type",
         "description": "For protocol icmp select specific icmp types to match. "
@@ -1340,7 +1338,7 @@ firewall_rules_properties = {
     },
     "target": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/rule_policy"},
+            {"$ref": "#/definitions/rule_policy"},
             {
                 "title": "target",
                 "description": "firewall action for matched traffic",
@@ -1351,18 +1349,18 @@ firewall_rules_properties = {
 }
 
 firewall_forwardings_properties = {
-    "name": {"$ref": "#/definitions/firewall/name"},
-    "enabled": {"$ref": "#/definitions/firewall/enabled"},
-    "src": {"$ref": "#/definitions/firewall/src"},
-    "dest": {"$ref": "#/definitions/firewall/dest"},
-    "family": {"$ref": "#/definitions/firewall/family"},
+    "name": {"$ref": "#/definitions/name"},
+    "enabled": {"$ref": "#/definitions/enabled"},
+    "src": {"$ref": "#/definitions/src"},
+    "dest": {"$ref": "#/definitions/dest"},
+    "family": {"$ref": "#/definitions/family"},
 }
 
 # Note: this is currently incomplete and needs other properties adding
 # https://openwrt.org/docs/guide-user/firewall/firewall_configuration#zones
 firewall_zones_properties = {
-    "name": {"$ref": "#/definitions/firewall/zone_name"},
-    "enabled": {"$ref": "#/definitions/firewall/enabled"},
+    "name": {"$ref": "#/definitions/zone_name"},
+    "enabled": {"$ref": "#/definitions/enabled"},
     "network": {
         "type": "array",
         "title": "Network",
@@ -1395,7 +1393,7 @@ firewall_zones_properties = {
     },
     "input": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/zone_policy"},
+            {"$ref": "#/definitions/zone_policy"},
             {
                 "title": "Input policy",
                 "description": "Default policy for incoming zone traffic.",
@@ -1405,7 +1403,7 @@ firewall_zones_properties = {
     },
     "output": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/zone_policy"},
+            {"$ref": "#/definitions/zone_policy"},
             {
                 "title": "Output policy",
                 "description": "Default policy for outgoing zone traffic.",
@@ -1415,7 +1413,7 @@ firewall_zones_properties = {
     },
     "forward": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/zone_policy"},
+            {"$ref": "#/definitions/zone_policy"},
             {
                 "title": "Forward policy.",
                 "description": "Default policy for forwarded zone traffic.",
@@ -1430,7 +1428,7 @@ firewall_zones_properties = {
         "propertyOrder": 8,
         "items": {
             "allOf": [
-                {"$ref": "#/definitions/firewall/ipv4_cidr"},
+                {"$ref": "#/definitions/ipv4_cidr"},
                 {
                     "title": "Masqueraded source CIDR.",
                     "description": "Source CIDR to enable masquerading for. "
@@ -1446,7 +1444,7 @@ firewall_zones_properties = {
         "propertyOrder": 9,
         "items": {
             "allOf": [
-                {"$ref": "#/definitions/firewall/ipv4_cidr"},
+                {"$ref": "#/definitions/ipv4_cidr"},
                 {
                     "title": "Masquerade destination CIDR.",
                     "description": "Destination CIDR to enable masquerading for. "
@@ -1464,7 +1462,7 @@ firewall_zones_properties = {
         "format": "checkbox",
         "propertyOrder": 10,
     },
-    "family": {"$ref": "#/definitions/firewall/family"},
+    "family": {"$ref": "#/definitions/family"},
     "log": {
         "type": "integer",
         "title": "Enable logging for the filter and/or mangle table.",
@@ -1499,18 +1497,15 @@ firewall_zones_properties = {
 
 firewall_defaults = {
     "input": {
+        "title": "Default input policy",
+        "description": "Default policy for the INPUT chain of the filter table",
+        "propertyOrder": 1,
         "allOf": [
-            {"$ref": "#/definitions/firewall/firewall_policy"},
-            {
-                "title": "Default input policy",
-                "description": "Default policy for the INPUT chain of the filter table",
-                "propertyOrder": 1,
-            },
-        ]
-    },
+            {"$ref": "#/definitions/firewall_policy"},]
+     },
     "output": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/firewall_policy"},
+            {"$ref": "#/definitions/firewall_policy"},
             {
                 "title": "Default output policy",
                 "description": "Default policy for the OUTPUT chain of the filter table",
@@ -1520,7 +1515,7 @@ firewall_defaults = {
     },
     "forward": {
         "allOf": [
-            {"$ref": "#/definitions/firewall/firewall_policy"},
+            {"$ref": "#/definitions/firewall_policy"},
             {
                 "title": "Default forward policy",
                 "description": "Defulat policy for the FORWARD chain of the filter table",
