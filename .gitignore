@@ -60,3 +60,5 @@ target/
 *.DS_Store*
 .__*
 __DEV
+
+file.tar.gz

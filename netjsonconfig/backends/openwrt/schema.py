@@ -999,7 +999,7 @@ firewall_definitions = {
             "propertyOrder": 4,
         },
         "src_ip": {
-            "type": "string",
+            "type": ["string","array"],
             "title": "src_ip",
             "description": "Match incoming traffic from the specified source ip "
             "address.",
@@ -1468,13 +1468,13 @@ firewall_zones_properties = {
     },
     "family": {"$ref": "#/definitions/family"},
     "log": {
-        "type": "integer",
+        "type": "string", #check if it's an integer
         "title": "Enable logging for the filter and/or mangle table.",
         "description": "Bit field to enable logging in the filter and/or mangle tables, "
         "bit 0 = filter, bit 1 = mangle.",
-        "min": 0,
-        "max": 3,
-        "default": 0,
+        "min": "0",
+        "max": "3",
+        "default": "0",
         "propertyOrder": 10,
     },
     "log_limit": {
@@ -1660,7 +1660,7 @@ firewall_properties = {
             "type": "object",
             "title": "Forwarding",
             "additionalProperties": False,
-            "required": ["src", "dest"],
+            "required": ["src", "dest"], #need to check why openwrt has forwardings without src or dest
             "properties": firewall_forwardings_properties,
         },
     },
