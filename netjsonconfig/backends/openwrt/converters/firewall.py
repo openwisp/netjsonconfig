@@ -47,7 +47,6 @@ class Firewall(OpenWrtConverter):
         result = []
         for forwarding in forwardings:
             if "name" in forwarding:
-                print(forwarding)
                 resultdict = OrderedDict(
                     (
                         (".name", self._get_uci_name(forwarding["name"])),
