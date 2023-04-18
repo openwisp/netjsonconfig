@@ -18,6 +18,7 @@ class Firewall(OpenWrtConverter):
     _schema = schema["properties"]["firewall"]
 
     def to_intermediate_loop(self, block, result, index=None):
+
         defaults = self.__intermediate_defaults(block.pop("defaults", {}))
         forwardings = self.__intermediate_forwardings(block.pop("forwardings", {}))
         zones = self.__intermediate_zones(block.pop("zones", {}))
@@ -46,12 +47,21 @@ class Firewall(OpenWrtConverter):
         """
         result = []
         for forwarding in forwardings:
-            resultdict = OrderedDict(
-                (
-                    (".name", self._get_uci_name(forwarding["name"] if "name" in forwarding else "")),
-                    (".type", "forwarding"),
+            if "name" in forwarding:
+                print(forwarding)
+                resultdict = OrderedDict(
+                    (
+                        (".name", self._get_uci_name(forwarding["name"])),
+                        (".type", "forwarding"),
+                    )
                 )
-            )
+            else:
+                resultdict = OrderedDict(
+                    (
+                        (".name", forwarding["src"]+"_"+forwarding["dest"]), #if the forwarding has no name, will assign src_dest as name
+                        (".type", "forwarding"),
+                    )
+                )
             resultdict.update(forwarding)
             result.append(resultdict)
         return result
@@ -68,7 +78,7 @@ class Firewall(OpenWrtConverter):
             )
             # If network contains only a single value, force the use of a UCI "option"
             # rather than "list"".
-            network =  zone["network"] if "network" in zone else []
+            network = zone["network"] if "network" in zone else []
             if len(network) == 1:
                 zone["network"] = network[0]
             resultdict.update(zone)
@@ -133,9 +143,17 @@ class Firewall(OpenWrtConverter):
         """
         result = []
         for include in includes:
-            resultdict = OrderedDict(
-                ((".name", self._get_uci_name(include["name"])), (".type", "include"),)
-            )
+            if "name" in include:
+                resultdict = OrderedDict(
+                    ((".name", self._get_uci_name(include["name"])), (".type", "include"))
+                )
+            else:
+                resultdict = OrderedDict(
+                    (
+                        (".type", "include"),
+                    )
+                )
+                
 
             resultdict.update(include)
             result.append(resultdict)
@@ -146,31 +164,31 @@ class Firewall(OpenWrtConverter):
         result.setdefault("firewall", {})
 
         block.pop(".name")
-        _type = block.pop(".type")
+        _type=block.pop(".type")
 
         if _type == "defaults":
-            defaults = self.__netjson_defaults(block)
+            defaults=self.__netjson_defaults(block)
             if defaults:  # note: default section can be empty
                 result["firewall"].setdefault("defaults", {})
                 result["firewall"]["defaults"].update(defaults)
         if _type == "rule":
-            rule = self.__netjson_rule(block)
+            rule=self.__netjson_rule(block)
             result["firewall"].setdefault("rules", [])
             result["firewall"]["rules"].append(rule)
         if _type == "zone":
-            zone = self.__netjson_zone(block)
+            zone=self.__netjson_zone(block)
             result["firewall"].setdefault("zones", [])
             result["firewall"]["zones"].append(zone)
         if _type == "forwarding":
-            forwarding = self.__netjson_forwarding(block)
+            forwarding=self.__netjson_forwarding(block)
             result["firewall"].setdefault("forwardings", [])
             result["firewall"]["forwardings"].append(forwarding)
         if _type == "redirect":
-            redirect = self.__netjson_redirect(block)
+            redirect=self.__netjson_redirect(block)
             result["firewall"].setdefault("redirects", [])
             result["firewall"]["redirects"].append(redirect)
         if _type == "include":
-            include = self.__netjson_include(block)
+            include=self.__netjson_include(block)
             result["firewall"].setdefault("includes", [])
             result["firewall"]["includes"].append(include)
 
