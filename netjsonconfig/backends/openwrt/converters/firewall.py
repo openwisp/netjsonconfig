@@ -18,7 +18,6 @@ class Firewall(OpenWrtConverter):
     _schema = schema["properties"]["firewall"]
 
     def to_intermediate_loop(self, block, result, index=None):
-
         defaults = self.__intermediate_defaults(block.pop("defaults", {}))
         forwardings = self.__intermediate_forwardings(block.pop("forwardings", {}))
         zones = self.__intermediate_zones(block.pop("zones", {}))
@@ -58,7 +57,8 @@ class Firewall(OpenWrtConverter):
             else:
                 resultdict = OrderedDict(
                     (
-                        (".name", forwarding["src"]+"_"+forwarding["dest"]), #if the forwarding has no name, will assign src_dest as name
+                        # if the forwarding has no name, will assign src_dest as name
+                        (".name", forwarding["src"] + "_" + forwarding["dest"]),
                         (".type", "forwarding"),
                     )
                 )
@@ -153,42 +153,39 @@ class Firewall(OpenWrtConverter):
                         (".type", "include"),
                     )
                 )
-                
-
             resultdict.update(include)
             result.append(resultdict)
-
         return result
 
     def to_netjson_loop(self, block, result, index):
         result.setdefault("firewall", {})
 
         block.pop(".name")
-        _type=block.pop(".type")
+        _type = block.pop(".type")
 
         if _type == "defaults":
-            defaults=self.__netjson_defaults(block)
+            defaults = self.__netjson_defaults(block)
             if defaults:  # note: default section can be empty
                 result["firewall"].setdefault("defaults", {})
                 result["firewall"]["defaults"].update(defaults)
         if _type == "rule":
-            rule=self.__netjson_rule(block)
+            rule = self.__netjson_rule(block)
             result["firewall"].setdefault("rules", [])
             result["firewall"]["rules"].append(rule)
         if _type == "zone":
-            zone=self.__netjson_zone(block)
+            zone = self.__netjson_zone(block)
             result["firewall"].setdefault("zones", [])
             result["firewall"]["zones"].append(zone)
         if _type == "forwarding":
-            forwarding=self.__netjson_forwarding(block)
+            forwarding = self.__netjson_forwarding(block)
             result["firewall"].setdefault("forwardings", [])
             result["firewall"]["forwardings"].append(forwarding)
         if _type == "redirect":
-            redirect=self.__netjson_redirect(block)
+            redirect = self.__netjson_redirect(block)
             result["firewall"].setdefault("redirects", [])
             result["firewall"]["redirects"].append(redirect)
         if _type == "include":
-            include=self.__netjson_include(block)
+            include = self.__netjson_include(block)
             result["firewall"].setdefault("includes", [])
             result["firewall"]["includes"].append(include)
 
@@ -236,7 +233,7 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(rule)
 
     def __netjson_zone(self, zone):
-        network =  zone["network"] if "network" in zone else []
+        network = zone["network"] if "network" in zone else []
         # network may be specified as a list in a single string e.g.
         #     option network 'wan wan6'
         # Here we ensure that network is always a list.
