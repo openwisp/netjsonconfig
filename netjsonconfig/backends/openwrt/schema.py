@@ -976,8 +976,7 @@ firewall_definitions = {
     "zone_name": {
         "type": "string",
         "title": "A Zone name",
-        "description": "A unique zone name. Has a maximum"
-        "length of 11 characters.",
+        "description": "A unique zone name. Has a maximum" "length of 11 characters.",
         "maxLength": 11,
         "propertyOrder": 3,
     },
@@ -1005,8 +1004,7 @@ firewall_definitions = {
         "address.",
         "items": {
             "type": "string",
-            "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}]
-
+            "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}],
         },
         "propertyOrder": 5,
     },
@@ -1059,7 +1057,7 @@ firewall_definitions = {
         "iptables/DNAT rule.",
         "items": {
             "type": "string",
-            "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}]
+            "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}],
         },
         # "format": "ipv4",
         "propertyOrder": 10,
@@ -1110,8 +1108,7 @@ firewall_definitions = {
     "start_time": {
         "type": "string",
         "title": "start_time",
-        "description": "Only match traffic after the given time of day "
-        "(inclusive).",
+        "description": "Only match traffic after the given time of day " "(inclusive).",
         "pattern": time_regex,
         "propertyOrder": 16,
     },
@@ -1133,9 +1130,9 @@ firewall_definitions = {
         "Mondays, Thursdays and Fridays.",
         "propertyOrder": 18,
         "items": {
-                "type": "string",
-                "title": "weekday",
-                "enum": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+            "type": "string",
+            "title": "weekday",
+            "enum": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
         },
     },
     # Note: here we don't support negation of values like
@@ -1148,10 +1145,10 @@ firewall_definitions = {
         "day of the month.",
         "propertyOrder": 19,
         "items": {
-                "type": "integer",
-                "title": "day of month",
-                "minimum": 1,
-                "maximum": 31,
+            "type": "integer",
+            "title": "day of month",
+            "minimum": 1,
+            "maximum": 31,
         },
     },
     "utc_time": {
@@ -1316,9 +1313,7 @@ firewall_rules_properties = {
     "enabled": {"$ref": "#/definitions/enabled"},
     "src": {"$ref": "#/definitions/src"},
     "src_ip": {
-        "allOf": [
-            {"$ref": "#/definitions/src_ip"}
-        ],
+        "allOf": [{"$ref": "#/definitions/src_ip"}],
     },
     "src_mac": {"$ref": "#/definitions/src_mac"},
     "src_port": {"$ref": "#/definitions/src_port"},
@@ -1342,7 +1337,7 @@ firewall_rules_properties = {
         "title": "icmp_type",
         "description": "For protocol icmp select specific icmp types to match. "
         "Values can be either exact icmp type numbers or type names.",
-        "type": ["array","string"],
+        "type": ["array", "string"],
         "uniqueItems": True,
         "additionalItems": True,
         "propertyOrder": 101,
@@ -1513,7 +1508,8 @@ firewall_defaults = {
         "description": "Default policy for the INPUT chain of the filter table",
         "propertyOrder": 1,
         "allOf": [
-            {"$ref": "#/definitions/firewall_policy"},]
+            {"$ref": "#/definitions/firewall_policy"},
+        ],
     },
     "output": {
         "allOf": [
@@ -1668,7 +1664,10 @@ firewall_properties = {
             "type": "object",
             "title": "Forwarding",
             "additionalProperties": False,
-            "required": ["src", "dest"],  # need to check why openwrt has forwardings without src or dest
+            "required": [
+                "src",
+                "dest",
+            ],  # need to check why openwrt has forwardings without src or dest
             "properties": firewall_forwardings_properties,
         },
     },

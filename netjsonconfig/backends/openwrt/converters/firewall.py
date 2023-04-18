@@ -144,14 +144,13 @@ class Firewall(OpenWrtConverter):
         for include in includes:
             if "name" in include:
                 resultdict = OrderedDict(
-                    ((".name", self._get_uci_name(include["name"])), (".type", "include"))
-                )
-            else:
-                resultdict = OrderedDict(
                     (
+                        (".name", self._get_uci_name(include["name"])),
                         (".type", "include"),
                     )
                 )
+            else:
+                resultdict = OrderedDict(((".type", "include"),))
             resultdict.update(include)
             result.append(resultdict)
         return result
