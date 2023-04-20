@@ -25,8 +25,10 @@ class Mwan3(OpenWrtConverter):
         for interface in interfaces:
             resultdict = OrderedDict(
                 (
-                    ('.name', self._get_uci_name(interface.pop('name'))),
-                    ('.type', 'interface'),
+                    (
+                        (".name", self._get_uci_name(interface["name"])),
+                        (".type", "interface"),
+                    )
                 )
             )
             resultdict.update(interface)
@@ -34,12 +36,43 @@ class Mwan3(OpenWrtConverter):
         return result
 
     def to_netjson_loop(self, block, result, index):
-        result['mwan3'] = self.__netjson_mwan3(block)
+        result.setdefault("mwan3", {})
+        _type = block.pop(".type")
+        if _type == "interface":
+            interface = self.__netjson_interface(block)
+            result["mwan3"].setdefault("interfaces", [])
+            result['mwan3']['interfaces'].append(interface)
         return result
 
-    def __netjson_mwan3(self, mwan3):
-        del mwan3['.type']
-        _name = mwan3.pop('.name')
-        if _name != 'mwan3':
-            mwan3['id'] = _name
-        return self.type_cast(mwan3)
+    def __netjson_interface(self, interface):
+        interface['name'] = interface.pop('.name')
+        for option in [
+            "enabled",
+            "keep_failure_interval",
+            "check_quality",
+        ]:
+            if option in interface:
+                interface[option] = option in ["1", "yes", "on", "true", "enabled"]
+        for option in [
+            "reliability",
+            "count",
+            "timeout",
+            "interval",
+            "failure_interval",
+            "recovery_interval",
+            "failure_latency",
+            "recovery_latency",
+            "failure_loss",
+            "recovery_loss",
+            "max_ttl",
+            "size",
+            "up",
+            "down",
+        ]:
+            if option in interface:
+                try:
+                    interface[option] = int(interface[option])
+                except ValueError:
+                    del interface[option]
+
+        return self.type_cast(interface)

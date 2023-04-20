@@ -1765,7 +1765,7 @@ mwan3 = {
                                 "type": "boolean",
                                 "title": "Enabled",
                                 "description": "specifies wether mwan3 should run on this interface",
-                                "default": False,
+                                "default": True,
                                 "format": "checkbox",
                                 "propertyOrder": 2,
                             },
