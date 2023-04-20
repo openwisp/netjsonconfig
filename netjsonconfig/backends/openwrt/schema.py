@@ -1931,7 +1931,7 @@ mwan3 = {
                     "propertyOrder": 2,
                     "items": {
                         "type": "object",
-                        "title": "Interface",
+                        "title": "Members",
                         "additionalProperties": True,
                         "required": ["name", "interface"],
                         "properties": {
@@ -1965,6 +1965,84 @@ mwan3 = {
                                 "load based on this weight value",
                                 "default": 1,
                                 "propertyOrder": 4,
+                            },
+                        },
+                    },
+                },
+                "rules": {
+                    "type": "array",
+                    "title": "Rules",
+                    "propertyOrder": 3,
+                    "items": {
+                        "type": "object",
+                        "title": "Rules",
+                        "additionalProperties": True,
+                        "required": ["name", "use_policy"],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "The unique name of the rule. "
+                                "Must be no more than 15 characters",
+                                "propertyOrder": 1,
+                            },
+                            "use_policy": {
+                                "type": "string",
+                                "title": "Use policy",
+                                "description": "Use this policy for traffic that matches or set to "
+                                "default to use the default routing table to lookup",
+                                "default": "default",
+                                "propertyOrder": 2,
+                            },
+                            # check description
+                            "src_ip": {
+                                "$ref": "#/definitions/src_ip",
+                                "propertyOrder": 3,
+                            },
+                            "src_port": {
+                                "$ref": "#/definitions/src_port",
+                                "propertyOrder": 4,
+                            },
+                            "proto": {
+                                "$ref": "#/definitions/proto",
+                                "propertyOrder": 5,
+                            },
+                            "dest_ip": {
+                                "$ref": "#/definitions/dest_ip",
+                                "propertyOrder": 6,
+                            },
+                            "dest_port": {
+                                "$ref": "#/definitions/dest_port",
+                                "propertyOrder": 7,
+                            },
+                            "ipset": {
+                                "$ref": "#/definitions/ipset",
+                                "propertyOrder": 8,
+                            },
+                            "sticky": {
+                                "type": "boolean",
+                                "title": "Sticky",
+                                "description": "Allow traffic from the same source "
+                                "IP address within the timeout limit to use"
+                                " same wan interface as prior session",
+                                "default": False,
+                                "propertyOrder": 9,
+                            },
+                            "timeout": {
+                                "type": "integer",
+                                "title": "Sticky",
+                                "description": "Stickiness timeout value in seconds",
+                                "default": 60,
+                                "propertyOrder": 10,
+                            },
+                            "family": {"$ref": "#/definitions/family"},
+                            "logging": {
+                                "type": "boolean",
+                                "title": "Enable logging",
+                                "description": "Enables firewall rule logging "
+                                "(global mwan3 logging setting must also be enabled)",
+                                "default": False,
+                                "propertyOrder": 11,
                             },
                         },
                     },
