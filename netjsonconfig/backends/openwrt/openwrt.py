@@ -26,6 +26,7 @@ class OpenWrt(BaseBackend):
         converters.OpenVpn,
         converters.WireguardPeers,
         converters.Firewall,
+        converters.Mwan3,
         converters.Default,
     ]
     parser = OpenWrtParser
