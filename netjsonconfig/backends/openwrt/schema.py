@@ -1938,26 +1938,31 @@ mwan3 = {
                             "name": {
                                 "type": "string",
                                 "title": "Name",
-                                "description": "The name of this member configuration, which is then referenced in policies",
+                                "description": "The name of this member configuration "
+                                ",which is then referenced in policies",
                                 "propertyOrder": 1,
                             },
                             "interface": {
                                 "type": "string",
                                 "title": "Interface",
-                                "description": "Member applies to this interface (use the same interface name as used in the mwan3 interface section, above)",
+                                "description": "Member applies to this interface "
+                                "(use the same interface name as used in the mwan3 "
+                                "interface section, above)",
                                 "propertyOrder": 2,
                             },
                             "metric": {
                                 "type": "integer",
                                 "title": "Metric",
-                                "description": "Members within one policy with a lower metric have precedence over higher metric members",
+                                "description": "Members within one policy with a lower "
+                                "metric have precedence over higher metric members",
                                 "default": 1,
                                 "propertyOrder": 3,
                             },
                             "weight": {
                                 "type": "integer",
                                 "title": "Weight",
-                                "description": "Members with same metric will distribute load based on this weight value",
+                                "description": "Members with same metric will distribute "
+                                "load based on this weight value",
                                 "default": 1,
                                 "propertyOrder": 4,
                             },
