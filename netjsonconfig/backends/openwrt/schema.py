@@ -1969,10 +1969,45 @@ mwan3 = {
                         },
                     },
                 },
+                "policies": {
+                    "type": "array",
+                    "title": "Policy",
+                    "propertyOrder": 3,
+                    "items": {
+                        "type": "object",
+                        "title": "Rules",
+                        "additionalProperties": True,
+                        "required": ["name", "members_assigned"],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "The unique name of the policy. "
+                                "Must be no more than 15 characters",
+                                "propertyOrder": 1,
+                            },
+                            "members_assigned": {
+                                "type": "string",
+                                "title": "Members assigned",
+                                "description": "One or more members assigned to this policy",
+                                "propertyOrder": 2,
+                            },
+                            "last_resort": {
+                                "type": "string",
+                                "title": "Last resort",
+                                "description": "Determine the fallback routing "
+                                "behaviour if all WAN members in the policy are down",
+                                "enum": ["unreachable", "blackhole", "default"],
+                                "default": "unreachable",
+                                "propertyOrder": 3,
+                            },
+                        },
+                    },
+                },
                 "rules": {
                     "type": "array",
                     "title": "Rules",
-                    "propertyOrder": 3,
+                    "propertyOrder": 4,
                     "items": {
                         "type": "object",
                         "title": "Rules",
