@@ -5,15 +5,16 @@ from .base import OpenWrtConverter
 
 
 class Mwan3(OpenWrtConverter):
-    netjson_key = 'mwan3'
-    intermediate_key = 'mwan3'
-    _uci_types = ['interface']
-    _schema = schema['properties']['mwan3']
+    netjson_key = "mwan3"
+    intermediate_key = "mwan3"
+    _uci_types = ["interface", "member"]
+    _schema = schema["properties"]["mwan3"]
 
     def to_intermediate_loop(self, block, result, index=None):
-        interfaces = self.__intermediate_interfaces(block.pop('interfaces', {}))
-        result.setdefault('mwan3', [])
-        result['mwan3'] = interfaces
+        interfaces = self.__intermediate_interfaces(block.pop("interfaces", {}))
+        members = self.__intermediate_members(block.pop("members", {}))
+        result.setdefault("mwan3", [])
+        result["mwan3"] = interfaces + members
         return result
 
     def __intermediate_interfaces(self, interfaces):
@@ -35,6 +36,25 @@ class Mwan3(OpenWrtConverter):
             result.append(resultdict)
         return result
 
+    def __intermediate_members(self, members):
+        """
+        converts NetJSON member to
+        UCI intermediate data structure
+        """
+        result = []
+        for member in members:
+            resultdict = OrderedDict(
+                (
+                    (
+                        (".name", self._get_uci_name(member["name"])),
+                        (".type", "member"),
+                    )
+                )
+            )
+            resultdict.update(member)
+            result.append(resultdict)
+        return result
+
     def to_netjson_loop(self, block, result, index):
         result.setdefault("mwan3", {})
         _type = block.pop(".type")
@@ -42,10 +62,14 @@ class Mwan3(OpenWrtConverter):
             interface = self.__netjson_interface(block)
             result["mwan3"].setdefault("interfaces", [])
             result['mwan3']['interfaces'].append(interface)
+        if _type == "member":
+            member = self.__netjson_member(block)
+            result["mwan3"].setdefault("members", [])
+            result['mwan3']['members'].append(member)
         return result
 
     def __netjson_interface(self, interface):
-        interface['name'] = interface.pop('.name')
+        interface["name"] = interface.pop(".name")
         for option in [
             "enabled",
             "keep_failure_interval",
@@ -76,3 +100,13 @@ class Mwan3(OpenWrtConverter):
                     del interface[option]
 
         return self.type_cast(interface)
+
+    def __netjson_member(self, member):
+        member["name"] = member.pop(".name")
+        for option in ["metric", "weight"]:
+            if option in member:
+                try:
+                    member[option] = int(member[option])
+                except ValueError:
+                    del member[option]
+        return self.type_cast(member)
