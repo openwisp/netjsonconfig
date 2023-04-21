@@ -1691,7 +1691,7 @@ firewall_properties = {
             "type": "object",
             "title": "Rules",
             "additionalProperties": True,
-            "required": ["src","target"],
+            "required": ["target"],
             "properties": firewall_rules_properties,
         },
     },
