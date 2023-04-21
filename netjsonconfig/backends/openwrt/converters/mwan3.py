@@ -7,14 +7,15 @@ from .base import OpenWrtConverter
 class Mwan3(OpenWrtConverter):
     netjson_key = "mwan3"
     intermediate_key = "mwan3"
-    _uci_types = ["interface", "member"]
+    _uci_types = ["interface", "member", "policy"]
     _schema = schema["properties"]["mwan3"]
 
     def to_intermediate_loop(self, block, result, index=None):
         interfaces = self.__intermediate_interfaces(block.pop("interfaces", {}))
         members = self.__intermediate_members(block.pop("members", {}))
+        policies = self.__intermediate_members(block.pop("policies", {}))
         result.setdefault("mwan3", [])
-        result["mwan3"] = interfaces + members
+        result["mwan3"] = interfaces + members + policies
         return result
 
     def __intermediate_interfaces(self, interfaces):
@@ -55,6 +56,25 @@ class Mwan3(OpenWrtConverter):
             result.append(resultdict)
         return result
 
+    def __intermediate_policies(self, policies):
+        """
+        converts NetJSON policy to
+        UCI intermediate data structure
+        """
+        result = []
+        for policy in policies:
+            resultdict = OrderedDict(
+                (
+                    (
+                        (".name", self._get_uci_name(policy["name"])),
+                        (".type", "policy"),
+                    )
+                )
+            )
+            resultdict.update(policy)
+            result.append(resultdict)
+        return result
+
     def to_netjson_loop(self, block, result, index):
         result.setdefault("mwan3", {})
         _type = block.pop(".type")
@@ -66,6 +86,10 @@ class Mwan3(OpenWrtConverter):
             member = self.__netjson_member(block)
             result["mwan3"].setdefault("members", [])
             result['mwan3']['members'].append(member)
+        if _type == "policy":
+            member = self.__netjson_policy(block)
+            result["mwan3"].setdefault("policies", [])
+            result['mwan3']['policies'].append(member)
         return result
 
     def __netjson_interface(self, interface):
@@ -110,3 +134,7 @@ class Mwan3(OpenWrtConverter):
                 except ValueError:
                     del member[option]
         return self.type_cast(member)
+
+    def __netjson_policy(self, policy):
+        policy["name"] = policy.pop(".name")
+        return self.type_cast(policy)

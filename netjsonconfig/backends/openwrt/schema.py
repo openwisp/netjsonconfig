@@ -1977,7 +1977,7 @@ mwan3 = {
                         "type": "object",
                         "title": "Rules",
                         "additionalProperties": True,
-                        "required": ["name", "members_assigned"],
+                        "required": ["name", "use_member"],
                         "properties": {
                             "name": {
                                 "type": "string",
@@ -1986,10 +1986,14 @@ mwan3 = {
                                 "Must be no more than 15 characters",
                                 "propertyOrder": 1,
                             },
-                            "members_assigned": {
-                                "type": "string",
+                            "use_member": {
+                                "type": "array",
                                 "title": "Members assigned",
                                 "description": "One or more members assigned to this policy",
+                                "items": {
+                                    "title": "NTP server",
+                                    "type": "string",
+                                },
                                 "propertyOrder": 2,
                             },
                             "last_resort": {
