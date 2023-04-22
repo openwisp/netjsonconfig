@@ -1975,7 +1975,7 @@ mwan3 = {
                     "propertyOrder": 3,
                     "items": {
                         "type": "object",
-                        "title": "Rules",
+                        "title": "Policy",
                         "additionalProperties": True,
                         "required": ["name", "use_member"],
                         "properties": {
