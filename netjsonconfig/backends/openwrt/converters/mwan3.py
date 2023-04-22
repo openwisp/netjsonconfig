@@ -7,16 +7,16 @@ from .base import OpenWrtConverter
 class Mwan3(OpenWrtConverter):
     netjson_key = "mwan3"
     intermediate_key = "mwan3"
-    _uci_types = ["interface", "member", "policy"]
+    _uci_types = ["interface", "member", "policy", "rule"]
     _schema = schema["properties"]["mwan3"]
 
     def to_intermediate_loop(self, block, result, index=None):
         interfaces = self.__intermediate_interfaces(block.pop("interfaces", {}))
         members = self.__intermediate_members(block.pop("members", {}))
         policies = self.__intermediate_policies(block.pop("policies", {}))
-
+        rules = self.__intermediate_rules(block.pop("rules", {}))
         result.setdefault("mwan3", [])
-        result["mwan3"] = interfaces + members + policies
+        result["mwan3"] = interfaces + members + policies + rules
         return result
 
     def __intermediate_interfaces(self, interfaces):
@@ -76,6 +76,34 @@ class Mwan3(OpenWrtConverter):
             result.append(resultdict)
         return result
 
+    def __intermediate_rules(self, rules):
+        """
+        converts NetJSON rule to
+        UCI intermediate data structure
+        """
+        result = []
+        for rule in rules:
+            resultdict = OrderedDict(
+                (
+                    (
+                        (".name", self._get_uci_name(rule["name"])),
+                        (".type", "rule"),
+                    )
+                )
+            )
+            if "proto" in rule:
+                # If proto is a single value, then force it not to be in a list so that
+                # the UCI uses "option" rather than "list". If proto is only "tcp"
+                # and"udp", we can force it to the single special value of "tcpudp".
+                proto = rule["proto"]
+                if len(proto) == 1:
+                    rule["proto"] = proto[0]
+                elif set(proto) == {"tcp", "udp"}:
+                    rule["proto"] = "tcpudp"
+            resultdict.update(rule)
+            result.append(resultdict)
+        return result
+
     def to_netjson_loop(self, block, result, index):
         result.setdefault("mwan3", {})
         _type = block.pop(".type")
@@ -91,6 +119,10 @@ class Mwan3(OpenWrtConverter):
             member = self.__netjson_policy(block)
             result["mwan3"].setdefault("policies", [])
             result['mwan3']['policies'].append(member)
+        if _type == "rules":
+            rule = self.__netjson_rule(block)
+            result["mwan3"].setdefault("rules", [])
+            result['mwan3']['rules'].append(rule)
         return result
 
     def __netjson_interface(self, interface):
@@ -139,3 +171,31 @@ class Mwan3(OpenWrtConverter):
     def __netjson_policy(self, policy):
         policy["name"] = policy.pop(".name")
         return self.type_cast(policy)
+
+    def __netjson_rule(self, rule):
+        rule["name"] = rule.pop(".name")
+        for option in [
+            "sticky",
+            "logging",
+        ]:
+            if option in rule:
+                rule[option] = option in ["1", "yes", "on", "true", "enabled"]
+
+        if "timeout" in rule:
+            try:
+                rule["timeout"] = int(rule["timeout"])
+            except ValueError:
+                del rule["timeout"]
+        if "proto" in rule:
+            rule["proto"] = self.__netjson_generic_proto(rule["proto"])
+
+        return self.type_cast(rule)
+
+    def __netjson_generic_proto(self, proto):
+        if isinstance(proto, list):
+            return proto.copy()
+        else:
+            if proto == "tcpudp":
+                return ["tcp", "udp"]
+            else:
+                return proto.split()
