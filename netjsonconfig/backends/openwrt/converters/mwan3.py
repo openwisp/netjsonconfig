@@ -13,7 +13,8 @@ class Mwan3(OpenWrtConverter):
     def to_intermediate_loop(self, block, result, index=None):
         interfaces = self.__intermediate_interfaces(block.pop("interfaces", {}))
         members = self.__intermediate_members(block.pop("members", {}))
-        policies = self.__intermediate_members(block.pop("policies", {}))
+        policies = self.__intermediate_policies(block.pop("policies", {}))
+
         result.setdefault("mwan3", [])
         result["mwan3"] = interfaces + members + policies
         return result

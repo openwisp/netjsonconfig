@@ -998,7 +998,7 @@ firewall_definitions = {
         "propertyOrder": 4,
     },
     "src_ip": {
-        "type": ["string", "array"],
+        "type": ["array", "string"],
         "title": "src_ip",
         "description": "Match incoming traffic from the specified source ip "
         "address.",
