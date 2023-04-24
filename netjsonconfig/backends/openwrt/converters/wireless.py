@@ -61,6 +61,7 @@ class Wireless(OpenWrtConverter):
         if 'encryption' in wireless:
             encryption = self.__intermediate_encryption(wireless)
             wireless.update(encryption)
+        wireless = self.__intermediate_roaming(wireless)
         # attached networks (openwrt specific)
         # by default the wifi interface is attached
         # to its defining interface
@@ -138,6 +139,20 @@ class Wireless(OpenWrtConverter):
         if cipher and protocol.startswith('wpa') and cipher != 'auto':
             uci['encryption'] += '+{0}'.format(cipher)
         return uci
+
+    roaming_properties = (
+        'ft_over_ds',
+        'ft_psk_generate_local',
+        'nasid',
+        'reassociation_deadline',
+    )
+
+    def __intermediate_roaming(self, wireless):
+        if wireless.get('ieee80211r') is False:
+            for property in self.roaming_properties:
+                if property in wireless:
+                    del wireless[property]
+        return wireless
 
     def to_netjson_loop(self, block, result, index):
         is_new = False
