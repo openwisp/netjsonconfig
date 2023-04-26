@@ -1743,10 +1743,59 @@ mwan3 = {
             "additionalProperties": True,
             "propertyOrder": 12,
             "properties": {
+                "globals": {
+                    "type": "object",
+                    "title": "Globals",
+                    "propertyOrder": 1,
+                    "items": {
+                        "required": [
+                            "mmx_mask",
+                        ],
+                        "properties": {
+                            "mmx_mask": {
+                                "type": "string",
+                                "title": "Firewall mask",
+                                "description": "Enter value in hex, starting with 0x",
+                                "propertyOrder": 1,
+                                "default": "0x3F00",
+                            },
+                            "logging": {
+                                "type": "boolean",
+                                "title": "Logging",
+                                "description": "Global firewall logging. This must be enabled for any rule specific logging to occur",
+                                "propertyOrder": 2,
+                                "default": False,
+                            },
+                            "loglevel": {
+                                "type": "string",
+                                "title": "Log Level",
+                                "description": "Firewall loglevel",
+                                "enum": [
+                                    "emerg",
+                                    "emerg",
+                                    "crit",
+                                    "error",
+                                    "warning",
+                                    "notice",
+                                    "info",
+                                    "debug",
+                                ],
+                                "default": "notice",
+                                "propertyOrder": 3,
+                            },
+                            "rt_table_lookup": {
+                                "type": "number",
+                                "title": "Routing table lookup",
+                                "description": "Specify an additional routing table to be scanned for connected networks. In default config leave empty",
+                                "propertyOrder": 4,
+                            },
+                        },
+                    },
+                },
                 "interfaces": {
                     "type": "array",
                     "title": "Interfaces",
-                    "propertyOrder": 1,
+                    "propertyOrder": 2,
                     "items": {
                         "type": "object",
                         "title": "Interface",
@@ -1928,7 +1977,7 @@ mwan3 = {
                 "members": {
                     "type": "array",
                     "title": "Members",
-                    "propertyOrder": 2,
+                    "propertyOrder": 3,
                     "items": {
                         "type": "object",
                         "title": "Members",
@@ -1972,7 +2021,7 @@ mwan3 = {
                 "policies": {
                     "type": "array",
                     "title": "Policy",
-                    "propertyOrder": 3,
+                    "propertyOrder": 4,
                     "items": {
                         "type": "object",
                         "title": "Policy",
@@ -2011,7 +2060,7 @@ mwan3 = {
                 "rules": {
                     "type": "array",
                     "title": "Rules",
-                    "propertyOrder": 4,
+                    "propertyOrder": 5,
                     "items": {
                         "type": "object",
                         "title": "Rules",

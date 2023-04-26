@@ -7,17 +7,27 @@ from .base import OpenWrtConverter
 class Mwan3(OpenWrtConverter):
     netjson_key = "mwan3"
     intermediate_key = "mwan3"
-    _uci_types = ["interface", "member", "policy", "rule"]
+    _uci_types = ["globals", "interface", "member", "policy", "rule"]
     _schema = schema["properties"]["mwan3"]
 
     def to_intermediate_loop(self, block, result, index=None):
+        globals = self.__intermediate_globals(block.pop("globals", {}))
         interfaces = self.__intermediate_interfaces(block.pop("interfaces", {}))
         members = self.__intermediate_members(block.pop("members", {}))
         policies = self.__intermediate_policies(block.pop("policies", {}))
         rules = self.__intermediate_rules(block.pop("rules", {}))
         result.setdefault("mwan3", [])
-        result["mwan3"] = interfaces + members + policies + rules
+        result["mwan3"] = globals + interfaces + members + policies + rules
         return result
+
+    def __intermediate_globals(self, globals):
+        """
+        converts NetJSON globals to
+        UCI intermediate data structure
+        """
+        result = OrderedDict(((".name", "globals"), (".type", "globals")))
+        result.update(globals)
+        return [result]
 
     def __intermediate_interfaces(self, interfaces):
         """
@@ -107,6 +117,10 @@ class Mwan3(OpenWrtConverter):
     def to_netjson_loop(self, block, result, index):
         result.setdefault("mwan3", {})
         _type = block.pop(".type")
+        if _type == "globals":
+            globals = self.__netjson_globals(block)
+            # result["mwan3"].setdefault("globals", [])
+            result['mwan3']['globals'] = globals
         if _type == "interface":
             interface = self.__netjson_interface(block)
             result["mwan3"].setdefault("interfaces", [])
@@ -124,6 +138,18 @@ class Mwan3(OpenWrtConverter):
             result["mwan3"].setdefault("rules", [])
             result['mwan3']['rules'].append(rule)
         return result
+
+    def __netjson_globals(self, globals):
+        globals["name"] = globals.pop(".name")
+        if "logging" in globals:
+            globals["logging"] = globals["logging"] in [
+                "1",
+                "yes",
+                "on",
+                "true",
+                "enabled",
+            ]
+        return self.type_cast(globals)
 
     def __netjson_interface(self, interface):
         interface["name"] = interface.pop(".name")
