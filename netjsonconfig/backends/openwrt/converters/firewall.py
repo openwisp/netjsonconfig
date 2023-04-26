@@ -206,7 +206,7 @@ class Firewall(OpenWrtConverter):
         ]:
             if param in defaults:
                 defaults[param] = self.__netjson_generic_boolean(defaults[param])
-        for param in ["synflood_limit", "synflood_burst"]:
+        for param in ["synflood_limit", "synflood_burst", "synflood_rate"]:
             if param in defaults:
                 defaults[param] = int(defaults[param])
         return self.type_cast(defaults)
