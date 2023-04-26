@@ -2042,7 +2042,7 @@ mwan3 = {
                                 "title": "Members assigned",
                                 "description": "One or more members assigned to this policy",
                                 "items": {
-                                    "title": "NTP server",
+                                    "title": "Member used",
                                     "type": "string",
                                 },
                                 "propertyOrder": 2,
