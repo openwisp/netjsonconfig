@@ -998,11 +998,13 @@ firewall_definitions = {
         "propertyOrder": 4,
     },
     "src_ip": {
-        "type": ["array", "string"],
+        "type": "array",
         "title": "src_ip",
         "description": "Match incoming traffic from the specified source ip "
         "address.",
+        "uniqueItems": True,
         "items": {
+            "title": "src_ip",
             "type": "string",
             "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}],
         },
@@ -1238,12 +1240,7 @@ firewall_redirect_properties = {
     "name": {"$ref": "#/definitions/name"},
     "enabled": {"$ref": "#/definitions/enabled"},
     "src": {"$ref": "#/definitions/src"},
-    "src_ip": {
-        "allOf": [
-            {"$ref": "#/definitions/src_ip"},
-            {"pattern": ipv4_cidr_regex},
-        ],
-    },
+    "src_ip": {"$ref": "#/definitions/src_ip"},
     "src_mac": {"$ref": "#/definitions/src_mac"},
     "src_port": {"$ref": "#/definitions/src_port"},
     "proto": {"$ref": "#/definitions/proto"},
@@ -1312,9 +1309,7 @@ firewall_rules_properties = {
     "name": {"$ref": "#/definitions/name"},
     "enabled": {"$ref": "#/definitions/enabled"},
     "src": {"$ref": "#/definitions/src"},
-    "src_ip": {
-        "allOf": [{"$ref": "#/definitions/src_ip"}],
-    },
+    "src_ip": {"$ref": "#/definitions/src_ip"},
     "src_mac": {"$ref": "#/definitions/src_mac"},
     "src_port": {"$ref": "#/definitions/src_port"},
     "proto": {"$ref": "#/definitions/proto"},

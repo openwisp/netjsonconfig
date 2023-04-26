@@ -29,7 +29,7 @@ class TestDefault(unittest.TestCase, _TabsMixin):
                             "name": "Allow-MLD",
                             "src": "wan",
                             "proto": ["icmp"],
-                            "src_ip": "fe80::/10",
+                            "src_ip": ["fe80::/10"],
                             "family": "ipv6",
                             "target": "ACCEPT",
                             "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
@@ -38,7 +38,7 @@ class TestDefault(unittest.TestCase, _TabsMixin):
                             "name": "Rule2",
                             "src": "wan",
                             "proto": ["icmp"],
-                            "src_ip": "192.168.1.1/24",
+                            "src_ip": ["192.168.1.1/24"],
                             "family": "ipv4",
                             "target": "ACCEPT",
                             "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
@@ -157,7 +157,7 @@ config custom 'custom'
                         "name": "Allow-MLD",
                         "proto": ["icmp"],
                         "src": "wan",
-                        "src_ip": "fe80::/10",
+                        "src_ip": ["fe80::/10"],
                         "target": "ACCEPT",
                     }
                 ]

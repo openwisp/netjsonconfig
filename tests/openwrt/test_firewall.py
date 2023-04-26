@@ -99,7 +99,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
                 {
                     "name": "Allow-MLD",
                     "src": "wan",
-                    "src_ip": "fe80::/10",
+                    "src_ip": ["fe80::/10"],
                     "proto": ["icmp"],
                     "icmp_type": ["130/0", "131/0", "132/0", "143/0"],
                     "target": "ACCEPT",
@@ -144,7 +144,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
                 {
                     "name": "Allow-DHCPv6",
                     "src": "wan",
-                    "src_ip": "fc00::/6",
+                    "src_ip": ["fc00::/6"],
                     "dest_ip": "fc00::/6",
                     "dest_port": "546",
                     "proto": ["udp"],
@@ -267,7 +267,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
             "rules": [
                 {
                     "name": "Allow-Isolated-DHCP",
-                    "src_ip": "10.10.10.10",
+                    "src_ip": ["10.10.10.10"],
                     "src_mac": "fc:aa:14:18:12:98",
                     "src": "isolated",
                     "proto": ["udp"],
@@ -309,7 +309,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
             "rules": [
                 {
                     "name": "Allow-Isolated-DHCP",
-                    "src_ip": "10.10.10.10",
+                    "src_ip": ["10.10.10.10"],
                     "src_mac": "fc:aa:14:18:12:98",
                     "src": "isolated",
                     "proto": ["udp"],
@@ -865,7 +865,7 @@ class TestFirewall(unittest.TestCase, _TabsMixin):
                     "target": "DNAT",
                     "weekdays": ["mon", "tue", "wed"],
                     "monthdays": [1, 2, 31],
-                    "src_ip": "192.168.1.1",
+                    "src_ip": ["192.168.1.1"],
                     "src_dip": "192.168.1.1",
                     "src_mac": "AA:AA:AA:AA:AA:AA",
                     "src_port": "1-1064",
