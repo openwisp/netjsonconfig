@@ -1622,7 +1622,7 @@ firewall_defaults = {
         "format": "checkbox",
         "propertyOrder": 14,
     },
-    "flow_offlocaing": {
+    "flow_offloading": {
         "type": "boolean",
         "title": "Enable software flow offloading for connections.",
         "description": "If True, enable software flow offloading for connections.",
@@ -1630,7 +1630,7 @@ firewall_defaults = {
         "format": "checkbox",
         "propertyOrder": 15,
     },
-    "flow_offlocaing_hw": {
+    "flow_offloading_hw": {
         "type": "boolean",
         "title": "Enable hardware flow offloading for connections.",
         "description": "If True, enable hardware flow offloading for connections.",
