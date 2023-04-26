@@ -1051,7 +1051,7 @@ firewall_definitions = {
         "propertyOrder": 9,
     },
     "dest_ip": {
-        "type": ["string", "array"],
+        "type": "array",
         "title": "dest_ip",
         "description": "For DNAT, redirect matches incoming traffic to the "
         "specified internal host. For SNAT, it matches traffic directed at "
@@ -1059,10 +1059,10 @@ firewall_definitions = {
         "is translated in a iptables/REDIRECT rule, otherwise it is a "
         "iptables/DNAT rule.",
         "items": {
+            "title": "dest_ip",
             "type": "string",
-            "oneOf": [{"pattern": ipv4_cidr_regex}, {"pattern": ipv6_cidr_regex}],
+            "pattern": ipv4_and_ipv6_cidr_regex,
         },
-        # "format": "ipv4",
         "propertyOrder": 10,
     },
     "dest_port": {

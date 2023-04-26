@@ -104,12 +104,13 @@ class Firewall(OpenWrtConverter):
                 elif set(proto) == {"tcp", "udp"}:
                     rule["proto"] = "tcpudp"
 
-            # If src_ip contains only a single value, force the use of a UCI "option"
+            # If src_ip and dest_ip contains only a single value, force the use of a UCI "option"
             # rather than "list".
-            if "src_ip" in rule:
-                src_ip = rule["src_ip"]
-                if len(src_ip) == 1:
-                    rule["src_ip"] = src_ip[0]
+            for option in ["src_ip", "dest_ip"]:
+                if option in rule:
+                    ip = rule[option]
+                    if len(ip) == 1:
+                        rule[option] = ip[0]
             resultdict.update(rule)
             result.append(resultdict)
         return result
@@ -137,12 +138,13 @@ class Firewall(OpenWrtConverter):
                 elif set(proto) == {"tcp", "udp"}:
                     redirect["proto"] = "tcpudp"
 
-            # If src_ip contains only a single value, force the use of a UCI "option"
+            # If src_ip and dest_ip contains only a single value, force the use of a UCI "option"
             # rather than "list".
-            if "src_ip" in redirect:
-                src_ip = redirect["src_ip"]
-                if len(src_ip) == 1:
-                    redirect["src_ip"] = src_ip[0]
+            for option in ["src_ip", "dest_ip"]:
+                if option in redirect:
+                    ip = redirect[option]
+                    if len(ip) == 1:
+                        redirect[option] = ip[0]
 
             resultdict.update(redirect)
             result.append(resultdict)
@@ -226,10 +228,12 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(defaults)
 
     def __netjson_rule(self, rule):
-        if "src_ip" in rule:
-            src_ip = rule["src_ip"]
-            if not isinstance(src_ip, list):
-                rule["src_ip"] = src_ip.split()
+
+        for option in ["src_ip", "dest_ip"]:
+            if option in rule:
+                ip = rule[option]
+                if not isinstance(ip, list):
+                    rule[option] = ip.split()
 
         for param in ["enabled", "utc_time"]:
             if param in rule:
@@ -271,10 +275,12 @@ class Firewall(OpenWrtConverter):
         return self.type_cast(forwarding)
 
     def __netjson_redirect(self, redirect):
-        if "src_ip" in redirect:
-            src_ip = redirect["src_ip"]
-            if not isinstance(src_ip, list):
-                redirect["src_ip"] = src_ip.split()
+        for option in ["src_ip", "dest_ip"]:
+            if option in redirect:
+                ip = redirect[option]
+                if not isinstance(ip, list):
+                    redirect[option] = ip.split()
+
         if "proto" in redirect:
             redirect["proto"] = self.__netjson_generic_proto(redirect["proto"])
 
