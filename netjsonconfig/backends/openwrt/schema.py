@@ -1762,7 +1762,8 @@ mwan3 = {
                             "logging": {
                                 "type": "boolean",
                                 "title": "Logging",
-                                "description": "Global firewall logging. This must be enabled for any rule specific logging to occur",
+                                "description": "Global firewall logging. "
+                                "This must be enabled for any rule specific logging to occur",
                                 "propertyOrder": 2,
                                 "default": False,
                             },
@@ -1786,7 +1787,8 @@ mwan3 = {
                             "rt_table_lookup": {
                                 "type": "number",
                                 "title": "Routing table lookup",
-                                "description": "Specify an additional routing table to be scanned for connected networks. In default config leave empty",
+                                "description": "Specify an additional routing table to be scanned  "
+                                "for connected networks. In default config leave empty",
                                 "propertyOrder": 4,
                             },
                         },
