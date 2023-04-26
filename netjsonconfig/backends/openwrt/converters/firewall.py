@@ -230,7 +230,7 @@ class Firewall(OpenWrtConverter):
             src_ip = rule["src_ip"]
             if not isinstance(src_ip, list):
                 rule["src_ip"] = src_ip.split()
-                
+
         for param in ["enabled", "utc_time"]:
             if param in rule:
                 rule[param] = self.__netjson_generic_boolean(rule[param])
