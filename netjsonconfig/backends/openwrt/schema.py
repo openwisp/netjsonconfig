@@ -1769,7 +1769,7 @@ mwan3 = {
                                 "description": "Firewall loglevel",
                                 "enum": [
                                     "emerg",
-                                    "emerg",
+                                    "alert",
                                     "crit",
                                     "error",
                                     "warning",
