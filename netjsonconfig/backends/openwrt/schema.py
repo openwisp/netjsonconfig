@@ -1955,7 +1955,8 @@ mwan3 = {
                                 "description": "specifies upon which events the connections table should"
                                 " be flushed",
                                 "type": "array",
-                                "uniqueItems": True,
+                                # commented because the front end gives a strange error
+                                # "uniqueItems": True,
                                 "additionalItems": True,
                                 "items": {
                                     "type": "string",
