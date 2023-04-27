@@ -642,7 +642,37 @@ key name                    type    default   allowed values
 ``max_age``                 integer ``20``    timeout in seconds until
                                               topology updates on link
                                               loss
+``vlan_filtering``          list    ``[]```   a list of ``dict ({})`` defining VLANs for the bridge
+
+                                              Refer to the :ref:`VLAN options table <bridge_vlan_options>` below
+                                              for a list of available options.
 =========================== ======= ========= ============================
+
+.. _bridge_vlan_options:
+
+VLAN options:
+
++-----------+---------+--------------------------------------------------------------------+
+| key name  | type    | allowed values                                                     |
++===========+=========+====================================================================+
+| ``vlan``  | integer | VLAN ID                                                            |
++-----------+---------+--------------------------------------------------------------------+
+| ``ports`` | list    | A list of ``dict`` defining interfaces participating in the VLAN   |
+|           |         |                                                                    |
+|           |         | +-----------------+---------+------------------------------------+ |
+|           |         | | key name        | type    | allowed values                     | |
+|           |         | +=================+=========+====================================+ |
+|           |         | | ``ifname``      | string  | interface name (this interface     | |
+|           |         | |                 |         | should be a bridge member)         | |
+|           |         | +-----------------+---------+------------------------------------+ |
+|           |         | | ``tagging``     | string  | whether the port is tagged (``t``) | |
+|           |         | |                 |         | or untagged (``u``)                | |
+|           |         | +-----------------+---------+------------------------------------+ |
+|           |         | | ``primary_vid`` | boolean | whether the current VLAN should be | |
+|           |         | |                 |         | used for all untagged incoming     | |
+|           |         | |                 |         | traffic on this interface          | |
+|           |         | +-----------------+---------+------------------------------------+ |
++-----------+---------+--------------------------------------------------------------------+
 
 Bridge interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~
