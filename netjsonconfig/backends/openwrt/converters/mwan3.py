@@ -116,11 +116,13 @@ class Mwan3(OpenWrtConverter):
 
     def to_netjson_loop(self, block, result, index):
         result.setdefault("mwan3", {})
+        _name=block.pop(".name")
         _type = block.pop(".type")
         if _type == "globals":
             globals = self.__netjson_globals(block)
-            # result["mwan3"].setdefault("globals", [])
-            result['mwan3']['globals'] = globals
+            if globals:     
+                result["mwan3"].setdefault("globals", {})
+                result['mwan3']['globals'].update(globals)
         if _type == "interface":
             interface = self.__netjson_interface(block)
             result["mwan3"].setdefault("interfaces", [])
@@ -140,7 +142,6 @@ class Mwan3(OpenWrtConverter):
         return result
 
     def __netjson_globals(self, globals):
-        globals["name"] = globals.pop(".name")
         if "logging" in globals:
             globals["logging"] = globals["logging"] in [
                 "1",
@@ -152,7 +153,6 @@ class Mwan3(OpenWrtConverter):
         return self.type_cast(globals)
 
     def __netjson_interface(self, interface):
-        interface["name"] = interface.pop(".name")
         for option in [
             "enabled",
             "keep_failure_interval",
@@ -185,7 +185,6 @@ class Mwan3(OpenWrtConverter):
         return self.type_cast(interface)
 
     def __netjson_member(self, member):
-        member["name"] = member.pop(".name")
         for option in ["metric", "weight"]:
             if option in member:
                 try:
@@ -195,11 +194,9 @@ class Mwan3(OpenWrtConverter):
         return self.type_cast(member)
 
     def __netjson_policy(self, policy):
-        policy["name"] = policy.pop(".name")
         return self.type_cast(policy)
 
     def __netjson_rule(self, rule):
-        rule["name"] = rule.pop(".name")
         for option in [
             "sticky",
             "logging",
