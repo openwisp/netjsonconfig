@@ -1331,7 +1331,7 @@ firewall_rules_properties = {
         "title": "icmp_type",
         "description": "For protocol icmp select specific icmp types to match. "
         "Values can be either exact icmp type numbers or type names.",
-        "type": ["array", "string"],
+        "type": "array",
         "uniqueItems": True,
         "additionalItems": True,
         "propertyOrder": 101,

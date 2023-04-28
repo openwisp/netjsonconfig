@@ -96,13 +96,10 @@ class Firewall(OpenWrtConverter):
             )
             if "proto" in rule:
                 # If proto is a single value, then force it not to be in a list so that
-                # the UCI uses "option" rather than "list". If proto is only "tcp"
-                # and"udp", we can force it to the single special value of "tcpudp".
+                # the UCI uses "option" rather than "list"
                 proto = rule["proto"]
                 if len(proto) == 1:
                     rule["proto"] = proto[0]
-                elif set(proto) == {"tcp", "udp"}:
-                    rule["proto"] = "tcpudp"
 
             # If src_ip and dest_ip contains only a single value, force the use of a UCI "option"
             # rather than "list".
@@ -135,8 +132,6 @@ class Firewall(OpenWrtConverter):
                 proto = redirect["proto"]
                 if len(proto) == 1:
                     redirect["proto"] = proto[0]
-                elif set(proto) == {"tcp", "udp"}:
-                    redirect["proto"] = "tcpudp"
 
             # If src_ip and dest_ip contains only a single value, force the use of a UCI "option"
             # rather than "list".
