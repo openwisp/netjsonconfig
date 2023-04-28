@@ -74,3 +74,4 @@ class TestMwan3(unittest.TestCase, _TabsMixin):
     def test_parse_interfaces_1(self):
         o = OpenWrt(native=self._interfaces_1_uci)
         self.assertEqual(o.config, self._interfaces_1_netjson)
+  

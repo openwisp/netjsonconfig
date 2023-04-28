@@ -1018,8 +1018,6 @@ firewall_definitions = {
         "title": "src_mac",
         "description": "Match incoming traffic from the specified MAC address.",
         "pattern": mac_address_regex,
-        "minLength": 17,
-        "maxLength": 17,
         "propertyOrder": 6,
     },
     "src_port": {
