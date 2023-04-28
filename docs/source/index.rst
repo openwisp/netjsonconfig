@@ -2,8 +2,8 @@
 netjsonconfig
 =============
 
-.. image:: https://travis-ci.org/openwisp/netjsonconfig.svg
-   :target: https://travis-ci.org/openwisp/netjsonconfig
+.. image:: https://github.com/openwisp/netjsonconfig/workflows/Netjsonconfig%20CI%20Build/badge.svg?branch=master
+   :target: https://github.com/openwisp/netjsonconfig/actions?query=workflow%3A%22Netjsonconfig+CI+Build%22
 
 .. image:: https://coveralls.io/repos/openwisp/netjsonconfig/badge.svg
    :target: https://coveralls.io/r/openwisp/netjsonconfig
