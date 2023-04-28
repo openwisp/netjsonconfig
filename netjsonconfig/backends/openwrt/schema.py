@@ -1894,19 +1894,29 @@ mwan3 = {
                                 "format": "checkbox",
                                 "propertyOrder": 11,
                             },
+                            "check_quality": {
+                                "type": "boolean",
+                                "title": "Check link quality",
+                                "description": "In addition to the interface being up, the check_quality "
+                                "options can check the overall link quality "
+                                "with packet loss and/or latency measurements",
+                                "default": False,
+                                "format": "checkbox",
+                                "propertyOrder": 12,
+                            },
                             "up": {
                                 "type": "integer",
                                 "title": "Up",
                                 "description": "Number of successful tests to consider link as alive",
                                 "default": 5,
-                                "propertyOrder": 12,
+                                "propertyOrder": 13,
                             },
                             "down": {
                                 "type": "integer",
                                 "title": "Down",
                                 "description": "Number of failed tests to consider link as dead",
                                 "default": 5,
-                                "propertyOrder": 13,
+                                "propertyOrder": 14,
                             },
                             "family": {
                                 "type": "string",
@@ -1917,7 +1927,7 @@ mwan3 = {
                                     "ipv6",
                                 ],
                                 "default": "ipv4",
-                                "propertyOrder": 14,
+                                "propertyOrder": 15,
                             },
                             "max_ttl": {
                                 "type": "integer",
@@ -1925,7 +1935,7 @@ mwan3 = {
                                 "description": "Time to live (TTL) or hop limit. Only valid if tracking "
                                 "method is ping.",
                                 "default": 60,
-                                "propertyOrder": 15,
+                                "propertyOrder": 16,
                             },
                             "initial_state": {
                                 "type": "string",
@@ -1940,7 +1950,7 @@ mwan3 = {
                                     "offline",
                                 ],
                                 "default": "online",
-                                "propertyOrder": 16,
+                                "propertyOrder": 17,
                             },
                             "size": {
                                 "type": "integer",
@@ -1948,7 +1958,7 @@ mwan3 = {
                                 "description": "Size of ping packets to use in bytes. Only valid if "
                                 "tracking method is ping.",
                                 "default": 56,
-                                "propertyOrder": 17,
+                                "propertyOrder": 18,
                             },
                             "flush_conntrack": {
                                 "title": "Flush connection tracking",
@@ -1967,7 +1977,7 @@ mwan3 = {
                                         "disconnected",
                                     ],
                                 },
-                                "propertyOrder": 18,
+                                "propertyOrder": 19,
                             },
                         },
                     },
