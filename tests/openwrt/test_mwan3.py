@@ -10,36 +10,32 @@ class TestMwan3(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
     _interfaces_1_netjson = {
-    "mwan3": {
-        "interfaces": [
-            {
-                "name": "Test",
-                "enabled": True,
-                "initial_state": "online",
-                "family": "ipv4",
-                "track_method": "ping",
-                "reliability": 1,
-                "count": 1,
-                "size": 56,
-                "max_ttl": 60,
-                "check_quality": False,
-                "timeout": 4,
-                "interval": 10,
-                "failure_interval": 0,
-                "recovery_interval": 0,
-                "down": 5,
-                "keep_failure_interval": False,
-                "up": 5,
-                "track_ip": [
-                    "8.8.8.8"
-                ],
-                "flush_conntrack": [
-                    "ifup"
-                ]
-            }
-        ]
+        "mwan3": {
+            "interfaces": [
+                {
+                    "name": "Test",
+                    "enabled": True,
+                    "initial_state": "online",
+                    "family": "ipv4",
+                    "track_method": "ping",
+                    "reliability": 1,
+                    "count": 1,
+                    "size": 56,
+                    "max_ttl": 60,
+                    "check_quality": False,
+                    "timeout": 4,
+                    "interval": 10,
+                    "failure_interval": 0,
+                    "recovery_interval": 0,
+                    "down": 5,
+                    "keep_failure_interval": False,
+                    "up": 5,
+                    "track_ip": ["8.8.8.8"],
+                    "flush_conntrack": ["ifup"],
+                }
+            ]
+        }
     }
-}
 
     _interfaces_1_uci = textwrap.dedent(
         """\

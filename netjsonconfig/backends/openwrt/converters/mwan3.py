@@ -116,11 +116,11 @@ class Mwan3(OpenWrtConverter):
 
     def to_netjson_loop(self, block, result, index):
         result.setdefault("mwan3", {})
-        _name=block.pop(".name")
+        _name = block.pop(".name")
         _type = block.pop(".type")
         if _type == "globals":
             globals = self.__netjson_globals(block)
-            if globals:     
+            if globals:
                 result["mwan3"].setdefault("globals", {})
                 result['mwan3']['globals'].update(globals)
         if _type == "interface":
