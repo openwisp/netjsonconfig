@@ -399,9 +399,9 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wep"},
-                        {"$ref": "#/definitions/encryption_wpa3_personal"},
                     ],
                 }
             }
