@@ -1242,3 +1242,54 @@ config wifi-iface 'wifi_wlan0'
         }
         with self.assertRaises(ValidationError):
             OpenWrt(_netjson_wpa2_enterprise_mixed_cipher_tkip).render()
+
+    _owe_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "owe_ssid",
+                    "bssid": "00:26:b9:20:5f:09",
+                    "encryption": {
+                        "protocol": "owe",
+                        "cipher": "auto",
+                        "ieee80211w": "2",
+                    },
+                },
+            }
+        ]
+    }
+
+    _owe_uci = """package network
+
+config device 'device_wlan0'
+    option name 'wlan0'
+
+config interface 'wlan0'
+    option device 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option bssid '00:26:b9:20:5f:09'
+    option device 'radio0'
+    option encryption 'owe'
+    option ieee80211w '2'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'wlan0'
+    option ssid 'owe_ssid'
+"""
+
+    def test_render_owe(self):
+        o = OpenWrt(self._owe_netjson)
+        expected = self._tabs(self._owe_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_owe(self):
+        o = OpenWrt(native=self._owe_uci)
+        self.assertEqual(o.config, self._owe_netjson)

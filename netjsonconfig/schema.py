@@ -426,9 +426,11 @@ schema = {
                     "properties": {
                         "protocol": {
                             "type": "string",
-                            "title": "encryption protocol",
+                            "title": "Opportunistic Wireless Encryption",
                             "enum": ["owe"],
-                            "options": {"enum_titles": ["OWE"]},
+                            "options": {
+                                "enum_titles": ["Opportunistic Wireless Encryption"]
+                            },
                         }
                     }
                 },
