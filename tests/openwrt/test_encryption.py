@@ -1041,6 +1041,56 @@ config wifi-iface 'wifi_mesh0'
         o = OpenWrt(native=self._wpa2_80211s_uci)
         self.assertEqual(o.config, self._wpa2_80211s_netjson)
 
+    _wpa3_80211s_netjson = {
+        "interfaces": [
+            {
+                "name": "mesh0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "802.11s",
+                    "mesh_id": "encrypted-mesh",
+                    "encryption": {
+                        "protocol": "wpa3_personal",
+                        "cipher": "ccmp",
+                        "key": "passphrase012345",
+                        "ieee80211w": "2",
+                    },
+                },
+            }
+        ]
+    }
+    _wpa3_80211s_uci = """package network
+
+config device 'device_mesh0'
+    option name 'mesh0'
+
+config interface 'mesh0'
+    option device 'mesh0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_mesh0'
+    option device 'radio0'
+    option encryption 'sae+ccmp'
+    option ieee80211w '2'
+    option ifname 'mesh0'
+    option key 'passphrase012345'
+    option mesh_id 'encrypted-mesh'
+    option mode 'mesh'
+    option network 'mesh0'
+"""
+
+    def test_render_wpa3_80211s(self):
+        o = OpenWrt(self._wpa3_80211s_netjson)
+        expected = self._tabs(self._wpa3_80211s_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_wpa3_80211s(self):
+        o = OpenWrt(native=self._wpa3_80211s_uci)
+        self.assertEqual(o.config, self._wpa3_80211s_netjson)
+
     _wpa2_adhoc_netjson = {
         "interfaces": [
             {
