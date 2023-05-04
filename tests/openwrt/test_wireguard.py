@@ -254,3 +254,50 @@ config wireguard_wg0 'wgpeer_wg0'
         }
         o = OpenWrt(native=native)
         self.assertEqual(o.config, expected)
+
+    _multiple_peers_netjson = {
+        "wireguard_peers": [
+            {
+                "interface": "wg0",
+                "public_key": "rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk=",
+                "allowed_ips": ["10.0.0.1/32"],
+                "preshared_key": "oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4=",
+                "persistent_keepalive": 30,
+                "route_allowed_ips": True,
+            },
+            {
+                "interface": "wg0",
+                "public_key": "e8yh3kIrMjLVZPi5DS1BU3j3mWkYWrCXvnLSvNkW7HM=",
+                "allowed_ips": ["10.0.0.2/32"],
+                "preshared_key": "oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4=",
+                "persistent_keepalive": 30,
+                "route_allowed_ips": True,
+            },
+        ]
+    }
+
+    _multiple_peers_uci = """package network
+
+config wireguard_wg0 'wgpeer_wg0'
+    list allowed_ips '10.0.0.1/32'
+    option persistent_keepalive '30'
+    option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
+    option public_key 'rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk='
+    option route_allowed_ips '1'
+
+config wireguard_wg0 'wgpeer_wg0_2'
+    list allowed_ips '10.0.0.2/32'
+    option persistent_keepalive '30'
+    option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
+    option public_key 'e8yh3kIrMjLVZPi5DS1BU3j3mWkYWrCXvnLSvNkW7HM='
+    option route_allowed_ips '1'
+"""
+
+    def test_render_multiple_wireguard_peers(self):
+        o = OpenWrt(self._multiple_peers_netjson)
+        expected = self._tabs(self._multiple_peers_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_multiple_wireguard_peers(self):
+        o = OpenWrt(native=self._multiple_peers_uci)
+        self.assertEqual(o.config, self._multiple_peers_netjson)

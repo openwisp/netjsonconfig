@@ -12,12 +12,15 @@ class WireguardPeers(OpenWrtConverter):
 
     def to_intermediate_loop(self, block, result, index=None):
         result.setdefault('network', [])
-        result['network'].append(self.__intermediate_peer(block))
+        result['network'].append(self.__intermediate_peer(block, index))
         return result
 
-    def __intermediate_peer(self, peer):
-        interface = peer.pop("interface")
-        peer.update({'.type': f'wireguard_{interface}', '.name': f'wgpeer_{interface}'})
+    def __intermediate_peer(self, peer, index):
+        interface = peer.pop('interface')
+        uci_name = f'wgpeer_{interface}'
+        if index > 1:
+            uci_name = f'{uci_name}_{index}'
+        peer.update({'.type': f'wireguard_{interface}', '.name': uci_name})
         if not peer.get('endpoint_host') and 'endpoint_port' in peer:
             del peer['endpoint_port']
         return self.sorted_dict(peer)
