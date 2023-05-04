@@ -71,7 +71,7 @@ config wifi-iface 'wifi_wlan0'
                         "protocol": "wpa2_personal_mixed",
                         "cipher": "ccmp",
                         "key": "passphrase012345",
-                        "ieee80211w": "1",
+                        "ieee80211w": "2",
                     },
                 },
             }
@@ -91,7 +91,7 @@ package wireless
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'sae-mixed+ccmp'
-    option ieee80211w '1'
+    option ieee80211w '2'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'

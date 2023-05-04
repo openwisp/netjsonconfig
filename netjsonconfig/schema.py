@@ -496,7 +496,7 @@ schema = {
                 "ieee80211w": {
                     "type": "string",
                     "title": "management frame protection",
-                    "enum": ["1"],
+                    "enum": ["1", "2"],
                     "readOnly": True,
                     "options": {"enum_titles": ["optional", "required"]},
                     "propertyOrder": 4,
