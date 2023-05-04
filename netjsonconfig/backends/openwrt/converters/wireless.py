@@ -103,6 +103,7 @@ class Wireless(OpenWrtConverter):
             'wpa_enterprise_mixed': 'wpa-mixed',
             'wpa2_enterprise_mixed': 'wpa3-mixed',
             'wps': 'psk',
+            'owe': 'owe',
         }
         # if encryption disabled return empty dict
         if not encryption or disabled or encryption['protocol'] == 'none':
@@ -310,6 +311,7 @@ class Wireless(OpenWrtConverter):
                 'wpa3': 'wpa3_enterprise',
                 'wpa-mixed': 'wpa_enterprise_mixed',
                 'wpa3-mixed': 'wpa2_enterprise_mixed',
+                'owe': 'owe',
             }
             settings['protocol'] = protocol_mapping[protocol]
             settings['cipher'] = cipher
