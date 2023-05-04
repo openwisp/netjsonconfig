@@ -419,24 +419,6 @@ schema = {
                 }
             },
         },
-        "encryption_owe": {
-            "title": "OWE",
-            "allOf": [
-                {"$ref": "#/definitions/encryption_mfp_property_required"},
-                {
-                    "properties": {
-                        "protocol": {
-                            "type": "string",
-                            "title": "Opportunistic Wireless Encryption",
-                            "enum": ["owe"],
-                            "options": {
-                                "enum_titles": ["Opportunistic Wireless Encryption"]
-                            },
-                        }
-                    }
-                },
-            ],
-        },
         "encryption_base_settings": {
             "required": ["key"],
             "additionalProperties": True,
@@ -520,6 +502,25 @@ schema = {
                     "propertyOrder": 4,
                 }
             },
+        },
+        "encryption_owe": {
+            "title": "Opportunistic Wireless Encryption",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_mfp_property"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "type": "string",
+                            "title": "encryption protocol",
+                            "propertyOrder": 1,
+                            "enum": ["owe"],
+                            "options": {
+                                "enum_titles": ["Opportunistic Wireless Encryption"]
+                            },
+                        }
+                    }
+                },
+            ],
         },
         "encryption_wpa3_personal": {
             "title": "WPA3 Personal",

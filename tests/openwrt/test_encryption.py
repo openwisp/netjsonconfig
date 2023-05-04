@@ -1302,11 +1302,10 @@ config wifi-iface 'wifi_wlan0'
                     "radio": "radio0",
                     "mode": "access_point",
                     "ssid": "owe_ssid",
-                    "bssid": "00:26:b9:20:5f:09",
                     "encryption": {
                         "protocol": "owe",
                         "cipher": "auto",
-                        "ieee80211w": "2",
+                        "ieee80211w": "1",
                     },
                 },
             }
@@ -1325,10 +1324,9 @@ config interface 'wlan0'
 package wireless
 
 config wifi-iface 'wifi_wlan0'
-    option bssid '00:26:b9:20:5f:09'
     option device 'radio0'
     option encryption 'owe'
-    option ieee80211w '2'
+    option ieee80211w '1'
     option ifname 'wlan0'
     option mode 'ap'
     option network 'wlan0'
