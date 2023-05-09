@@ -358,6 +358,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_owe"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_ap"},
                         {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
@@ -379,6 +380,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_owe"},
                         {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa3_enterprise_sta"},
                         {"$ref": "#/definitions/encryption_wpa3_personal_mixed"},
@@ -399,6 +401,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wep"},
                     ],
@@ -493,12 +496,31 @@ schema = {
                 "ieee80211w": {
                     "type": "string",
                     "title": "management frame protection",
-                    "enum": ["1"],
+                    "enum": ["1", "2"],
                     "readOnly": True,
                     "options": {"enum_titles": ["optional", "required"]},
                     "propertyOrder": 4,
                 }
             },
+        },
+        "encryption_owe": {
+            "title": "Opportunistic Wireless Encryption",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_mfp_property"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "type": "string",
+                            "title": "encryption protocol",
+                            "propertyOrder": 1,
+                            "enum": ["owe"],
+                            "options": {
+                                "enum_titles": ["Opportunistic Wireless Encryption"]
+                            },
+                        }
+                    }
+                },
+            ],
         },
         "encryption_wpa3_personal": {
             "title": "WPA3 Personal",

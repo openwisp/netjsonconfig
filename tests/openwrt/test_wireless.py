@@ -861,6 +861,52 @@ config wifi-iface 'wifi_wlan0'
             del netjson_80211r['interfaces'][0]['wireless']['reassociation_deadline']
             self.assertEqual(o.config, netjson_80211r)
 
+    _80211r_false_netjson = {
+        "interfaces": [
+            {
+                "name": "wlan0",
+                "type": "wireless",
+                "wireless": {
+                    "radio": "radio0",
+                    "mode": "access_point",
+                    "ssid": "MyWifiAP",
+                    "rsn_preauth": True,
+                    "ieee80211r": False,
+                    "ft_over_ds": True,
+                    "ft_psk_generate_local": True,
+                    "nasid": "123",
+                    "reassociation_deadline": 1000,
+                    "network": ["lan"],
+                },
+            }
+        ]
+    }
+    _80211r_false_uci = """package network
+
+config device 'device_wlan0'
+    option name 'wlan0'
+
+config interface 'wlan0'
+    option device 'wlan0'
+    option proto 'none'
+
+package wireless
+
+config wifi-iface 'wifi_wlan0'
+    option device 'radio0'
+    option ieee80211r '0'
+    option ifname 'wlan0'
+    option mode 'ap'
+    option network 'lan'
+    option rsn_preauth '1'
+    option ssid 'MyWifiAP'
+"""
+
+    def test_render_access_point_80211r_false(self):
+        o = OpenWrt(self._80211r_false_netjson)
+        expected = self._tabs(self._80211r_false_uci)
+        self.assertEqual(o.render(), expected)
+
     _80211s_netjson = {
         "interfaces": [
             {
