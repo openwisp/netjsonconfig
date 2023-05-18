@@ -1151,6 +1151,7 @@ config interface 'wan'
                 "type": "bridge",
                 "bridge_members": ["lan1", "lan2", "lan3"],
                 "name": "br-lan",
+                "network": "home_vlan",
                 "vlan_filtering": [
                     {
                         "vlan": 1,
@@ -1173,7 +1174,7 @@ config interface 'wan'
 
     _vlan_filtering_bridge_uci = """package network
 
-config device 'device_br_lan'
+config device 'device_home_vlan'
     option name 'br-lan'
     list ports 'lan1'
     list ports 'lan2'
@@ -1181,27 +1182,27 @@ config device 'device_br_lan'
     option type 'bridge'
     option vlan_filtering '1'
 
-config bridge-vlan 'vlan_br_lan_1'
+config bridge-vlan 'home_vlan_1'
     option device 'br-lan'
     list ports 'lan1:t*'
     list ports 'lan2:t'
     option vlan '1'
 
-config bridge-vlan 'vlan_br_lan_2'
+config bridge-vlan 'home_vlan_2'
     option device 'br-lan'
     list ports 'lan1:t'
     list ports 'lan3:u*'
     option vlan '2'
 
-config interface 'vlan_br_lan_1'
+config interface 'home_vlan_1'
     option device 'br-lan.1'
     option proto 'none'
 
-config interface 'vlan_br_lan_2'
+config interface 'home_vlan_2'
     option device 'br-lan.2'
     option proto 'none'
 
-config interface 'br_lan'
+config interface 'home_vlan'
     option device 'br-lan'
     option proto 'none'
 """
@@ -1231,6 +1232,7 @@ config interface 'br_lan'
         expected['interfaces'][0]['vlan_filtering'][0]['ports'][1][
             'primary_vid'
         ] = False
+        expected['interfaces'][0]['name'] = 'br-home_vlan'
         self.assertEqual(o.config, expected)
 
     _vlan_filtering_bridge_override_netjson = {
@@ -2116,23 +2118,19 @@ config interface 'vlan_br_lan_1'
 
     _vlan8021ad_netjson = {
         "interfaces": [
-            {
-                "type": "8021ad",
-                "vid": 6,
-                "name": "eth0",
-            }
+            {"type": "8021ad", "vid": 6, "name": "eth0", "network": "iot_vlan"}
         ]
     }
 
     _vlan8021ad_uci = """package network
 
-config device 'device_eth0_6'
+config device 'device_iot_vlan'
     option ifname 'eth0'
     option name 'eth0.6'
     option type '8021ad'
     option vid '6'
 
-config interface 'vlan_eth0_6'
+config interface 'iot_vlan'
     option device 'eth0.6'
     option proto 'none'
 """
@@ -2145,5 +2143,4 @@ config interface 'vlan_eth0_6'
     def test_parse_vlan8021ad(self):
         o = OpenWrt(native=self._tabs(self._vlan8021ad_uci))
         expected = deepcopy(self._vlan8021ad_netjson)
-        expected['interfaces'][0]['network'] = 'vlan_eth0_6'
         self.assertEqual(expected, o.config)
