@@ -170,8 +170,6 @@ class Interfaces(OpenWrtConverter):
         """
         interface.update({'.type': 'interface', '.name': uci_name})
         interface['ifname'] = interface.pop('name')
-        if 'network' in interface:
-            del interface['network']
         if 'mac' in interface:
             # mac address of wireless interface must
             # be set in /etc/config/wireless, therfore
@@ -195,6 +193,8 @@ class Interfaces(OpenWrtConverter):
         if method:
             interface = method(interface)
         self._check_bridge_vlan(interface)
+        if 'network' in interface:
+            del interface['network']
         return interface
 
     def _check_bridge_vlan(self, interface):
@@ -227,7 +227,9 @@ class Interfaces(OpenWrtConverter):
 
     def _intermediate_8021_vlan(self, interface):
         interface['name'] = '{}.{}'.format(interface['ifname'], interface['vid'])
-        interface['.name'] = '{}_{}'.format(interface['.name'], interface['vid'])
+        interface['.name'] = interface.get(
+            'network', 'vlan_{}_{}'.format(interface['.name'], interface['vid'])
+        )
         return interface
 
     def _intermediate_8021q(self, interface):
@@ -251,10 +253,12 @@ class Interfaces(OpenWrtConverter):
         vid = vlan['vlan']
         uci_vlan = {
             '.type': 'bridge-vlan',
-            '.name': f'vlan_{uci_name}_{vid}',
+            '.name': f'{uci_name}_{vid}',
             'vlan': vid,
             'device': interface['ifname'],
         }
+        if uci_name == self._get_uci_name(interface['ifname']):
+            uci_vlan['.name'] = 'vlan_{}'.format(uci_vlan['.name'])
         uci_vlan_interface = {
             '.type': 'interface',
             '.name': uci_vlan['.name'],
@@ -304,12 +308,12 @@ class Interfaces(OpenWrtConverter):
                     'type': interface['type'],
                     'vid': interface.pop('vid'),
                     'name': interface.pop('name'),
+                    '.name': 'device_{}'.format(interface['.name'].lstrip('vlan_')),
                     'ifname': interface.pop('ifname'),
                     'ingress_qos_mapping': interface.pop('ingress_qos_mapping', []),
                     'egress_qos_mapping': interface.pop('egress_qos_mapping', []),
                 }
             )
-            interface['.name'] = 'vlan_{}'.format(interface['.name'])
             interface['device'] = device['name']
         if interface_type != 'bridge':
             # A non-bridge interface that contains L2 options.
