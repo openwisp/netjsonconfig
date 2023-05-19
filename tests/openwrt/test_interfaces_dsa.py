@@ -1232,7 +1232,6 @@ config interface 'home_vlan'
         expected['interfaces'][0]['vlan_filtering'][0]['ports'][1][
             'primary_vid'
         ] = False
-        expected['interfaces'][0]['name'] = 'br-home_vlan'
         self.assertEqual(o.config, expected)
 
     _vlan_filtering_bridge_override_netjson = {
