@@ -518,9 +518,9 @@ class Interfaces(OpenWrtConverter):
     def __netjson_interface(self, interface):
         del interface['.type']
         interface['network'] = interface.pop('.name')
+        interface['device_name'] = interface.get('name')
+        interface['name'] = interface.pop('ifname', interface['network'])
         interface['type'] = self.__netjson_type(interface)
-        if 'name' not in interface:
-            interface['name'] = interface.pop('ifname', interface['network'])
         interface = self.__netjson_addresses(interface)
         if 'auto' in interface:
             interface['autostart'] = interface.pop('auto') == '1'
@@ -573,12 +573,12 @@ class Interfaces(OpenWrtConverter):
             device_config.pop('bridge_21', None)
             or interface.get('proto') in self._proto_dsa_conflict
         ):
-            for option, value in device_config.items():
+            for option in device_config:
                 # ifname has been renamed to ports in OpenWrt 21.02 bridge
                 if option == 'ports':
-                    interface['ifname'] = ' '.join(value)
+                    interface['ifname'] = ' '.join(device_config[option])
                 else:
-                    interface[option] = value
+                    interface[option] = device_config[option]
         # Merging L2 options to interface
         for options in (
             self._bridge_interface_options['all']
@@ -588,8 +588,7 @@ class Interfaces(OpenWrtConverter):
             if options in device_config:
                 interface[options] = device_config.pop(options)
         if device_config.get('type', '').startswith('8021'):
-            interface['ifname'] = ''.join(interface.pop('name').split('.')[:-1])
-
+            interface['ifname'] = ''.join(device_config['name'].split('.')[:-1])
         return interface
 
     def _handle_bridge_vlan(self, interface, device_config):
@@ -669,22 +668,22 @@ class Interfaces(OpenWrtConverter):
         return
 
     def __netjson_type(self, interface):
+        device_name = interface.pop('device_name', None)
         if 'type' in interface:
             if interface['type'] == 'bridge':
-                interface['bridge_members'] = interface.pop('ifname').split()
-                interface['name'] = interface.get(
-                    'name', interface['network'].replace('br_', '')
-                )
-                # cleanup automatically generated "br_" network prefix
+                interface['bridge_members'] = interface['name'].split()
+                interface['name'] = device_name or interface['network']
                 if not interface['name'].startswith('br-'):
                     interface['name'] = 'br-{0}'.format(interface['name'])
+                # cleanup automatically generated "br_" network prefix
+                interface['name'] = interface['name'].replace('br_', '')
                 self.__netjson_bridge_typecast(interface)
                 if interface.pop('bridge_empty', None) == '1':
                     interface['bridge_members'] = []
                 return 'bridge'
             if interface['type'].startswith('802'):
                 return interface['type']
-        if interface.get('ifname', 'name') in ['lo', 'lo0', 'loopback']:
+        if interface['name'] in ['lo', 'lo0', 'loopback']:
             return 'loopback'
         return 'ethernet'
 
