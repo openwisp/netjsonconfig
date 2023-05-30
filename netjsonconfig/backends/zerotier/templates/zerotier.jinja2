@@ -1,0 +1,17 @@
+{% for vpn in data.zerotier %}
+# zerotier config: {{ vpn.nwid }}
+
+    {% for key, value in vpn.items() %}
+        {% set key = key.replace('_', '-') %}
+        {% if key != 'name' %}
+            {% if value is string or value is number %}
+                {{ key }}={{ value }}
+            {% elif value is iterable %}
+                {% for element in value %}
+                    {{ key }}={{ element }}
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+{% endfor %}
