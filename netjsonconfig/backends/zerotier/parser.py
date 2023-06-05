@@ -2,9 +2,9 @@ import re
 
 from ..base.parser import BaseParser
 
-vpn_pattern = re.compile('^// zerotier config:\s', flags=re.MULTILINE)
+vpn_pattern = re.compile('^// zerotier controller config:\s', flags=re.MULTILINE)
 config_pattern = re.compile('^([^\s]*) ?(.*)$')
-config_suffix = '.json'
+config_suffix = ''
 
 
 class ZeroTierParser(BaseParser):
