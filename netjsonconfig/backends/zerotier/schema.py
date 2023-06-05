@@ -19,22 +19,31 @@ base_zerotier_schema = {
             "title": "ZeroTier",
             "uniqueItems": True,
             "additionalItems": True,
-            "propertyOrder": 12,
             "items": {
                 "type": "object",
-                "title": "ZeroTier",
+                "title": "ZeroTier Network",
                 "additionalProperties": True,
                 "required": ["name"],
                 "properties": {
                     # Read-only properties
+                    "name": {
+                        "type": "string",
+                        # Since it is intended to be set by
+                        # the VPN backend's name field, it is read-only
+                        "readOnly": True,
+                        "example": "openwisp-wifi-network",
+                        "description": "Name of the network",
+                    },
                     "id": {
                         "type": "string",
+                        "maxLength": 16,
                         "readOnly": True,
                         "example": "3e245e31af000001",
                         "description": "Network ID",
                     },
                     "nwid": {
                         "type": "string",
+                        "maxLength": 16,
                         "readOnly": True,
                         "example": "3e245e31af000001",
                         "description": "Network ID legacy field (same as 'id')",
@@ -42,6 +51,7 @@ base_zerotier_schema = {
                     "objtype": {
                         "type": "string",
                         "readOnly": True,
+                        "default": "network",
                         "example": "network",
                     },
                     "revision": {
@@ -54,19 +64,15 @@ base_zerotier_schema = {
                         "type": "number",
                         "readOnly": True,
                         "example": 1623101592,
-                        "description": "Time the network was created",
+                        "description": "Time when the network was created",
                     },
                     # Configurable properties
-                    "name": {
-                        "type": "string",
-                        "example": "openwisp-wifi-network",
-                        "description": "Name of the network",
-                    },
                     "private": {
                         "type": "boolean",
+                        "default": True,
                         "description": (
-                            "Whether or not the network is private."
-                            "If false, members will *NOT* need to be authorized to join."
+                            "Whether or not the network is private "
+                            "If false, members will NOT need to be authorized to join"
                         ),
                     },
                     "enableBroadcast": {
@@ -76,8 +82,10 @@ base_zerotier_schema = {
                     "v4AssignMode": {
                         "type": "object",
                         "properties": {
-                            "zt": {"type": "boolean"},
-                            "description": "Whether ZeroTier should assign IPv4 addresses to members",
+                            "zt": {
+                                "type": "boolean",
+                                "description": "Whether ZeroTier should assign IPv4 addresses to members",
+                            },
                         },
                     },
                     "v6AssignMode": {
