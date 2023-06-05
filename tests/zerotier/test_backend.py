@@ -92,7 +92,7 @@ class TestBackend(unittest.TestCase):
 
     def test_confs(self):
         c = ZeroTier(self._TEST_CONFIG)
-        expected = """// zerotier config: 9536600adf654321
+        expected = """// zerotier controller config: 9536600adf654321.json
 
 {
   "capabilities": [
@@ -166,7 +166,7 @@ class TestBackend(unittest.TestCase):
   }
 }
 
-// zerotier config: 9536600adf654322
+// zerotier controller config: 9536600adf654322.json
 
 {
   "creationTime": 1632012345,
