@@ -24,7 +24,9 @@ class OpenVpn(BaseConverter):
         result['openvpn'].append(vpn)
         return result
 
-    def __intermediate_vpn(self, config, remove=[False, 0, '']):
+    def __intermediate_vpn(self, config, remove=None):
+        if remove is None:
+            remove = [False, 0, '']
         skip_keys = ['script_security', 'remote']
         delete_keys = []
         # allow server_bridge to be empty and still rendered
