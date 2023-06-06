@@ -13,5 +13,5 @@ class ZeroTier(BaseConverter):
         result['zerotier'].append(vpn)
         return result
 
-    def __intermediate_vpn(self, config, remove=[False, 0, '']):
+    def __intermediate_vpn(self, config, remove=None):
         return self.sorted_dict(config)

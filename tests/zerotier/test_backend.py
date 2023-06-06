@@ -95,124 +95,124 @@ class TestBackend(unittest.TestCase):
         expected = """// zerotier controller config: 9536600adf654321.json
 
 {
-  "capabilities": [
-{
-  "default": true,
-  "id": 1,
-  "rules": [
-{
-  "etherType": 2048,
-  "not": true,
-  "or": false,
-  "type": "MATCH_ETHERTYPE"
-}
-  ]
-}
-  ],
-  "creationTime": 1632012345,
-  "dns": {
-"domain": "zerotier.openwisp.io",
-"servers": [
-  "10.147.20.3"
-]
-  },
-  "enableBroadcast": true,
-  "id": "9536600adf654321",
-  "ipAssignmentPools": [
-{
-  "ipRangeEnd": "10.0.0.100",
-  "ipRangeStart": "10.0.0.10"
-}
-  ],
-  "mtu": 2700,
-  "multicastLimit": 16,
-  "name": "zerotier-openwisp-network",
-  "nwid": "9536600adf654321",
-  "objtype": "network",
-  "private": true,
-  "remoteTraceLevel": 1,
-  "remoteTraceTarget": "7f5d90eb87",
-  "revision": 1,
-  "routes": [
-{
-  "target": "10.0.0.0/24",
-  "via": "10.0.0.1"
-}
-  ],
-  "rules": [
-{
-  "etherType": 2048,
-  "not": true,
-  "or": false,
-  "type": "MATCH_ETHERTYPE"
-},
-{
-  "type": "ACTION_DROP"
-}
-  ],
-  "tags": [
-{
-  "default": 1,
-  "id": 1
-}
-  ],
-  "v4AssignMode": {
-"zt": true
-  },
-  "v6AssignMode": {
-"6plane": false,
-"rfc4193": true,
-"zt": true
-  }
+    "capabilities": [
+        {
+            "default": true,
+            "id": 1,
+            "rules": [
+                {
+                    "etherType": 2048,
+                    "not": true,
+                    "or": false,
+                    "type": "MATCH_ETHERTYPE"
+                }
+            ]
+        }
+    ],
+    "creationTime": 1632012345,
+    "dns": {
+        "domain": "zerotier.openwisp.io",
+        "servers": [
+            "10.147.20.3"
+        ]
+    },
+    "enableBroadcast": true,
+    "id": "9536600adf654321",
+    "ipAssignmentPools": [
+        {
+            "ipRangeEnd": "10.0.0.100",
+            "ipRangeStart": "10.0.0.10"
+        }
+    ],
+    "mtu": 2700,
+    "multicastLimit": 16,
+    "name": "zerotier-openwisp-network",
+    "nwid": "9536600adf654321",
+    "objtype": "network",
+    "private": true,
+    "remoteTraceLevel": 1,
+    "remoteTraceTarget": "7f5d90eb87",
+    "revision": 1,
+    "routes": [
+        {
+            "target": "10.0.0.0/24",
+            "via": "10.0.0.1"
+        }
+    ],
+    "rules": [
+        {
+            "etherType": 2048,
+            "not": true,
+            "or": false,
+            "type": "MATCH_ETHERTYPE"
+        },
+        {
+            "type": "ACTION_DROP"
+        }
+    ],
+    "tags": [
+        {
+            "default": 1,
+            "id": 1
+        }
+    ],
+    "v4AssignMode": {
+        "zt": true
+    },
+    "v6AssignMode": {
+        "6plane": false,
+        "rfc4193": true,
+        "zt": true
+    }
 }
 
 // zerotier controller config: 9536600adf654322.json
 
 {
-  "creationTime": 1632012345,
-  "dns": {
-"domain": "zerotier.openwisp.io",
-"servers": [
-  "10.147.20.3"
-]
-  },
-  "enableBroadcast": true,
-  "id": "9536600adf654322",
-  "ipAssignmentPools": [
-{
-  "ipRangeEnd": "10.0.0.100",
-  "ipRangeStart": "10.0.0.10"
-}
-  ],
-  "mtu": 2700,
-  "multicastLimit": 16,
-  "name": "zerotier-openwisp-network-2",
-  "nwid": "9536600adf654322",
-  "objtype": "network",
-  "private": true,
-  "remoteTraceLevel": 1,
-  "remoteTraceTarget": "7f5d90eb87",
-  "revision": 1,
-  "routes": [
-{
-  "target": "10.0.0.0/24",
-  "via": "10.0.0.1"
-}
-  ],
-  "tags": [
-{
-  "default": 1,
-  "id": 1
-}
-  ],
-  "v4AssignMode": {
-"zt": true
-  },
-  "v6AssignMode": {
-"6plane": false,
-"rfc4193": true,
-"zt": true
-  }
+    "creationTime": 1632012345,
+    "dns": {
+        "domain": "zerotier.openwisp.io",
+        "servers": [
+            "10.147.20.3"
+        ]
+    },
+    "enableBroadcast": true,
+    "id": "9536600adf654322",
+    "ipAssignmentPools": [
+        {
+            "ipRangeEnd": "10.0.0.100",
+            "ipRangeStart": "10.0.0.10"
+        }
+    ],
+    "mtu": 2700,
+    "multicastLimit": 16,
+    "name": "zerotier-openwisp-network-2",
+    "nwid": "9536600adf654322",
+    "objtype": "network",
+    "private": true,
+    "remoteTraceLevel": 1,
+    "remoteTraceTarget": "7f5d90eb87",
+    "revision": 1,
+    "routes": [
+        {
+            "target": "10.0.0.0/24",
+            "via": "10.0.0.1"
+        }
+    ],
+    "tags": [
+        {
+            "default": 1,
+            "id": 1
+        }
+    ],
+    "v4AssignMode": {
+        "zt": true
+    },
+    "v6AssignMode": {
+        "6plane": false,
+        "rfc4193": true,
+        "zt": true
+    }
 }
 """
         self.assertEqual(c.render(), expected)
@@ -220,75 +220,75 @@ class TestBackend(unittest.TestCase):
     def test_generate(self):
         c = ZeroTier(self._TEST_CONFIG)
         expected = """{
-  "capabilities": [
-{
-  "default": true,
-  "id": 1,
-  "rules": [
-{
-  "etherType": 2048,
-  "not": true,
-  "or": false,
-  "type": "MATCH_ETHERTYPE"
-}
-  ]
-}
-  ],
-  "creationTime": 1632012345,
-  "dns": {
-"domain": "zerotier.openwisp.io",
-"servers": [
-  "10.147.20.3"
-]
-  },
-  "enableBroadcast": true,
-  "id": "9536600adf654321",
-  "ipAssignmentPools": [
-{
-  "ipRangeEnd": "10.0.0.100",
-  "ipRangeStart": "10.0.0.10"
-}
-  ],
-  "mtu": 2700,
-  "multicastLimit": 16,
-  "name": "zerotier-openwisp-network",
-  "nwid": "9536600adf654321",
-  "objtype": "network",
-  "private": true,
-  "remoteTraceLevel": 1,
-  "remoteTraceTarget": "7f5d90eb87",
-  "revision": 1,
-  "routes": [
-{
-  "target": "10.0.0.0/24",
-  "via": "10.0.0.1"
-}
-  ],
-  "rules": [
-{
-  "etherType": 2048,
-  "not": true,
-  "or": false,
-  "type": "MATCH_ETHERTYPE"
-},
-{
-  "type": "ACTION_DROP"
-}
-  ],
-  "tags": [
-{
-  "default": 1,
-  "id": 1
-}
-  ],
-  "v4AssignMode": {
-"zt": true
-  },
-  "v6AssignMode": {
-"6plane": false,
-"rfc4193": true,
-"zt": true
-  }
+    "capabilities": [
+        {
+            "default": true,
+            "id": 1,
+            "rules": [
+                {
+                    "etherType": 2048,
+                    "not": true,
+                    "or": false,
+                    "type": "MATCH_ETHERTYPE"
+                }
+            ]
+        }
+    ],
+    "creationTime": 1632012345,
+    "dns": {
+        "domain": "zerotier.openwisp.io",
+        "servers": [
+            "10.147.20.3"
+        ]
+    },
+    "enableBroadcast": true,
+    "id": "9536600adf654321",
+    "ipAssignmentPools": [
+        {
+            "ipRangeEnd": "10.0.0.100",
+            "ipRangeStart": "10.0.0.10"
+        }
+    ],
+    "mtu": 2700,
+    "multicastLimit": 16,
+    "name": "zerotier-openwisp-network",
+    "nwid": "9536600adf654321",
+    "objtype": "network",
+    "private": true,
+    "remoteTraceLevel": 1,
+    "remoteTraceTarget": "7f5d90eb87",
+    "revision": 1,
+    "routes": [
+        {
+            "target": "10.0.0.0/24",
+            "via": "10.0.0.1"
+        }
+    ],
+    "rules": [
+        {
+            "etherType": 2048,
+            "not": true,
+            "or": false,
+            "type": "MATCH_ETHERTYPE"
+        },
+        {
+            "type": "ACTION_DROP"
+        }
+    ],
+    "tags": [
+        {
+            "default": 1,
+            "id": 1
+        }
+    ],
+    "v4AssignMode": {
+        "zt": true
+    },
+    "v6AssignMode": {
+        "6plane": false,
+        "rfc4193": true,
+        "zt": true
+    }
 }
 """
         tar = tarfile.open(fileobj=c.generate(), mode="r")
