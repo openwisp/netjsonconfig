@@ -21,6 +21,7 @@ class ZeroTier(BaseVpnBackend):
                 {
                     'id': network_id,
                     'name': server.get('name', ''),
+                    'disabled': server.get('disabled', False)
                 }
             ]
         }

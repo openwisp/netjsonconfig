@@ -5,6 +5,7 @@ from ...schema import schema as default_schema
 from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
 from ..wireguard.schema import base_wireguard_schema
+from ..zerotier.schema import base_zerotier_schema
 from .timezones import timezones
 
 default_radio_driver = "mac80211"
@@ -935,6 +936,28 @@ schema = merge_config(
 # add OpenVPN schema
 schema = merge_config(schema, base_openvpn_schema)
 # OpenVPN customizations for OpenWRT
+schema = merge_config(
+    schema,
+    {
+        "definitions": {
+            "tunnel": {
+                "properties": {
+                    "disabled": {
+                        "title": "disabled",
+                        "description": "disable this VPN without deleting its configuration",
+                        "type": "boolean",
+                        "default": False,
+                        "format": "checkbox",
+                        "propertyOrder": 1,
+                    }
+                }
+            }
+        }
+    },
+)
+# add ZeroTier schema
+schema = merge_config(schema, base_zerotier_schema)
+# ZeroTier customizations for OpenWRT
 schema = merge_config(
     schema,
     {
