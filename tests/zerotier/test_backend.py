@@ -303,6 +303,7 @@ class TestBackend(unittest.TestCase):
                 {
                     "id": "9536600adf654321",
                     "name": "zerotier-openwisp-network",
+                    "disabled": False,
                 }
             ]
         }

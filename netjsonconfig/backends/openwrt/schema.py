@@ -962,7 +962,7 @@ schema = merge_config(
     schema,
     {
         "definitions": {
-            "tunnel": {
+            "zerotier_server": {
                 "properties": {
                     "disabled": {
                         "title": "disabled",
@@ -973,7 +973,19 @@ schema = merge_config(
                         "propertyOrder": 1,
                     }
                 }
-            }
+            },
+            "zerotier_client": {
+                "properties": {
+                    "disabled": {
+                        "title": "disabled",
+                        "description": "disable this VPN without deleting its configuration",
+                        "type": "boolean",
+                        "default": False,
+                        "format": "checkbox",
+                        "propertyOrder": 1,
+                    }
+                }
+            },
         }
     },
 )
