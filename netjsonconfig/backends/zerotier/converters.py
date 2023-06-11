@@ -15,3 +15,8 @@ class ZeroTier(BaseConverter):
 
     def __intermediate_vpn(self, config, remove=None):
         return self.sorted_dict(config)
+
+    def to_netjson_loop(self, block, result, index):
+        result.setdefault('zerotier', [])
+        result['zerotier'].append(block)
+        return result
