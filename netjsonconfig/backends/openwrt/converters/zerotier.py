@@ -22,4 +22,4 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
         # 'enabled' defaults to False in OpenWRT
         vpn['disabled'] = vpn.pop('enabled', '0') == '0'
         del vpn['.type']
-        return dict(vpn)
+        return super().__netjson_vpn(vpn)
