@@ -36,8 +36,5 @@ class ZeroTierParser(BaseParser):
         for vpn in vpn_instances:
             lines = vpn.split('\n')
             text_contents = '\n'.join(lines[2:])
-            # do not end with double new line
-            if text_contents.endswith('\n\n'):
-                text_contents = text_contents[0:-1]
             vpn_configs.append(loads(text_contents))
         return vpn_configs
