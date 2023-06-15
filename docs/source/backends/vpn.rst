@@ -10,3 +10,4 @@ VPN Backends
     /backends/openvpn
     /backends/wireguard
     /backends/vxlan_over_wireguard
+    /backends/zerotier
