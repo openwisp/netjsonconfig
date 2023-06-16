@@ -29,12 +29,17 @@ class ZeroTierParser(BaseParser):
         return self.parse_text(text)
 
     def _get_vpn_config(self, text):
-        vpn_configs = []
-        vpn_instances = vpn_pattern.split(text)
-        if '' in vpn_instances:
-            vpn_instances.remove('')
-        for vpn in vpn_instances:
-            lines = vpn.split('\n')
-            text_contents = '\n'.join(lines[2:])
-            vpn_configs.append(loads(text_contents))
+        # Remove comments from the vpn text
+        text = re.sub(r'\/\*(\*(?!\/)|[^*])*\*\/|\/\/.*', '', text)
+        # Strip leading and trailing whitespace from the text
+        text = text.strip()
+        # Split the text into separate VPN instances
+        # using two or more newline characters as the delimiter
+        vpn_instances = re.split(r"\n{2,}", text)
+        # Parse each JSON object separately
+        vpn_configs = [
+            loads(vpn_instance)
+            for vpn_instance in vpn_instances
+            if vpn_instance.strip()
+        ]
         return vpn_configs
