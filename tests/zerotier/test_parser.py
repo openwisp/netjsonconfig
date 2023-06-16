@@ -117,7 +117,7 @@ class TestParser(unittest.TestCase):
     ],
     "creationTime": 1632012345,
     "dns": {
-        "domain": "zerotier.openwisp.io",
+        "domain": "zerotier.openwisp.io",  // test
         "servers": [
             "10.147.20.3"
         ]
@@ -130,7 +130,7 @@ class TestParser(unittest.TestCase):
             "ipRangeStart": "10.0.0.10"
         }
     ],
-    "mtu": 2700,
+    "mtu": 2700,  // test
     "multicastLimit": 16,
     "name": "zerotier-openwisp-network",
     "nwid": "9536600adf654321",
@@ -163,7 +163,7 @@ class TestParser(unittest.TestCase):
         }
     ],
     "v4AssignMode": {
-        "zt": true
+        "zt": true  // test
     },
     "v6AssignMode": {
         "6plane": false,
