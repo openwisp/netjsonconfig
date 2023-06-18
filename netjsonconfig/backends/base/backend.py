@@ -380,6 +380,8 @@ class BaseVpnBackend(BaseBackend):
         # create a file for each VPN
         for vpn in vpn_instances:
             lines = vpn.split('\n')
+            # It's better to split lines[0] using
+            # `config_suffix` to extract the correct vpn_name
             vpn_name = lines[0].split(self.config_suffix)[0]
             text_contents = '\n'.join(lines[2:])
             # do not end with double new line

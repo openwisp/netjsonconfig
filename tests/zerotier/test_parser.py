@@ -89,9 +89,94 @@ class TestParser(unittest.TestCase):
         }
     )
 
+    def test_parse_exception(self):
+        try:
+            ZeroTier(native=10)
+        except Exception as e:
+            self.assertIsInstance(e, ParseError)
+        else:
+            self.fail('Exception not raised')
+
     def test_parse_text(self):
         native = """// zerotier controller config: 9536600adf654321.json
 
+{
+    "capabilities": [
+        {
+            "default": true,
+            "id": 1,
+            "rules": [
+                {
+                    "etherType": 2048,
+                    "not": true,
+                    "or": false,
+                    "type": "MATCH_ETHERTYPE"
+                }
+            ]
+        }
+    ],
+    "creationTime": 1632012345,
+    "dns": {
+        "domain": "zerotier.openwisp.io",  // test
+        "servers": [
+            "10.147.20.3"
+        ]
+    },
+    "enableBroadcast": true,
+    "id": "9536600adf654321",
+    "ipAssignmentPools": [
+        {
+            "ipRangeEnd": "10.0.0.100",
+            "ipRangeStart": "10.0.0.10"
+        }
+    ],
+    "mtu": 2700,  // test
+    "multicastLimit": 16,
+    "name": "zerotier-openwisp-network",
+    "nwid": "9536600adf654321",
+    "objtype": "network",
+    "private": true,
+    "remoteTraceLevel": 1,
+    "remoteTraceTarget": "7f5d90eb87",
+    "revision": 1,
+    "routes": [
+        {
+            "target": "10.0.0.0/24",
+            "via": "10.0.0.1"
+        }
+    ],
+    "rules": [
+        {
+            "etherType": 2048,
+            "not": true,
+            "or": false,
+            "type": "MATCH_ETHERTYPE"
+        },
+        {
+            "type": "ACTION_DROP"
+        }
+    ],
+    "tags": [
+        {
+            "default": 1,
+            "id": 1
+        }
+    ],
+    "v4AssignMode": {
+        "zt": true  // test
+    },
+    "v6AssignMode": {
+        "6plane": false,
+        "rfc4193": true,
+        "zt": true
+    }
+}
+"""
+        o = ZeroTier(native=native)
+        self.assertDictEqual(o.config, self._TEST_CONFIG)
+
+    def test_parse_text_without_comment(self):
+        native = """
 {
     "capabilities": [
         {
@@ -166,14 +251,6 @@ class TestParser(unittest.TestCase):
 """
         o = ZeroTier(native=native)
         self.assertDictEqual(o.config, self._TEST_CONFIG)
-
-    def test_parse_exception(self):
-        try:
-            ZeroTier(native=10)
-        except Exception as e:
-            self.assertIsInstance(e, ParseError)
-        else:
-            self.fail('Exception not raised')
 
     _MULTIPLE_VPN_TEXT = """// zerotier controller config: 9536600adf654321.json
 
@@ -301,6 +378,131 @@ class TestParser(unittest.TestCase):
 
     def test_multiple_vpn(self):
         o = ZeroTier(native=self._MULTIPLE_VPN_TEXT)
+        self.assertEqual(o.config, self._TEST_MULTIPLE_CONFIG)
+
+    _MULTIPLE_VPN_TEXT_WITHOUT_COMMENT = """
+{
+    "capabilities": [
+        {
+            "default": true,
+            "id": 1,
+            "rules": [
+                {
+                    "etherType": 2048,
+                    "not": true,
+                    "or": false,
+                    "type": "MATCH_ETHERTYPE"
+                }
+            ]
+        }
+    ],
+    "creationTime": 1632012345,
+    "dns": {
+        "domain": "zerotier.openwisp.io",
+        "servers": [
+            "10.147.20.3"
+        ]
+    },
+    "enableBroadcast": true,
+    "id": "9536600adf654321",
+    "ipAssignmentPools": [
+        {
+            "ipRangeEnd": "10.0.0.100",
+            "ipRangeStart": "10.0.0.10"
+        }
+    ],
+    "mtu": 2700,
+    "multicastLimit": 16,
+    "name": "zerotier-openwisp-network",
+    "nwid": "9536600adf654321",
+    "objtype": "network",
+    "private": true,
+    "remoteTraceLevel": 1,
+    "remoteTraceTarget": "7f5d90eb87",
+    "revision": 1,
+    "routes": [
+        {
+            "target": "10.0.0.0/24",
+            "via": "10.0.0.1"
+        }
+    ],
+    "rules": [
+        {
+            "etherType": 2048,
+            "not": true,
+            "or": false,
+            "type": "MATCH_ETHERTYPE"
+        },
+        {
+            "type": "ACTION_DROP"
+        }
+    ],
+    "tags": [
+        {
+            "default": 1,
+            "id": 1
+        }
+    ],
+    "v4AssignMode": {
+        "zt": true
+    },
+    "v6AssignMode": {
+        "6plane": false,
+        "rfc4193": true,
+        "zt": true
+    }
+}
+
+{
+    "creationTime": 1632012345,
+    "dns": {
+        "domain": "zerotier.openwisp.io",
+        "servers": [
+            "10.147.20.3"
+        ]
+    },
+    "enableBroadcast": true,
+    "id": "9536600adf654322",
+    "ipAssignmentPools": [
+        {
+            "ipRangeEnd": "10.0.0.100",
+            "ipRangeStart": "10.0.0.10"
+        }
+    ],
+    "mtu": 2700,
+    "multicastLimit": 16,
+    "name": "zerotier-openwisp-network-2",
+    "nwid": "9536600adf654322",
+    "objtype": "network",
+    "private": true,
+    "remoteTraceLevel": 1,
+    "remoteTraceTarget": "7f5d90eb87",
+    "revision": 1,
+    "routes": [
+        {
+            "target": "10.0.0.0/24",
+            "via": "10.0.0.1"
+        }
+    ],
+    "tags": [
+        {
+            "default": 1,
+            "id": 1
+        }
+    ],
+    "v4AssignMode": {
+        "zt": true
+    },
+    "v6AssignMode": {
+        "6plane": false,
+        "rfc4193": true,
+        "zt": true
+    }
+}
+"""
+
+    def test_multiple_vpn_without_comment(self):
+        o = ZeroTier(native=self._MULTIPLE_VPN_TEXT_WITHOUT_COMMENT)
         self.assertEqual(o.config, self._TEST_MULTIPLE_CONFIG)
 
     def test_parse_tar_bytesio(self):
