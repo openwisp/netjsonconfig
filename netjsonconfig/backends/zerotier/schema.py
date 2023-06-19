@@ -80,6 +80,7 @@ base_zerotier_schema = {
                     },
                     "enableBroadcast": {
                         "type": "boolean",
+                        "default": True,
                         "propertyOrder": 8,
                         "description": "Enable broadcast packets on the network",
                     },
@@ -114,11 +115,13 @@ base_zerotier_schema = {
                     "mtu": {
                         "type": "integer",
                         "propertyOrder": 12,
+                        "default": 2800,
                         "description": "MTU to set on the client virtual network adapter",
                     },
                     "multicastLimit": {
                         "type": "integer",
                         "propertyOrder": 13,
+                        "default": 32,
                         "description": (
                             "Maximum number of recipients per multicast or broadcast. "
                             "Warning - Setting this to 0 will disable IPv4 communication on your network!"
