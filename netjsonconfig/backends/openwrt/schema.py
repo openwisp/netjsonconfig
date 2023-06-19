@@ -5,7 +5,6 @@ from ...schema import schema as default_schema
 from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
 from ..wireguard.schema import base_wireguard_schema
-from ..zerotier.schema import base_zerotier_schema
 from .timezones import timezones
 
 default_radio_driver = "mac80211"
@@ -929,6 +928,78 @@ schema = merge_config(
                     },
                 },
             },
+            "zerotier": {
+                "type": "array",
+                "title": "ZeroTier Clients",
+                "uniqueItems": True,
+                "propertyOrder": 14,
+                "items": {
+                    "type": "object",
+                    "title": "ZeroTier Client",
+                    "additionalProperties": True,
+                    "required": ["id", "name"],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "propertyOrder": 1,
+                            "description": "The ID of the ZeroTier network",
+                        },
+                        "name": {
+                            "type": "string",
+                            "propertyOrder": 2,
+                            "description": "The name of the ZeroTier network",
+                        },
+                        "config_path": {
+                            "type": "string",
+                            "propertyOrder": 3,
+                            "description": (
+                                "The path to the persistent "
+                                "configuration folder (for ZT controller mode)"
+                            ),
+                        },
+                        "copy_config_path": {
+                            "type": "string",
+                            "propertyOrder": 4,
+                            "enum": ["0", "1"],
+                            "description": (
+                                "Specifies whether to copy the "
+                                "configuration file to RAM ('0' - No, '1' - Yes) "
+                                "This prevents writing to flash in ZT controller mode"
+                            ),
+                        },
+                        "port": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 65535,
+                            "default": 9993,
+                            "propertyOrder": 5,
+                            "description": "The port number of the ZeroTier service",
+                        },
+                        "local_conf": {
+                            "type": "string",
+                            "propertyOrder": 6,
+                            "description": "The path of the local ZeroTier configuration",
+                        },
+                        "secret": {
+                            "type": "string",
+                            "propertyOrder": 7,
+                            "description": (
+                                "The secret key of the ZeroTier client, "
+                                "leave it blank to be automatically determined"
+                            ),
+                        },
+                        # ZeroTier customizations for OpenWRT
+                        "disabled": {
+                            "title": "disabled",
+                            "description": "disable this VPN without deleting its configuration",
+                            "type": "boolean",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 1,
+                        },
+                    },
+                },
+            },
         },
     },
 )
@@ -952,40 +1023,6 @@ schema = merge_config(
                     }
                 }
             }
-        }
-    },
-)
-# add ZeroTier schema
-schema = merge_config(schema, base_zerotier_schema)
-# ZeroTier customizations for OpenWRT
-schema = merge_config(
-    schema,
-    {
-        "definitions": {
-            "zerotier_server": {
-                "properties": {
-                    "disabled": {
-                        "title": "disabled",
-                        "description": "disable this VPN without deleting its configuration",
-                        "type": "boolean",
-                        "default": False,
-                        "format": "checkbox",
-                        "propertyOrder": 1,
-                    }
-                }
-            },
-            "zerotier_client": {
-                "properties": {
-                    "disabled": {
-                        "title": "disabled",
-                        "description": "disable this VPN without deleting its configuration",
-                        "type": "boolean",
-                        "default": False,
-                        "format": "checkbox",
-                        "propertyOrder": 1,
-                    }
-                }
-            },
         }
     },
 )

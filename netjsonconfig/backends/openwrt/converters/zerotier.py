@@ -1,9 +1,11 @@
 from ...zerotier.converters import ZeroTier as BaseZeroTier
+from ..schema import schema
 from .base import OpenWrtConverter
 
 
 class ZeroTier(OpenWrtConverter, BaseZeroTier):
     _uci_types = ['zerotier']
+    _schema = schema['properties']['zerotier']['items']
 
     def __intermediate_vpn(self, vpn):
         vpn.update(

@@ -205,58 +205,6 @@ base_zerotier_schema = {
                 },
             },
         },
-        "zerotier_client": {
-            "title": "ZeroTier Client",
-            "type": "object",
-            "required": ["id", "name"],
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "propertyOrder": 1,
-                    "description": "The ID of the ZeroTier network",
-                },
-                "name": {
-                    "type": "string",
-                    "propertyOrder": 2,
-                    "description": "The name of the ZeroTier network",
-                },
-                "config_path": {
-                    "type": "string",
-                    "propertyOrder": 3,
-                    "description": "The path to the persistent configuration folder (for ZT controller mode)",
-                },
-                "copy_config_path": {
-                    "type": "string",
-                    "propertyOrder": 4,
-                    "enum": ["0", "1"],
-                    "description": (
-                        "Specifies whether to copy the configuration file to RAM ('0' - No, '1' - Yes) "
-                        "This prevents writing to flash in ZT controller mode"
-                    ),
-                },
-                "port": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 65535,
-                    "default": 9993,
-                    "propertyOrder": 5,
-                    "description": "The port number of the ZeroTier service",
-                },
-                "local_conf": {
-                    "type": "string",
-                    "propertyOrder": 6,
-                    "description": "The path of the local ZeroTier configuration",
-                },
-                "secret": {
-                    "type": "string",
-                    "propertyOrder": 7,
-                    "description": (
-                        "The secret key of the ZeroTier client, "
-                        "leave it blank to be automatically determined"
-                    ),
-                },
-            },
-        },
     },
     "properties": {
         "zerotier": {
@@ -269,8 +217,7 @@ base_zerotier_schema = {
                 "type": "object",
                 "title": "VPN",
                 "additionalProperties": True,
-                "anyOf": [
-                    {"$ref": "#/definitions/zerotier_client"},
+                "allOf": [
                     {"$ref": "#/definitions/zerotier_server"},
                 ],
             },
