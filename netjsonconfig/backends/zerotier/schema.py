@@ -80,6 +80,7 @@ base_zerotier_schema = {
                     },
                     "enableBroadcast": {
                         "type": "boolean",
+                        "default": True,
                         "propertyOrder": 8,
                         "description": "Enable broadcast packets on the network",
                     },
@@ -114,11 +115,13 @@ base_zerotier_schema = {
                     "mtu": {
                         "type": "integer",
                         "propertyOrder": 12,
+                        "default": 2800,
                         "description": "MTU to set on the client virtual network adapter",
                     },
                     "multicastLimit": {
                         "type": "integer",
                         "propertyOrder": 13,
+                        "default": 32,
                         "description": (
                             "Maximum number of recipients per multicast or broadcast. "
                             "Warning - Setting this to 0 will disable IPv4 communication on your network!"
@@ -188,6 +191,33 @@ base_zerotier_schema = {
                         "items": {"type": "object"},
                         "propertyOrder": 17,
                         "description": "Array of network rule objects",
+                        # This is the default rule set
+                        # that allows IPv4 and IPv6 traffic
+                        # It is based on the default
+                        # network configuration from ZeroTier Central
+                        # https://docs.zerotier.com/zerotier/rules
+                        "default": [
+                            {
+                                "etherType": 2048,
+                                "not": True,
+                                "or": False,
+                                "type": "MATCH_ETHERTYPE",
+                            },
+                            {
+                                "etherType": 2054,
+                                "not": True,
+                                "or": False,
+                                "type": "MATCH_ETHERTYPE",
+                            },
+                            {
+                                "etherType": 34525,
+                                "not": True,
+                                "or": False,
+                                "type": "MATCH_ETHERTYPE",
+                            },
+                            {"type": "ACTION_DROP"},
+                            {"type": "ACTION_ACCEPT"},
+                        ],
                     },
                     "capabilities": {
                         "type": "array",
