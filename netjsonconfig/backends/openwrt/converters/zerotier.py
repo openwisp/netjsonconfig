@@ -12,14 +12,14 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
             {
                 '.name': self._get_uci_name(vpn.pop('name')),
                 '.type': 'zerotier',
-                'join': [vpn.pop('id')],
+                'join': vpn.pop('id'),
                 'enabled': not vpn.pop('disabled', False),
             }
         )
         return super().__intermediate_vpn(vpn, remove=[''])
 
     def __netjson_vpn(self, vpn):
-        vpn['id'] = str(vpn.pop('join')[0])
+        vpn['id'] = vpn.pop('join')
         vpn['name'] = vpn.pop('.name').replace('_', '-')
         # 'enabled' defaults to False in OpenWRT
         vpn['disabled'] = vpn.pop('enabled', '0') == '0'

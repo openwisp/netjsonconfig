@@ -939,19 +939,37 @@ schema = merge_config(
                     "additionalProperties": True,
                     "required": ["id", "name"],
                     "properties": {
-                        "id": {
-                            "type": "string",
+                        # ZeroTier customization (disabled) for OpenWRT
+                        "disabled": {
+                            "title": "disabled",
+                            "description": "disable this VPN without deleting its configuration",
+                            "type": "boolean",
+                            "default": False,
+                            "format": "checkbox",
                             "propertyOrder": 1,
-                            "description": "The ID of the ZeroTier network",
+                        },
+                        "id": {
+                            "type": "array",
+                            "title": "ZeroTier Network IDs",
+                            "minItems": 1,
+                            "propertyOrder": 2,
+                            "uniqueItems": True,
+                            "items": {
+                                "type": "string",
+                                "title": "Network ID",
+                                "maxLength": 16,
+                                "minLength": 16,
+                            },
                         },
                         "name": {
                             "type": "string",
-                            "propertyOrder": 2,
+                            "propertyOrder": 3,
+                            "default": "zerotier_network",
                             "description": "The name of the ZeroTier network",
                         },
                         "config_path": {
                             "type": "string",
-                            "propertyOrder": 3,
+                            "propertyOrder": 4,
                             "description": (
                                 "The path to the persistent "
                                 "configuration folder (for ZT controller mode)"
@@ -959,7 +977,7 @@ schema = merge_config(
                         },
                         "copy_config_path": {
                             "type": "string",
-                            "propertyOrder": 4,
+                            "propertyOrder": 5,
                             "enum": ["0", "1"],
                             "description": (
                                 "Specifies whether to copy the "
@@ -972,30 +990,21 @@ schema = merge_config(
                             "minimum": 1,
                             "maximum": 65535,
                             "default": 9993,
-                            "propertyOrder": 5,
+                            "propertyOrder": 6,
                             "description": "The port number of the ZeroTier service",
                         },
                         "local_conf": {
                             "type": "string",
-                            "propertyOrder": 6,
+                            "propertyOrder": 7,
                             "description": "The path of the local ZeroTier configuration",
                         },
                         "secret": {
                             "type": "string",
-                            "propertyOrder": 7,
+                            "propertyOrder": 8,
                             "description": (
                                 "The secret key of the ZeroTier client, "
                                 "leave it blank to be automatically determined"
                             ),
-                        },
-                        # ZeroTier customizations for OpenWRT
-                        "disabled": {
-                            "title": "disabled",
-                            "description": "disable this VPN without deleting its configuration",
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 1,
                         },
                     },
                 },

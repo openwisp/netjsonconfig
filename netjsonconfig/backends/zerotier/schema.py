@@ -64,6 +64,7 @@ base_zerotier_schema = {
                 "private": {
                     "type": "boolean",
                     "default": True,
+                    "format": "checkbox",
                     "propertyOrder": 7,
                     "description": (
                         "Whether or not the network is private "
@@ -72,6 +73,7 @@ base_zerotier_schema = {
                 },
                 "enableBroadcast": {
                     "type": "boolean",
+                    "format": "checkbox",
                     "propertyOrder": 8,
                     "description": "Enable broadcast packets on the network",
                 },
@@ -81,6 +83,7 @@ base_zerotier_schema = {
                     "properties": {
                         "zt": {
                             "type": "boolean",
+                            "format": "checkbox",
                             "description": "Whether ZeroTier should assign IPv4 addresses to members",
                         },
                     },
@@ -91,14 +94,17 @@ base_zerotier_schema = {
                     "properties": {
                         "6plane": {
                             "type": "boolean",
+                            "format": "checkbox",
                             "description": "Whether 6PLANE addressing should be used for IPv6 assignment",
                         },
                         "rfc4193": {
                             "type": "boolean",
+                            "format": "checkbox",
                             "description": "Whether RFC4193 addressing should be used for IPv6 assignment",  # noqa
                         },
                         "zt": {
                             "type": "boolean",
+                            "format": "checkbox",
                             "description": "Whether ZeroTier should assign IPv6 addresses to members",
                         },
                     },

@@ -9,12 +9,8 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
     _TEST_CONFIG = {
         "zerotier": [
             {
-                "id": "9536600adf654321",
-                "name": "zerotier-openwisp-network-1",
-            },
-            {
-                "id": "9536600adf654322",
-                "name": "zerotier-openwisp-network-2",
+                "id": ["9536600adf654321", "9536600adf654322"],
+                "name": "zerotier-openwisp-network",
             },
         ]
     }
@@ -24,12 +20,9 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
         expected = self._tabs(
             """package zerotier
 
-config zerotier 'zerotier_openwisp_network_1'
+config zerotier 'zerotier_openwisp_network'
     option enabled '1'
     list join '9536600adf654321'
-
-config zerotier 'zerotier_openwisp_network_2'
-    option enabled '1'
     list join '9536600adf654322'
 """
         )
@@ -39,26 +32,18 @@ config zerotier 'zerotier_openwisp_network_2'
         native = self._tabs(
             """package zerotier
 
-config zerotier 'zerotier_openwisp_network_1'
-    option enabled '1'
+config zerotier 'zerotier_openwisp_network'
+    option enabled '0'
     list join '9536600adf654321'
-
-config zerotier 'zerotier_openwisp_network_2'
-    option enabled '1'
     list join '9536600adf654322'
 """
         )
         expected = {
             "zerotier": [
                 {
-                    "id": "9536600adf654321",
-                    "name": "zerotier-openwisp-network-1",
-                    "disabled": False,
-                },
-                {
-                    "id": "9536600adf654322",
-                    "name": "zerotier-openwisp-network-2",
-                    "disabled": False,
+                    "id": ["9536600adf654321", "9536600adf654322"],
+                    "name": "zerotier-openwisp-network",
+                    "disabled": True,
                 },
             ]
         }
