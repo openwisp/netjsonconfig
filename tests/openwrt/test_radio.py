@@ -1,5 +1,7 @@
 import unittest
 
+from jsonschema.exceptions import ValidationError
+
 from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
 
@@ -91,6 +93,7 @@ config wifi-device 'radio1'
                     "channel": 140,
                     "channel_width": 20,
                     "country": "00",
+                    "band": "5g",
                 },
                 {
                     "name": "radio1",
@@ -102,6 +105,7 @@ config wifi-device 'radio1'
                     "tx_power": 18,
                     "country": "00",
                     "disabled": True,
+                    "band": "5g",
                 },
             ]
         }
@@ -186,6 +190,7 @@ config wifi-device 'radio1'
                     "channel": 3,
                     "channel_width": 20,
                     "tx_power": 3,
+                    "band": "2g",
                 },
                 {
                     "name": "radio1",
@@ -195,6 +200,7 @@ config wifi-device 'radio1'
                     "channel": 3,
                     "channel_width": 20,
                     "tx_power": 3,
+                    "band": "2g",
                 },
             ]
         }
@@ -263,6 +269,7 @@ config wifi-device 'radio0'
                     "tx_power": 8,
                     "diversity": "1",
                     "country_ie": "1",
+                    "band": "5g",
                 }
             ]
         }
@@ -352,6 +359,7 @@ config wifi-device 'radio0'
                     "channel": 3,
                     "channel_width": 20,
                     "tx_power": 3,
+                    "band": "2g",
                 }
             ]
         }
@@ -408,7 +416,7 @@ config wifi-device 'radio0'
                     "protocol": "802.11n",
                     "channel": 0,
                     "channel_width": 20,
-                    "hwmode": "11g",
+                    "band": "2g",
                 }
             ]
         }
@@ -435,7 +443,7 @@ config wifi-device 'radio0'
             """package wireless
 
 config wifi-device 'radio0'
-    option band '2g'
+    option band '5g'
     option channel 'auto'
     option htmode 'HT20'
     option phy 'phy0'
@@ -465,7 +473,7 @@ config wifi-device 'radio0'
                     "protocol": "802.11n",
                     "channel": 0,
                     "channel_width": 20,
-                    "hwmode": "11a",
+                    "band": "5g",
                 }
             ]
         }
@@ -521,7 +529,7 @@ config wifi-device 'radio0'
                     "protocol": "802.11ax",
                     "channel": 0,
                     "channel_width": 20,
-                    "hwmode": "11a",
+                    "band": "5g",
                 }
             ]
         }
@@ -539,7 +547,7 @@ config wifi-device 'radio0'
                         "protocol": "802.11ax",
                         "channel": 0,
                         "channel_width": 80,
-                        "hwmode": "11g",
+                        "band": "2g",
                     }
                 ]
             }
@@ -548,7 +556,7 @@ config wifi-device 'radio0'
             """package wireless
 
 config wifi-device 'radio0'
-    option band '5g'
+    option band '2g'
     option channel 'auto'
     option htmode 'HE80'
     option phy 'phy0'
@@ -727,6 +735,7 @@ config wifi-device 'radio0'
                     "channel": 1,
                     "channel_width": 20,
                     "ht_capab": ["SMPS-STATIC", "SHORT-GI-20"],
+                    "band": "2g",
                 }
             ]
         }
@@ -784,6 +793,7 @@ config wifi-device 'radio0'
                     "channel": 140,
                     "channel_width": 40,
                     "htmode": "HT40+",
+                    "band": "5g",
                 },
             ]
         }
@@ -872,6 +882,7 @@ config wifi-device 'radio0'
                     "protocol": "802.11ax",
                     "channel": 137,
                     "channel_width": 160,
+                    "band": "6g",
                 }
             ]
         }
@@ -928,7 +939,30 @@ config wifi-device 'radio0'
                     "protocol": "802.11ad",
                     "channel": 2,
                     "channel_width": 20,
+                    "band": "60g",
                 }
             ]
         }
         self.assertEqual(o.config, expected)
+
+    def test_render_80211ax_no_band_hwmode_auto_channel(self):
+        o = OpenWrt(
+            {
+                "radios": [
+                    {
+                        "name": "radio0",
+                        "phy": "phy0",
+                        "driver": "mac80211",
+                        "protocol": "802.11ax",
+                        "channel": 0,
+                        "channel_width": 20,
+                    }
+                ]
+            }
+        )
+        with self.assertRaises(ValidationError) as error_context:
+            o.render()
+        self.assertEqual(
+            error_context.exception.message,
+            '"channel" cannot be set to "auto" when "hwmode" or "band" property is not configured.',
+        )

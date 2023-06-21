@@ -601,8 +601,8 @@ schema = merge_config(
                         "propertyOrder": 8,
                         "default": "11g",
                         "enum": ["11g"],
-                    }
-                }
+                    },
+                },
             },
             "radio_hwmode_11a": {
                 "properties": {
@@ -614,22 +614,95 @@ schema = merge_config(
                         "default": "11a",
                         "enum": ["11a"],
                     }
-                }
+                },
+            },
+            "radio_2g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 9,
+                        "default": "2g",
+                        "enum": ["2g"],
+                    }
+                },
+            },
+            "radio_5g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 9,
+                        "default": "5g",
+                        "enum": ["5g"],
+                    }
+                },
+            },
+            "radio_6g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 9,
+                        "default": "6g",
+                        "enum": ["6g"],
+                    }
+                },
+            },
+            "radio_60g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 8,
+                        "default": "60g",
+                        "enum": ["60g"],
+                    }
+                },
             },
             "radio_80211gn_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11g"},
+                    {"$ref": "#/definitions/radio_2g_band"},
+                ]
             },
             "radio_80211an_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11a"},
+                    {"$ref": "#/definitions/radio_5g_band"},
+                ]
             },
             "radio_80211ac_5ghz_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11a"},
+                    {"$ref": "#/definitions/radio_5g_band"},
+                ]
             },
             "radio_80211ax_2ghz_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11g"},
+                    {"$ref": "#/definitions/radio_2g_band"},
+                ]
             },
             "radio_80211ax_5ghz_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11a"},
+                    {"$ref": "#/definitions/radio_5g_band"},
+                ]
+            },
+            "radio_80211ax_6ghz_settings": {
+                "allOf": [
+                    {"$ref": "#/definitions/radio_6g_band"},
+                ]
+            },
+            "radio_80211ad_60ghz_settings": {
+                "allOf": [
+                    {"$ref": "#/definitions/radio_60g_band"},
+                ]
             },
         },
         "properties": {

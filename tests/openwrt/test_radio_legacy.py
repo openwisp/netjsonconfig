@@ -839,3 +839,49 @@ config wifi-device 'radio0'
 """
         )
         self.assertEqual(o.render(), expected)
+
+    def test_render_band_option_80211n(self):
+        o = OpenWrt(
+            {
+                "radios": [
+                    {
+                        "name": "radio0",
+                        "phy": "phy0",
+                        "driver": "mac80211",
+                        "protocol": "802.11n",
+                        "channel": 0,
+                        "channel_width": 20,
+                        "band": "2g",
+                    },
+                    {
+                        "name": "radio1",
+                        "phy": "phy0",
+                        "driver": "mac80211",
+                        "protocol": "802.11n",
+                        "channel": 0,
+                        "channel_width": 20,
+                        "band": "5g",
+                    },
+                ]
+            },
+            dsa=False,
+        )
+        expected = self._tabs(
+            """package wireless
+
+config wifi-device 'radio0'
+    option channel 'auto'
+    option htmode 'HT20'
+    option hwmode '11g'
+    option phy 'phy0'
+    option type 'mac80211'
+
+config wifi-device 'radio1'
+    option channel 'auto'
+    option htmode 'HT20'
+    option hwmode '11a'
+    option phy 'phy0'
+    option type 'mac80211'
+"""
+        )
+        self.assertEqual(o.render(), expected)
