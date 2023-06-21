@@ -1849,7 +1849,7 @@ Will be rendered as follows::
             option channel '11'
             option country 'IT'
             option htmode 'HT20'
-            option hwmode '11g'
+            option band '2g'
             option phy 'phy0'
             option txpower '5'
             option type 'mac80211'
@@ -1859,7 +1859,7 @@ Will be rendered as follows::
             option country 'IT'
             option disabled '0'
             option htmode 'HT20'
-            option hwmode '11a'
+            option band '5g'
             option phy 'phy1'
             option txpower '4'
             option type 'mac80211'
@@ -1868,8 +1868,8 @@ Automatic channel selection example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you need to use the "automatic channel selection" feature of OpenWRT, you must set
-the channel to ``0``. You must also set the ``hwmode`` property to tell OpenWRT which
-band to use (11g for 2.4 Ghz, 11a for 5 GHz).
+the channel to ``0``. You must also set the ``band`` property to tell OpenWRT which
+band to use (``2g`` for 2.4 Ghz, ``5g`` for 5 GHz, ``6g`` for 6 GHz, ``60g`` for 60 GHz).
 
 The following example sets "automatic channel selection" for two radios, the first radio uses
 **802.11n** in the 2.4 GHz band, while the second uses **802.11ac** in the 5 GHz band.
@@ -1884,7 +1884,7 @@ The following example sets "automatic channel selection" for two radios, the fir
                 "driver": "mac80211",
                 "protocol": "802.11n",
                 "channel": 0,  # 0 stands for auto
-                "hwmode": "11g",  # must set this explicitly, 11g means 2.4 GHz band
+                "band": "2g",  # must set this explicitly, 2g means 2.4 GHz band
                 "channel_width": 20
             },
             {
@@ -1893,9 +1893,9 @@ The following example sets "automatic channel selection" for two radios, the fir
                 "driver": "mac80211",
                 "protocol": "802.11ac",
                 "channel": 0,  # 0 stands for auto
-                "hwmode": "11a",  # must set this explicitly, 11a means 5 GHz band,
-                                  # but this is optional for "802.11ac" because it only
-                                  # support 5 GHz band.
+                "band": "5g",  # must set this explicitly, 5g means 5 GHz band,
+                               # but this is optional for "802.11ac" because it only
+                               # support 5 GHz band.
                 "channel_width": 80
             }
         ]
@@ -1908,14 +1908,14 @@ UCI output::
     config wifi-device 'radio0'
             option channel 'auto'
             option htmode 'HT20'
-            option hwmode '11g'
+            option band '2g'
             option phy 'phy0'
             option type 'mac80211'
 
     config wifi-device 'radio1'
             option channel 'auto'
             option htmode 'VHT80'
-            option hwmode '11a'
+            option band '5g'
             option phy 'phy1'
             option type 'mac80211'
 
@@ -1946,7 +1946,7 @@ UCI output::
     config wifi-device 'radio0'
             option channel '36'
             option htmode 'VHT80'
-            option hwmode '11a'
+            option band '5g'
             option phy 'phy0'
             option type 'mac80211'
 
@@ -1977,7 +1977,7 @@ UCI output::
     config wifi-device 'radio0'
             option channel '36'
             option htmode 'HE80'
-            option hwmode '11a'
+            option band '5g'
             option phy 'phy0'
             option type 'mac80211'
 
@@ -2596,7 +2596,7 @@ UCI output::
             list ht_capab 'SMPS-STATIC'
             list ht_capab 'SHORT-GI-20'
             option htmode 'HT20'
-            option hwmode '11g'
+            option band '2g'
             option phy 'phy0'
             option type 'mac80211'
 
