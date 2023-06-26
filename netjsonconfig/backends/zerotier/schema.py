@@ -61,15 +61,30 @@ base_zerotier_schema = {
                     "description": "Time when the network was created",
                 },
                 # Configurable properties
-                "private": {
-                    "type": "boolean",
-                    "default": True,
-                    "format": "checkbox",
-                    "propertyOrder": 7,
-                    "description": (
-                        "Whether or not the network is private "
-                        "If false, members will NOT need to be authorized to join"
-                    ),
+                "capabilities": {
+                    "type": "array",
+                    "items": {"type": "object"},
+                    "propertyOrder": 17,
+                    "description": "Array of network capabilities",
+                },
+                "dns": {
+                    "type": "object",
+                    "propertyOrder": 15,
+                    "properties": {
+                        "domain": {
+                            "type": "string",
+                            "propertyOrder": 1,
+                            "description": "The domain for DNS resolution",
+                        },
+                        "servers": {
+                            "type": "array",
+                            "propertyOrder": 2,
+                            "items": {
+                                "type": "string",
+                                "description": "The DNS server IP addresses",
+                            },
+                        },
+                    },
                 },
                 "enableBroadcast": {
                     "type": "boolean",
@@ -78,76 +93,9 @@ base_zerotier_schema = {
                     "propertyOrder": 8,
                     "description": "Enable broadcast packets on the network",
                 },
-                "v4AssignMode": {
-                    "type": "object",
-                    "propertyOrder": 9,
-                    "properties": {
-                        "zt": {
-                            "type": "boolean",
-                            "format": "checkbox",
-                            "description": "Whether ZeroTier should assign IPv4 addresses to members",
-                        },
-                    },
-                },
-                "v6AssignMode": {
-                    "type": "object",
-                    "propertyOrder": 11,
-                    "properties": {
-                        "6plane": {
-                            "type": "boolean",
-                            "format": "checkbox",
-                            "description": "Whether 6PLANE addressing should be used for IPv6 assignment",
-                        },
-                        "rfc4193": {
-                            "type": "boolean",
-                            "format": "checkbox",
-                            "description": "Whether RFC4193 addressing should be used for IPv6 assignment",  # noqa
-                        },
-                        "zt": {
-                            "type": "boolean",
-                            "format": "checkbox",
-                            "description": "Whether ZeroTier should assign IPv6 addresses to members",
-                        },
-                    },
-                },
-                "mtu": {
-                    "type": "integer",
-                    "default": 2800,
-                    "propertyOrder": 12,
-                    "description": "MTU to set on the client virtual network adapter",
-                },
-                "multicastLimit": {
-                    "type": "integer",
-                    "default": 32,
-                    "propertyOrder": 13,
-                    "description": (
-                        "Maximum number of recipients per multicast or broadcast. "
-                        "Warning - Setting this to 0 will disable IPv4 communication on your network!"
-                    ),
-                },
-                "routes": {
-                    "type": "array",
-                    "propertyOrder": 14,
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "target": {
-                                "type": "string",
-                                "propertyOrder": 1,
-                                "description": "The target IP address range for the route",
-                            },
-                            "via": {
-                                "type": "string",
-                                "propertyOrder": 2,
-                                "description": "The IP address of the next hop for the route",
-                            },
-                        },
-                    },
-                    "description": "Array of route objects",
-                },
                 "ipAssignmentPools": {
                     "type": "array",
-                    "propertyOrder": 15,
+                    "propertyOrder": 14,
                     "items": {
                         "type": "object",
                         "properties": {
@@ -165,29 +113,66 @@ base_zerotier_schema = {
                     },
                     "description": "Range of IP addresses for the auto assign pool",
                 },
-                "dns": {
-                    "type": "object",
-                    "propertyOrder": 16,
-                    "properties": {
-                        "domain": {
-                            "type": "string",
-                            "propertyOrder": 1,
-                            "description": "The domain for DNS resolution",
-                        },
-                        "servers": {
-                            "type": "array",
-                            "propertyOrder": 2,
-                            "items": {
+                "mtu": {
+                    "type": "integer",
+                    "default": 2800,
+                    "propertyOrder": 11,
+                    "description": "MTU to set on the client virtual network adapter",
+                },
+                "multicastLimit": {
+                    "type": "integer",
+                    "default": 32,
+                    "propertyOrder": 12,
+                    "description": (
+                        "Maximum number of recipients per multicast or broadcast. "
+                        "Warning - Setting this to 0 will disable IPv4 communication on your network!"
+                    ),
+                },
+                "private": {
+                    "type": "boolean",
+                    "default": True,
+                    "format": "checkbox",
+                    "propertyOrder": 7,
+                    "description": (
+                        "Whether or not the network is private "
+                        "If false, members will NOT need to be authorized to join"
+                    ),
+                },
+                "remoteTraceLevel": {
+                    "type": "integer",
+                    "propertyOrder": 19,
+                    "description": "The level of network tracing",
+                },
+                "remoteTraceTarget": {
+                    "type": ["string", "null"],
+                    "propertyOrder": 20,
+                    "default": "",
+                    "description": "The remote target ID for network tracing",
+                },
+                "routes": {
+                    "type": "array",
+                    "propertyOrder": 13,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "target": {
                                 "type": "string",
-                                "description": "The DNS server IP addresses",
+                                "propertyOrder": 1,
+                                "description": "The target IP address range for the route",
+                            },
+                            "via": {
+                                "type": "string",
+                                "propertyOrder": 2,
+                                "description": "The IP address of the next hop for the route",
                             },
                         },
                     },
+                    "description": "Array of route objects",
                 },
                 "rules": {
                     "type": "array",
                     "items": {"type": "object"},
-                    "propertyOrder": 17,
+                    "propertyOrder": 16,
                     "description": "Array of network rule objects",
                     # This is the default rule set
                     # that allows IPv4 and IPv6 traffic
@@ -217,27 +202,43 @@ base_zerotier_schema = {
                         {"type": "ACTION_ACCEPT"},
                     ],
                 },
-                "capabilities": {
-                    "type": "array",
-                    "items": {"type": "object"},
-                    "propertyOrder": 18,
-                    "description": "Array of network capabilities",
-                },
                 "tags": {
                     "type": "array",
                     "items": {"type": "object"},
-                    "propertyOrder": 19,
+                    "propertyOrder": 18,
                     "description": "Array of network tag objects",
                 },
-                "remoteTraceTarget": {
-                    "type": "string",
-                    "propertyOrder": 20,
-                    "description": "The remote target ID for network tracing",
+                "v4AssignMode": {
+                    "type": "object",
+                    "propertyOrder": 9,
+                    "properties": {
+                        "zt": {
+                            "type": "boolean",
+                            "format": "checkbox",
+                            "description": "Whether ZeroTier should assign IPv4 addresses to members",
+                        },
+                    },
                 },
-                "remoteTraceLevel": {
-                    "type": "integer",
-                    "propertyOrder": 21,
-                    "description": "The level of network tracing",
+                "v6AssignMode": {
+                    "type": "object",
+                    "propertyOrder": 10,
+                    "properties": {
+                        "6plane": {
+                            "type": "boolean",
+                            "format": "checkbox",
+                            "description": "Whether 6PLANE addressing should be used for IPv6 assignment",
+                        },
+                        "rfc4193": {
+                            "type": "boolean",
+                            "format": "checkbox",
+                            "description": "Whether RFC4193 addressing should be used for IPv6 assignment",  # noqa
+                        },
+                        "zt": {
+                            "type": "boolean",
+                            "format": "checkbox",
+                            "description": "Whether ZeroTier should assign IPv6 addresses to members",
+                        },
+                    },
                 },
             },
         },
