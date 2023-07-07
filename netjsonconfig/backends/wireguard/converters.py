@@ -6,6 +6,19 @@ class Wireguard(BaseConverter):
     netjson_key = 'wireguard'
     intermediate_key = 'wireguard'
     _schema = schema
+    _forward_property_map = {
+        'port': 'ListenPort',
+        'private_key': 'PrivateKey',
+        'address': 'Address',
+        'dns': 'DNS',
+        'mtu': 'MTU',
+        'save_config': 'SaveConfig',
+        'table': 'Table',
+        'pre_up': 'PreUp',
+        'post_up': 'PostUp',
+        'pre_down': 'PreDown',
+        'post_down': 'PostDown',
+    }
 
     def to_intermediate_loop(self, block, result, index=None):
         vpn = self.__intermediate_vpn(block)
@@ -14,9 +27,25 @@ class Wireguard(BaseConverter):
         return result
 
     def __intermediate_vpn(self, config, remove=None):
-        config['ListenPort'] = config.pop('port')
-        config['PrivateKey'] = config.pop('private_key')
-        config['Address'] = config.pop('address')
+        # Required properties
+        for option in ['port', 'private_key', 'address']:
+            config[self._forward_property_map[option]] = config.pop(option)
+        # Optional properties
+        for option in self._forward_property_map.keys():
+            if option in ['port', 'private_key', 'address']:
+                # These options have been already handled
+                continue
+            if config.get(option, None) not in ['', None, []]:
+                if option == 'dns':
+                    config[option] = ','.join(config[option])
+                elif option == 'save_config':
+                    config[option] = 'true' if config[option] else 'false'
+                config[self._forward_property_map[option]] = config.pop(option)
+            else:
+                config.pop(option, None)
+        # Remove default options
+        if config.get('Table') == 'auto':
+            config.pop('Table')
         config['peers'] = self.__intermediate_peers(config.get('peers', []))
         return self.sorted_dict(config)
 
