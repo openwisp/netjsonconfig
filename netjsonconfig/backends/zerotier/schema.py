@@ -26,6 +26,7 @@ base_zerotier_schema = {
                     # the VPN backend's name field, it is read-only
                     "readOnly": True,
                     "propertyOrder": 1,
+                    "title": "Name",
                     "description": "Name of the network",
                 },
                 "id": {
@@ -33,6 +34,7 @@ base_zerotier_schema = {
                     "maxLength": 16,
                     "readOnly": True,
                     "propertyOrder": 2,
+                    "title": "Network ID",
                     "description": "Network ID",
                 },
                 "nwid": {
@@ -40,24 +42,28 @@ base_zerotier_schema = {
                     "maxLength": 16,
                     "readOnly": True,
                     "propertyOrder": 3,
+                    "title": "Network ID",
                     "description": "Network ID legacy field (same as 'id')",
                 },
                 "objtype": {
                     "type": "string",
                     "readOnly": True,
                     "propertyOrder": 4,
+                    "title": "Object Type",
                     "default": "network",
                 },
                 "revision": {
                     "type": "integer",
                     "readOnly": True,
                     "propertyOrder": 5,
+                    "title": "Revision Number",
                     "description": "The revision number of the network configuration",
                 },
                 "creationTime": {
                     "type": "number",
                     "readOnly": True,
                     "propertyOrder": 6,
+                    "title": "Creation Time",
                     "description": "Time when the network was created",
                 },
                 # Configurable properties
@@ -65,22 +71,27 @@ base_zerotier_schema = {
                     "type": "array",
                     "items": {"type": "object"},
                     "propertyOrder": 17,
+                    "title": "Capabilities",
                     "description": "Array of network capabilities",
                 },
                 "dns": {
                     "type": "object",
                     "propertyOrder": 15,
+                    "title": "DNS",
                     "properties": {
                         "domain": {
                             "type": "string",
                             "propertyOrder": 1,
+                            "title": "Search Domain",
                             "description": "The domain for DNS resolution",
                         },
                         "servers": {
                             "type": "array",
                             "propertyOrder": 2,
+                            "title": "Server Address",
                             "items": {
                                 "type": "string",
+                                "title": "IP Address",
                                 "description": "The DNS server IP addresses",
                             },
                         },
@@ -91,22 +102,26 @@ base_zerotier_schema = {
                     "default": True,
                     "format": "checkbox",
                     "propertyOrder": 8,
+                    "title": "Enable Broadcast",
                     "description": "Enable broadcast packets on the network",
                 },
                 "ipAssignmentPools": {
                     "type": "array",
                     "propertyOrder": 14,
+                    "title": "IPv4 Address Pools",
                     "items": {
                         "type": "object",
                         "properties": {
                             "ipRangeStart": {
                                 "type": "string",
                                 "propertyOrder": 1,
+                                "title": "IP Range Start",
                                 "description": "The starting IP address of the pool range",
                             },
                             "ipRangeEnd": {
                                 "type": "string",
                                 "propertyOrder": 2,
+                                "title": "IP Range End",
                                 "description": "The ending IP address of the pool range",
                             },
                         },
@@ -117,11 +132,13 @@ base_zerotier_schema = {
                     "type": "integer",
                     "default": 2800,
                     "propertyOrder": 11,
+                    "title": "Maximum Transmission Unit",
                     "description": "MTU to set on the client virtual network adapter",
                 },
                 "multicastLimit": {
                     "type": "integer",
                     "default": 32,
+                    "title": "Multicast Recipient Limit",
                     "propertyOrder": 12,
                     "description": (
                         "Maximum number of recipients per multicast or broadcast. "
@@ -132,6 +149,7 @@ base_zerotier_schema = {
                     "type": "boolean",
                     "default": True,
                     "format": "checkbox",
+                    "title": "Private",
                     "propertyOrder": 7,
                     "description": (
                         "Whether or not the network is private "
@@ -141,28 +159,33 @@ base_zerotier_schema = {
                 "remoteTraceLevel": {
                     "type": "integer",
                     "propertyOrder": 19,
+                    "title": "Remote Trace Level",
                     "description": "The level of network tracing",
                 },
                 "remoteTraceTarget": {
                     "type": ["string", "null"],
                     "propertyOrder": 20,
                     "default": "",
+                    "title": "Remote Trace Target",
                     "description": "The remote target ID for network tracing",
                 },
                 "routes": {
                     "type": "array",
                     "propertyOrder": 13,
+                    "title": "Managed Routes",
                     "items": {
                         "type": "object",
                         "properties": {
                             "target": {
                                 "type": "string",
                                 "propertyOrder": 1,
+                                "title": "Destination",
                                 "description": "The target IP address range for the route",
                             },
                             "via": {
                                 "type": "string",
                                 "propertyOrder": 2,
+                                "title": "Via",
                                 "description": "The IP address of the next hop for the route",
                             },
                         },
@@ -173,6 +196,7 @@ base_zerotier_schema = {
                     "type": "array",
                     "items": {"type": "object"},
                     "propertyOrder": 16,
+                    "title": "Flow Rules",
                     "description": "Array of network rule objects",
                     # This is the default rule set
                     # that allows IPv4 and IPv6 traffic
@@ -206,15 +230,18 @@ base_zerotier_schema = {
                     "type": "array",
                     "items": {"type": "object"},
                     "propertyOrder": 18,
+                    "title": "Tags",
                     "description": "Array of network tag objects",
                 },
                 "v4AssignMode": {
                     "type": "object",
                     "propertyOrder": 9,
+                    "title": "IPv4 Auto-Assign",
                     "properties": {
                         "zt": {
                             "type": "boolean",
                             "format": "checkbox",
+                            "title": "Auto-Assign from Range",
                             "description": "Whether ZeroTier should assign IPv4 addresses to members",
                         },
                     },
@@ -222,20 +249,24 @@ base_zerotier_schema = {
                 "v6AssignMode": {
                     "type": "object",
                     "propertyOrder": 10,
+                    "title": "IPv6 Auto-Assign",
                     "properties": {
                         "6plane": {
                             "type": "boolean",
                             "format": "checkbox",
+                            "title": "ZeroTier 6PLANE (/80 routable for each device)",
                             "description": "Whether 6PLANE addressing should be used for IPv6 assignment",
                         },
                         "rfc4193": {
                             "type": "boolean",
                             "format": "checkbox",
+                            "title": "ZeroTier RFC4193 (/128 for each device)",
                             "description": "Whether RFC4193 addressing should be used for IPv6 assignment",  # noqa
                         },
                         "zt": {
                             "type": "boolean",
                             "format": "checkbox",
+                            "title": "Auto-Assign from Range",
                             "description": "Whether ZeroTier should assign IPv6 addresses to members",
                         },
                     },
