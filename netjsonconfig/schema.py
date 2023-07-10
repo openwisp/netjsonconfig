@@ -981,7 +981,7 @@ schema = {
             "properties": {"channel_width": {"enum": [20, 40, 80, 160]}}
         },
         "radio_80211bg_settings": {
-            "title": "802.11b/g (2.4 GHz legacy)",
+            "title": "2.4 GHz legacy (802.11b/g)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11b", "802.11g"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -990,7 +990,7 @@ schema = {
             ],
         },
         "radio_80211a_settings": {
-            "title": "802.11a (5 GHz legacy)",
+            "title": "5 GHz legacy (802.11a)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11a"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -999,7 +999,7 @@ schema = {
             ],
         },
         "radio_80211gn_settings": {
-            "title": "802.11n (2.4 GHz N)",
+            "title": "2.4 GHz WiFi4 (802.11n)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11n"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -1008,7 +1008,7 @@ schema = {
             ],
         },
         "radio_80211an_settings": {
-            "title": "802.11n (5 GHz N)",
+            "title": "5 GHz WiFi4 (802.11n)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11n"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -1017,7 +1017,7 @@ schema = {
             ],
         },
         "radio_80211ac_5ghz_settings": {
-            "title": "802.11ac (5 GHz AC)",
+            "title": "5 GHz WiFi5 (802.11ac)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11ac"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -1026,7 +1026,7 @@ schema = {
             ],
         },
         "radio_80211ax_2ghz_settings": {
-            "title": "802.11ax (2.4 GHz AX)",
+            "title": "2.4 GHz WiFi6 (802.11ax)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11ax"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -1035,7 +1035,7 @@ schema = {
             ],
         },
         "radio_80211ax_5ghz_settings": {
-            "title": "802.11ax (5 GHz AX)",
+            "title": "5 GHz WiFi6 (802.11ax)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11ax"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -1044,7 +1044,7 @@ schema = {
             ],
         },
         "radio_80211ax_6ghz_settings": {
-            "title": "802.11ax (6 GHz AX)",
+            "title": "6 GHz WiFi6 (802.11ax)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11ax"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -1053,7 +1053,7 @@ schema = {
             ],
         },
         "radio_80211ad_60ghz_settings": {
-            "title": "802.11ad (60 GHz AX)",
+            "title": "60 GHz (802.11ad)",
             "allOf": [
                 {"properties": {"protocol": {"enum": ["802.11ad"]}}},
                 {"$ref": "#/definitions/base_radio_settings"},
@@ -1115,15 +1115,15 @@ schema = {
             "items": {
                 "title": "Radio",
                 "oneOf": [
-                    {"$ref": "#/definitions/radio_80211gn_settings"},
-                    {"$ref": "#/definitions/radio_80211an_settings"},
-                    {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ax_2ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211gn_settings"},
+                    {"$ref": "#/definitions/radio_80211bg_settings"},
                     {"$ref": "#/definitions/radio_80211ax_5ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211ac_5ghz_settings"},
+                    {"$ref": "#/definitions/radio_80211an_settings"},
+                    {"$ref": "#/definitions/radio_80211a_settings"},
                     {"$ref": "#/definitions/radio_80211ax_6ghz_settings"},
                     {"$ref": "#/definitions/radio_80211ad_60ghz_settings"},
-                    {"$ref": "#/definitions/radio_80211bg_settings"},
-                    {"$ref": "#/definitions/radio_80211a_settings"},
                 ],
             },
         },

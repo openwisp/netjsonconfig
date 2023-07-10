@@ -172,14 +172,10 @@ class Radios(OpenWrtConverter):
         elif htmode.startswith('HE'):
             return '802.11ax'
         elif htmode == 'NONE':
-            if self.dsa:
-                if radio.get('band'):
-                    if radio['band'] == '2g':
-                        return '802.11g'
-                    elif radio['band'] == '5g':
-                        return '802.11a'
-                    elif radio['band'] == '60g':
-                        return '802.11ad'
+            band = radio.get('band')
+            if self.dsa and band:
+                band_map = {'2g': '802.11g', '5g': '802.11a', '60g': '802.11ad'}
+                return band_map[band]
             else:
                 hwmode = radio.get('hwmode', None)
                 return '802.{0}'.format(hwmode)
