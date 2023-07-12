@@ -339,7 +339,7 @@ Will generater the following output::
             option country 'US'
             option disabled '0'
             option htmode 'HT20'
-            option hwmode '11g'
+            option band '2g'
             option phy 'phy0'
             option type 'mac80211'
 
@@ -418,7 +418,7 @@ Will generater the following output::
             option country 'US'
             option disabled '0'
             option htmode 'HT20'
-            option hwmode '11g'
+            option band '2g'
             option phy 'phy0'
             option type 'mac80211'
 
