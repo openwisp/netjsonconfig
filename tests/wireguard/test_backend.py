@@ -41,6 +41,7 @@ class TestBackend(unittest.TestCase):
                         "name": "test2",
                         "private_key": "AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
                         "port": 40843,
+                        "mtu": 1280,
                         "address": "10.0.1.1/24",
                         "dns": ["10.0.1.1", "10.0.0.1"],
                         "table": "1234",

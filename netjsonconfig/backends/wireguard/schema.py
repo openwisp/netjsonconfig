@@ -59,7 +59,7 @@ base_wireguard_schema = {
                         "title": "MTU",
                         "minimum": 68,
                         "propertyOrder": 5,
-                        "default": 1500,
+                        "default": 1280,
                     },
                     "table": {
                         "title": "Table",

@@ -46,6 +46,8 @@ class Wireguard(BaseConverter):
         # Remove default options
         if config.get('Table') == 'auto':
             config.pop('Table')
+        if config.get('MTU') == 1280:
+            config.pop('MTU')
         config['peers'] = self.__intermediate_peers(config.get('peers', []))
         return self.sorted_dict(config)
 
