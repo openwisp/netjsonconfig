@@ -1,3 +1,5 @@
+from jsonschema.exceptions import ValidationError
+
 from ..base.backend import BaseBackend
 from ..vxlan.vxlan_wireguard import VxlanWireguard
 from ..wireguard.wireguard import Wireguard
@@ -123,7 +125,7 @@ class OpenWrt(BaseBackend):
         config = cls.wireguard_auto_client(**kwargs)
         vxlan_config = VxlanWireguard.auto_client(**kwargs)
         vxlan_interface = {
-            'name': 'vxlan',
+            'name': vxlan_config['name'],
             'type': 'vxlan',
             'vtep': vxlan_config['server_ip_address'],
             'port': 4789,
@@ -140,3 +142,27 @@ class OpenWrt(BaseBackend):
         }
         config['interfaces'].append(vxlan_interface)
         return config
+
+    def validate(self):
+        self._validate_radios()
+        super().validate()
+
+    def _validate_radios(self):
+        # We use "hwmode" or "band" property of "radio" configuration
+        # to predict the radio frequency. If both of these
+        # properties are absent from the configuration, then channels
+        # are used to predict the radio frequency. If the channel is
+        # set to "auto" (0) in the configuration, then netjsonconfig
+        # cannot predict the radio frequency. Thus, raises an error.
+        for radio in self.config.get('radios', []):
+            if radio['protocol'] not in ['802.11n', '802.11ax']:
+                continue
+            if (
+                radio.get('band') is None
+                and radio.get('hwmode') is None
+                and radio.get('channel') == 0
+            ):
+                raise ValidationError(
+                    '"channel" cannot be set to "auto" when'
+                    ' "hwmode" or "band" property is not configured.'
+                )
