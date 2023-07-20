@@ -24,17 +24,25 @@ base_vxlan_properties = {
                     "propertyOrder": 1,
                 },
                 "vni": {
-                    "type": "integer",
-                    "title": "VNI",
-                    "description": (
-                        "VXLAN Network Identifier, if set to \"0\", each tunnel will have"
-                        " different VNI. If a non-zero VNI is specified, then it will be"
-                        " used for all VXLAN tunnels."
-                    ),
                     "propertyOrder": 2,
-                    "default": 0,
-                    "minimum": 0,
-                    "maximum": 16777216,
+                    "title": "VNI",
+                    "oneOf": [
+                        {
+                            "title": "VNI (auto)",
+                            "description": "Auto-generate (different for each tunnel)",
+                            "type": "string",
+                            "enum": [""],
+                            "options": {"enum_titles": ["auto"]},
+                            "readonly": True,
+                        },
+                        {
+                            "title": "VNI (manual)",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 0,
+                            "maximum": 16777216,
+                        },
+                    ],
                 },
             },
         },
