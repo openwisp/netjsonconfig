@@ -601,8 +601,8 @@ schema = merge_config(
                         "propertyOrder": 8,
                         "default": "11g",
                         "enum": ["11g"],
-                    }
-                }
+                    },
+                },
             },
             "radio_hwmode_11a": {
                 "properties": {
@@ -614,22 +614,95 @@ schema = merge_config(
                         "default": "11a",
                         "enum": ["11a"],
                     }
-                }
+                },
+            },
+            "radio_2g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 9,
+                        "default": "2g",
+                        "enum": ["2g"],
+                    }
+                },
+            },
+            "radio_5g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 9,
+                        "default": "5g",
+                        "enum": ["5g"],
+                    }
+                },
+            },
+            "radio_6g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 9,
+                        "default": "6g",
+                        "enum": ["6g"],
+                    }
+                },
+            },
+            "radio_60g_band": {
+                "properties": {
+                    "band": {
+                        "type": "string",
+                        "title": "band",
+                        "readOnly": True,
+                        "propertyOrder": 8,
+                        "default": "60g",
+                        "enum": ["60g"],
+                    }
+                },
             },
             "radio_80211gn_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11g"},
+                    {"$ref": "#/definitions/radio_2g_band"},
+                ]
             },
             "radio_80211an_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11a"},
+                    {"$ref": "#/definitions/radio_5g_band"},
+                ]
             },
             "radio_80211ac_5ghz_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11a"},
+                    {"$ref": "#/definitions/radio_5g_band"},
+                ]
             },
             "radio_80211ax_2ghz_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11g"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11g"},
+                    {"$ref": "#/definitions/radio_2g_band"},
+                ]
             },
             "radio_80211ax_5ghz_settings": {
-                "allOf": [{"$ref": "#/definitions/radio_hwmode_11a"}]
+                "allOf": [
+                    {"$ref": "#/definitions/radio_hwmode_11a"},
+                    {"$ref": "#/definitions/radio_5g_band"},
+                ]
+            },
+            "radio_80211ax_6ghz_settings": {
+                "allOf": [
+                    {"$ref": "#/definitions/radio_6g_band"},
+                ]
+            },
+            "radio_80211ad_60ghz_settings": {
+                "allOf": [
+                    {"$ref": "#/definitions/radio_60g_band"},
+                ]
             },
         },
         "properties": {
@@ -948,11 +1021,17 @@ schema = merge_config(
                             "format": "checkbox",
                             "propertyOrder": 1,
                         },
+                        "name": {
+                            "type": "string",
+                            "propertyOrder": 2,
+                            "default": "openwisp_zerotier_network",
+                            "description": "Name of the zerotier network",
+                        },
                         "id": {
                             "type": "array",
                             "title": "16-digit hexadecimal network IDs to join",
                             "minItems": 1,
-                            "propertyOrder": 2,
+                            "propertyOrder": 3,
                             "uniqueItems": True,
                             "items": {
                                 "type": "string",
@@ -961,18 +1040,12 @@ schema = merge_config(
                                 "minLength": 16,
                             },
                         },
-                        "name": {
-                            "type": "string",
-                            "propertyOrder": 3,
-                            "default": "openwisp_zerotier_network",
-                            "description": "Name of the zerotier network",
-                        },
                         "config_path": {
                             "type": "string",
                             "propertyOrder": 4,
                             "description": (
-                                "Path to the persistent "
-                                "configuration folder (for zerotier controller mode)"
+                                "Path to the persistent configuration "
+                                "folder (for zerotier controller mode)"
                             ),
                         },
                         "copy_config_path": {
