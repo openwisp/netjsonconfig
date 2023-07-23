@@ -1,6 +1,7 @@
 from ..base.backend import BaseBackend
 from ..vxlan.vxlan_wireguard import VxlanWireguard
 from ..wireguard.wireguard import Wireguard
+from ..zerotier.zerotier import ZeroTier
 from . import converters
 from .parser import OpenWrtParser, config_path, packages_pattern
 from .renderer import OpenWrtRenderer
@@ -140,3 +141,8 @@ class OpenWrt(BaseBackend):
         }
         config['interfaces'].append(vxlan_interface)
         return config
+
+    @classmethod
+    def zerotier_auto_client(cls, **kwargs):
+        data = ZeroTier.auto_client(**kwargs)
+        return {'zerotier': [data]}

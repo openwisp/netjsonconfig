@@ -206,9 +206,21 @@ Required properties:
 |                        |         |              | +----------------------+---------+---------------------------------------------------------------+ |
 |                        |         |              | | key name             | type    | description                                                   | |
 |                        |         |              | +======================+=========+===============================================================+ |
-|                        |         |              | | ``6plane``           | boolean | whether 6PLANE addressing should be used for IPv6 assignment  | |
+|                        |         |              | | ``6plane``           | boolean | 6PLANE assigns each device a single IPv6 address from a       | |
+|                        |         |              | |                      |         |                                                               | |
+|                        |         |              | |                      |         | fully routable /80 block. It utilizes NDP emulation to route  | |
+|                        |         |              | |                      |         |                                                               | |
+|                        |         |              | |                      |         | the entire /80 to the device owner, enabling up to 2^48 IPs   | |
+|                        |         |              | |                      |         |                                                               | |
+|                        |         |              | |                      |         | without additional configuration. Ideal for Docker or VM hosts| |
 |                        |         |              | +----------------------+---------+---------------------------------------------------------------+ |
-|                        |         |              | | ``rfc4193``          | boolean | whether RFC4193 addressing should be used for IPv6 assignment | |
+|                        |         |              | | ``rfc4193``          | boolean | RFC4193 assigns each device a single IPv6 /128 address        | |
+|                        |         |              | |                      |         |                                                               | |
+|                        |         |              | |                      |         | computed from the network ID and device address and uses NDP  | |
+|                        |         |              | |                      |         |                                                               | |
+|                        |         |              | |                      |         | emulation to make these addresses instantly resolvable without| |
+|                        |         |              | |                      |         |                                                               | |
+|                        |         |              | |                      |         | multicast                                                     | |
 |                        |         |              | +----------------------+---------+---------------------------------------------------------------+ |
 |                        |         |              | | ``zt``               | boolean | whether ZeroTier should assign IPv6 addresses to members      | |
 |                        |         |              | +----------------------+---------+---------------------------------------------------------------+ |
@@ -257,6 +269,35 @@ Required properties:
 | ``remoteTraceLevel``   | integer |              | level of network tracing                                                                           |
 +------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
 
+Client specific settings
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Required properties:
+
+* id
+* name
+
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
+| key name               | type    | default      | description                                                                                        |
++========================+=========+==============+====================================================================================================+
+| ``id``                 | list    | ``[]``       | list of strings containing **16-digit** hexadecimal network IDs to join                            |
+|                        |         |              |                                                                                                    |
+|                        |         |              | **note:** must contain at least one network ID                                                     |
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
+| ``name``               | string  |              | name of the zerotier network                                                                       |
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
+| ``config_path``        | string  |              | path to the persistent configuration folder                                                        |
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
+| ``copy_config_path``   | string  | ``'0'``      | specifies whether to copy the configuration file to RAM                                            |
+|                        |         |              |                                                                                                    |
+|                        |         |              | ``'0'`` - No, ``'1'`` - Yes, this prevents writing to flash in zerotier controller mode            |
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
+| ``port``               | integer | ``9993``     | port number of the zerotier service                                                                |
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
+| ``local_conf``         | boolean |              | path of the local zerotier configuration                                                           |
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
+| ``secret``             | boolean |              | secret key of the zerotier client (network member), leave it blank to be automatically determined  |
++------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
 
 Working around schema limitations
 ---------------------------------
@@ -269,9 +310,55 @@ any property not included in the schema as long as its type is one the following
 * strings
 * lists
 
-For a list of all ZeroTier network configuration settings, refer to the following OpenAPI API specifications:
+Automatic generation of clients
+-------------------------------
+
+.. automethod:: netjsonconfig.OpenWrt.zerotier_auto_client
+
+Example:
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    server_config = {
+        "id": ["9536600adf654321"],
+        "name": "zerotier-openwisp-network",
+    }
+    client_config = OpenWrt.zerotier_auto_client(
+        nwid=server_config['id'], name=server_config['name']
+    )
+    print(OpenWrt(client_config).render())
+
+Will be rendered as:
+
+.. code-block:: text
+
+    package zerotier
+
+    config zerotier 'zerotier_openwisp_network'
+        option enabled '1'
+        list join '9536600adf654321'
+
+.. note::
+
+    The current implementation of **ZeroTier VPN** backend is implemented with
+    **OpenWrt** backend. Hence, the example above shows configuration generated for
+    OpenWrt.
+
+
+Useful resources
+----------------
+
+The default flow rules used in `zerotier/schema.py
+<https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/zerotier/schema.py>`_
+for the ZeroTier self-hosted controller are taken from the flow rules mentioned in the documentation below.
+
+- `ZeroTier Controller Network Flow Rules <https://docs.zerotier.com/zerotier/rules/>`_
+
+To explore a comprehensive list of all available ZeroTier network
+configuration settings, please refer to the following OpenAPI API specifications.
 
 - `ZeroTier Service (schema: ControllerNetwork) <https://docs.zerotier.com/openapi/servicev1.json>`_
 
 - `ZeroTier Central (schema: NetworkConfig) <https://docs.zerotier.com/openapi/centralv1.json>`_
-

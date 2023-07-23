@@ -256,11 +256,11 @@ base_zerotier_schema = {
                             "format": "checkbox",
                             "title": "ZeroTier 6PLANE (/80 routable for each device)",
                             "description": (
-                            "6PLANE assigns each device a single "
-                            "IPv6 address from a fully routable /80 block. "
-                            "It utilizes NDP emulation to route the entire /80 "
-                            "to the device owner, enabling up to 2^48 IPs without "
-                            "additional configuration. Ideal for Docker or VM hosts"
+                                "6PLANE assigns each device a single "
+                                "IPv6 address from a fully routable /80 block. "
+                                "It utilizes NDP emulation to route the entire /80 "
+                                "to the device owner, enabling up to 2^48 IPs without "
+                                "additional configuration. Ideal for Docker or VM hosts"
                             ),
                         },
                         "rfc4193": {

@@ -385,20 +385,15 @@ class TestBackend(unittest.TestCase):
 
     def test_auto_client(self):
         expected = {
-            "zerotier": [
-                {
-                    "id": ["9536600adf654321"],
-                    "name": "zerotier-openwisp-network",
-                    "disabled": False,
-                }
-            ]
+            "id": ["9536600adf654321"],
+            "name": "zerotier-openwisp-network",
+            "disabled": False,
         }
         test_config = self._TEST_CONFIG["zerotier"][0]
         self.assertEqual(
             ZeroTier.auto_client(
-                nwid=test_config['id'],
+                nwid=[test_config['id']],
                 name=test_config['name'],
-                server=self._TEST_CONFIG["zerotier"][0],
             ),
             expected,
         )

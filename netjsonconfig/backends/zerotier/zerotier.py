@@ -15,14 +15,10 @@ class ZeroTier(BaseVpnBackend):
     config_suffix = config_suffix
 
     @classmethod
-    def auto_client(cls, nwid=None, name=None, **kwargs):
-        server = kwargs['server'] or {}
+    def auto_client(cls, nwid=None, name='', disabled=False):
+        nwid = nwid or ['']
         return {
-            'zerotier': [
-                {
-                    'id': [nwid],
-                    'name': name or f'network_{nwid}',
-                    'disabled': server.get('disabled', False),
-                }
-            ]
+            'id': nwid,
+            'name': name,
+            'disabled': disabled,
         }
