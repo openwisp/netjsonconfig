@@ -131,7 +131,7 @@ base_zerotier_schema = {
                 "mtu": {
                     "type": "integer",
                     "default": 2800,
-                    "propertyOrder": 11,
+                    "propertyOrder": 10,
                     "title": "Maximum Transmission Unit",
                     "description": "MTU to set on the client virtual network adapter",
                 },
@@ -139,7 +139,7 @@ base_zerotier_schema = {
                     "type": "integer",
                     "default": 32,
                     "title": "Multicast Recipient Limit",
-                    "propertyOrder": 12,
+                    "propertyOrder": 9,
                     "description": (
                         "Maximum number of recipients per multicast or broadcast. "
                         "Warning - Setting this to 0 will disable IPv4 communication on your network!"
@@ -235,7 +235,7 @@ base_zerotier_schema = {
                 },
                 "v4AssignMode": {
                     "type": "object",
-                    "propertyOrder": 9,
+                    "propertyOrder": 11,
                     "title": "IPv4 Auto-Assign",
                     "properties": {
                         "zt": {
@@ -248,20 +248,32 @@ base_zerotier_schema = {
                 },
                 "v6AssignMode": {
                     "type": "object",
-                    "propertyOrder": 10,
+                    "propertyOrder": 12,
                     "title": "IPv6 Auto-Assign",
                     "properties": {
                         "6plane": {
                             "type": "boolean",
                             "format": "checkbox",
                             "title": "ZeroTier 6PLANE (/80 routable for each device)",
-                            "description": "Whether 6PLANE addressing should be used for IPv6 assignment",
+                            "description": (
+                            "6PLANE assigns each device a single "
+                            "IPv6 address from a fully routable /80 block. "
+                            "It utilizes NDP emulation to route the entire /80 "
+                            "to the device owner, enabling up to 2^48 IPs without "
+                            "additional configuration. Ideal for Docker or VM hosts"
+                            ),
                         },
                         "rfc4193": {
                             "type": "boolean",
                             "format": "checkbox",
                             "title": "ZeroTier RFC4193 (/128 for each device)",
-                            "description": "Whether RFC4193 addressing should be used for IPv6 assignment",  # noqa
+                            "description": (
+                                "RFC4193 assigns each device a "
+                                "single IPv6 /128 address computed "
+                                "from the network ID and device address, "
+                                "and uses NDP emulation to make these addresses "
+                                "instantly resolvable without multicast"
+                            ),
                         },
                         "zt": {
                             "type": "boolean",
