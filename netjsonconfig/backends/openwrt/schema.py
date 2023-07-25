@@ -1003,7 +1003,7 @@ schema = merge_config(
             },
             "zerotier": {
                 "type": "array",
-                "title": "ZeroTier Clients",
+                "title": "ZeroTier Networks",
                 "uniqueItems": True,
                 "propertyOrder": 14,
                 "items": {
