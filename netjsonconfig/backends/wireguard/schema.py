@@ -46,12 +46,91 @@ base_wireguard_schema = {
                         "pattern": "^[^\\s]*$",
                         "propertyOrder": 3,
                     },
+                    "dns": {
+                        "title": "DNS",
+                        "type": "array",
+                        "uniqueItems": True,
+                        "propertyOrder": 4,
+                        "items": {"title": "DNS", "type": "string"},
+                        "propertyOrder": 4,
+                    },
+                    "mtu": {
+                        "type": "integer",
+                        "title": "MTU",
+                        "minimum": 68,
+                        "propertyOrder": 5,
+                        "default": 1280,
+                    },
+                    "table": {
+                        "title": "Table",
+                        "type": "string",
+                        "default": "auto",
+                        "description": (
+                            "Controls the routing table to which routes are added."
+                            "There are two special values:"
+                            " 'off' (disables the creation of routes altogether)"
+                            " and 'auto' (adds routes to the default table and enables"
+                            " special handling of default routes)."
+                        ),
+                        "propertyOrder": 6,
+                    },
+                    "pre_up": {
+                        "title": "PreUp",
+                        "type": "string",
+                        "description": (
+                            "Script snippet which will be executed before setting up the interface."
+                            " The special string '%i' is expanded to INTERFACE."
+                        ),
+                        "format": "textarea",
+                        "propertyOrder": 7,
+                    },
+                    "post_up": {
+                        "title": "PostUp",
+                        "type": "string",
+                        "description": (
+                            "Script snippet which will be executed after setting up the interface."
+                            " The special string '%i' is expanded to INTERFACE."
+                        ),
+                        "format": "textarea",
+                        "propertyOrder": 8,
+                    },
+                    "pre_down": {
+                        "title": "PreDown",
+                        "type": "string",
+                        "description": (
+                            "Script snippet which will be executed before tearing down the interface."
+                            " The special string '%i' is expanded to INTERFACE."
+                        ),
+                        "format": "textarea",
+                        "propertyOrder": 9,
+                    },
+                    "post_down": {
+                        "title": "PostDown",
+                        "type": "string",
+                        "description": (
+                            "Script snippet which will be executed after tearing down the interface."
+                            " The special string '%i' is expanded to INTERFACE."
+                        ),
+                        "format": "textarea",
+                        "propertyOrder": 10,
+                    },
+                    "save_config": {
+                        "type": "boolean",
+                        "title": "save config",
+                        "default": False,
+                        "format": "checkbox",
+                        "description": (
+                            "If set to `true', the configuration is saved from the current"
+                            " state of the interface upon shutdown. "
+                        ),
+                        "propertyOrder": 11,
+                    },
                     "peers": {
                         "type": "array",
                         "title": "Peers",
                         "uniqueItems": True,
                         "additionalItems": True,
-                        "propertyOrder": 11,
+                        "propertyOrder": 12,
                         "items": {
                             "type": "object",
                             "title": "Peer",

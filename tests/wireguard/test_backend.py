@@ -28,12 +28,23 @@ class TestBackend(unittest.TestCase):
                         "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
                         "port": 40842,
                         "address": "10.0.0.1/24",
+                        "dns": ["10.0.0.1"],
+                        "table": "auto",
+                        "mtu": 1500,
+                        "save_config": True,
+                        "pre_up": "",
+                        "post_up": "ip rule add ipproto tcp dport 22 table 1234",
+                        "pre_down": "ip rule delete ipproto tcp dport 22 table 1234",
+                        "post_down": "",
                     },
                     {
                         "name": "test2",
                         "private_key": "AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
                         "port": 40843,
+                        "mtu": 1280,
                         "address": "10.0.1.1/24",
+                        "dns": ["10.0.1.1", "10.0.0.1"],
+                        "table": "1234",
                     },
                 ]
             }
@@ -42,15 +53,22 @@ class TestBackend(unittest.TestCase):
 
 [Interface]
 Address = 10.0.0.1/24
+DNS = 10.0.0.1
 ListenPort = 40842
+MTU = 1500
+PostUp = ip rule add ipproto tcp dport 22 table 1234
+PreDown = ip rule delete ipproto tcp dport 22 table 1234
 PrivateKey = QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
+SaveConfig = true
 
 # wireguard config: test2
 
 [Interface]
 Address = 10.0.1.1/24
+DNS = 10.0.1.1,10.0.0.1
 ListenPort = 40843
 PrivateKey = AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
+Table = 1234
 """
         self.assertEqual(c.render(), expected)
 
