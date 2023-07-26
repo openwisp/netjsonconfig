@@ -124,7 +124,7 @@ class OpenWrt(BaseBackend):
         config = cls.wireguard_auto_client(**kwargs)
         vxlan_config = VxlanWireguard.auto_client(**kwargs)
         vxlan_interface = {
-            'name': 'vxlan',
+            'name': vxlan_config['name'],
             'type': 'vxlan',
             'vtep': vxlan_config['server_ip_address'],
             'port': 4789,
