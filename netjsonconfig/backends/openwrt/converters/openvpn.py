@@ -18,7 +18,7 @@ class OpenVpn(OpenWrtConverter, BaseOpenVpn):
     def __netjson_vpn(self, vpn):
         if vpn.get('server_bridge') == '1':
             vpn['server_bridge'] = ''
-        # 'enabled' defaults to False in OpenWRT
+        # 'disabled' defaults to False in OpenWRT
         vpn['disabled'] = vpn.pop('enabled', '0') == '0'
         vpn['name'] = vpn.pop('.name')
         del vpn['.type']

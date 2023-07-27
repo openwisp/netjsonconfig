@@ -21,7 +21,7 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
     def __netjson_vpn(self, vpn):
         vpn['id'] = vpn.pop('join')
         vpn['name'] = vpn.pop('.name').replace('_', '-')
-        # 'enabled' defaults to False in OpenWRT
+        # 'disabled' defaults to False in OpenWRT
         vpn['disabled'] = vpn.pop('enabled', '0') == '0'
         del vpn['.type']
         return super().__netjson_vpn(vpn)
