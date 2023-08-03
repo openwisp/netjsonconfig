@@ -15,11 +15,11 @@ class ZeroTier(BaseVpnBackend):
     config_suffix = config_suffix
 
     @classmethod
-    def auto_client(cls, nwid=None, identity_secret=None, disabled=False):
+    def auto_client(cls, name='', nwid=None, identity_secret=None, disabled=False):
         nwid = nwid or ['']
         return {
             'id': nwid,
-            'name': 'ow_zt',
+            'name': name,
             'secret': identity_secret,
             'disabled': disabled,
         }

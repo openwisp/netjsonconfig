@@ -10,13 +10,12 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
     def __intermediate_vpn(self, vpn):
         vpn.update(
             {
-                '.name': self._get_uci_name('ow_zt'),
+                '.name': self._get_uci_name(vpn.pop('name')),
                 '.type': 'zerotier',
                 'join': vpn.pop('id'),
                 'enabled': not vpn.pop('disabled', False),
             }
         )
-        del vpn['name']
         return super().__intermediate_vpn(vpn, remove=[''])
 
     def __netjson_vpn(self, vpn):
