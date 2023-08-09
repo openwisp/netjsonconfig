@@ -548,14 +548,24 @@ config wifi-iface 'wifi_wlan0'
 
     def test_zerotier_auto_client(self):
         with self.subTest('No arguments provided'):
-            expected = {'zerotier': [{'id': [''], 'name': '', 'disabled': False}]}
+            expected = {
+                'zerotier': [
+                    {
+                        'name': 'ow_zt',
+                        'id': [''],
+                        'secret': '{{zt_identity_secret}}',
+                        'disabled': False,
+                    }
+                ]
+            }
             self.assertDictEqual(OpenWrt.zerotier_auto_client(), expected)
         with self.subTest('Required arguments provided'):
             expected = {
                 'zerotier': [
                     {
+                        'name': 'ow_zt',
                         'id': ['9536600adf654321'],
-                        'name': 'zerotier-openwisp-network',
+                        'secret': '{{zt_identity_secret}}',
                         'disabled': False,
                     }
                 ]
@@ -563,7 +573,6 @@ config wifi-iface 'wifi_wlan0'
             self.assertDictEqual(
                 OpenWrt.zerotier_auto_client(
                     nwid=['9536600adf654321'],
-                    name='zerotier-openwisp-network',
                 ),
                 expected,
             )

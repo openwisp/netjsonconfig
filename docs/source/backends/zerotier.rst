@@ -323,7 +323,7 @@ Example:
 
     server_config = {
         "id": ["9536600adf654321"],
-        "name": "zerotier-openwisp-network",
+        "name": "ow_zt",
     }
     client_config = OpenWrt.zerotier_auto_client(
         nwid=server_config['id'], name=server_config['name']
@@ -336,9 +336,10 @@ Will be rendered as:
 
     package zerotier
 
-    config zerotier 'zerotier_openwisp_network'
+    config zerotier 'ow_zt'
         option enabled '1'
         list join '9536600adf654321'
+        option secret '{{zt_identity_secret}}'
 
 .. note::
 
@@ -362,3 +363,49 @@ configuration settings, please refer to the following OpenAPI API specifications
 - `ZeroTier Service (schema: ControllerNetwork) <https://docs.zerotier.com/openapi/servicev1.json>`_
 
 - `ZeroTier Central (schema: NetworkConfig) <https://docs.zerotier.com/openapi/centralv1.json>`_
+
+Advanced configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+The OpenWRT ZeroTier service can be configured to run on multiple ports,
+for example, **9993 (default)** and **9994**. This can be achieved by creating
+a file named ``zt_local.conf`` in a persistent filesystem location, such as
+``/etc/config/zt_local.conf``, and then adding the option ``local_conf``
+to the ZeroTier UCI configuration.
+
+``/etc/config/zt_local.conf``
+
+.. code-block:: json
+
+    {
+      "settings": {
+        "primaryPort": 9994
+      }
+    }
+
+``/etc/config/zerotier``
+
+.. code-block:: text
+
+    package zerotier
+
+    # This config utilizes port 9993 (default)
+
+    config zerotier 'ow_zt1'
+        option enabled '1'
+        list join '9536600adf654321'
+        option secret '{{zt_identity_secret}}'
+
+    # This config utilizes port 9994
+
+    config zerotier 'ow_zt2' (new)
+        option enabled '1'
+        list join '9536600adf654322'
+        option secret '{{zt_identity_secret}}'
+        option local_conf '/etc/config/zerotier.local.conf'
+
+
+**More information**
+
+- `ZeroTier Controller Local Configuration <https://docs.zerotier.com/zerotier/zerotier.conf/#local-configuration-options>`_
+- `OpenWRT ZeroTier Advance Configuration <https://openwrt.org/docs/guide-user/services/vpn/zerotier#advanced_configuration>`_
