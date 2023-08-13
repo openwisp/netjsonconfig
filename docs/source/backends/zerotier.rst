@@ -315,7 +315,7 @@ Automatic generation of clients
 
 .. automethod:: netjsonconfig.OpenWrt.zerotier_auto_client
 
-Example:
+**Example 1** (with custom ``zt interface name``):
 
 .. code-block:: python
 
@@ -325,8 +325,13 @@ Example:
         "id": ["9536600adf654321"],
         "name": "ow_zt",
     }
+    nw_id = server_config['id'][0]
     client_config = OpenWrt.zerotier_auto_client(
-        nwid=server_config['id'], name=server_config['name']
+        nwid=server_config['id'],
+        name=server_config['name'],
+        config_path='/etc/ow_zerotier',
+        copy_config_path='1',
+        zt_ifname=f'owzt{nw_id[-6:]}',
     )
     print(OpenWrt(client_config).render())
 
@@ -337,6 +342,43 @@ Will be rendered as:
     package zerotier
 
     config zerotier 'ow_zt'
+        option config_path '/etc/ow_zerotier'
+        option copy_config_path '1'
+        option enabled '1'
+        list join '9536600adf654321'
+        option secret '{{zt_identity_secret}}'
+
+    # ---------- files ---------- #
+
+    # path: /etc/ow_zerotier/devicemap
+    # mode: 0644
+
+    9536600adf654321=owzt654321
+
+**Example 2** (without custom ``zt interface name``):
+
+.. code-block:: python
+
+    from netjsonconfig import OpenWrt
+
+    server_config = {
+        "id": ["9536600adf654321"],
+        "name": "ow_zt",
+    }
+    client_config = OpenWrt.zerotier_auto_client(
+        nwid=server_config['id'],
+        name=server_config['name'],
+    )
+    print(OpenWrt(client_config).render())
+
+Will be rendered as:
+
+.. code-block:: text
+
+    package zerotier
+
+    config zerotier 'ow_zt'
+        option copy_config_path '0'
         option enabled '1'
         list join '9536600adf654321'
         option secret '{{zt_identity_secret}}'
