@@ -147,7 +147,25 @@ class OpenWrt(BaseBackend):
     @classmethod
     def zerotier_auto_client(cls, **kwargs):
         data = ZeroTier.auto_client(**kwargs)
-        return {'zerotier': [data]}
+        config_path = data.get('config_path')
+        copy_config_path = data.get('copy_config_path')
+        zt_network_id = data.get('id')[0]
+        zt_ifname = data.get('zt_ifname')
+        del data['zt_ifname']
+        config = {'zerotier': [data]}
+        if config_path and copy_config_path == '1':
+            config.update(
+                {
+                    'files': [
+                        dict(
+                            path=f"{config_path}/devicemap",
+                            mode="0644",
+                            contents=f"{zt_network_id}={zt_ifname}",
+                        )
+                    ],
+                }
+            )
+        return config
 
     def validate(self):
         self._validate_radios()

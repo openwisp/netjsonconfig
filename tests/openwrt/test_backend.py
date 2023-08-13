@@ -554,6 +554,8 @@ config wifi-iface 'wifi_wlan0'
                         'name': 'ow_zt',
                         'id': [''],
                         'secret': '{{zt_identity_secret}}',
+                        'config_path': '',
+                        'copy_config_path': '0',
                         'disabled': False,
                     }
                 ]
@@ -563,16 +565,29 @@ config wifi-iface 'wifi_wlan0'
             expected = {
                 'zerotier': [
                     {
-                        'name': 'ow_zt',
                         'id': ['9536600adf654321'],
+                        'name': 'ow_zt',
                         'secret': '{{zt_identity_secret}}',
+                        'config_path': '/etc/ow_zerotier',
+                        'copy_config_path': '1',
                         'disabled': False,
                     }
-                ]
+                ],
+                'files': [
+                    {
+                        'path': '/etc/ow_zerotier/devicemap',
+                        'mode': '0644',
+                        'contents': '9536600adf654321=owzt654321',
+                    }
+                ],
             }
+            nw_id = '9536600adf654321'
             self.assertDictEqual(
                 OpenWrt.zerotier_auto_client(
-                    nwid=['9536600adf654321'],
+                    nwid=[nw_id],
+                    config_path='/etc/ow_zerotier',
+                    copy_config_path='1',
+                    zt_ifname=f'owzt{nw_id[-6:]}',
                 ),
                 expected,
             )

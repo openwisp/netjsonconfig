@@ -384,18 +384,25 @@ class TestBackend(unittest.TestCase):
         self.assertEqual(contents, expected)
 
     def test_auto_client(self):
-        expected = {
-            "name": "ow_zt",
-            "id": ["9536600adf654321"],
-            "secret": "test_secret",
-            "disabled": False,
-        }
         test_config = self._TEST_CONFIG["zerotier"][0]
+        nw_id = test_config['id']
+        expected = {
+            'id': ['9536600adf654321'],
+            'name': 'ow_zt',
+            'secret': 'test_secret',
+            'config_path': '/etc/ow_zerotier',
+            'copy_config_path': '1',
+            'zt_ifname': f'owzt{nw_id[-6:]}',
+            'disabled': False,
+        }
         self.assertEqual(
             ZeroTier.auto_client(
                 name="ow_zt",
-                nwid=[test_config['id']],
+                nwid=[nw_id],
                 identity_secret="test_secret",
+                config_path='/etc/ow_zerotier',
+                copy_config_path='1',
+                zt_ifname=f'owzt{nw_id[-6:]}',
             ),
             expected,
         )

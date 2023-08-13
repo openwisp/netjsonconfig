@@ -20,6 +20,9 @@ class ZeroTier(BaseVpnBackend):
         name='ow_zt',
         nwid=None,
         identity_secret='{{zt_identity_secret}}',
+        config_path='',
+        copy_config_path='0',
+        zt_ifname='',
         disabled=False,
     ):
         nwid = nwid or ['']
@@ -27,5 +30,8 @@ class ZeroTier(BaseVpnBackend):
             'id': nwid,
             'name': name,
             'secret': identity_secret,
+            'config_path': config_path,
+            'copy_config_path': copy_config_path,
+            'zt_ifname': zt_ifname,
             'disabled': disabled,
         }
