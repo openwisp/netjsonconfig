@@ -20,18 +20,19 @@ class ZeroTier(BaseVpnBackend):
         name='ow_zt',
         nwid=None,
         identity_secret='{{zt_identity_secret}}',
-        config_path='',
+        config_path='/etc/ow_zerotier_extra',
         copy_config_path='0',
-        zt_ifname='',
+        ifname='',
         disabled=False,
     ):
         nwid = nwid or ['']
+        copy_config_path = '1' if ifname else copy_config_path
         return {
             'id': nwid,
             'name': name,
             'secret': identity_secret,
             'config_path': config_path,
             'copy_config_path': copy_config_path,
-            'zt_ifname': zt_ifname,
+            'ifname': ifname,
             'disabled': disabled,
         }

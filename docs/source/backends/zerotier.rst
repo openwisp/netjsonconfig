@@ -329,9 +329,7 @@ Automatic generation of clients
     client_config = OpenWrt.zerotier_auto_client(
         nwid=server_config['id'],
         name=server_config['name'],
-        config_path='/etc/ow_zerotier',
-        copy_config_path='1',
-        zt_ifname=f'owzt{nw_id[-6:]}',
+        ifname=f'owzt{nw_id[-6:]}',
     )
     print(OpenWrt(client_config).render())
 
@@ -342,7 +340,7 @@ Will be rendered as:
     package zerotier
 
     config zerotier 'ow_zt'
-        option config_path '/etc/ow_zerotier'
+        option config_path '/etc/ow_zerotier_extra'
         option copy_config_path '1'
         option enabled '1'
         list join '9536600adf654321'
@@ -378,6 +376,7 @@ Will be rendered as:
     package zerotier
 
     config zerotier 'ow_zt'
+        option config_path '/etc/ow_zerotier_extra'
         option copy_config_path '0'
         option enabled '1'
         list join '9536600adf654321'

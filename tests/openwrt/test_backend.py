@@ -554,7 +554,7 @@ config wifi-iface 'wifi_wlan0'
                         'name': 'ow_zt',
                         'id': [''],
                         'secret': '{{zt_identity_secret}}',
-                        'config_path': '',
+                        'config_path': '/etc/ow_zerotier_extra',
                         'copy_config_path': '0',
                         'disabled': False,
                     }
@@ -568,14 +568,14 @@ config wifi-iface 'wifi_wlan0'
                         'id': ['9536600adf654321'],
                         'name': 'ow_zt',
                         'secret': '{{zt_identity_secret}}',
-                        'config_path': '/etc/ow_zerotier',
+                        'config_path': '/etc/ow_zerotier_test',
                         'copy_config_path': '1',
                         'disabled': False,
                     }
                 ],
                 'files': [
                     {
-                        'path': '/etc/ow_zerotier/devicemap',
+                        'path': '/etc/ow_zerotier_test/devicemap',
                         'mode': '0644',
                         'contents': '9536600adf654321=owzt654321',
                     }
@@ -585,9 +585,9 @@ config wifi-iface 'wifi_wlan0'
             self.assertDictEqual(
                 OpenWrt.zerotier_auto_client(
                     nwid=[nw_id],
-                    config_path='/etc/ow_zerotier',
-                    copy_config_path='1',
-                    zt_ifname=f'owzt{nw_id[-6:]}',
+                    # Test it is possible to change default `config_path`
+                    config_path='/etc/ow_zerotier_test',
+                    ifname=f'owzt{nw_id[-6:]}',
                 ),
                 expected,
             )

@@ -390,9 +390,9 @@ class TestBackend(unittest.TestCase):
             'id': ['9536600adf654321'],
             'name': 'ow_zt',
             'secret': 'test_secret',
-            'config_path': '/etc/ow_zerotier',
+            'config_path': '/etc/ow_zerotier_extra',
             'copy_config_path': '1',
-            'zt_ifname': f'owzt{nw_id[-6:]}',
+            'ifname': f'owzt{nw_id[-6:]}',
             'disabled': False,
         }
         self.assertEqual(
@@ -400,9 +400,7 @@ class TestBackend(unittest.TestCase):
                 name="ow_zt",
                 nwid=[nw_id],
                 identity_secret="test_secret",
-                config_path='/etc/ow_zerotier',
-                copy_config_path='1',
-                zt_ifname=f'owzt{nw_id[-6:]}',
+                ifname=f'owzt{nw_id[-6:]}',
             ),
             expected,
         )

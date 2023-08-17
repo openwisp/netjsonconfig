@@ -150,10 +150,10 @@ class OpenWrt(BaseBackend):
         config_path = data.get('config_path')
         copy_config_path = data.get('copy_config_path')
         zt_network_id = data.get('id')[0]
-        zt_ifname = data.get('zt_ifname')
-        del data['zt_ifname']
+        zt_ifname = data.get('ifname')
+        del data['ifname']
         config = {'zerotier': [data]}
-        if config_path and copy_config_path == '1':
+        if zt_ifname and copy_config_path == '1':
             config.update(
                 {
                     'files': [
