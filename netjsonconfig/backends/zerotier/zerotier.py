@@ -28,11 +28,14 @@ class ZeroTier(BaseVpnBackend):
         nwid = nwid or ['']
         copy_config_path = '1' if ifname else copy_config_path
         return {
-            'id': nwid,
             'name': name,
             'secret': identity_secret,
             'config_path': config_path,
-            'copy_config_path': copy_config_path,
-            'ifname': ifname,
+            'nwid_ifname': [
+                {
+                    'id': nwid,
+                    'ifname': ifname,
+                }
+            ],
             'disabled': disabled,
         }
