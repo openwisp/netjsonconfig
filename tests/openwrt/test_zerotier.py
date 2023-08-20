@@ -12,7 +12,10 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
         "zerotier": [
             {
                 "name": "ow_zt",
-                "id": ["9536600adf654321", "9536600adf654322"],
+                "nwid_ifname": [
+                    {"id": "9536600adf654321", "ifname": "owzt654321"},
+                    {"id": "9536600adf654322", "ifname": "owzt654322"},
+                ],
             },
         ]
     }
@@ -24,11 +27,11 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
         "zerotier": [
             {
                 "name": "ow_zt1",
-                "id": ["9536600adf654321"],
+                "nwid_ifname": [{"id": "9536600adf654321", "ifname": "owzt654321"}],
             },
             {
                 "name": "ow_zt2",
-                "id": ["9536600adf654322"],
+                "nwid_ifname": [{"id": "9536600adf654322", "ifname": "owzt654322"}],
             },
         ]
     }
@@ -39,12 +42,28 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
             """package zerotier
 
 config zerotier 'ow_zt1'
+    option config_path '/etc/ow_zerotier_extra'
+    option copy_config_path '1'
     option enabled '1'
     list join '9536600adf654321'
 
 config zerotier 'ow_zt2'
+    option config_path '/etc/ow_zerotier_extra'
+    option copy_config_path '1'
     option enabled '1'
     list join '9536600adf654322'
+
+# ---------- files ---------- #
+
+# path: /etc/ow_zerotier_extra/devicemap
+# mode: 0644
+
+# network_id=interface_name
+9536600adf654322=owzt654322
+
+# network_id=interface_name
+9536600adf654321=owzt654321
+
 """
         )
         self.assertEqual(o.render(), expected)
@@ -65,14 +84,14 @@ config zerotier 'ow_zt2'
         expected = {
             "zerotier": [
                 {
-                    "id": ["9536600adf654321"],
                     "name": "ow_zt1",
                     "disabled": False,
+                    "nwid_ifname": [{"id": "9536600adf654321", "ifname": "owzt654321"}],
                 },
                 {
-                    "id": ["9536600adf654322"],
                     "name": "ow_zt2",
                     "disabled": False,
+                    "nwid_ifname": [{"id": "9536600adf654322", "ifname": "owzt654322"}],
                 },
             ]
         }
@@ -85,9 +104,21 @@ config zerotier 'ow_zt2'
             """package zerotier
 
 config zerotier 'ow_zt'
+    option config_path '/etc/ow_zerotier_extra'
+    option copy_config_path '1'
     option enabled '1'
     list join '9536600adf654321'
     list join '9536600adf654322'
+
+# ---------- files ---------- #
+
+# path: /etc/ow_zerotier_extra/devicemap
+# mode: 0644
+
+# network_id=interface_name
+9536600adf654321=owzt654321
+9536600adf654322=owzt654322
+
 """
         )
         self.assertEqual(o.render(), expected)
@@ -105,7 +136,10 @@ config zerotier 'ow_zt'
         expected = {
             "zerotier": [
                 {
-                    "id": ["9536600adf654321", "9536600adf654322"],
+                    "nwid_ifname": [
+                        {"id": "9536600adf654321", "ifname": "owzt654321"},
+                        {"id": "9536600adf654322", "ifname": "owzt654322"},
+                    ],
                     "name": "ow_zt",
                     "disabled": True,
                 },

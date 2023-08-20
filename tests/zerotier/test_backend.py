@@ -387,20 +387,22 @@ class TestBackend(unittest.TestCase):
         test_config = self._TEST_CONFIG["zerotier"][0]
         nw_id = test_config['id']
         expected = {
-            'id': ['9536600adf654321'],
             'name': 'ow_zt',
+            'nwid_ifname': [{'id': '9536600adf654321', 'ifname': 'owzt654321'}],
             'secret': 'test_secret',
             'config_path': '/etc/ow_zerotier_extra',
-            'copy_config_path': '1',
-            'ifname': f'owzt{nw_id[-6:]}',
             'disabled': False,
         }
         self.assertEqual(
             ZeroTier.auto_client(
                 name="ow_zt",
-                nwid=[nw_id],
+                nwid_ifname=[
+                    {
+                        'id': nw_id,
+                        'ifname': f'owzt{nw_id[-6:]}',
+                    }
+                ],
                 identity_secret="test_secret",
-                ifname=f'owzt{nw_id[-6:]}',
             ),
             expected,
         )

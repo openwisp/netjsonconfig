@@ -274,29 +274,23 @@ Client specific settings
 
 Required properties:
 
-* id
 * name
+* nwid_ifname
 
 +------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
 | key name               | type    | default      | description                                                                                        |
 +========================+=========+==============+====================================================================================================+
 | ``name``               | string  |              | name of the zerotier network                                                                       |
 +------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``id``                 | list    | ``[]``       | list of strings containing **16-digit** hexadecimal network IDs to join                            |
+| ``nwid_ifname``        | list    | ``[{}]``     | list of dictionaries containing strings with **16-digit** hexadecimal network IDs for joining,     |
 |                        |         |              |                                                                                                    |
-|                        |         |              | **note:** must contain at least one network ID                                                     |
+|                        |         |              | along with a corresponding custom **10-digit** ZeroTier interface name for each network            |
+|                        |         |              |                                                                                                    |
+|                        |         |              | **note:** ensure that the list includes at least one such dictionary                               |
 +------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
 | ``config_path``        | string  |              | path to the persistent configuration folder                                                        |
 +------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``copy_config_path``   | string  | ``'0'``      | specifies whether to copy the configuration file to RAM                                            |
-|                        |         |              |                                                                                                    |
-|                        |         |              | ``'0'`` - No, ``'1'`` - Yes, this prevents writing to flash in zerotier controller mode            |
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``port``               | integer | ``9993``     | port number of the zerotier service                                                                |
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``local_conf``         | boolean |              | path of the local zerotier configuration                                                           |
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``secret``             | boolean |              | secret key of the zerotier client (network member), leave it blank to be automatically determined  |
+| ``secret``             | string  |              | secret key of the zerotier client (network member), leave it blank to be automatically determined  |
 +------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
 
 Working around schema limitations
@@ -315,21 +309,15 @@ Automatic generation of clients
 
 .. automethod:: netjsonconfig.OpenWrt.zerotier_auto_client
 
-**Example 1** (with custom ``zt interface name``):
+**Example (with custom ``zerotier interface name``)**:
 
 .. code-block:: python
 
     from netjsonconfig import OpenWrt
 
-    server_config = {
-        "id": ["9536600adf654321"],
-        "name": "ow_zt",
-    }
-    nw_id = server_config['id'][0]
     client_config = OpenWrt.zerotier_auto_client(
-        nwid=server_config['id'],
-        name=server_config['name'],
-        ifname=f'owzt{nw_id[-6:]}',
+        name='ow_zt',
+        nwid_ifname=[{"id": "9536600adf654321", "ifname": "owzt654321"}],
     )
     print(OpenWrt(client_config).render())
 
@@ -351,36 +339,8 @@ Will be rendered as:
     # path: /etc/ow_zerotier/devicemap
     # mode: 0644
 
+    # network_id=interface_name
     9536600adf654321=owzt654321
-
-**Example 2** (without custom ``zt interface name``):
-
-.. code-block:: python
-
-    from netjsonconfig import OpenWrt
-
-    server_config = {
-        "id": ["9536600adf654321"],
-        "name": "ow_zt",
-    }
-    client_config = OpenWrt.zerotier_auto_client(
-        nwid=server_config['id'],
-        name=server_config['name'],
-    )
-    print(OpenWrt(client_config).render())
-
-Will be rendered as:
-
-.. code-block:: text
-
-    package zerotier
-
-    config zerotier 'ow_zt'
-        option config_path '/etc/ow_zerotier_extra'
-        option copy_config_path '0'
-        option enabled '1'
-        list join '9536600adf654321'
-        option secret '{{zt_identity_secret}}'
 
 .. note::
 

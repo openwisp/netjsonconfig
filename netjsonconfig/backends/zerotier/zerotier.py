@@ -18,21 +18,16 @@ class ZeroTier(BaseVpnBackend):
     def auto_client(
         cls,
         name='ow_zt',
-        nwid=None,
+        nwid_ifname=None,
         identity_secret='{{zt_identity_secret}}',
         config_path='/etc/ow_zerotier_extra',
-        copy_config_path='0',
-        ifname='',
         disabled=False,
     ):
-        nwid = nwid or ['']
-        copy_config_path = '1' if ifname else copy_config_path
+        nwid_ifname = nwid_ifname or []
         return {
-            'id': nwid,
             'name': name,
+            'nwid_ifname': nwid_ifname,
             'secret': identity_secret,
             'config_path': config_path,
-            'copy_config_path': copy_config_path,
-            'ifname': ifname,
             'disabled': disabled,
         }
