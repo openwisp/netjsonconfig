@@ -390,7 +390,7 @@ class TestBackend(unittest.TestCase):
             'name': 'ow_zt',
             'nwid_ifname': [{'id': '9536600adf654321', 'ifname': 'owzt654321'}],
             'secret': 'test_secret',
-            'config_path': '/etc/ow_zerotier_extra',
+            'config_path': '/etc/openwisp/zerotier',
             'disabled': False,
         }
         self.assertEqual(

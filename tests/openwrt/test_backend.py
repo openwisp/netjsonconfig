@@ -554,7 +554,7 @@ config wifi-iface 'wifi_wlan0'
                         'name': 'ow_zt',
                         'nwid_ifname': [],
                         'secret': '{{zt_identity_secret}}',
-                        'config_path': '/etc/ow_zerotier_extra',
+                        'config_path': '/etc/openwisp/zerotier',
                         'disabled': False,
                     }
                 ]

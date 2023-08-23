@@ -328,7 +328,7 @@ Will be rendered as:
     package zerotier
 
     config zerotier 'ow_zt'
-        option config_path '/etc/ow_zerotier_extra'
+        option config_path '/etc/openwisp/zerotier'
         option copy_config_path '1'
         option enabled '1'
         list join '9536600adf654321'
