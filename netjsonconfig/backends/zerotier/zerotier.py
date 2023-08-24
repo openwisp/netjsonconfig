@@ -19,7 +19,7 @@ class ZeroTier(BaseVpnBackend):
         cls,
         name='ow_zt',
         nwid_ifname=None,
-        identity_secret='{{zt_identity_secret}}',
+        identity_secret='{{secret}}',
         config_path='/etc/openwisp/zerotier',
         disabled=False,
     ):

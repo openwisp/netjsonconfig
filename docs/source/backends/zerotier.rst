@@ -277,21 +277,25 @@ Required properties:
 * name
 * nwid_ifname
 
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| key name               | type    | default      | description                                                                                        |
-+========================+=========+==============+====================================================================================================+
-| ``name``               | string  |              | name of the zerotier network                                                                       |
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``nwid_ifname``        | list    | ``[{}]``     | list of dictionaries containing strings with **16-digit** hexadecimal network IDs for joining,     |
-|                        |         |              |                                                                                                    |
-|                        |         |              | along with a corresponding custom **10-digit** ZeroTier interface name for each network            |
-|                        |         |              |                                                                                                    |
-|                        |         |              | **note:** ensure that the list includes at least one such dictionary                               |
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``config_path``        | string  |              | path to the persistent configuration folder                                                        |
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
-| ``secret``             | string  |              | secret key of the zerotier client (network member), leave it blank to be automatically determined  |
-+------------------------+---------+--------------+----------------------------------------------------------------------------------------------------+
++------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
+| key name               | type    | default                    | description                                                                                          |
++========================+=========+============================+======================================================================================================+
+| ``name``               | string  |  ``ow_zt``                 | name of the zerotier network                                                                         |
++------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
+| ``nwid_ifname``        | list    | ``[{}]``                   | list of dictionaries containing strings with **16-digit** hexadecimal network IDs for joining,       |
+|                        |         |                            |                                                                                                      |
+|                        |         |                            | along with a corresponding custom **10-digit** ZeroTier interface name for each network              |
+|                        |         |                            |                                                                                                      |
+|                        |         |                            | **note:** ensure that the list includes at least one such dictionary                                 |
++------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
+| ``config_path``        | string  | ``/etc/openwisp/zerotier`` | path to the persistent configuration directory                                                       |
++------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
+| ``copy_config_path``   | string  | ``'1'``                    | specifies whether to copy the configuration file to RAM                                              |
+|                        |         |                            |                                                                                                      |
+|                        |         |                            | ``'0'`` - No, ``'1'`` - Yes, this prevents writing to flash in zerotier controller mode              |
++------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
+| ``secret``             | string  | ``{{secret}}``             | secret key of the zerotier client (network member), leave it default to be automatically determined  |
++------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
 
 Working around schema limitations
 ---------------------------------
@@ -332,7 +336,7 @@ Will be rendered as:
         option copy_config_path '1'
         option enabled '1'
         list join '9536600adf654321'
-        option secret '{{zt_identity_secret}}'
+        option secret '{{secret}}'
 
     # ---------- files ---------- #
 

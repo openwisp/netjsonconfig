@@ -1038,6 +1038,7 @@ schema = merge_config(
                             "items": {
                                 "type": "object",
                                 "title": "Network Member",
+                                "allOf": [{"required": ["id", "ifname"]}],
                                 "properties": {
                                     "id": {
                                         "type": "string",
@@ -1059,9 +1060,21 @@ schema = merge_config(
                         "secret": {
                             "type": "string",
                             "propertyOrder": 4,
+                            "default": "{{secret}}",
                             "description": (
                                 "Secret key of the zerotier client (network member), "
-                                "leave it blank to be automatically determined"
+                                "You can leave it as the default and OpenWISP will automatically determine it"
+                            ),
+                        },
+                        # Hidden property
+                        "config_path": {
+                            "type": "string",
+                            "propertyOrder": 5,
+                            "options": {"hidden": True},
+                            "default": "/etc/openwisp/zerotier",
+                            "description": (
+                                "Path to the persistent configuration "
+                                "directory (for zerotier controller mode)"
                             ),
                         },
                     },
