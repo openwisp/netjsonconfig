@@ -1050,8 +1050,8 @@ schema = merge_config(
                                     "ifname": {
                                         "type": "string",
                                         "title": "Interface name",
+                                        "minLength": 1,
                                         "maxLength": 10,
-                                        "minLength": 10,
                                         "description": "Name of zerotier interface",
                                     },
                                 },
