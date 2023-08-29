@@ -380,10 +380,10 @@ If you want to use advanced configuration options that
 apply to your OpenWrt device, such as setting up trusted paths,
 blacklisting physical paths, setting up physical path hints for certain nodes,
 and defining trusted upstream devices, this can be achieved by creating a file named
-``local.conf`` in a persistent filesystem location, such as ``/etc/config/local.conf``
+``local.conf`` in a persistent filesystem location, such as ``/etc/openwisp/zerotier/local.conf``
 and then adding the ``local_conf`` option to the ZeroTier UCI configuration.
 
-For example, let's create a local configuration file at ``/etc/config/local.conf`` (JSON)
+For example, let's create a local configuration file at ``/etc/openwisp/zerotier/local.conf`` (JSON)
 to blacklist a specific physical network path **(10.0.0.0/24)** from all ZeroTier traffic.
 
 .. code-block:: json
@@ -406,7 +406,7 @@ Now add ``local_conf`` option to ``/etc/config/zerotier``:
         option enabled '1'
         list join '9536600adf654322'
         option secret '{{secret}}'
-        option local_conf '/etc/config/local.conf'
+        option local_conf '/etc/openwisp/zerotier/local.conf'
 
 
 **More information**
