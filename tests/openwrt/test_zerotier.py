@@ -12,7 +12,7 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
         "zerotier": [
             {
                 "name": "ow_zt",
-                "nwid_ifname": [
+                "networks": [
                     {"id": "9536600adf654321", "ifname": "owzt654321"},
                     {"id": "9536600adf654322", "ifname": "owzt654322"},
                 ],
@@ -27,11 +27,11 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
         "zerotier": [
             {
                 "name": "ow_zt1",
-                "nwid_ifname": [{"id": "9536600adf654321", "ifname": "owzt654321"}],
+                "networks": [{"id": "9536600adf654321", "ifname": "owzt654321"}],
             },
             {
                 "name": "ow_zt2",
-                "nwid_ifname": [{"id": "9536600adf654322", "ifname": "owzt654322"}],
+                "networks": [{"id": "9536600adf654322", "ifname": "owzt654322"}],
             },
         ]
     }
@@ -86,12 +86,12 @@ config zerotier 'ow_zt2'
                 {
                     "name": "ow_zt1",
                     "disabled": False,
-                    "nwid_ifname": [{"id": "9536600adf654321", "ifname": "owzt654321"}],
+                    "networks": [{"id": "9536600adf654321", "ifname": "owzt654321"}],
                 },
                 {
                     "name": "ow_zt2",
                     "disabled": False,
-                    "nwid_ifname": [{"id": "9536600adf654322", "ifname": "owzt654322"}],
+                    "networks": [{"id": "9536600adf654322", "ifname": "owzt654322"}],
                 },
             ]
         }
@@ -136,7 +136,7 @@ config zerotier 'ow_zt'
         expected = {
             "zerotier": [
                 {
-                    "nwid_ifname": [
+                    "networks": [
                         {"id": "9536600adf654321", "ifname": "owzt654321"},
                         {"id": "9536600adf654322", "ifname": "owzt654322"},
                     ],

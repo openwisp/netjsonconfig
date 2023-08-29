@@ -275,27 +275,31 @@ Client specific settings
 Required properties:
 
 * name
-* nwid_ifname
+* networks
 
-+------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
-| key name               | type    | default                    | description                                                                                          |
-+========================+=========+============================+======================================================================================================+
-| ``name``               | string  |  ``ow_zt``                 | name of the zerotier network                                                                         |
-+------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
-| ``nwid_ifname``        | list    | ``[{}]``                   | list of dictionaries containing strings with **16-digit** hexadecimal network IDs for joining,       |
-|                        |         |                            |                                                                                                      |
-|                        |         |                            | along with a corresponding custom **10-digit** ZeroTier interface name for each network              |
-|                        |         |                            |                                                                                                      |
-|                        |         |                            | **note:** ensure that the list includes at least one such dictionary                                 |
-+------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
-| ``config_path``        | string  | ``/etc/openwisp/zerotier`` | path to the persistent configuration directory                                                       |
-+------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
-| ``copy_config_path``   | string  | ``'1'``                    | specifies whether to copy the configuration file to RAM                                              |
-|                        |         |                            |                                                                                                      |
-|                        |         |                            | ``'0'`` - No, ``'1'`` - Yes, this prevents writing to flash in zerotier controller mode              |
-+------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
-| ``secret``             | string  | ``{{secret}}``             | secret key of the zerotier client (network member), leave it default to be automatically determined  |
-+------------------------+---------+----------------------------+------------------------------------------------------------------------------------------------------+
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
+| key name               | type    | default                    | description                                                                                               |
++========================+=========+============================+===========================================================================================================+
+| ``name``               | string  |  ``ow_zt``                 | name of the zerotier network                                                                              |
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
+| ``networks``           | list    | ``[{}]``                   | list of dictionaries containing strings with **16-digit** hexadecimal network IDs for joining,            |
+|                        |         |                            |                                                                                                           |
+|                        |         |                            | along with a corresponding custom **10-digit** ZeroTier interface name for each network                   |
+|                        |         |                            |                                                                                                           |
+|                        |         |                            | **note:** ensure that the list includes at least one such dictionary                                      |
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
+| ``config_path``        | string  | ``/etc/openwisp/zerotier`` | path to the persistent configuration directory                                                            |
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
+| ``copy_config_path``   | string  | ``'1'``                    | specifies whether to copy the configuration file to RAM                                                   |
+|                        |         |                            |                                                                                                           |
+|                        |         |                            | ``'0'`` - No, ``'1'`` - Yes, this prevents writing to flash in zerotier controller mode                   |
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
+| ``secret``             | string  | ``{{secret}}``             | identity secret of the zerotier client (network member), leave it default to be automatically determined  |
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
+| ``port``               | integer | ``9993``                   | port number of the zerotier service                                                                       |
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
+| ``local_conf``         | string  |                            | path of the local zerotier configuration (only used for advanced configuration)                           |
++------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
 
 Working around schema limitations
 ---------------------------------
@@ -313,7 +317,7 @@ Automatic generation of clients
 
 .. automethod:: netjsonconfig.OpenWrt.zerotier_auto_client
 
-**Example (with custom ``zerotier interface name``)**:
+Example (with custom zerotier interface name):
 
 .. code-block:: python
 
@@ -321,7 +325,7 @@ Automatic generation of clients
 
     client_config = OpenWrt.zerotier_auto_client(
         name='ow_zt',
-        nwid_ifname=[{"id": "9536600adf654321", "ifname": "owzt654321"}],
+        networks=[{"id": "9536600adf654321", "ifname": "owzt654321"}],
     )
     print(OpenWrt(client_config).render())
 
@@ -340,7 +344,7 @@ Will be rendered as:
 
     # ---------- files ---------- #
 
-    # path: /etc/ow_zerotier/devicemap
+    # path: /etc/openwisp/zerotier/devicemap
     # mode: 0644
 
     # network_id=interface_name
@@ -372,42 +376,37 @@ configuration settings, please refer to the following OpenAPI API specifications
 Advanced configuration
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The OpenWRT ZeroTier service can be configured to run on multiple ports,
-for example, **9993 (default)** and **9994**. This can be achieved by creating
-a file named ``zt_local.conf`` in a persistent filesystem location, such as
-``/etc/config/zt_local.conf``, and then adding the option ``local_conf``
-to the ZeroTier UCI configuration.
+If you want to use advanced configuration options that
+apply to your OpenWrt device, such as setting up trusted paths,
+blacklisting physical paths, setting up physical path hints for certain nodes,
+and defining trusted upstream devices, this can be achieved by creating a file named
+``local.conf`` in a persistent filesystem location, such as ``/etc/config/local.conf``
+and then adding the ``local_conf`` option to the ZeroTier UCI configuration.
 
-``/etc/config/zt_local.conf``
+For example, let's create a local configuration file at ``/etc/config/local.conf`` (JSON)
+to blacklist a specific physical network path **(10.0.0.0/24)** from all ZeroTier traffic.
 
 .. code-block:: json
 
     {
-      "settings": {
-        "primaryPort": 9994
+      "physical": {
+        "10.0.0.0/24": {
+          "blacklist": true
+        }
       }
     }
 
-``/etc/config/zerotier``
+Now add ``local_conf`` option to ``/etc/config/zerotier``:
 
 .. code-block:: text
 
     package zerotier
 
-    # This config utilizes port 9993 (default)
-
-    config zerotier 'ow_zt1'
-        option enabled '1'
-        list join '9536600adf654321'
-        option secret '{{zt_identity_secret}}'
-
-    # This config utilizes port 9994
-
-    config zerotier 'ow_zt2' (new)
+    config zerotier 'ow_zt'
         option enabled '1'
         list join '9536600adf654322'
-        option secret '{{zt_identity_secret}}'
-        option local_conf '/etc/config/zerotier.local.conf'
+        option secret '{{secret}}'
+        option local_conf '/etc/config/local.conf'
 
 
 **More information**

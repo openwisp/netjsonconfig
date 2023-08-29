@@ -552,7 +552,7 @@ config wifi-iface 'wifi_wlan0'
                 'zerotier': [
                     {
                         'name': 'ow_zt',
-                        'nwid_ifname': [],
+                        'networks': [],
                         'secret': '{{secret}}',
                         'config_path': '/etc/openwisp/zerotier',
                         'disabled': False,
@@ -565,7 +565,7 @@ config wifi-iface 'wifi_wlan0'
                 'zerotier': [
                     {
                         'name': 'ow_zt',
-                        'nwid_ifname': [
+                        'networks': [
                             {'id': '9536600adf654321', 'ifname': 'owzt654321'}
                         ],
                         'secret': '{{secret}}',
@@ -579,7 +579,7 @@ config wifi-iface 'wifi_wlan0'
                 OpenWrt.zerotier_auto_client(
                     # Test it is possible to change default `config_path`
                     config_path='/etc/ow_zerotier_test',
-                    nwid_ifname=[{'id': nw_id, 'ifname': f'owzt{nw_id[-6:]}'}],
+                    networks=[{'id': nw_id, 'ifname': f'owzt{nw_id[-6:]}'}],
                 ),
                 expected,
             )

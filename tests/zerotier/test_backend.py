@@ -388,7 +388,7 @@ class TestBackend(unittest.TestCase):
         nw_id = test_config['id']
         expected = {
             'name': 'ow_zt',
-            'nwid_ifname': [{'id': '9536600adf654321', 'ifname': 'owzt654321'}],
+            'networks': [{'id': '9536600adf654321', 'ifname': 'owzt654321'}],
             'secret': 'test_secret',
             'config_path': '/etc/openwisp/zerotier',
             'disabled': False,
@@ -396,7 +396,7 @@ class TestBackend(unittest.TestCase):
         self.assertEqual(
             ZeroTier.auto_client(
                 name="ow_zt",
-                nwid_ifname=[
+                networks=[
                     {
                         'id': nw_id,
                         'ifname': f'owzt{nw_id[-6:]}',

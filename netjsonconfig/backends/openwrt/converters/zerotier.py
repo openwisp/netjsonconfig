@@ -8,7 +8,7 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
     _schema = schema['properties']['zerotier']['items']
 
     def __intermediate_vpn(self, vpn):
-        nwid_ifnames = vpn.get('nwid_ifname', [])
+        nwid_ifnames = vpn.get('networks', [])
         files = self.netjson.get('files', [])
         self.netjson['files'] = self.__get_zt_ifname_files(vpn, files)
         vpn.update(
@@ -17,19 +17,17 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
                 '.type': 'zerotier',
                 'config_path': vpn.get('config_path', '/etc/openwisp/zerotier'),
                 'copy_config_path': vpn.get('copy_config_path', '1'),
-                'join': [nwid_ifname.get('id', '') for nwid_ifname in nwid_ifnames],
+                'join': [networks.get('id', '') for networks in nwid_ifnames],
                 'enabled': not vpn.pop('disabled', False),
             }
         )
-        del vpn['nwid_ifname']
+        del vpn['networks']
         return super().__intermediate_vpn(vpn, remove=[''])
 
     def __netjson_vpn(self, vpn):
         nwids = vpn.pop('join')
         vpn['name'] = vpn.pop('.name')
-        vpn['nwid_ifname'] = [
-            {"id": nwid, "ifname": f"owzt{nwid[-6:]}"} for nwid in nwids
-        ]
+        vpn['networks'] = [{"id": nwid, "ifname": f"owzt{nwid[-6:]}"} for nwid in nwids]
         # 'disabled' defaults to False in OpenWRT
         vpn['disabled'] = vpn.pop('enabled', '0') == '0'
         del vpn['.type']
@@ -37,12 +35,12 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
 
     def __get_zt_ifname_files(self, vpn, files):
         config_path = vpn.get('config_path', '/etc/openwisp/zerotier')
-        nwid_ifnames = vpn.get('nwid_ifname', [])
+        nwid_ifnames = vpn.get('networks', [])
         zt_file_contents = '# network_id=interface_name\n'
 
-        for nwid_ifname in nwid_ifnames:
-            nwid = nwid_ifname.get('id', '')
-            ifname = nwid_ifname.get('ifname', f'owzt{nwid[-6:]}')
+        for networks in nwid_ifnames:
+            nwid = networks.get('id', '')
+            ifname = networks.get('ifname', f'owzt{nwid[-6:]}')
             zt_file_contents += f"{nwid}={ifname}\n"
 
         zt_interface_map = {

@@ -18,15 +18,15 @@ class ZeroTier(BaseVpnBackend):
     def auto_client(
         cls,
         name='ow_zt',
-        nwid_ifname=None,
+        networks=None,
         identity_secret='{{secret}}',
         config_path='/etc/openwisp/zerotier',
         disabled=False,
     ):
-        nwid_ifname = nwid_ifname or []
+        networks = networks or []
         return {
             'name': name,
-            'nwid_ifname': nwid_ifname,
+            'networks': networks,
             'secret': identity_secret,
             'config_path': config_path,
             'disabled': disabled,
