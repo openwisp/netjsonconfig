@@ -294,7 +294,7 @@ Required properties:
 |                        |         |                            |                                                                                                           |
 |                        |         |                            | ``'0'`` - No, ``'1'`` - Yes, this prevents writing to flash in zerotier controller mode                   |
 +------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
-| ``secret``             | string  | ``{{secret}}``             | identity secret of the zerotier client (network member), leave it default to be automatically determined  |
+| ``secret``             | string  | ``''``                     | identity secret of the zerotier client (network member), leave it blank to be automatically determined    |
 +------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+
 | ``port``               | integer | ``9993``                   | port number of the zerotier service                                                                       |
 +------------------------+---------+----------------------------+-----------------------------------------------------------------------------------------------------------+

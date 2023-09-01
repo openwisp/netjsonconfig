@@ -147,3 +147,39 @@ config zerotier 'ow_zt'
         }
         o = OpenWrt(native=native)
         self.assertEqual(o.config, expected)
+
+    def test_zt_render_fallback_ifname(self):
+        _TEST_ZT_WITHOUT_IFNAME = {
+            "zerotier": [
+                {
+                    "name": "ow_zt",
+                    "networks": [
+                        {"id": "9536600adf654321"},
+                        {"id": "9536600adf654322"},
+                    ],
+                },
+            ]
+        }
+        o = OpenWrt(_TEST_ZT_WITHOUT_IFNAME)
+        expected = self._tabs(
+            """package zerotier
+
+config zerotier 'ow_zt'
+    option config_path '/etc/openwisp/zerotier'
+    option copy_config_path '1'
+    option enabled '1'
+    list join '9536600adf654321'
+    list join '9536600adf654322'
+
+# ---------- files ---------- #
+
+# path: /etc/openwisp/zerotier/devicemap
+# mode: 0644
+
+# network_id=interface_name
+9536600adf654321=owzt654321
+9536600adf654322=owzt654322
+
+"""
+        )
+        self.assertEqual(o.render(), expected)

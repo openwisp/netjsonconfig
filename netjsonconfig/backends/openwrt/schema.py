@@ -1038,7 +1038,7 @@ schema = merge_config(
                             "items": {
                                 "type": "object",
                                 "title": "Network Member",
-                                "allOf": [{"required": ["id", "ifname"]}],
+                                "required": ["id"],
                                 "properties": {
                                     "id": {
                                         "type": "string",
