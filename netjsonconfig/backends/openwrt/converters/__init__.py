@@ -1,3 +1,4 @@
+from .ddns import Ddns
 from .default import Default
 from .general import General
 from .interfaces import Interfaces
@@ -24,4 +25,5 @@ __all__ = [
     'Switch',
     'WireguardPeers',
     'Wireless',
+    'Ddns',
 ]
