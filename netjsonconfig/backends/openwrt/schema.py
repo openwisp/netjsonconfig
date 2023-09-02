@@ -1001,6 +1001,196 @@ schema = merge_config(
                     },
                 },
             },
+            "mwan3": {
+                "type": "object",
+                "title": "Mwan3",
+                "additionalProperties": True,
+                "propertyOrder": 11,
+                "properties": {
+                    "interfaces": {
+                        "type": "array",
+                        "title": "Interfaces",
+                        "propertyOrder": 1,
+                        "items": {
+                            "type": "object",
+                            "title": "Interface",
+                            "additionalProperties": True,
+                            "required": [
+                                "name",
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "Name",
+                                    "description": "the OpenWrt interface name",
+                                    "propertyOrder": 1,
+                                },
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enabled",
+                                    "description": "specifies wether mwan3 should run on this interface",
+                                    "default": False,
+                                    "format": "checkbox",
+                                    "propertyOrder": 2,
+                                },
+                                "track_method": {
+                                    "type": "string",
+                                    "title": "Tracking method",
+                                    "description": "Tracking method for mwan3track",
+                                    "enum": ["ping", "arping", "httping", "nping-*"],
+                                    "default": "ping",
+                                    "propertyOrder": 3,
+                                },
+                                "track_ip": {
+                                    "title": "Tracking IPs",
+                                    "description": "List of IPs to ping to test the interface. If this list "
+                                    "is empty then the interface is always considered up",
+                                    "type": "array",
+                                    "uniqueItems": True,
+                                    "additionalItems": True,
+                                    "items": {
+                                        "type": "string",
+                                        "title": "ipv4 address",
+                                        "minLength": 7,
+                                        "maxLength": 15,
+                                        "format": "ipv4",
+                                    },
+                                    "propertyOrder": 4,
+                                },
+                                "reliability": {
+                                    "type": "integer",
+                                    "title": "Reliability",
+                                    "description": "Number of track_ip hosts that must reply for the test to"
+                                    " be considered successful. Ensure there are at least this"
+                                    " many track_ip hosts defined or the interface will always"
+                                    " be considered down",
+                                    "default": 1,
+                                    "propertyOrder": 5,
+                                },
+                                "count": {
+                                    "type": "integer",
+                                    "title": "Count",
+                                    "description": "Number of checks to send to each host with each test",
+                                    "default": 1,
+                                    "propertyOrder": 6,
+                                },
+                                "timeout": {
+                                    "type": "integer",
+                                    "title": "Timeout",
+                                    "description": "Number of seconds to wait for an echo-reply after an "
+                                    "echo-request",
+                                    "default": 4,
+                                    "propertyOrder": 7,
+                                },
+                                "interval": {
+                                    "type": "integer",
+                                    "title": "Interval",
+                                    "description": "Number of seconds between each test",
+                                    "default": 10,
+                                    "propertyOrder": 8,
+                                },
+                                "failure_interval": {
+                                    "type": "integer",
+                                    "title": "Failure interval",
+                                    "description": "Number of seconds between each test during teardown on "
+                                    "failure detection",
+                                    "propertyOrder": 9,
+                                },
+                                "recovery_interval": {
+                                    "type": "integer",
+                                    "title": "Recovery interval",
+                                    "description": "Number of seconds between each test during tearup on "
+                                    "recovery detection",
+                                    "propertyOrder": 10,
+                                },
+                                "keep_failure_interval": {
+                                    "type": "boolean",
+                                    "title": "Keep failure interval",
+                                    "description": "In the event of an error, keep the number of seconds "
+                                    "between each test during teardown (failure detection)",
+                                    "default": False,
+                                    "format": "checkbox",
+                                    "propertyOrder": 11,
+                                },
+                                "up": {
+                                    "type": "integer",
+                                    "title": "Up",
+                                    "description": "Number of successful tests to consider link as alive",
+                                    "default": 5,
+                                    "propertyOrder": 12,
+                                },
+                                "down": {
+                                    "type": "integer",
+                                    "title": "Down",
+                                    "description": "Number of failed tests to consider link as dead",
+                                    "default": 5,
+                                    "propertyOrder": 13,
+                                },
+                                "family": {
+                                    "type": "string",
+                                    "title": "Family",
+                                    "description": "",
+                                    "enum": [
+                                        "ipv4",
+                                        "ipv6",
+                                    ],
+                                    "default": "ipv4",
+                                    "propertyOrder": 14,
+                                },
+                                "max_ttl": {
+                                    "type": "integer",
+                                    "title": "Time to live",
+                                    "description": "Time to live (TTL) or hop limit. Only valid if tracking "
+                                    "method is ping.",
+                                    "default": 60,
+                                    "propertyOrder": 15,
+                                },
+                                "initial_state": {
+                                    "type": "string",
+                                    "title": "Initial state",
+                                    "description": "If the value is offline, then traffic goes via this "
+                                    "interface only if mwan3track checked the connection "
+                                    "first. If the value is online, then the mwan3track "
+                                    "test is not waited for. The interface is marked as "
+                                    "online at once.",
+                                    "enum": [
+                                        "online",
+                                        "offline",
+                                    ],
+                                    "default": "online",
+                                    "propertyOrder": 16,
+                                },
+                                "size": {
+                                    "type": "integer",
+                                    "title": "Size",
+                                    "description": "Size of ping packets to use in bytes. Only valid if "
+                                    "tracking method is ping.",
+                                    "default": 56,
+                                    "propertyOrder": 17,
+                                },
+                                "flush_conntrack": {
+                                    "title": "Flush connection tracking",
+                                    "description": "specifies upon which events the connections table should"
+                                    " be flushed",
+                                    "type": "array",
+                                    "uniqueItems": True,
+                                    "additionalItems": True,
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ifup",
+                                            "ifdown",
+                                            "connected",
+                                            "disconnected",
+                                        ],
+                                    },
+                                    "propertyOrder": 18,
+                                },
+                            },
+                        },
+                    }
+                },
+            },
         },
     },
 )
