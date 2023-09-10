@@ -40,7 +40,7 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
 
         for networks in nwid_ifnames:
             nwid = networks.get('id', '')
-            ifname = networks.get('ifname', f'owzt{nwid[-6:]}')
+            ifname = networks.get('ifname')
             zt_file_contents += f"{nwid}={ifname}\n"
 
         zt_interface_map = {
