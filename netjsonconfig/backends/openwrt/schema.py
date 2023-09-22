@@ -1008,9 +1008,9 @@ schema = merge_config(
                 "propertyOrder": 14,
                 "items": {
                     "type": "object",
-                    "title": "Network Member",
+                    "title": "Network Member Configuration",
                     "additionalProperties": True,
-                    "required": ["id", "name"],
+                    "required": ["name", "networks"],
                     "properties": {
                         # ZeroTier customization (disabled) for OpenWRT
                         "disabled": {
@@ -1024,34 +1024,65 @@ schema = merge_config(
                         "name": {
                             "type": "string",
                             "propertyOrder": 2,
-                            "default": "openwisp_zerotier_network",
-                            "description": "Name of the zerotier network",
+                            "default": "ow_zt",
+                            "minLength": 1,
+                            "description": "Name of the zerotier network member configuration",
                         },
-                        "id": {
+                        "networks": {
                             "type": "array",
-                            "title": "16-digit hexadecimal network IDs to join",
+                            "title": "Networks",
                             "minItems": 1,
                             "propertyOrder": 3,
                             "uniqueItems": True,
+                            "additionalProperties": True,
                             "items": {
-                                "type": "string",
-                                "title": "Network ID",
-                                "maxLength": 16,
-                                "minLength": 16,
+                                "type": "object",
+                                "title": "Network Member",
+                                "allOf": [{"required": ["id", "ifname"]}],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "title": "Network ID",
+                                        "maxLength": 16,
+                                        "minLength": 16,
+                                        "description": "Network ID to join",
+                                    },
+                                    "ifname": {
+                                        "type": "string",
+                                        "title": "Interface name",
+                                        "minLength": 1,
+                                        "maxLength": 10,
+                                        "description": "Name of zerotier interface",
+                                    },
+                                },
                             },
                         },
-                        "config_path": {
+                        "secret": {
                             "type": "string",
                             "propertyOrder": 4,
+                            "default": "{{secret}}",
+                            "description": (
+                                "Identity secret of the zerotier client (network member), "
+                                "You can leave it as the default and OpenWISP will automatically determine it"
+                            ),
+                        },
+                        # Hidden properties
+                        "config_path": {
+                            "type": "string",
+                            "propertyOrder": 5,
+                            "options": {"hidden": True},
+                            "default": "/etc/openwisp/zerotier",
                             "description": (
                                 "Path to the persistent configuration "
-                                "folder (for zerotier controller mode)"
+                                "directory (for zerotier controller mode)"
                             ),
                         },
                         "copy_config_path": {
                             "type": "string",
-                            "propertyOrder": 5,
+                            "propertyOrder": 6,
+                            "options": {"hidden": True},
                             "enum": ["0", "1"],
+                            "default": "1",
                             "description": (
                                 "Specifies whether to copy the configuration "
                                 "file to RAM ('0' - No, '1' - Yes), this prevents "
@@ -1063,20 +1094,15 @@ schema = merge_config(
                             "minimum": 1,
                             "maximum": 65535,
                             "default": 9993,
-                            "propertyOrder": 6,
+                            "propertyOrder": 7,
                             "description": "Port number of the zerotier service",
                         },
                         "local_conf": {
                             "type": "string",
-                            "propertyOrder": 7,
-                            "description": "Path of the local zerotier configuration",
-                        },
-                        "secret": {
-                            "type": "string",
                             "propertyOrder": 8,
                             "description": (
-                                "Secret key of the zerotier client (network member), "
-                                "leave it blank to be automatically determined"
+                                "Path of the local zerotier configuration "
+                                "(only used for advanced configuration)"
                             ),
                         },
                     },

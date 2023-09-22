@@ -552,8 +552,9 @@ config wifi-iface 'wifi_wlan0'
                 'zerotier': [
                     {
                         'name': 'ow_zt',
-                        'id': [''],
-                        'secret': '{{zt_identity_secret}}',
+                        'networks': [],
+                        'secret': '{{secret}}',
+                        'config_path': '/etc/openwisp/zerotier',
                         'disabled': False,
                     }
                 ]
@@ -564,15 +565,21 @@ config wifi-iface 'wifi_wlan0'
                 'zerotier': [
                     {
                         'name': 'ow_zt',
-                        'id': ['9536600adf654321'],
-                        'secret': '{{zt_identity_secret}}',
+                        'networks': [
+                            {'id': '9536600adf654321', 'ifname': 'owzt654321'}
+                        ],
+                        'secret': '{{secret}}',
+                        'config_path': '/etc/ow_zerotier_test',
                         'disabled': False,
                     }
                 ]
             }
+            nw_id = '9536600adf654321'
             self.assertDictEqual(
                 OpenWrt.zerotier_auto_client(
-                    nwid=['9536600adf654321'],
+                    # Test it is possible to change default `config_path`
+                    config_path='/etc/ow_zerotier_test',
+                    networks=[{'id': nw_id, 'ifname': f'owzt{nw_id[-6:]}'}],
                 ),
                 expected,
             )
