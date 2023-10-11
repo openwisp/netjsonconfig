@@ -44,6 +44,7 @@ Its main features are listed below for your reference:
 * `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_ support
 * `OpenVPN <https://openvpn.net>`_ support
 * `WireGuard <https://www.wireguard.com/>`_ support
+* `ZeroTier <https://www.zerotier.com/>`_ support
 * Possibility to support more firmwares via custom backends
 * Based on the `NetJSON RFC <http://netjson.org/rfc.html>`_
 * **Validation** based on `JSON-Schema <http://json-schema.org/>`_

@@ -1001,6 +1001,113 @@ schema = merge_config(
                     },
                 },
             },
+            "zerotier": {
+                "type": "array",
+                "title": "ZeroTier Networks",
+                "uniqueItems": True,
+                "propertyOrder": 14,
+                "items": {
+                    "type": "object",
+                    "title": "Network Member Configuration",
+                    "additionalProperties": True,
+                    "required": ["name", "networks"],
+                    "properties": {
+                        # ZeroTier customization (disabled) for OpenWRT
+                        "disabled": {
+                            "title": "disabled",
+                            "description": "Disable this VPN without deleting its configuration",
+                            "type": "boolean",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 1,
+                        },
+                        "name": {
+                            "type": "string",
+                            "propertyOrder": 2,
+                            "default": "ow_zt",
+                            "minLength": 1,
+                            "description": "Name of the zerotier network member configuration",
+                        },
+                        "networks": {
+                            "type": "array",
+                            "title": "Networks",
+                            "minItems": 1,
+                            "propertyOrder": 3,
+                            "uniqueItems": True,
+                            "additionalProperties": True,
+                            "items": {
+                                "type": "object",
+                                "title": "Network Member",
+                                "allOf": [{"required": ["id", "ifname"]}],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "title": "Network ID",
+                                        "maxLength": 16,
+                                        "minLength": 16,
+                                        "description": "Network ID to join",
+                                    },
+                                    "ifname": {
+                                        "type": "string",
+                                        "title": "Interface name",
+                                        "minLength": 1,
+                                        "maxLength": 10,
+                                        "description": "Name of zerotier interface",
+                                    },
+                                },
+                            },
+                        },
+                        "secret": {
+                            "type": "string",
+                            "propertyOrder": 4,
+                            "default": "{{secret}}",
+                            "description": (
+                                "Identity secret of the zerotier client (network member), "
+                                "You can leave it as the default and OpenWISP will automatically determine it"
+                            ),
+                        },
+                        # Hidden properties
+                        "config_path": {
+                            "type": "string",
+                            "propertyOrder": 5,
+                            "options": {"hidden": True},
+                            "default": "/etc/openwisp/zerotier",
+                            "description": (
+                                "Path to the persistent configuration "
+                                "directory (for zerotier controller mode)"
+                            ),
+                        },
+                        "copy_config_path": {
+                            "type": "string",
+                            "propertyOrder": 6,
+                            "options": {"hidden": True},
+                            "enum": ["0", "1"],
+                            "default": "1",
+                            "description": (
+                                "Specifies whether to copy the configuration "
+                                "file to RAM ('0' - No, '1' - Yes), this prevents "
+                                "writing to flash in zerotier controller mode"
+                            ),
+                        },
+                        "port": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 65535,
+                            "default": 9993,
+                            "propertyOrder": 7,
+                            "description": "Port number of the zerotier service",
+                        },
+                        "local_conf": {
+                            "type": "string",
+                            "propertyOrder": 8,
+                            "description": (
+                                "Path of the local zerotier configuration "
+                                "(only used for advanced configuration)"
+                            ),
+                        },
+                    },
+                },
+            },
         },
     },
 )
