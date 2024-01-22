@@ -56,6 +56,7 @@ class OpenWrt(BaseBackend):
         super().__init__(config, native, templates, context)
 
     def validate(self):
+        self._validate_radios()
         super().validate()
         # When VLAN filtering is enabled on a "bridge" interfaces,
         # primary VLAN ID can be set for only one VLAN.
@@ -170,10 +171,6 @@ class OpenWrt(BaseBackend):
         data = ZeroTier.auto_client(**kwargs)
         return {'zerotier': [data]}
 
-    def validate(self):
-        self._validate_radios()
-        super().validate()
-
     def _validate_radios(self):
         # We use "hwmode" or "band" property of "radio" configuration
         # to predict the radio frequency. If both of these
@@ -189,7 +186,7 @@ class OpenWrt(BaseBackend):
                 and radio.get('hwmode') is None
                 and radio.get('channel') == 0
             ):
-                raise ValidationError(
+                raise JsonSchemaError(
                     '"channel" cannot be set to "auto" when'
                     ' "hwmode" or "band" property is not configured.'
                 )
