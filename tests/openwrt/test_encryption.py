@@ -288,6 +288,9 @@ config interface 'wlan0'
 package wireless
 
 config wifi-iface 'wifi_wlan0'
+    option acct_secret 'radius_secret'
+    option auth_secret 'radius_secret'
+    option auth_server '192.168.0.1'
     option device 'radio0'
     option encryption 'wpa3-mixed+ccmp'
     option ieee80211w '1'
@@ -325,6 +328,10 @@ config wifi-iface 'wifi_wlan0'
                         "port": 1812,
                         "acct_server": "192.168.0.2",
                         "acct_port": 1813,
+                        "acct_interval": 300,
+                        "dae_client": "192.168.0.2",
+                        "dae_port": 3799,
+                        "dae_secret": "radius_secret",
                         "nasid": "2",
                         "wpa_group_rekey": "350",
                         "ieee80211w": "2",
@@ -345,8 +352,16 @@ config interface 'wlan0'
 package wireless
 
 config wifi-iface 'wifi_wlan0'
+    option acct_interval '300'
     option acct_port '1813'
+    option acct_secret 'radius_secret'
     option acct_server '192.168.0.2'
+    option auth_port '1812'
+    option auth_secret 'radius_secret'
+    option auth_server '192.168.0.1'
+    option dae_client '192.168.0.2'
+    option dae_port '3799'
+    option dae_secret 'radius_secret'
     option device 'radio0'
     option encryption 'wpa3+ccmp'
     option ieee80211w '2'
@@ -407,7 +422,11 @@ package wireless
 
 config wifi-iface 'wifi_wlan0'
     option acct_port '1813'
+    option acct_secret 'radius_secret'
     option acct_server '192.168.0.2'
+    option auth_port '1812'
+    option auth_secret 'radius_secret'
+    option auth_server '192.168.0.1'
     option device 'radio0'
     option encryption 'wpa2+tkip'
     option ifname 'wlan0'
@@ -461,6 +480,9 @@ config interface 'wlan0'
 package wireless
 
 config wifi-iface 'wifi_wlan0'
+    option acct_secret 'radius_secret'
+    option auth_secret 'radius_secret'
+    option auth_server '192.168.0.1'
     option device 'radio0'
     option encryption 'wpa-mixed'
     option ifname 'wlan0'
@@ -511,6 +533,9 @@ config interface 'wlan0'
 package wireless
 
 config wifi-iface 'wifi_wlan0'
+    option acct_secret 'radius_secret'
+    option auth_secret 'radius_secret'
+    option auth_server '192.168.0.1'
     option device 'radio0'
     option encryption 'wpa+ccmp'
     option ifname 'wlan0'
