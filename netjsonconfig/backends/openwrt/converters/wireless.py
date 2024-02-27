@@ -110,7 +110,7 @@ class Wireless(OpenWrtConverter):
             return {'encryption': 'none'}
         # otherwise configure encryption
         uci = encryption.copy()
-        for option in ['protocol', 'key', 'cipher', 'disabled']:
+        for option in ['protocol', 'key', 'cipher', 'disabled', 'acct_server_port']:
             if option in uci:
                 del uci[option]
         protocol = encryption['protocol']
@@ -146,6 +146,8 @@ class Wireless(OpenWrtConverter):
             uci['auth_secret'] = encryption['key']
             if not encryption.get('acct_secret'):
                 uci['acct_secret'] = encryption['key']
+            if encryption.get('acct_server_port'):
+                uci['acct_port'] = encryption.pop('acct_server_port')
 
     roaming_properties = (
         'ft_over_ds',
@@ -343,6 +345,8 @@ class Wireless(OpenWrtConverter):
             for option in ['server', 'port']:
                 if f'auth_{option}' in settings:
                     settings[option] = settings.pop(f'auth_{option}')
+            if settings.get('acct_port'):
+                settings['acct_server_port'] = settings.pop('acct_port')
         # Management Frame Protection
         if 'ieee80211w' in wifi:
             settings['ieee80211w'] = wifi.pop('ieee80211w')
@@ -353,8 +357,8 @@ class Wireless(OpenWrtConverter):
         # type casting
         if 'port' in encryption:
             encryption['port'] = int(encryption['port'])
-        if 'acct_port' in encryption:
-            encryption['acct_port'] = int(encryption['acct_port'])
+        if 'acct_server_port' in encryption:
+            encryption['acct_server_port'] = int(encryption['acct_server_port'])
         if 'dae_port' in encryption:
             encryption['dae_port'] = int(encryption['dae_port'])
         if 'acct_interval' in encryption:

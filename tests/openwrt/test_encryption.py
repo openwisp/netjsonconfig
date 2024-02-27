@@ -327,7 +327,7 @@ config wifi-iface 'wifi_wlan0'
                         "server": "192.168.0.1",
                         "port": 1812,
                         "acct_server": "192.168.0.2",
-                        "acct_port": 1813,
+                        "acct_server_port": 1813,
                         "acct_interval": 300,
                         "dae_client": "192.168.0.2",
                         "dae_port": 3799,
@@ -383,6 +383,9 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa3_enterprise(self):
         o = OpenWrt(native=self._wpa3_enterprise_ap_uci)
+        from pprint import pprint
+
+        pprint(dict(o.config))
         self.assertEqual(o.config, self._wpa3_enterprise_ap_netjson)
 
     _wpa2_enterprise_ap_netjson = {
@@ -401,7 +404,7 @@ config wifi-iface 'wifi_wlan0'
                         "server": "192.168.0.1",
                         "port": 1812,
                         "acct_server": "192.168.0.2",
-                        "acct_port": 1813,
+                        "acct_server_port": 1813,
                         "nasid": "2",
                         "wpa_group_rekey": "350",
                     },
