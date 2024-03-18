@@ -144,9 +144,9 @@ class Wireless(OpenWrtConverter):
                 if option in encryption:
                     uci[f'auth_{option}'] = encryption[option]
             uci['auth_secret'] = encryption['key']
-            if not encryption.get('acct_secret'):
+            if 'acct_secret' not in encryption:
                 uci['acct_secret'] = encryption['key']
-            if encryption.get('acct_server_port'):
+            if 'acct_server_port' in encryption:
                 uci['acct_port'] = encryption.pop('acct_server_port')
 
     roaming_properties = (
@@ -338,14 +338,14 @@ class Wireless(OpenWrtConverter):
         if 'enterprise' in settings['protocol']:
             if 'auth_secret' in settings:
                 settings['key'] = settings.pop('auth_secret')
-            if settings.get('acct_secret') and settings['acct_secret'] == settings.get(
+            if 'acct_secret' in settings and settings['acct_secret'] == settings.get(
                 'key'
             ):
                 settings.pop('acct_secret')
             for option in ['server', 'port']:
                 if f'auth_{option}' in settings:
                     settings[option] = settings.pop(f'auth_{option}')
-            if settings.get('acct_port'):
+            if 'acct_port' in settings:
                 settings['acct_server_port'] = settings.pop('acct_port')
         # Management Frame Protection
         if 'ieee80211w' in wifi:

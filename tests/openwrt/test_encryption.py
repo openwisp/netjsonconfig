@@ -383,9 +383,6 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa3_enterprise(self):
         o = OpenWrt(native=self._wpa3_enterprise_ap_uci)
-        from pprint import pprint
-
-        pprint(dict(o.config))
         self.assertEqual(o.config, self._wpa3_enterprise_ap_netjson)
 
     _wpa2_enterprise_ap_netjson = {
