@@ -110,7 +110,7 @@ class Wireless(OpenWrtConverter):
             return {'encryption': 'none'}
         # otherwise configure encryption
         uci = encryption.copy()
-        for option in ['protocol', 'key', 'cipher', 'disabled']:
+        for option in ['protocol', 'key', 'cipher', 'disabled', 'acct_server_port']:
             if option in uci:
                 del uci[option]
         protocol = encryption['protocol']
@@ -124,15 +124,8 @@ class Wireless(OpenWrtConverter):
             if protocol == 'wep_open':
                 uci['key1'] = 's:{0}'.format(uci['key1'])
         else:
-            if (
-                'enterprise' in protocol
-                and 'eap_type' in uci
-                and uci['eap_type'] == 'tls'
-                and 'auth' in uci
-            ):
-                # remove auth if not needed
-                # (not applicable to EAP-TLS)
-                del uci['auth']
+            if 'enterprise' in protocol:
+                self.__intermediate_encryption_wpa_enterprise(wireless, encryption, uci)
             if 'key' in encryption:
                 uci['key'] = encryption['key']
         # add ciphers
@@ -140,6 +133,21 @@ class Wireless(OpenWrtConverter):
         if cipher and protocol.startswith('wpa') and cipher != 'auto':
             uci['encryption'] += '+{0}'.format(cipher)
         return uci
+
+    def __intermediate_encryption_wpa_enterprise(self, wireless, encryption, uci):
+        if 'eap_type' in uci and uci['eap_type'] == 'tls' and 'auth' in uci:
+            # remove auth if not needed
+            # (not applicable to EAP-TLS)
+            del uci['auth']
+        if wireless['mode'] == 'ap':
+            for option in ['server', 'port']:
+                if option in encryption:
+                    uci[f'auth_{option}'] = encryption[option]
+            uci['auth_secret'] = encryption['key']
+            if 'acct_secret' not in encryption:
+                uci['acct_secret'] = encryption['key']
+            if 'acct_server_port' in encryption:
+                uci['acct_port'] = encryption.pop('acct_server_port')
 
     roaming_properties = (
         'ft_over_ds',
@@ -251,6 +259,8 @@ class Wireless(OpenWrtConverter):
         'auth_cache',
         'acct_port',
         'acct_server',
+        'acct_secret',
+        'acct_interval',
         'nasid',
         'ownip',
         'dae_client',
@@ -325,6 +335,18 @@ class Wireless(OpenWrtConverter):
             if key.startswith('s:'):
                 key = key[2:]
             settings['key'] = key
+        if 'enterprise' in settings['protocol']:
+            if 'auth_secret' in settings:
+                settings['key'] = settings.pop('auth_secret')
+            if 'acct_secret' in settings and settings['acct_secret'] == settings.get(
+                'key'
+            ):
+                settings.pop('acct_secret')
+            for option in ['server', 'port']:
+                if f'auth_{option}' in settings:
+                    settings[option] = settings.pop(f'auth_{option}')
+            if 'acct_port' in settings:
+                settings['acct_server_port'] = settings.pop('acct_port')
         # Management Frame Protection
         if 'ieee80211w' in wifi:
             settings['ieee80211w'] = wifi.pop('ieee80211w')
@@ -335,8 +357,12 @@ class Wireless(OpenWrtConverter):
         # type casting
         if 'port' in encryption:
             encryption['port'] = int(encryption['port'])
-        if 'acct_port' in encryption:
-            encryption['acct_port'] = int(encryption['acct_port'])
+        if 'acct_server_port' in encryption:
+            encryption['acct_server_port'] = int(encryption['acct_server_port'])
+        if 'dae_port' in encryption:
+            encryption['dae_port'] = int(encryption['dae_port'])
+        if 'acct_interval' in encryption:
+            encryption['acct_interval'] = int(encryption['acct_interval'])
         if 'wps_label' in encryption:
             encryption['wps_label'] = encryption['wps_label'] == '1'
         if 'wps_pushbutton' in encryption:

@@ -704,6 +704,50 @@ schema = merge_config(
                     {"$ref": "#/definitions/radio_60g_band"},
                 ]
             },
+            "encryption_wpa_enterprise_ap_base_settings": {
+                "properties": {
+                    "acct_secret": {
+                        "title": "accounting shared secret",
+                        "type": "string",
+                        "propertyOrder": 9,
+                    },
+                    "acct_interval": {
+                        "type": "integer",
+                        "title": "accounting interval",
+                        "default": 600,
+                        "propertyOrder": 10,
+                    },
+                    "dae_client": {
+                        "title": "DAE client",
+                        "type": "string",
+                        "description": (
+                            "Dynamic Authorization Extension client."
+                            " This client can send \"Disconnect-Request\""
+                            " or \"CoA-Request\" packets to forcibly disconnect a client"
+                            " or change connection parameters."
+                        ),
+                        "propertyOrder": 11,
+                    },
+                    "dae_port": {
+                        "type": "integer",
+                        "title": "DAE port",
+                        # "description": "port the Dynamic Authorization Extension server listens on.",
+                        "default": 3799,
+                        "propertyOrder": 12,
+                    },
+                    "dae_secret": {
+                        "title": "DAE secret",
+                        "type": "string",
+                        "propertyOrder": 13,
+                    },
+                    "nasid": {
+                        "title": "NAS ID",
+                        "type": "string",
+                        "description": "NAS ID for RADIUS authentication requests",
+                        "propertyOrder": 13,
+                    },
+                }
+            },
         },
         "properties": {
             "general": {
