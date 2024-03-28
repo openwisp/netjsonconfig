@@ -598,43 +598,68 @@ Interfaces of type ``bridge`` contains options that are specific for network bri
 
 The ``OpenWrt`` backend NetJSON extensions for bridge interfaces:
 
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| key name                    | type    | default   | allowed values                                              |
-+=============================+=========+===========+=============================================================+
-| ``bridge_members``          | list    | ``[]``    | list of interface names for creating bridge                 |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``igmp_snooping``           | boolean | ``False`` | sets the ``multicast_snooping`` kernel setting for a bridge |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``multicast_querier``       | boolean | ``False`` | enables the bridge as a multicast querier                   |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``query_interval``          | integer | ``12500`` | time interval in centiseconds between multicast general     |
-|                             |         |           | queries                                                     |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``query_response_interval`` | integer | ``1000``  | the max response time in centiseconds inserted into         |
-|                             |         |           | the periodic general queries                                |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``last_member_interval``    | integer | ``100``   | the maximum response time in centiseconds inserted into     |
-|                             |         |           | group-specific queries sent in response to leave            |
-|                             |         |           | group messages.                                             |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``hash_max``                | integer | ``512``   | size of kernel multicast hash table                         |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``robustness``              | integer | ``2``     | sets Startup Query Count and Last Member Count              |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``stp``                     | boolean | ``False`` | enables the spanning tree protocol                          |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``forward_delay``           | integer | ``4``     | time in seconds to spend in listening                       |
-|                             |         |           | and learning states (range between 2-30)                    |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``hello_time``              | integer | ``2``     | time interval in seconds for STP hello packets (range 1-10) |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``priority``                | integer | ``32767`` | sets the STP bridge priority (range 0-65535)                |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``ageing_time``             | integer | ``300``   | expiration time in seconds for dynamic MAC                  |
-|                             |         |           | entries in the filtering DB" (range 10-1000000)             |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``max_age``                 | integer | ``20``    | timeout in seconds until topology updates on link loss      |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| key name                    | type    | default   | allowed values                                                                               |
++=============================+=========+===========+==============================================================================================+
+| ``bridge_members``          | list    | ``[]``    | list of interface names for creating bridge                                                  |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``igmp_snooping``           | boolean | ``False`` | sets the ``multicast_snooping`` kernel setting for a bridge                                  |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``multicast_querier``       | boolean | ``False`` | enables the bridge as a multicast querier                                                    |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``query_interval``          | integer | ``12500`` | time interval in centiseconds between multicast general                                      |
+|                             |         |           | queries                                                                                      |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``query_response_interval`` | integer | ``1000``  | the max response time in centiseconds inserted into                                          |
+|                             |         |           | the periodic general queries                                                                 |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``last_member_interval``    | integer | ``100``   | the maximum response time in centiseconds inserted into                                      |
+|                             |         |           | group-specific queries sent in response to leave                                             |
+|                             |         |           | group messages.                                                                              |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``hash_max``                | integer | ``512``   | size of kernel multicast hash table                                                          |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``robustness``              | integer | ``2``     | sets Startup Query Count and Last Member Count                                               |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``stp``                     | boolean | ``False`` | enables the spanning tree protocol                                                           |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``forward_delay``           | integer | ``4``     | time in seconds to spend in listening                                                        |
+|                             |         |           | and learning states (range between 2-30)                                                     |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``hello_time``              | integer | ``2``     | time interval in seconds for STP hello packets (range 1-10)                                  |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``priority``                | integer | ``32767`` | sets the STP bridge priority (range 0-65535)                                                 |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``ageing_time``             | integer | ``300``   | expiration time in seconds for dynamic MAC                                                   |
+|                             |         |           | entries in the filtering DB" (range 10-1000000)                                              |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``max_age``                 | integer | ``20``    | timeout in seconds until topology updates on link loss                                       |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+| ``vlan_filtering``          | list    | ``[]``    | a list of ``dict ({})`` defining VLANs for the bridge                                        |
+|                             |         |           |                                                                                              |
+|                             |         |           | +-----------+---------+--------------------------------------------------------------------+ |
+|                             |         |           | | key name  | type    | allowed values                                                     | |
+|                             |         |           | +===========+=========+====================================================================+ |
+|                             |         |           | | ``vlan``  | integer | VLAN ID                                                            | |
+|                             |         |           | +-----------+---------+--------------------------------------------------------------------+ |
+|                             |         |           | | ``ports`` | list    | A list of ``dict`` defining interfaces participating in the VLAN   | |
+|                             |         |           | |           |         |                                                                    | |
+|                             |         |           | |           |         | +-----------------+---------+------------------------------------+ | |
+|                             |         |           | |           |         | | key name        | type    | allowed values                     | | |
+|                             |         |           | |           |         | +=================+=========+====================================+ | |
+|                             |         |           | |           |         | | ``ifname``      | string  | interface name (this interface     | | |
+|                             |         |           | |           |         | |                 |         | should be a bridge member)         | | |
+|                             |         |           | |           |         | +-----------------+---------+------------------------------------+ | |
+|                             |         |           | |           |         | | ``tagging``     | string  | whether the port is tagged (``t``) | | |
+|                             |         |           | |           |         | |                 |         | or untagged (``u``)                | | |
+|                             |         |           | |           |         | +-----------------+---------+------------------------------------+ | |
+|                             |         |           | |           |         | | ``primary_vid`` | boolean | whether the current VLAN should be | | |
+|                             |         |           | |           |         | |                 |         | used for all untagged incoming     | | |
+|                             |         |           | |           |         | |                 |         | traffic on this interface          | | |
+|                             |         |           | |           |         | +-----------------+---------+------------------------------------+ | |
+|                             |         |           | +-----------+---------+--------------------------------------------------------------------+ |
++-----------------------------+---------+-----------+----------------------------------------------------------------------------------------------+
+
 
 Bridge interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -705,6 +730,76 @@ Will be rendered as follows::
             option proto 'static'
             option stp '1'
             option type 'bridge'
+
+Using VLAN Filtering on a Bridge
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "bridge",
+                "bridge_members": ["lan1", "lan2", "lan3"],
+                "name": "br-lan",
+                "vlan_filtering": [
+                    {
+                        "vlan": 1,
+                        "ports": [
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": True},
+                            {"ifname": "lan2", "tagging": "t"},
+                        ],
+                    },
+                    {
+                        "vlan": 2,
+                        "ports": [
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": False},
+                            {"ifname": "lan3", "tagging": "u", "primary_vid": True},
+                        ],
+                    },
+                ],
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config device 'device_br_lan'
+            option name 'br-lan'
+            list ports 'lan1'
+            list ports 'lan2'
+            list ports 'lan3'
+            option type 'bridge'
+            option vlan_filtering '1'
+
+    config bridge-vlan 'vlan_br_lan_1'
+            option device 'br-lan'
+            list ports 'lan1:t*'
+            list ports 'lan2:t'
+            option vlan '1'
+
+    config bridge-vlan 'vlan_br_lan_2'
+            option device 'br-lan'
+            list ports 'lan1:t'
+            list ports 'lan3:u*'
+            option vlan '2'
+
+    config interface 'vlan_br_lan_1'
+            option device 'br-lan.1'
+            option proto 'none'
+
+    config interface 'vlan_br_lan_2'
+            option device 'br-lan.2'
+            option proto 'none'
+
+    config interface 'br_lan'
+            option device 'br-lan'
+            option proto 'none'
+
 
 Wireless settings
 -----------------
@@ -1787,6 +1882,108 @@ Will be rendered as follows::
             option proto 'modemmanager'
             option signalrate '5'
             option username 'user123'
+
+VLAN 802.1q / VLAN 802.1ad settings
+-----------------------------------
+
+.. note::
+
+    The configuration setting for **VLAN 802.1q** and **VLAN 802.1ad**
+    are exactly same, except the ``type`` setting. Hence, the
+    documentation only explains **VLAN 802.1q**.
+
+Interfaces of type ``vlan_8021q`` contain a few options that are specific to
+VLAN 802.1q interfaces.
+
+These are the ``OpenWrt`` backend NetJSON extensions for VLAN 802.1q interfaces:
+
++-------------------------+---------+-----------------+--------------------------------------------+
+| key name                | type    | default         | allowed values                             |
++=========================+=========+=================+============================================+
+| ``type``                | string  | ``vlan_8021q``  | type of interface (``vlan_8021ad`` for     |
+|                         |         |                 | VLAN 802.1ad)                              |
++-------------------------+---------+-----------------+--------------------------------------------+
+| ``vid``                 | integer | empty           | VLAN ID                                    |
++-------------------------+---------+-----------------+--------------------------------------------+
+| ``ingress_qos_mapping`` | string  | empty           | Defines a mapping of VLAN header priority  |
+|                         |         |                 | to the Linux internal packet priority on   |
+|                         |         |                 | incoming frames                            |
++-------------------------+---------+-----------------+--------------------------------------------+
+| ``egress_qos_mapping``  | string  | empty           | Defines a mapping of Linux internal packet |
+|                         |         |                 | priority to VLAN header priority but for   |
+|                         |         |                 | outgoing frames                            |
++-------------------------+---------+-----------------+--------------------------------------------+
+
+
+VLAN 802.1q example
+~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "8021q",
+                "vid": 1,
+                "name": "br-lan",
+                "mac": "E8:6A:64:3E:4A:3A",
+                "mtu": 1500,
+                "ingress_qos_mapping": ["1:1"],
+                "egress_qos_mapping": ["2:2"],
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config device 'device_br_lan_1'
+        list egress_qos_mapping '2:2'
+        option ifname 'br-lan'
+        list ingress_qos_mapping '1:1'
+        option macaddr 'E8:6A:64:3E:4A:3A'
+        option mtu '1500'
+        option name 'br-lan.1'
+        option type '8021q'
+        option vid '1'
+
+    config interface 'vlan_br_lan_1'
+        option device 'br-lan.1'
+        option proto 'none'
+
+VLAN 802.1ad example
+~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "8021ad",
+                "vid": 6,
+                "name": "eth0",
+            }
+        ]
+    }
+
+Will be rendered as follows::
+
+    package network
+
+    config device 'device_eth0_6'
+        option ifname 'eth0'
+        option name 'eth0.6'
+        option type '8021ad'
+        option vid '6'
+
+    config interface 'vlan_eth0_6'
+        option device 'eth0.6'
+        option proto 'none'
 
 Radio settings
 --------------
