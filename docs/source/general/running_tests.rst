@@ -36,6 +36,13 @@ Alternatively, you can use the ``nose2`` tool (which has a ton of available opti
 
     nose2
 
+Run specific test files:
+
+.. code-block:: shell
+
+    # runs tests.openwrt.test_network
+    nose2 -s tests/openwrt/ -v test_network
+
 See test coverage with:
 
 .. code-block:: shell

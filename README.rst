@@ -9,7 +9,7 @@ netjsonconfig
 
 .. image:: https://img.shields.io/librariesio/release/github/openwisp/netjsonconfig
    :target: https://libraries.io/github/openwisp/netjsonconfig#repository_dependencies
-   :alt: Dependency monitoring 
+   :alt: Dependency monitoring
 
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
    :target: https://gitter.im/openwisp/general
@@ -35,7 +35,7 @@ configuration engine of `OpenWISP 2 <https://github.com/openwisp/ansible-openwis
 
 **netjsonconfig** is a python library that converts `NetJSON <http://netjson.org>`_
 *DeviceConfiguration* objects into real router configurations that can be installed
-on systems like `OpenWRT <http://openwrt.org>`_, `LEDE <https://www.lede-project.org/>`_
+on systems like `OpenWRT <http://openwrt.org>`_,
 or `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_.
 
 Its main features are listed below for your reference:
