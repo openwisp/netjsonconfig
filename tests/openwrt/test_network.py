@@ -119,6 +119,40 @@ config route6 'route4'
         o = OpenWrt(native=self._routes_uci)
         self.assertEqual(o.config, self._routes_netjson)
 
+    _routes_nogw_netjson = {
+        "routes": [
+            {"device": "wan", "destination": "192.168.100.1/32", "next": "", "cost": 0}
+        ]
+    }
+    _routes_nogw_uci = """package network
+
+config route 'route1'
+    option interface 'wan'
+    option metric '0'
+    option netmask '255.255.255.255'
+    option target '192.168.100.1'
+"""
+
+    def test_render_route_nogw(self):
+        o = OpenWrt(self._routes_nogw_netjson)
+        expected = self._tabs(self._routes_nogw_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_routes_nogw(self):
+        o = OpenWrt(native=self._routes_nogw_uci)
+        self.assertEqual(o.config, self._routes_nogw_netjson)
+
+        with self.subTest('minimalistic route'):
+            minimal_uci = """package network
+
+config route 'route1'
+    option interface 'wan'
+    option target '192.168.100.1'
+    option netmask '255.255.255.255'
+"""
+            o = OpenWrt(native=minimal_uci)
+            self.assertEqual(o.config, self._routes_nogw_netjson)
+
     _rules_netjson = {
         "ip_rules": [
             {

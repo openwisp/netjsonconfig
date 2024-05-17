@@ -54,7 +54,7 @@ class Routes(OpenWrtConverter):
             {
                 "device": route.pop('interface'),
                 "destination": str(ip_interface(network)),
-                "next": route.pop('gateway'),
+                "next": route.pop('gateway', ''),
                 "cost": route.pop(
                     'metric', self._schema['properties']['cost']['default']
                 ),
