@@ -43,6 +43,9 @@ Run specific test files:
     # runs tests.openwrt.test_network
     nose2 -s tests/openwrt/ -v test_network
 
+    # alternative way
+    ./runtests.py tests.openwrt.test_backend.TestBackend
+
 See test coverage with:
 
 .. code-block:: shell
