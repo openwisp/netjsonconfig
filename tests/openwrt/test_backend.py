@@ -181,7 +181,6 @@ config wifi-iface 'wifi_wlan0'
     option hidden '1'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyWifiAP'
 """
         )

@@ -52,7 +52,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option isolate '1'
     option mode 'ap'
-    option network 'wlan0'
     option rts '1300'
     option ssid 'MyWifiAP'
 """
@@ -78,7 +77,6 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyWifiAP'
 """
         )
@@ -136,7 +134,6 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'ap-ssid'
 
 config wifi-iface 'wifi_wlan1'
@@ -144,7 +141,6 @@ config wifi-iface 'wifi_wlan1'
     option device 'radio1'
     option ifname 'wlan1'
     option mode 'adhoc'
-    option network 'wlan1'
     option ssid 'adhoc-ssid'
 """
 
@@ -246,7 +242,6 @@ config wifi-iface 'wifi_wsta0'
     option device 'radio0'
     option ifname 'wsta0'
     option mode 'sta'
-    option network 'wsta0'
     option ssid 'open'
     option wds '0'
 """
@@ -284,7 +279,6 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'open'
 """
         )
@@ -333,7 +327,6 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'open'
 """
 
@@ -429,7 +422,6 @@ config wifi-iface 'wifi_wlan0'
     option disabled '1'
     option ifname 'wlan0'
     option mode 'sta'
-    option network 'wlan0'
     option ssid 'mywifi'
 """
 
@@ -482,7 +474,6 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyWdsAp'
     option wds '1'
 """
@@ -527,7 +518,6 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyWifiAP'
     option wmm '1'
 """
@@ -558,7 +548,6 @@ config wifi-iface 'wifi_wlan0'
     list maclist 'E8:94:F6:33:8C:1D'
     list maclist '42:6c:8f:95:0f:00'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyWifiAP'
 """
 
@@ -903,7 +892,6 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'open'
 """
 
@@ -956,7 +944,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option macaddr 'E8:94:F6:33:8C:00'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'open'
 """
 
@@ -989,7 +976,6 @@ config wifi-iface 'arbitrary_id'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyWifiAP'
 """
 
