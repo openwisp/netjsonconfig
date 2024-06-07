@@ -20,6 +20,7 @@ class Wireless(OpenWrtConverter):
     def __intermediate_wireless(self, interface):
         if 'wireless' not in interface:
             return
+        interface.pop('network', None)
         wireless = interface['wireless']
         # inherit "disabled" attribute from interface if present
         wireless['disabled'] = interface.get('disabled')
