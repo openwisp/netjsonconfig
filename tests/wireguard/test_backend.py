@@ -60,6 +60,7 @@ PostUp = ip rule add ipproto tcp dport 22 table 1234
 PreDown = ip rule delete ipproto tcp dport 22 table 1234
 PrivateKey = QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
 SaveConfig = true
+Table = auto
 
 # wireguard config: test2
 
@@ -67,6 +68,7 @@ SaveConfig = true
 Address = 10.0.1.1/24
 DNS = 10.0.1.1,10.0.0.1
 ListenPort = 40843
+MTU = 1280
 PrivateKey = AFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
 Table = 1234
 """
