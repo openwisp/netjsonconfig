@@ -301,3 +301,35 @@ config wireguard_wg0 'wgpeer_wg0_2'
     def test_parse_multiple_wireguard_peers(self):
         o = OpenWrt(native=self._multiple_peers_uci)
         self.assertEqual(o.config, self._multiple_peers_netjson)
+
+    def test_render_dash(self):
+        o = OpenWrt(
+            {
+                "wireguard_peers": [
+                    {
+                        "interface": "wg-dash",
+                        "public_key": "rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk=",
+                        "allowed_ips": ["10.0.0.1/32"],
+                        "endpoint_host": "192.168.1.42",
+                        "endpoint_port": 40840,
+                        "preshared_key": "oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4=",
+                        "persistent_keepalive": 30,
+                        "route_allowed_ips": True,
+                    }
+                ]
+            }
+        )
+        expected = self._tabs(
+            """package network
+
+config wireguard_wg_dash 'wgpeer_wg_dash'
+    list allowed_ips '10.0.0.1/32'
+    option endpoint_host '192.168.1.42'
+    option endpoint_port '40840'
+    option persistent_keepalive '30'
+    option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
+    option public_key 'rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk='
+    option route_allowed_ips '1'
+"""
+        )
+        self.assertEqual(o.render(), expected)

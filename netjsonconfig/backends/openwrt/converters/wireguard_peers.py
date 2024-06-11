@@ -16,7 +16,7 @@ class WireguardPeers(OpenWrtConverter):
         return result
 
     def __intermediate_peer(self, peer, index):
-        interface = peer.pop('interface')
+        interface = peer.pop('interface').replace('-', '_')
         uci_name = f'wgpeer_{interface}'
         if index > 1:
             uci_name = f'{uci_name}_{index}'
