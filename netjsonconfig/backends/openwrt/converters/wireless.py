@@ -20,6 +20,7 @@ class Wireless(OpenWrtConverter):
     def __intermediate_wireless(self, interface):
         if 'wireless' not in interface:
             return
+        interface.pop('network', None)
         wireless = interface['wireless']
         # inherit "disabled" attribute from interface if present
         wireless['disabled'] = interface.get('disabled')
@@ -72,8 +73,8 @@ class Wireless(OpenWrtConverter):
             try:
                 bridges = self._bridged_wifi[interface['name']]
             except KeyError:
-                # default to the value of "network" or inteface name
-                network = [interface.get('network', interface['name'])]
+                # don't bridge to anything unless explicitly specified
+                network = []
             else:
                 network = bridges
             wireless['network'] = network
