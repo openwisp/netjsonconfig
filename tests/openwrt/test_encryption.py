@@ -27,16 +27,7 @@ class TestEncryption(unittest.TestCase, _TabsMixin):
             }
         ]
     }
-    _wpa3_personal_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa3_personal_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -45,7 +36,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wpa3-personal'
 """
 
@@ -56,7 +46,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa3_personal(self):
         o = OpenWrt(native=self._wpa3_personal_uci)
-        self.assertEqual(o.config, self._wpa3_personal_netjson)
+        self.assertDictEqual(o.config, self._wpa3_personal_netjson)
 
     _wpa2_personal_mixed_netjson = {
         "interfaces": [
@@ -77,16 +67,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_personal_mixed_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_personal_mixed_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -95,7 +76,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wpa2-3-personal-mixed'
 """
 
@@ -106,7 +86,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_personal_mixed(self):
         o = OpenWrt(native=self._wpa2_personal_mixed_uci)
-        self.assertEqual(o.config, self._wpa2_personal_mixed_netjson)
+        self.assertDictEqual(o.config, self._wpa2_personal_mixed_netjson)
 
     _wpa2_personal_netjson = {
         "interfaces": [
@@ -127,16 +107,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_personal_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_personal_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -145,7 +116,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wpa2-personal'
 """
 
@@ -156,7 +126,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_personal(self):
         o = OpenWrt(native=self._wpa2_personal_uci)
-        self.assertEqual(o.config, self._wpa2_personal_netjson)
+        self.assertDictEqual(o.config, self._wpa2_personal_netjson)
 
     _wpa_personal_mixed_netjson = {
         "interfaces": [
@@ -177,16 +147,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa_personal_mixed_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa_personal_mixed_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -195,7 +156,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wpa2-personal'
 """
 
@@ -206,7 +166,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa_personal_mixed(self):
         o = OpenWrt(native=self._wpa_personal_mixed_uci)
-        self.assertEqual(o.config, self._wpa_personal_mixed_netjson)
+        self.assertDictEqual(o.config, self._wpa_personal_mixed_netjson)
 
     _wpa_personal_netjson = {
         "interfaces": [
@@ -226,16 +186,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa_personal_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa_personal_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -243,7 +194,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wpa-personal'
 """
 
@@ -254,7 +204,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa_personal(self):
         o = OpenWrt(native=self._wpa_personal_uci)
-        self.assertEqual(o.config, self._wpa_personal_netjson)
+        self.assertDictEqual(o.config, self._wpa_personal_netjson)
 
     _wpa2_enterprise_mixed_ap_netjson = {
         "interfaces": [
@@ -276,16 +226,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_enterprise_mixed_ap_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_enterprise_mixed_ap_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option acct_secret 'radius_secret'
@@ -297,7 +238,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'radius_secret'
     option mode 'ap'
-    option network 'wlan0'
     option server '192.168.0.1'
     option ssid 'enterprise-mixed'
 """
@@ -309,7 +249,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_enterprise_mixed_ap(self):
         o = OpenWrt(native=self._wpa2_enterprise_mixed_ap_uci)
-        self.assertEqual(o.config, self._wpa2_enterprise_mixed_ap_netjson)
+        self.assertDictEqual(o.config, self._wpa2_enterprise_mixed_ap_netjson)
 
     _wpa3_enterprise_ap_netjson = {
         "interfaces": [
@@ -340,16 +280,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa3_enterprise_ap_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa3_enterprise_ap_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option acct_interval '300'
@@ -369,7 +300,6 @@ config wifi-iface 'wifi_wlan0'
     option key 'radius_secret'
     option mode 'ap'
     option nasid '2'
-    option network 'wlan0'
     option port '1812'
     option server '192.168.0.1'
     option ssid 'wpa3-enterprise'
@@ -383,7 +313,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa3_enterprise(self):
         o = OpenWrt(native=self._wpa3_enterprise_ap_uci)
-        self.assertEqual(o.config, self._wpa3_enterprise_ap_netjson)
+        self.assertDictEqual(o.config, self._wpa3_enterprise_ap_netjson)
 
     _wpa2_enterprise_ap_netjson = {
         "interfaces": [
@@ -409,16 +339,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_enterprise_ap_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_enterprise_ap_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option acct_port '1813'
@@ -433,7 +354,6 @@ config wifi-iface 'wifi_wlan0'
     option key 'radius_secret'
     option mode 'ap'
     option nasid '2'
-    option network 'wlan0'
     option port '1812'
     option server '192.168.0.1'
     option ssid 'wpa2-802.1x'
@@ -447,7 +367,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_enterprise(self):
         o = OpenWrt(native=self._wpa2_enterprise_ap_uci)
-        self.assertEqual(o.config, self._wpa2_enterprise_ap_netjson)
+        self.assertDictEqual(o.config, self._wpa2_enterprise_ap_netjson)
 
     _wpa_enterprise_mixed_ap_netjson = {
         "interfaces": [
@@ -468,16 +388,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa_enterprise_mixed_ap_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa_enterprise_mixed_ap_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option acct_secret 'radius_secret'
@@ -488,7 +399,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'radius_secret'
     option mode 'ap'
-    option network 'wlan0'
     option server '192.168.0.1'
     option ssid 'enterprise-mixed'
 """
@@ -500,7 +410,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa_enterprise_mixed_ap(self):
         o = OpenWrt(native=self._wpa_enterprise_mixed_ap_uci)
-        self.assertEqual(o.config, self._wpa_enterprise_mixed_ap_netjson)
+        self.assertDictEqual(o.config, self._wpa_enterprise_mixed_ap_netjson)
 
     _wpa_enterprise_ap_netjson = {
         "interfaces": [
@@ -521,16 +431,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa_enterprise_ap_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa_enterprise_ap_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option acct_secret 'radius_secret'
@@ -541,7 +442,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'radius_secret'
     option mode 'ap'
-    option network 'wlan0'
     option server '192.168.0.1'
     option ssid 'enterprise'
 """
@@ -553,7 +453,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa_enterprise_ap(self):
         o = OpenWrt(native=self._wpa_enterprise_ap_uci)
-        self.assertEqual(o.config, self._wpa_enterprise_ap_netjson)
+        self.assertDictEqual(o.config, self._wpa_enterprise_ap_netjson)
 
     _wpa3_enterprise_client_netjson = {
         "interfaces": [
@@ -578,16 +478,7 @@ config wifi-iface 'wifi_wlan0'
         ]
     }
 
-    _wpa3_enterprise_client_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa3_enterprise_client_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option bssid '00:26:b9:20:5f:09'
@@ -598,7 +489,6 @@ config wifi-iface 'wifi_wlan0'
     option ieee80211w '2'
     option ifname 'wlan0'
     option mode 'sta'
-    option network 'wlan0'
     option password 'test-password'
     option ssid 'enterprise-client'
 """
@@ -610,7 +500,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa3_enterprise_client(self):
         o = OpenWrt(native=self._wpa3_enterprise_client_uci)
-        self.assertEqual(o.config, self._wpa3_enterprise_client_netjson)
+        self.assertDictEqual(o.config, self._wpa3_enterprise_client_netjson)
 
     _wpa2_enterprise_tls_client_netjson = {
         "interfaces": [
@@ -634,16 +524,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_enterprise_client_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_enterprise_client_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option bssid '00:26:b9:20:5f:09'
@@ -654,7 +535,6 @@ config wifi-iface 'wifi_wlan0'
     option ieee80211w '1'
     option ifname 'wlan0'
     option mode 'sta'
-    option network 'wlan0'
     option password 'test-password'
     option ssid 'enterprise-client'
 """
@@ -666,7 +546,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_enterprise_client(self):
         o = OpenWrt(native=self._wpa2_enterprise_client_uci)
-        self.assertEqual(o.config, self._wpa2_enterprise_tls_client_netjson)
+        self.assertDictEqual(o.config, self._wpa2_enterprise_tls_client_netjson)
 
     _wpa2_enterprise_ttls_client_netjson = {
         "interfaces": [
@@ -690,16 +570,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_enterprise_ttls_client_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_enterprise_ttls_client_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option auth 'MSCHAPV2'
@@ -710,7 +581,6 @@ config wifi-iface 'wifi_wlan0'
     option identity 'test-identity'
     option ifname 'wlan0'
     option mode 'sta'
-    option network 'wlan0'
     option password 'test-password'
     option ssid 'enterprise-client'
 """
@@ -722,7 +592,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_enterprise_ttls_client(self):
         o = OpenWrt(native=self._wpa2_enterprise_ttls_client_uci)
-        self.assertEqual(o.config, self._wpa2_enterprise_ttls_client_netjson)
+        self.assertDictEqual(o.config, self._wpa2_enterprise_ttls_client_netjson)
 
     _wpa2_enterprise_peap_client_netjson = {
         "interfaces": [
@@ -746,16 +616,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_enterprise_peap_client_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_enterprise_peap_client_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option auth 'EAP-MSCHAPV2'
@@ -766,7 +627,6 @@ config wifi-iface 'wifi_wlan0'
     option identity 'test-identity'
     option ifname 'wlan0'
     option mode 'sta'
-    option network 'wlan0'
     option password 'test-password'
     option ssid 'enterprise-client'
 """
@@ -778,7 +638,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_enterprise_peap_client(self):
         o = OpenWrt(native=self._wpa2_enterprise_peap_client_uci)
-        self.assertEqual(o.config, self._wpa2_enterprise_peap_client_netjson)
+        self.assertDictEqual(o.config, self._wpa2_enterprise_peap_client_netjson)
 
     _wpa2_enterprise_tls_client_auth_netjson = {
         "interfaces": [
@@ -803,16 +663,7 @@ config wifi-iface 'wifi_wlan0'
         ]
     }
 
-    _wpa2_enterprise_tls_client_auth_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_enterprise_tls_client_auth_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option bssid '00:26:b9:20:5f:09'
@@ -822,7 +673,6 @@ config wifi-iface 'wifi_wlan0'
     option identity 'test-identity'
     option ifname 'wlan0'
     option mode 'sta'
-    option network 'wlan0'
     option password 'test-password'
     option ssid 'enterprise-client'
 """
@@ -850,16 +700,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wep_open_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wep_open_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -868,7 +709,6 @@ config wifi-iface 'wifi_wlan0'
     option key '1'
     option key1 's:wepkey1234567'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wep'
 """
 
@@ -879,7 +719,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wep_open(self):
         o = OpenWrt(native=self._wep_open_uci)
-        self.assertEqual(o.config, self._wep_open_netjson)
+        self.assertDictEqual(o.config, self._wep_open_netjson)
 
     _wep_shared_netjson = {
         "interfaces": [
@@ -899,16 +739,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wep_shared_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wep_shared_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -917,7 +748,6 @@ config wifi-iface 'wifi_wlan0'
     option key '1'
     option key1 'wepkey1234567'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wep'
 """
 
@@ -928,7 +758,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wep_shared(self):
         o = OpenWrt(native=self._wep_shared_uci)
-        self.assertEqual(o.config, self._wep_shared_netjson)
+        self.assertDictEqual(o.config, self._wep_shared_netjson)
 
     def test_encryption_disabled(self):
         o = OpenWrt(
@@ -953,23 +783,13 @@ config wifi-iface 'wifi_wlan0'
             }
         )
         expected = self._tabs(
-            """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+            """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'none'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyNetwork'
 """
         )
@@ -989,23 +809,13 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _no_encryption_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _no_encryption_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'none'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'open'
 """
 
@@ -1016,7 +826,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_no_encryption(self):
         o = OpenWrt(native=self._no_encryption_uci)
-        self.assertEqual(o.config, self._no_encryption_netjson)
+        self.assertDictEqual(o.config, self._no_encryption_netjson)
 
     _wpa2_80211s_netjson = {
         "interfaces": [
@@ -1036,16 +846,7 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wpa2_80211s_uci = """package network
-
-config device 'device_mesh0'
-    option name 'mesh0'
-
-config interface 'mesh0'
-    option device 'mesh0'
-    option proto 'none'
-
-package wireless
+    _wpa2_80211s_uci = """package wireless
 
 config wifi-iface 'wifi_mesh0'
     option device 'radio0'
@@ -1054,7 +855,6 @@ config wifi-iface 'wifi_mesh0'
     option key 'passphrase012345'
     option mesh_id 'encrypted-mesh'
     option mode 'mesh'
-    option network 'mesh0'
 """
 
     def test_render_wpa2_80211s(self):
@@ -1064,7 +864,7 @@ config wifi-iface 'wifi_mesh0'
 
     def test_parse_wpa2_80211s(self):
         o = OpenWrt(native=self._wpa2_80211s_uci)
-        self.assertEqual(o.config, self._wpa2_80211s_netjson)
+        self.assertDictEqual(o.config, self._wpa2_80211s_netjson)
 
     _wpa3_80211s_netjson = {
         "interfaces": [
@@ -1085,16 +885,7 @@ config wifi-iface 'wifi_mesh0'
             }
         ]
     }
-    _wpa3_80211s_uci = """package network
-
-config device 'device_mesh0'
-    option name 'mesh0'
-
-config interface 'mesh0'
-    option device 'mesh0'
-    option proto 'none'
-
-package wireless
+    _wpa3_80211s_uci = """package wireless
 
 config wifi-iface 'wifi_mesh0'
     option device 'radio0'
@@ -1104,7 +895,6 @@ config wifi-iface 'wifi_mesh0'
     option key 'passphrase012345'
     option mesh_id 'encrypted-mesh'
     option mode 'mesh'
-    option network 'mesh0'
 """
 
     def test_render_wpa3_80211s(self):
@@ -1114,7 +904,7 @@ config wifi-iface 'wifi_mesh0'
 
     def test_parse_wpa3_80211s(self):
         o = OpenWrt(native=self._wpa3_80211s_uci)
-        self.assertEqual(o.config, self._wpa3_80211s_netjson)
+        self.assertDictEqual(o.config, self._wpa3_80211s_netjson)
 
     _wpa2_adhoc_netjson = {
         "interfaces": [
@@ -1135,16 +925,7 @@ config wifi-iface 'wifi_mesh0'
             }
         ]
     }
-    _wpa2_adhoc_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wpa2_adhoc_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option bssid '00:26:b9:20:5f:09'
@@ -1153,7 +934,6 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option key 'passphrase012345'
     option mode 'adhoc'
-    option network 'wlan0'
     option ssid 'encrypted-adhoc'
 """
 
@@ -1164,7 +944,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wpa2_adhoc(self):
         o = OpenWrt(native=self._wpa2_adhoc_uci)
-        self.assertEqual(o.config, self._wpa2_adhoc_netjson)
+        self.assertDictEqual(o.config, self._wpa2_adhoc_netjson)
 
     _wps_ap_netjson = {
         "interfaces": [
@@ -1185,23 +965,13 @@ config wifi-iface 'wifi_wlan0'
             }
         ]
     }
-    _wps_ap_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _wps_ap_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option encryption 'psk'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'wps-ssid'
     option wps_label '0'
     option wps_pin 'pin1234'
@@ -1215,7 +985,7 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_wps_ap(self):
         o = OpenWrt(native=self._wps_ap_uci)
-        self.assertEqual(o.config, self._wps_ap_netjson)
+        self.assertDictEqual(o.config, self._wps_ap_netjson)
 
     def test_render_ieee80211w(self):
         _netjson_wpa3_personal_cipher_tkip = {
@@ -1337,16 +1107,7 @@ config wifi-iface 'wifi_wlan0'
         ]
     }
 
-    _owe_uci = """package network
-
-config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
-    option proto 'none'
-
-package wireless
+    _owe_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -1354,7 +1115,6 @@ config wifi-iface 'wifi_wlan0'
     option ieee80211w '1'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'owe_ssid'
 """
 
@@ -1365,4 +1125,4 @@ config wifi-iface 'wifi_wlan0'
 
     def test_parse_owe(self):
         o = OpenWrt(native=self._owe_uci)
-        self.assertEqual(o.config, self._owe_netjson)
+        self.assertDictEqual(o.config, self._owe_netjson)

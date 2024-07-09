@@ -156,11 +156,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         network = tar.getmember('etc/config/network')
         contents = tar.extractfile(network).read().decode()
         expected = self._tabs(
-            """config device 'device_wlan0'
-    option name 'wlan0'
-
-config interface 'wlan0'
-    option device 'wlan0'
+            """config interface 'wlan0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
@@ -185,7 +181,6 @@ config wifi-iface 'wifi_wlan0'
     option hidden '1'
     option ifname 'wlan0'
     option mode 'ap'
-    option network 'wlan0'
     option ssid 'MyWifiAP'
 """
         )

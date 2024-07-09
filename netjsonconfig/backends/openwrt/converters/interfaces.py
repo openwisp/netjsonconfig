@@ -52,7 +52,6 @@ class Interfaces(OpenWrtConverter):
         )
 
     def to_intermediate_loop(self, block, result, index=None):
-        result.setdefault('network', [])
         uci_name = self._get_uci_name(block.get('network') or block['name'])
         address_list = self.__intermediate_addresses(block)
         interface = self.__intermediate_interface(block, uci_name)
@@ -60,6 +59,7 @@ class Interfaces(OpenWrtConverter):
         if self.dsa_interface:
             uci_device = self.__intermediate_device(interface)
             if uci_device:
+                result.setdefault('network', [])
                 result['network'].append(self.sorted_dict(uci_device))
         # create one or more "config interface" UCI blocks
         i = 1
@@ -95,6 +95,9 @@ class Interfaces(OpenWrtConverter):
         if interface.get('type') == 'wireguard':
             return self.__intermediate_wireguard_addresses(interface)
         address_list = self.get_copy(interface, 'addresses')
+        # ignore wireless interfaces without addresses
+        if not address_list and interface['type'] == 'wireless':
+            return []
         # do not ignore interfaces if they do not contain any address
         if not address_list:
             return [{'proto': 'none'}]
@@ -117,20 +120,23 @@ class Interfaces(OpenWrtConverter):
             static[address_key].append('{address}/{mask}'.format(**address))
             static.update(self.__intermediate_address(address))
         if static:
-            # do not use CIDR notation when using a single ipv4
-            # see https://github.com/openwisp/netjsonconfig/issues/54
-            if len(static.get('ipaddr', [])) == 1:
-                network = ip_interface(static['ipaddr'][0])
-                static['ipaddr'] = str(network.ip)
-                static['netmask'] = str(network.netmask)
-            # do not use lists when using a single ipv6 address
-            # (avoids to change output of existing configuration)
-            if len(static.get('ip6addr', [])) == 1:
-                static['ip6addr'] = static['ip6addr'][0]
-            result.append(static)
+            result.append(self.__intermediate_static_address(static))
         if dhcp:
             result += dhcp
         return result
+
+    def __intermediate_static_address(self, uci):
+        # do not use CIDR notation when using a single ipv4
+        # see https://github.com/openwisp/netjsonconfig/issues/54
+        if len(uci.get('ipaddr', [])) == 1:
+            network = ip_interface(uci['ipaddr'][0])
+            uci['ipaddr'] = str(network.ip)
+            uci['netmask'] = str(network.netmask)
+        # do not use lists when using a single ipv6 address
+        # (avoids to change output of existing configuration)
+        if len(uci.get('ip6addr', [])) == 1:
+            uci['ip6addr'] = uci['ip6addr'][0]
+        return uci
 
     def __intermediate_wireguard_addresses(self, interface):
         addresses = interface.pop('addresses')
@@ -210,8 +216,10 @@ class Interfaces(OpenWrtConverter):
         data structure compatible with new syntax
         introduced in OpenWrt 21.02.
         """
-
         device = {}
+        # ignore wireless interfaces
+        if interface['type'] == 'wireless':
+            return device
         # Add L2 options (needed for > OpenWrt 21.02)
         self._add_l2_options(device, interface)
         device.update(
