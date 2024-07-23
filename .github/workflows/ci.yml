@@ -34,23 +34,24 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install python dependencies
+      - name: Install Dependencies
+        id: deps
         run: |
           pip install -U pip wheel setuptools
           pip install -U -r requirements-test.txt
-
-      - name: Install netjsonconfig
-        run: pip install -U -e .
+          pip install -U -e .
 
       - name: QA checks
         run: ./run-qa-checks
 
       - name: Tests
+        if: ${{ !cancelled() && steps.deps.conclusion == 'success' }}
         run: |
           coverage run -a --source=netjsonconfig runtests.py
           coverage xml
 
       - name: Upload Coverage
+        if: ${{ success() }}
         uses: coverallsapp/github-action@v2
         with:
           parallel: true
