@@ -1,11 +1,11 @@
-=====
 Setup
 =====
 
 Install stable version from pypi
 --------------------------------
 
-The easiest way to install *netjsonconfig* is via the `python package index <https://pypi.python.org/>`_:
+The easiest way to install *netjsonconfig* is via the `python package
+index <https://pypi.python.org/>`_:
 
 .. code-block:: shell
 
@@ -14,7 +14,8 @@ The easiest way to install *netjsonconfig* is via the `python package index <htt
 Install development version
 ---------------------------
 
-If you need to test the latest development version you can do it in two ways;
+If you need to test the latest development version you can do it in two
+ways;
 
 The first option is to install a tarball:
 
@@ -22,8 +23,8 @@ The first option is to install a tarball:
 
     pip install https://github.com/openwisp/netjsonconfig/tarball/master
 
-The second option is to install via pip using git
-(this will automatically clone the repo and store it on your hard drive):
+The second option is to install via pip using git (this will automatically
+clone the repo and store it on your hard drive):
 
 .. code-block:: shell
 

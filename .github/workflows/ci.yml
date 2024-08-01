@@ -5,23 +5,21 @@ on:
   push:
     branches:
       - master
-      - gsoc23
   pull_request:
     branches:
       - master
-      - gsoc23
 
 jobs:
   build:
     name: Python==${{ matrix.python-version }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
       matrix:
         python-version:
-          - 3.8
-          - 3.9
+          - "3.8"
+          - "3.9"
           - "3.10"
 
     steps:
@@ -47,7 +45,8 @@ jobs:
       - name: Tests
         if: ${{ !cancelled() && steps.deps.conclusion == 'success' }}
         run: |
-          coverage run -a --source=netjsonconfig runtests.py
+          coverage run runtests.py
+          coverage combine
           coverage xml
 
       - name: Upload Coverage

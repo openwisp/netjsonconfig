@@ -1,12 +1,12 @@
-====================
 Command line utility
 ====================
 
-netjsonconfig ships a command line utility that can be
-used from the interactive shell, bash scripts or other programming
-languages.
+netjsonconfig ships a command line utility that can be used from the
+interactive shell, bash scripts or other programming languages.
 
-Check out the available options yourself with::
+Check out the available options yourself with:
+
+::
 
     $ netjsonconfig --help
     usage: netjsonconfig [-h] [--config CONFIG]
@@ -48,33 +48,37 @@ Check out the available options yourself with::
       --verbose             verbose output
       --version, -v         show program's version number and exit
 
-Here's the common use cases explained::
+Here's the common use cases explained:
 
-   # generate tar.gz from a NetJSON DeviceConfiguration object and save its output to a file
-   netjsonconfig --config config.json --backend openwrt --method generate > config.tar.gz
+::
 
-   # convert an OpenWRT tar.gz to NetJSON and print to standard output (with 4 space indentation)
-   netjsonconfig --native config.tar.gz --backend openwrt --method json -a indent="    "
+    # generate tar.gz from a NetJSON DeviceConfiguration object and save its output to a file
+    netjsonconfig --config config.json --backend openwrt --method generate > config.tar.gz
 
-   # use write configuration archive to disk in /tmp/routerA.tar.gz
-   netjsonconfig --config config.json --backend openwrt --method write --args name=routerA path=/tmp/
+    # convert an OpenWRT tar.gz to NetJSON and print to standard output (with 4 space indentation)
+    netjsonconfig --native config.tar.gz --backend openwrt --method json -a indent="    "
 
-   # see output of OpenWrt render method
-   netjsonconfig --config config.json --backend openwrt --method render
+    # use write configuration archive to disk in /tmp/routerA.tar.gz
+    netjsonconfig --config config.json --backend openwrt --method write --args name=routerA path=/tmp/
 
-   # same as previous but exclude additional files
-   netjsonconfig --config config.json --backend openwrt --method render --args files=0
+    # see output of OpenWrt render method
+    netjsonconfig --config config.json --backend openwrt --method render
 
-   # validate the config.json file against the openwrt backend
-   netjsonconfig --config config.json --backend openwrt --method validate
+    # same as previous but exclude additional files
+    netjsonconfig --config config.json --backend openwrt --method render --args files=0
 
-   # abbreviated options
-   netjsonconfig -c config.json -b openwrt -m render -a files=0
+    # validate the config.json file against the openwrt backend
+    netjsonconfig --config config.json --backend openwrt --method validate
 
-   # passing a JSON string instead of a file path
-   netjsonconfig -c '{"general": { "hostname": "example" }}' -b openwrt -m render
+    # abbreviated options
+    netjsonconfig -c config.json -b openwrt -m render -a files=0
 
-Using templates::
+    # passing a JSON string instead of a file path
+    netjsonconfig -c '{"general": { "hostname": "example" }}' -b openwrt -m render
+
+Using templates:
+
+::
 
     netjsonconfig -c config.json -t template1.json template2.json -b openwrt -m render
 
@@ -85,13 +89,19 @@ Using templates::
 Environment variables
 ---------------------
 
-*Environment variables* are automatically passed to the ``context`` argument (if you don't
-know what this argument does please read ":ref:`context`"), therefore
-you can reference environment variables inside *configurations* and *templates*::
+*Environment variables* are automatically passed to the ``context``
+argument (if you don't know what this argument does please read
+":ref:`context`"), therefore you can reference environment variables
+inside *configurations* and *templates*:
+
+::
 
     export HOSTNAME=freedom
     netjsonconfig -c '{"general": { "hostname": "{{ HOSTNAME }}" }}' -b openwrt -m render
 
-You can also avoid using ``export`` and write everything in a one line command::
+You can also avoid using ``export`` and write everything in a one line
+command:
+
+::
 
     PORT=2009; netjsonconfig -c config.json -t template1.json -b openwrt -m render

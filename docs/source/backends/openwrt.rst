@@ -1,47 +1,47 @@
-===============
 OpenWRT Backend
 ===============
 
-The ``OpenWrt`` backend allows to generate OpenWRT compatible configurations.
+The ``OpenWrt`` backend allows to generate OpenWRT compatible
+configurations.
 
 .. note::
+
     This backend purposely generates only named UCI blocks.
 
-    UCI stands for `Unified Configuration Interface <https://wiki.openwrt.org/doc/uci>`_
-    and it is the default configuration system installed on `OpenWRT <http://openwrt.org>`_
-    and its fork `LEDE <https://www.lede-project.org/>`_.
+    UCI stands for `Unified Configuration Interface
+    <https://wiki.openwrt.org/doc/uci>`_ and it is the default
+    configuration system installed on `OpenWRT <http://openwrt.org>`_ and
+    its fork `LEDE <https://www.lede-project.org/>`_.
 
 .. important::
 
-    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21 <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
-    By default, the netjsonconfig library generates configuration in the new syntax.
-    If you want to generate configuration in the legacy syntax (OpenWrt <=19), then
-    set ``dsa=False`` while instantiating object of ``netjsonconfig.OpenWrt`` class.
+    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21
+    <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
+    By default, the netjsonconfig library generates configuration in the
+    new syntax. If you want to generate configuration in the legacy syntax
+    (OpenWrt <=19), then set ``dsa=False`` while instantiating object of
+    ``netjsonconfig.OpenWrt`` class.
 
     .. code-block:: python
 
-        >>> from netjsonconfig import OpenWrt
-        >>>
-        >>> o = OpenWrt(
-        ...     config = {
-        ...         "interfaces": [
-        ...             {
-        ...                 "name": "eth0",
-        ...                 "type": "ethernet",
-        ...                 "addresses": [
-        ...                     {
-        ...                         "proto": "dhcp",
-        ...                         "family": "ipv4"
-        ...                     }
-        ...                 ]
-        ...             }
-        ...         ]
-        ...     },
-        ...     dsa=False, # This will generate configuration in legacy syntax
-        ... )
+        from netjsonconfig import OpenWrt
 
-    The examples present in this documentation only demonstrates configuration
-    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
+        o = OpenWrt(
+            config={
+                "interfaces": [
+                    {
+                        "name": "eth0",
+                        "type": "ethernet",
+                        "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                    }
+                ]
+            },
+            dsa=False,  # This will generate configuration in legacy syntax
+        )
+
+    The examples present in this documentation only demonstrates
+    configuration in new syntax. Refer `older documentation versions
+    <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
     to check examples of old syntax.
 
 Initialization
@@ -49,13 +49,13 @@ Initialization
 
 .. automethod:: netjsonconfig.OpenWrt.__init__
 
-If you are unsure about the meaning of the initalization parameters,
-read about the following basic concepts:
+If you are unsure about the meaning of the initalization parameters, read
+about the following basic concepts:
 
-    * :ref:`configuration_dictionary`
-    * :ref:`backend`
-    * :ref:`template`
-    * :ref:`context`
+    - :ref:`configuration_dictionary`
+    - :ref:`backend`
+    - :ref:`template`
+    - :ref:`context`
 
 Initialization example (forward conversion):
 
@@ -63,11 +63,7 @@ Initialization example (forward conversion):
 
     from netjsonconfig import OpenWrt
 
-    router = OpenWrt({
-        "general": {
-            "hostname": "HomeRouter"
-        }
-    })
+    router = OpenWrt({"general": {"hostname": "HomeRouter"}})
 
 Initialization example (backward conversion):
 
@@ -75,7 +71,7 @@ Initialization example (backward conversion):
 
     from netjsonconfig import OpenWrt
 
-    router = OpenWrt(native=open('./openwrt-config.tar.gz'))
+    router = OpenWrt(native=open("./openwrt-config.tar.gz"))
 
 Render method
 -------------
@@ -88,39 +84,43 @@ Code example:
 
     from netjsonconfig import OpenWrt
 
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "eth0.1",
-                "type": "ethernet",
-                "addresses": [
-                    {
-                        "address": "192.168.1.2",
-                        "gateway": "192.168.1.1",
-                        "mask": 24,
-                        "proto": "static",
-                        "family": "ipv4"
-                    },
-                    {
-                        "address": "192.168.2.1",
-                        "mask": 24,
-                        "proto": "static",
-                        "family": "ipv4"
-                    },
-                    {
-                        "address": "fd87::2",
-                        "gateway": "fd87::1",
-                        "mask": 64,
-                        "proto": "static",
-                        "family": "ipv6"
-                    }
-                ]
-            }
-        ]
-    })
+    o = OpenWrt(
+        {
+            "interfaces": [
+                {
+                    "name": "eth0.1",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "address": "192.168.1.2",
+                            "gateway": "192.168.1.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4",
+                        },
+                        {
+                            "address": "192.168.2.1",
+                            "mask": 24,
+                            "proto": "static",
+                            "family": "ipv4",
+                        },
+                        {
+                            "address": "fd87::2",
+                            "gateway": "fd87::1",
+                            "mask": 64,
+                            "proto": "static",
+                            "family": "ipv6",
+                        },
+                    ],
+                }
+            ]
+        }
+    )
     print(o.render())
 
-Will return the following output::
+Will return the following output:
+
+::
 
     package network
 
@@ -142,49 +142,53 @@ Example:
 
 .. code-block:: python
 
-    >>> import tarfile
-    >>> from netjsonconfig import OpenWrt
-    >>>
-    >>> o = OpenWrt({
-    ...     "interfaces": [
-    ...         {
-    ...             "name": "eth0",
-    ...             "type": "ethernet",
-    ...             "addresses": [
-    ...                 {
-    ...                     "proto": "dhcp",
-    ...                     "family": "ipv4"
-    ...                 }
-    ...             ]
-    ...         }
-    ...     ]
-    ... })
-    >>> stream = o.generate()
-    >>> print(stream)
-    <_io.BytesIO object at 0x7fd2287fb410>
-    >>> tar = tarfile.open(fileobj=stream, mode='r:gz')
-    >>> print(tar.getmembers())
-    [<TarInfo 'etc/config/network' at 0x7fd228790250>]
+    import tarfile
+    from netjsonconfig import OpenWrt
 
-As you can see from this example, the ``generate`` method does not write to disk,
-but returns an instance of ``io.BytesIO`` which contains a tar.gz file object with the
-following file structure::
+    o = OpenWrt(
+        {
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                }
+            ]
+        }
+    )
+    stream = o.generate()
+    print(stream)
+    # <_io.BytesIO object at 0x7fd2287fb410>
+    tar = tarfile.open(fileobj=stream, mode="r:gz")
+    print(tar.getmembers())
+    # [<TarInfo 'etc/config/network' at 0x7fd228790250>]
+
+As you can see from this example, the ``generate`` method does not write
+to disk, but returns an instance of ``io.BytesIO`` which contains a tar.gz
+file object with the following file structure:
+
+::
 
     /etc/config/network
 
-The configuration archive can then be written to disk, served via HTTP or uploaded
-directly on the OpenWRT router where it can be finally  "restored" with ``sysupgrade``::
+The configuration archive can then be written to disk, served via HTTP or
+uploaded directly on the OpenWRT router where it can be finally "restored"
+with ``sysupgrade``:
+
+::
 
     sysupgrade -r <archive>
 
-Note that ``sysupgrade -r`` does not apply the configuration, to do this you have
-to reload the services manually or reboot the router.
+Note that ``sysupgrade -r`` does not apply the configuration, to do this
+you have to reload the services manually or reboot the router.
 
 .. note::
-   the ``generate`` method intentionally sets the timestamp of the tar.gz archive and its
-   members to ``0`` in order to facilitate comparing two different archives: setting the
-   timestamp would infact cause the checksum to be different each time even when contents
-   of the archive are identical.
+
+    the ``generate`` method intentionally sets the timestamp of the tar.gz
+    archive and its members to ``0`` in order to facilitate comparing two
+    different archives: setting the timestamp would infact cause the
+    checksum to be different each time even when contents of the archive
+    are identical.
 
 Write method
 ------------
@@ -195,24 +199,21 @@ Example:
 
 .. code-block:: python
 
-    >>> import tarfile
-    >>> from netjsonconfig import OpenWrt
-    >>>
-    >>> o = OpenWrt({
-    ...     "interfaces": [
-    ...         {
-    ...             "name": "eth0",
-    ...             "type": "ethernet",
-    ...             "addresses": [
-    ...                 {
-    ...                     "proto": "dhcp",
-    ...                     "family": "ipv4"
-    ...                 }
-    ...             ]
-    ...         }
-    ...     ]
-    ... })
-    >>> o.write('dhcp-router', path='/tmp/')
+    import tarfile
+    from netjsonconfig import OpenWrt
+
+    o = OpenWrt(
+        {
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                }
+            ]
+        }
+    )
+    o.write("dhcp-router", path="/tmp/")
 
 Will write the configuration archive in ``/tmp/dhcp-router.tar.gz``.
 
@@ -221,18 +222,19 @@ Parse method
 
 .. automethod:: netjsonconfig.OpenWrt.parse
 
-This method is automatically called when initializing the backend
-with the ``native`` argument:
+This method is automatically called when initializing the backend with the
+``native`` argument:
 
 .. code-block:: python
 
     from netjsonconfig import OpenWrt
 
-    router = OpenWrt(native=open('./openwrt-config.tar.gz'))
+    router = OpenWrt(native=open("./openwrt-config.tar.gz"))
 
-The argument passed to ``native`` can be a string containing a dump obtained via
-``uci export``, or a file object (real file or ``BytesIO`` instance) representing
-a configuration archive in tar.gz format typically used in OpenWRT/LEDE.
+The argument passed to ``native`` can be a string containing a dump
+obtained via ``uci export``, or a file object (real file or ``BytesIO``
+instance) representing a configuration archive in tar.gz format typically
+used in OpenWRT/LEDE.
 
 JSON method
 -----------
@@ -243,42 +245,39 @@ Code example:
 
 .. code-block:: python
 
-    >>> from netjsonconfig import OpenWrt
-    >>>
-    >>> router = OpenWrt({
-    ...     "general": {
-    ...         "hostname": "HomeRouter"
-    ...     }
-    ... })
-    >>> print(router.json(indent=4))
-    {
-        "type": "DeviceConfiguration",
-        "general": {
-            "hostname": "HomeRouter"
-        }
-    }
+    from netjsonconfig import OpenWrt
+
+    router = OpenWrt({"general": {"hostname": "HomeRouter"}})
+    print(router.json(indent=4))
+    # {
+    #     "type": "DeviceConfiguration",
+    #     "general": {
+    #         "hostname": "HomeRouter"
+    #     }
+    # }
 
 General settings
 ----------------
 
-The general settings reside in the ``general`` key of the
-*configuration dictionary*, which follows the
-`NetJSON General object <http://netjson.org/rfc.html#general1>`_ definition
-(see the link for the detailed specification).
+The general settings reside in the ``general`` key of the *configuration
+dictionary*, which follows the `NetJSON General object
+<http://netjson.org/rfc.html#general1>`_ definition (see the link for the
+detailed specification).
 
 Currently only the ``hostname`` option is processed by this backend.
 
 General object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to the default *NetJSON General object options*, the ``OpenWrt`` backend
-also supports the following custom options:
+In addition to the default *NetJSON General object options*, the
+``OpenWrt`` backend also supports the following custom options:
 
-+-------------------+---------+---------------------------------------------------------------------+
-| key name          | type    | function                                                            |
-+===================+=========+=====================================================================+
-| ``timezone``      | string  | one of the `allowed timezone values`_ (first element of each tuple) |
-+-------------------+---------+---------------------------------------------------------------------+
+============ ====== ====================================================
+key name     type   function
+============ ====== ====================================================
+``timezone`` string one of the `allowed timezone values`_ (first element
+                    of each tuple)
+============ ====== ====================================================
 
 .. _allowed timezone values: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openwrt/timezones.py
 
@@ -293,11 +292,13 @@ The following *configuration dictionary*:
         "general": {
             "hostname": "routerA",
             "timezone": "UTC",
-            "ula_prefix": "fd8e:f40a:6701::/48"
+            "ula_prefix": "fd8e:f40a:6701::/48",
         }
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package system
 
@@ -315,64 +316,65 @@ Network interfaces
 ------------------
 
 The network interface settings reside in the ``interfaces`` key of the
-*configuration dictionary*, which must contain a list of
-`NetJSON interface objects <http://netjson.org/rfc.html#interfaces1>`_
-(see the link for the detailed specification).
+*configuration dictionary*, which must contain a list of `NetJSON
+interface objects <http://netjson.org/rfc.html#interfaces1>`_ (see the
+link for the detailed specification).
 
 There are 4 main types of interfaces:
 
-* **network interfaces**: may be of type ``ethernet``, ``virtual``, ``loopback`` or ``other``
-* **wireless interfaces**: must be of type ``wireless``
-* **bridge interfaces**: must be of type ``bridge``
-* **dialup interfaces**: must be of type ``dialup``
-* **modem manager interfaces**: must be of type ``modem-manager``
+- **network interfaces**: may be of type ``ethernet``, ``virtual``,
+  ``loopback`` or ``other``
+- **wireless interfaces**: must be of type ``wireless``
+- **bridge interfaces**: must be of type ``bridge``
+- **dialup interfaces**: must be of type ``dialup``
+- **modem manager interfaces**: must be of type ``modem-manager``
 
 Interface object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to the default *NetJSON Interface object options*, the ``OpenWrt`` backend
-also supports the following custom options for every type of interface:
+In addition to the default *NetJSON Interface object options*, the
+``OpenWrt`` backend also supports the following custom options for every
+type of interface:
 
-+--------------+---------+-----------------------------------------------+
-| key name     | type    | allowed values                                |
-+==============+=========+===============================================+
-| ``network``  | string  | logical interface name (UCI specific)         |
-+--------------+---------+-----------------------------------------------+
+=========== ====== =====================================
+key name    type   allowed values
+=========== ====== =====================================
+``network`` string logical interface name (UCI specific)
+=========== ====== =====================================
 
 .. important::
 
-    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21 <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
-    By default, the netjsonconfig library generates configuration in the new syntax.
-    If you want to generate configuration in the legacy syntax (OpenWrt <=19), then
-    set ``dsa=False`` while instantiating object of ``netjsonconfig.OpenWrt`` class.
+    OpenWrt introduced a new syntax for defining interfaces in `OpenWrt 21
+    <https://openwrt.org/releases/21.02/notes-21.02.0#new_network_configuration_syntax_and_boardjson_change>`_.
+    By default, the netjsonconfig library generates configuration in the
+    new syntax. If you want to generate configuration in the legacy syntax
+    (OpenWrt <=19), then set ``dsa=False`` while instantiating object of
+    ``netjsonconfig.OpenWrt`` class.
 
     .. code-block:: python
 
-        >>> from netjsonconfig import OpenWrt
-        >>>
-        >>> o = OpenWrt(
-        ...     config = {
-        ...         "interfaces": [
-        ...             {
-        ...                 "name": "eth0",
-        ...                 "type": "ethernet",
-        ...                 "addresses": [
-        ...                     {
-        ...                         "proto": "dhcp",
-        ...                         "family": "ipv4"
-        ...                     }
-        ...                 ]
-        ...             }
-        ...         ]
-        ...     },
-        ...     dsa=False, # This will generate configuration in legacy syntax
-        ... )
+        from netjsonconfig import OpenWrt
 
-    The examples present in this documentation only demonstrates configuration
-    in new syntax. Refer `older documentation versions <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
+        o = OpenWrt(
+            config={
+                "interfaces": [
+                    {
+                        "name": "eth0",
+                        "type": "ethernet",
+                        "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                    }
+                ]
+            },
+            dsa=False,  # This will generate configuration in legacy syntax
+        )
+
+    The examples present in this documentation only demonstrates
+    configuration in new syntax. Refer `older documentation versions
+    <https://netjsonconfig.openwisp.org/en/1.0.0a-pre-dsa/backends/openwrt.html>`_
     to check examples of old syntax.
 
-In the following sections some examples of the most common use cases are shown.
+In the following sections some examples of the most common use cases are
+shown.
 
 Loopback interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -391,14 +393,16 @@ The following *configuration dictionary*:
                         "address": "127.0.0.1",
                         "mask": 8,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
-                ]
+                ],
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -425,20 +429,22 @@ The following *configuration dictionary*:
                         "family": "ipv4",
                         "proto": "static",
                         "address": "10.27.251.1",
-                        "mask": 24
+                        "mask": 24,
                     },
                     {
                         "family": "ipv6",
                         "proto": "static",
                         "address": "fdb4:5f35:e8fd::1",
-                        "mask": 48
-                    }
-                ]
+                        "mask": 48,
+                    },
+                ],
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -452,12 +458,13 @@ Will be rendered as follows::
 DNS servers and search domains
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-DNS servers can be set using ``dns_servers``, while search domains can be set using
-``dns_search``.
+DNS servers can be set using ``dns_servers``, while search domains can be
+set using ``dns_search``.
 
-If specified, these values will be automatically added in every interface which has
-at least one static ip address; interfaces which have no ip address configured or are using
-dynamic ip address configuration won't get the ``dns`` option in the UCI output, eg:
+If specified, these values will be automatically added in every interface
+which has at least one static ip address; interfaces which have no ip
+address configured or are using dynamic ip address configuration won't get
+the ``dns`` option in the UCI output, eg:
 
 .. code-block:: python
 
@@ -473,32 +480,26 @@ dynamic ip address configuration won't get the ``dns`` option in the UCI output,
                         "address": "192.168.1.1",
                         "mask": 24,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
-                ]
+                ],
             },
             # the following interface has DHCP enabled
             # and it won't contain the dns setting
             {
                 "name": "eth1",
                 "type": "ethernet",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ]
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
             },
             # the following VLAN interface won't get
             # the dns nor the dns_search settings
-            {
-                "name": "eth1.31",
-                "type": "ethernet"
-            }
-        ]
+            {"name": "eth1.31", "type": "ethernet"},
+        ],
     }
 
-Will return the following UCI output::
+Will return the following UCI output:
+
+::
 
     package network
 
@@ -532,17 +533,14 @@ The following *configuration dictionary*:
                 "name": "eth0",
                 "network": "lan",
                 "type": "ethernet",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv6"
-                    }
-                ]
+                "addresses": [{"proto": "dhcp", "family": "ipv6"}],
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -553,16 +551,17 @@ Will be rendered as follows::
 Using different protocols
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-OpenWRT and LEDE support many protocols (pppoe, pppoa, pptp, l2tp, ecc) and
-the list of supported protocols evolves over time.
+OpenWRT and LEDE support many protocols (pppoe, pppoa, pptp, l2tp, ecc)
+and the list of supported protocols evolves over time.
 
-OpenWISP and netjsonconfig try to stay out of your way by leaving you maximum
-flexibility to use any protocol and any configuration option you may need,
-just set ``type`` to ``other``, then proceed by setting `proto` and any other
-configuration option according to your needs, see the example below.
+OpenWISP and netjsonconfig try to stay out of your way by leaving you
+maximum flexibility to use any protocol and any configuration option you
+may need, just set ``type`` to ``other``, then proceed by setting `proto`
+and any other configuration option according to your needs, see the
+example below.
 
 PPPoE proto example
-^^^^^^^^^^^^^^^^^^^
++++++++++++++++++++
 
 The following configuration dictionary:
 
@@ -576,12 +575,14 @@ The following configuration dictionary:
                 "network": "wan",
                 "proto": "pppoe",
                 "username": "<username>",
-                "password": "<password>"
+                "password": "<password>",
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -594,47 +595,54 @@ Will be rendered as follows::
 Bridge settings
 ---------------
 
-Interfaces of type ``bridge`` contains options that are specific for network bridges.
+Interfaces of type ``bridge`` contains options that are specific for
+network bridges.
 
 The ``OpenWrt`` backend NetJSON extensions for bridge interfaces:
 
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| key name                    | type    | default   | allowed values                                              |
-+=============================+=========+===========+=============================================================+
-| ``bridge_members``          | list    | ``[]``    | list of interface names for creating bridge                 |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``igmp_snooping``           | boolean | ``False`` | sets the ``multicast_snooping`` kernel setting for a bridge |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``multicast_querier``       | boolean | ``False`` | enables the bridge as a multicast querier                   |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``query_interval``          | integer | ``12500`` | time interval in centiseconds between multicast general     |
-|                             |         |           | queries                                                     |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``query_response_interval`` | integer | ``1000``  | the max response time in centiseconds inserted into         |
-|                             |         |           | the periodic general queries                                |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``last_member_interval``    | integer | ``100``   | the maximum response time in centiseconds inserted into     |
-|                             |         |           | group-specific queries sent in response to leave            |
-|                             |         |           | group messages.                                             |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``hash_max``                | integer | ``512``   | size of kernel multicast hash table                         |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``robustness``              | integer | ``2``     | sets Startup Query Count and Last Member Count              |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``stp``                     | boolean | ``False`` | enables the spanning tree protocol                          |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``forward_delay``           | integer | ``4``     | time in seconds to spend in listening                       |
-|                             |         |           | and learning states (range between 2-30)                    |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``hello_time``              | integer | ``2``     | time interval in seconds for STP hello packets (range 1-10) |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``priority``                | integer | ``32767`` | sets the STP bridge priority (range 0-65535)                |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``ageing_time``             | integer | ``300``   | expiration time in seconds for dynamic MAC                  |
-|                             |         |           | entries in the filtering DB" (range 10-1000000)             |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
-| ``max_age``                 | integer | ``20``    | timeout in seconds until topology updates on link loss      |
-+-----------------------------+---------+-----------+-------------------------------------------------------------+
+=========================== ======= ========= ============================
+key name                    type    default   allowed values
+=========================== ======= ========= ============================
+``bridge_members``          list    ``[]``    list of interface names for
+                                              creating bridge
+``igmp_snooping``           boolean ``False`` sets the
+                                              ``multicast_snooping``
+                                              kernel setting for a bridge
+``multicast_querier``       boolean ``False`` enables the bridge as a
+                                              multicast querier
+``query_interval``          integer ``12500`` time interval in
+                                              centiseconds between
+                                              multicast general queries
+``query_response_interval`` integer ``1000``  the max response time in
+                                              centiseconds inserted into
+                                              the periodic general queries
+``last_member_interval``    integer ``100``   the maximum response time in
+                                              centiseconds inserted into
+                                              group-specific queries sent
+                                              in response to leave group
+                                              messages.
+``hash_max``                integer ``512``   size of kernel multicast
+                                              hash table
+``robustness``              integer ``2``     sets Startup Query Count and
+                                              Last Member Count
+``stp``                     boolean ``False`` enables the spanning tree
+                                              protocol
+``forward_delay``           integer ``4``     time in seconds to spend in
+                                              listening and learning
+                                              states (range between 2-30)
+``hello_time``              integer ``2``     time interval in seconds for
+                                              STP hello packets (range
+                                              1-10)
+``priority``                integer ``32767`` sets the STP bridge priority
+                                              (range 0-65535)
+``ageing_time``             integer ``300``   expiration time in seconds
+                                              for dynamic MAC entries in
+                                              the filtering DB" (range
+                                              10-1000000)
+``max_age``                 integer ``20``    timeout in seconds until
+                                              topology updates on link
+                                              loss
+=========================== ======= ========= ============================
 
 Bridge interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -645,38 +653,29 @@ The following *configuration dictionary*:
 
     {
         "interfaces": [
-            {
-                "name": "eth0.1",
-                "network": "lan",
-                "type": "ethernet"
-            },
-            {
-                "name": "eth0.2",
-                "network": "wan",
-                "type": "ethernet"
-            },
+            {"name": "eth0.1", "network": "lan", "type": "ethernet"},
+            {"name": "eth0.2", "network": "wan", "type": "ethernet"},
             {
                 "name": "br-lan",
                 "type": "bridge",
                 "stp": True,  # enable spanning tree protocol
                 "igmp_snooping": True,  # enable imgp snooping
-                "bridge_members": [
-                    "eth0.1",
-                    "eth0.2"
-                ],
+                "bridge_members": ["eth0.1", "eth0.2"],
                 "addresses": [
                     {
                         "address": "172.17.0.2",
                         "mask": 24,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
-                ]
-            }
+                ],
+            },
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -711,44 +710,49 @@ Wireless settings
 
 Interfaces of type ``wireless`` may contain a lot of different combination
 of settings to configure wireless connectivity: from simple access points,
-to 802.1x authentication, 802.11s mesh networks, adhoc mesh networks, WDS repeaters and much more.
+to 802.1x authentication, 802.11s mesh networks, adhoc mesh networks, WDS
+repeaters and much more.
 
 The ``OpenWrt`` backend NetJSON extensions for wireless interfaces:
 
-+---------------+---------+-------------+------------------------------------------------------+
-| key name      | type    | default     | allowed values                                       |
-+===============+=========+=============+======================================================+
-| ``network``   | array   | ``[]``      | attached networks; if left blank will be             |
-|               |         |             | automatically determined                             |
-+---------------+---------+-------------+------------------------------------------------------+
+=========== ===== ======= ========================================
+key name    type  default allowed values
+=========== ===== ======= ========================================
+``network`` array ``[]``  attached networks; if left blank will be
+                          automatically determined
+=========== ===== ======= ========================================
 
 Some extensions are applicable only when ``mode`` is ``access_point``:
 
-+----------------------------+---------+-------------+------------------------------------------------------+
-| key name                   | type    | default     | allowed values                                       |
-+============================+=========+=============+======================================================+
-| ``wmm``                    | boolean | ``True``    | enables WMM (802.11e) support                        |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``ieee80211r``             | boolean | ``False``   | enables fast BSS transition (802.11r) support        |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``reassociation_deadline`` | integer | ``1000``    | reassociation deadline in time units                 |
-|                            |         |             | (TUs / 1.024 ms, 1000-65535)                         |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``ft_psk_generate_local``  | boolean | ``False``   | whether to generate FT response locally              |
-|                            |         |             | for PSK networks                                     |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``ft_over_ds``             | boolean | ``True``    | whether to enable FT-over-DS                         |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``rsn_preauth``            | boolean | ``False``   | allow pre-authentication for WPA2-EAP networks       |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``isolate``                | boolean | ``False``   | isolate wireless clients from one another            |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``macfilter``              | string  | ``disable`` | ACL policy, accepts: "disable", "allow" and "deny"   |
-+----------------------------+---------+-------------+------------------------------------------------------+
-| ``maclist``                | array   | ``[]``      | mac addresses filtered according to macfilter policy |
-+----------------------------+---------+-------------+------------------------------------------------------+
+========================== ======= =========== ===========================
+key name                   type    default     allowed values
+========================== ======= =========== ===========================
+``wmm``                    boolean ``True``    enables WMM (802.11e)
+                                               support
+``ieee80211r``             boolean ``False``   enables fast BSS transition
+                                               (802.11r) support
+``reassociation_deadline`` integer ``1000``    reassociation deadline in
+                                               time units (TUs / 1.024 ms,
+                                               1000-65535)
+``ft_psk_generate_local``  boolean ``False``   whether to generate FT
+                                               response locally for PSK
+                                               networks
+``ft_over_ds``             boolean ``True``    whether to enable
+                                               FT-over-DS
+``rsn_preauth``            boolean ``False``   allow pre-authentication
+                                               for WPA2-EAP networks
+``isolate``                boolean ``False``   isolate wireless clients
+                                               from one another
+``macfilter``              string  ``disable`` ACL policy, accepts:
+                                               "disable", "allow" and
+                                               "deny"
+``maclist``                array   ``[]``      mac addresses filtered
+                                               according to macfilter
+                                               policy
+========================== ======= =========== ===========================
 
-These extensions must be used the ``wireless`` object of a wireless interface eg:
+These extensions must be used the ``wireless`` object of a wireless
+interface eg:
 
 .. code-block:: python
 
@@ -763,13 +767,14 @@ These extensions must be used the ``wireless`` object of a wireless interface eg
                     "ssid": "myWiFi",
                     # OpenWrt backend NetJSON extensions
                     "wmm": True,
-                    "isolate": True
-                }
+                    "isolate": True,
+                },
             }
         ]
     }
 
-The same applies for custom configuration options not included in the ``OpenWrt`` backend schema:
+The same applies for custom configuration options not included in the
+``OpenWrt`` backend schema:
 
 .. code-block:: python
 
@@ -787,18 +792,19 @@ The same applies for custom configuration options not included in the ``OpenWrt`
                     "beacon_int": 200,
                     "noscan": True,
                     "custom1": "made-up-for-example-purposes",
-                }
+                },
             }
         ]
     }
 
-In the following sections some examples of the most common use cases are shown.
+In the following sections some examples of the most common use cases are
+shown.
 
 Wireless access point
 ~~~~~~~~~~~~~~~~~~~~~
 
-The following *configuration dictionary* represent one of the most
-common wireless access point configuration:
+The following *configuration dictionary* represent one of the most common
+wireless access point configuration:
 
 .. code-block:: python
 
@@ -812,13 +818,15 @@ common wireless access point configuration:
                     "mode": "access_point",
                     "ssid": "myWiFi",
                     "wmm": True,  # 802.11e
-                    "isolate": True  # client isolation
-                }
+                    "isolate": True,  # client isolation
+                },
             }
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -838,26 +846,25 @@ UCI output::
             option wmm '1'
 
 .. note::
-   the ``network`` option of the ``wifi-iface`` directive is filled in automatically
-   but can be overridden if needed by setting the ``network`` option in the ``wireless``
-   section of the *configuration dictionary*. The next example shows how to do this.
+
+    the ``network`` option of the ``wifi-iface`` directive is filled in
+    automatically but can be overridden if needed by setting the
+    ``network`` option in the ``wireless`` section of the *configuration
+    dictionary*. The next example shows how to do this.
 
 .. _wireless_network_option:
 
 Wireless attached to a different network
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In most cases you want to bridge a wireless interface to a different network,
-usually the LAN bridge:
+In most cases you want to bridge a wireless interface to a different
+network, usually the LAN bridge:
 
 .. code-block:: python
 
     {
         "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet"
-            },
+            {"name": "eth0", "type": "ethernet"},
             {
                 "name": "wlan0",
                 "type": "wireless",
@@ -867,26 +874,20 @@ usually the LAN bridge:
                     "ssid": "wifi service",
                     # "network": ["lan"]  this property can be omitted
                     # but may be overridden if needed
-                }
+                },
             },
             {
                 "name": "lan",  # the bridge will be named br-lan by OpenWRT
                 "type": "bridge",
-                "bridge_members": [
-                    "eth0",
-                    "wlan0"
-                ],
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ]
-            }
+                "bridge_members": ["eth0", "wlan0"],
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+            },
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -921,11 +922,13 @@ Will be rendered as follows::
 Wireless access point with macfilter ACL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``OpenWrt`` backend supports a custom NetJSON extension for wireless access point
-interfaces: ``macfilter`` (read more about ``macfilter`` and ``maclist`` on the
-`OpenWRT documentation for Wireless configuration <https://wiki.openwrt.org/doc/uci/wireless#common_options>`_).
+The ``OpenWrt`` backend supports a custom NetJSON extension for wireless
+access point interfaces: ``macfilter`` (read more about ``macfilter`` and
+``maclist`` on the `OpenWRT documentation for Wireless configuration
+<https://wiki.openwrt.org/doc/uci/wireless#common_options>`_).
 
-In the following example we ban two mac addresses from connecting to a wireless access point:
+In the following example we ban two mac addresses from connecting to a
+wireless access point:
 
 .. code-block:: python
 
@@ -939,16 +942,15 @@ In the following example we ban two mac addresses from connecting to a wireless 
                     "mode": "access_point",
                     "ssid": "MyWifiAP",
                     "macfilter": "deny",
-                    "maclist": [
-                        "E8:94:F6:33:8C:1D",
-                        "42:6c:8f:95:0f:00"
-                    ]
-                }
+                    "maclist": ["E8:94:F6:33:8C:1D", "42:6c:8f:95:0f:00"],
+                },
             }
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -972,10 +974,12 @@ Wireless access point with roaming (802.11r)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``OpenWrt`` backend supports custom NetJSON extensions to support
-(802.11r) in wireless access point interfaces (refer
-`"Fast BSS transition options" section in the OpenWRT documentation for Wireless configuration <https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r>`_).
+(802.11r) in wireless access point interfaces (refer `"Fast BSS transition
+options" section in the OpenWRT documentation for Wireless configuration
+<https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r>`_).
 
-In the following example we configure roaming options for a wireless access point:
+In the following example we configure roaming options for a wireless
+access point:
 
 .. code-block:: python
 
@@ -993,13 +997,15 @@ In the following example we configure roaming options for a wireless access poin
                     "ft_psk_generate_local": True,
                     "rsn_preauth": True,
                     "reassociation_deadline": 1000,
-                    "network": ["lan"]
-                }
+                    "network": ["lan"],
+                },
             }
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -1024,22 +1030,20 @@ UCI output::
 Wireless mesh (802.11s) example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Setting up **802.11s** interfaces is fairly simple, in the following example we
-bridge ``eth0`` with ``mesh0``, the latter being a layer2 802.11s
-wireless interface.
+Setting up **802.11s** interfaces is fairly simple, in the following
+example we bridge ``eth0`` with ``mesh0``, the latter being a layer2
+802.11s wireless interface.
 
 .. note::
-   in 802.11s mesh mode the ``ssid`` property is not required,
-   while ``mesh_id`` is mandatory.
+
+    in 802.11s mesh mode the ``ssid`` property is not required, while
+    ``mesh_id`` is mandatory.
 
 .. code-block:: python
 
     {
         "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet"
-            },
+            {"name": "eth0", "type": "ethernet"},
             {
                 "name": "mesh0",
                 "type": "wireless",
@@ -1047,8 +1051,8 @@ wireless interface.
                     "radio": "radio0",
                     "mode": "802.11s",
                     "mesh_id": "ninux",
-                    "network": ["lan"]
-                }
+                    "network": ["lan"],
+                },
             },
             {
                 "name": "lan",
@@ -1059,14 +1063,16 @@ wireless interface.
                         "address": "192.168.0.1",
                         "mask": 24,
                         "proto": "static",
-                        "family": "ipv4"
+                        "family": "ipv4",
                     }
-                ]
-            }
+                ],
+            },
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -1118,13 +1124,15 @@ The following example:
                     "radio": "radio0",
                     "ssid": "freifunk",
                     "mode": "adhoc",
-                    "bssid": "02:b8:c0:00:00:00"
-                }
+                    "bssid": "02:b8:c0:00:00:00",
+                },
             }
         ]
     }
 
-Will result in::
+Will result in:
+
+::
 
     package network
 
@@ -1145,7 +1153,8 @@ Will result in::
 WDS repeater example
 ~~~~~~~~~~~~~~~~~~~~
 
-In the following example we show how to configure a WDS station and repeat the signal:
+In the following example we show how to configure a WDS station and repeat
+the signal:
 
 .. code-block:: python
 
@@ -1161,8 +1170,8 @@ In the following example we show how to configure a WDS station and repeat the s
                     "network": ["wds_bridge"],
                     "ssid": "FreeRomaWifi",
                     "bssid": "C0:4A:00:2D:05:FD",
-                    "wds": True
-                }
+                    "wds": True,
+                },
             },
             # repeater access point
             {
@@ -1172,29 +1181,26 @@ In the following example we show how to configure a WDS station and repeat the s
                     "mode": "access_point",
                     "radio": "radio1",
                     "network": ["wds_bridge"],
-                    "ssid": "FreeRomaWifi"
-                }
+                    "ssid": "FreeRomaWifi",
+                },
             },
             # WDS bridge
             {
                 "name": "br-wds",
                 "network": "wds_bridge",
                 "type": "bridge",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4"
-                    }
-                ],
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
                 "bridge_members": [
                     "wlan0",
                     "wlan1",
-                ]
-            }
+                ],
+            },
         ]
     }
 
-Will result in::
+Will result in:
+
+::
 
     package network
 
@@ -1238,8 +1244,8 @@ Will result in::
 WPA2 Personal (Pre-Shared Key)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows a typical wireless access
-point using *WPA2 Personal (Pre-Shared Key)* encryption:
+The following example shows a typical wireless access point using *WPA2
+Personal (Pre-Shared Key)* encryption:
 
 .. code-block:: python
 
@@ -1257,14 +1263,16 @@ point using *WPA2 Personal (Pre-Shared Key)* encryption:
                         # possible cipher values are:
                         #   "auto", "tkip", "ccmp", and "tkip+ccmp"
                         "cipher": "tkip+ccmp",
-                        "key": "passphrase012345"
-                    }
-                }
+                        "key": "passphrase012345",
+                    },
+                },
             }
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -1286,10 +1294,9 @@ UCI output::
 WPA2 Enterprise (802.1x) ap
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows a typical wireless access
-point using *WPA2 Enterprise (802.1x)* security on **OpenWRT**,
-you can use this type of configuration for networks like
-`eduroam <https://www.eduroam.org/>`_:
+The following example shows a typical wireless access point using *WPA2
+Enterprise (802.1x)* security on **OpenWRT**, you can use this type of
+configuration for networks like `eduroam <https://www.eduroam.org/>`_:
 
 .. code-block:: python
 
@@ -1310,14 +1317,16 @@ you can use this type of configuration for networks like
                         "port": 1812,
                         "acct_server": "192.168.0.2",
                         "acct_port": 1813,
-                        "nasid": "hostname"
-                    }
-                }
+                        "nasid": "hostname",
+                    },
+                },
             }
         ]
     }
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -1364,13 +1373,15 @@ WPA2 Enterprise (802.1x) client
                         "eap_type": "tls",
                         "identity": "test-identity",
                         "password": "test-password",
-                    }
-                }
+                    },
+                },
             }
         ]
     }
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -1395,8 +1406,8 @@ UCI Output::
 WPA3 Personal (Simultaneous Authentication of Equals)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows a typical wireless access
-point using *WPA3 Personal (SAE)* encryption:
+The following example shows a typical wireless access point using *WPA3
+Personal (SAE)* encryption:
 
 .. code-block:: python
 
@@ -1416,13 +1427,15 @@ point using *WPA3 Personal (SAE)* encryption:
                         "key": "passphrase012345",
                         # Management Frame Protection is required for WPA3
                         "ieee80211w": "2",
-                    }
-                }
+                    },
+                },
             }
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -1445,10 +1458,9 @@ UCI output::
 WPA3 Enterprise (802.1x) ap
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows a typical wireless access
-point using *WPA3 Enterprise (802.1x)* security on **OpenWRT**,
-you can use this type of configuration for networks like
-`eduroam <https://www.eduroam.org/>`_:
+The following example shows a typical wireless access point using *WPA3
+Enterprise (802.1x)* security on **OpenWRT**, you can use this type of
+configuration for networks like `eduroam <https://www.eduroam.org/>`_:
 
 .. code-block:: python
 
@@ -1472,13 +1484,15 @@ you can use this type of configuration for networks like
                         "acct_port": 1813,
                         "nasid": "hostname",
                         "ieee80211w": "2",
-                    }
-                }
+                    },
+                },
             }
         ]
     }
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -1528,13 +1542,15 @@ WPA3 Enterprise (802.1x) client
                         "identity": "test-identity",
                         "password": "test-password",
                         "ieee80211w": "2",
-                    }
-                }
+                    },
+                },
             }
         ]
     }
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -1584,7 +1600,9 @@ UCI Output::
         ]
     }
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -1634,7 +1652,9 @@ UCI Output::
         ]
     }
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -1660,19 +1680,20 @@ UCI Output::
 Dialup settings
 ---------------
 
-Interfaces of type ``dialup`` contain a few options that are specific to dialup connections.
+Interfaces of type ``dialup`` contain a few options that are specific to
+dialup connections.
 
 The ``OpenWrt`` backend NetJSON extensions for dialup interfaces:
 
-+--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
-| key name     | type    | default   | allowed values                                                                                             |
-+==============+=========+===========+============================================================================================================+
-| ``proto``    | string  | ``pppoe`` | ``3g``, ``6in4``, ``aiccu``, ``l2tp``, ``ncm``, ``ppp``, ``pppoa``, ``pppoe``, ``pptp``, ``qmi``, ``wwan`` |
-+--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
-| ``password`` | string  | ``""``    |                                                                                                            |
-+--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
-| ``username`` | string  | ``""``    |                                                                                                            |
-+--------------+---------+-----------+------------------------------------------------------------------------------------------------------------+
+============ ====== ========= =======================================
+key name     type   default   allowed values
+============ ====== ========= =======================================
+``proto``    string ``pppoe`` ``3g``, ``6in4``, ``aiccu``, ``l2tp``,
+                              ``ncm``, ``ppp``, ``pppoa``, ``pppoe``,
+                              ``pptp``, ``qmi``, ``wwan``
+``password`` string ``""``
+``username`` string ``""``
+============ ====== ========= =======================================
 
 Dialup interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1689,12 +1710,14 @@ The following *configuration dictionary*:
                 "proto": "pppoe",
                 "password": "jf93nf82o023$",
                 "username": "dsluser",
-                "mtu": 1448
+                "mtu": 1448,
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -1708,41 +1731,34 @@ Will be rendered as follows::
 Modem Manager settings
 ----------------------
 
-Interfaces of type ``modem-manager`` contain a few options
-that are specific to modem-manager interfaces (2G, 3G, 4G, LTE, etc).
+Interfaces of type ``modem-manager`` contain a few options that are
+specific to modem-manager interfaces (2G, 3G, 4G, LTE, etc).
 
-These are the ``OpenWrt`` backend NetJSON extensions for Modem Manager interfaces:
+These are the ``OpenWrt`` backend NetJSON extensions for Modem Manager
+interfaces:
 
-+----------------+---------+-----------------+--------------------------------------------+
-| key name       | type    | default         | allowed values                             |
-+================+=========+=================+============================================+
-| ``proto``      | string  | ``modemanager`` | ``modemanager``                            |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``apn``        | string  | empty           | APN, can be left blank                     |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``pin``        | string  | empty           | PIN code, can be left blank                |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``device``     | string  | empty           | path to device (see note below)            |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``password``   | string  | empty           | password, can be left blank                |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``username``   | string  | empty           | username, can be left blank                |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``metric``     | integer | ``50``          | metric, can be left blank                  |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``iptype``     | string  | ``ipv4``        | One of ``ipv4``, ``ipv6``, ``ipv4v6``      |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``lowpower``   | boolean | ``False``       | low power mode                             |
-+----------------+---------+-----------------+--------------------------------------------+
-| ``signalrate`` | integer |                 | singal refresh rate in seconds             |
-+----------------+---------+-----------------+--------------------------------------------+
+============== ======= =============== ===============================
+key name       type    default         allowed values
+============== ======= =============== ===============================
+``proto``      string  ``modemanager`` ``modemanager``
+``apn``        string  empty           APN, can be left blank
+``pin``        string  empty           PIN code, can be left blank
+``device``     string  empty           path to device (see note below)
+``password``   string  empty           password, can be left blank
+``username``   string  empty           username, can be left blank
+``metric``     integer ``50``          metric, can be left blank
+``iptype``     string  ``ipv4``        One of ``ipv4``, ``ipv6``,
+                                       ``ipv4v6``
+``lowpower``   boolean ``False``       low power mode
+``signalrate`` integer                 singal refresh rate in seconds
+============== ======= =============== ===============================
 
 .. note::
-    ``device`` is a required property but can be left empty so that
-    the default value supplied by the hardware itself and already
-    present on the device can be left untouched by merging the
-    configuration generated with netjsonconfig
-    (instead of fully overwriting it).
+
+    ``device`` is a required property but can be left empty so that the
+    default value supplied by the hardware itself and already present on
+    the device can be left untouched by merging the configuration
+    generated with netjsonconfig (instead of fully overwriting it).
 
 Modem Manager interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1769,7 +1785,9 @@ The following *configuration dictionary*:
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -1791,23 +1809,24 @@ Will be rendered as follows::
 Radio settings
 --------------
 
-The radio settings reside in the ``radio`` key of the *configuration dictionary*,
-which must contain a list of `NetJSON radio objects <http://netjson.org/rfc.html#radios1>`_
-(see the link for the detailed specification).
+The radio settings reside in the ``radio`` key of the *configuration
+dictionary*, which must contain a list of `NetJSON radio objects
+<http://netjson.org/rfc.html#radios1>`_ (see the link for the detailed
+specification).
 
 Radio object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to the default *NetJSON Radio object options*, the ``OpenWrt`` backend
-also requires setting the following additional options for each radio in the list:
+In addition to the default *NetJSON Radio object options*, the ``OpenWrt``
+backend also requires setting the following additional options for each
+radio in the list:
 
-+--------------+---------+---------------------------------------------------------+
-| key name     | type    | allowed values                                          |
-+==============+=========+=========================================================+
-| ``driver``   | string  | mac80211, atheros, ath5k, ath9k, broadcom               |
-+--------------+---------+---------------------------------------------------------+
-| ``protocol`` | string  | 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac, 802.11ax  |
-+--------------+---------+---------------------------------------------------------+
+============ ====== ======================================================
+key name     type   allowed values
+============ ====== ======================================================
+``driver``   string mac80211, atheros, ath5k, ath9k, broadcom
+``protocol`` string 802.11a, 802.11b, 802.11g, 802.11n, 802.11ac, 802.11ax
+============ ====== ======================================================
 
 Radio example
 ~~~~~~~~~~~~~
@@ -1826,7 +1845,7 @@ The following *configuration dictionary*:
                 "channel": 11,
                 "channel_width": 20,
                 "tx_power": 5,
-                "country": "IT"
+                "country": "IT",
             },
             {
                 "name": "radio1",
@@ -1836,12 +1855,14 @@ The following *configuration dictionary*:
                 "channel": 36,
                 "channel_width": 20,
                 "tx_power": 4,
-                "country": "IT"
-            }
+                "country": "IT",
+            },
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package wireless
 
@@ -1867,12 +1888,14 @@ Will be rendered as follows::
 Automatic channel selection example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you need to use the "automatic channel selection" feature of OpenWRT, you must set
-the channel to ``0``. You must also set the ``band`` property to tell OpenWRT which
-band to use (``2g`` for 2.4 Ghz, ``5g`` for 5 GHz, ``6g`` for 6 GHz, ``60g`` for 60 GHz).
+If you need to use the "automatic channel selection" feature of OpenWRT,
+you must set the channel to ``0``. You must also set the ``band`` property
+to tell OpenWRT which band to use (``2g`` for 2.4 Ghz, ``5g`` for 5 GHz,
+``6g`` for 6 GHz, ``60g`` for 60 GHz).
 
-The following example sets "automatic channel selection" for two radios, the first radio uses
-**802.11n** in the 2.4 GHz band, while the second uses **802.11ac** in the 5 GHz band.
+The following example sets "automatic channel selection" for two radios,
+the first radio uses **802.11n** in the 2.4 GHz band, while the second
+uses **802.11ac** in the 5 GHz band.
 
 .. code-block:: python
 
@@ -1885,7 +1908,7 @@ The following example sets "automatic channel selection" for two radios, the fir
                 "protocol": "802.11n",
                 "channel": 0,  # 0 stands for auto
                 "band": "2g",  # must set this explicitly, 2g means 2.4 GHz band
-                "channel_width": 20
+                "channel_width": 20,
             },
             {
                 "name": "radio1",
@@ -1894,14 +1917,16 @@ The following example sets "automatic channel selection" for two radios, the fir
                 "protocol": "802.11ac",
                 "channel": 0,  # 0 stands for auto
                 "band": "5g",  # must set this explicitly, 5g means 5 GHz band,
-                               # but this is optional for "802.11ac" because it only
-                               # support 5 GHz band.
-                "channel_width": 80
-            }
+                # but this is optional for "802.11ac" because it only
+                # support 5 GHz band.
+                "channel_width": 80,
+            },
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package wireless
 
@@ -1922,7 +1947,8 @@ UCI output::
 802.11ac example
 ~~~~~~~~~~~~~~~~
 
-In the following example we show how to configure an *802.11ac* capable radio:
+In the following example we show how to configure an *802.11ac* capable
+radio:
 
 .. code-block:: python
 
@@ -1939,7 +1965,9 @@ In the following example we show how to configure an *802.11ac* capable radio:
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package wireless
 
@@ -1953,7 +1981,8 @@ UCI output::
 802.11ax example
 ~~~~~~~~~~~~~~~~
 
-In the following example we show how to configure an *802.11ax* capable radio:
+In the following example we show how to configure an *802.11ax* capable
+radio:
 
 .. code-block:: python
 
@@ -1970,7 +1999,9 @@ In the following example we show how to configure an *802.11ax* capable radio:
         ]
     }
 
-UCI output::
+UCI output:
+
+::
 
     package wireless
 
@@ -1981,33 +2012,31 @@ UCI output::
             option phy 'phy0'
             option type 'mac80211'
 
-
 Static Routes
 -------------
 
-The static routes settings reside in the ``routes`` key of the *configuration dictionary*,
-which must contain a list of `NetJSON Static Route objects <http://netjson.org/rfc.html#routes1>`_
-(see the link for the detailed specification).
+The static routes settings reside in the ``routes`` key of the
+*configuration dictionary*, which must contain a list of `NetJSON Static
+Route objects <http://netjson.org/rfc.html#routes1>`_ (see the link for
+the detailed specification).
 
 Static route object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to the default *NetJSON Route object options*, the ``OpenWrt`` backend
-also allows to define the following optional settings:
+In addition to the default *NetJSON Route object options*, the ``OpenWrt``
+backend also allows to define the following optional settings:
 
-+--------------+---------+-------------+---------------------------------------------------+
-| key name     | type    | default     | description                                       |
-+==============+=========+=============+===================================================+
-| ``type``     | string  | ``unicast`` | unicast, local, broadcast, multicast, unreachable |
-|              |         |             | prohibit, blackhole, anycast                      |
-+--------------+---------+-------------+---------------------------------------------------+
-| ``mtu``      | string  | ``None``    | MTU for route, only numbers are allowed           |
-+--------------+---------+-------------+---------------------------------------------------+
-| ``table``    | string  | ``None``    | Routing table id, only numbers are allowed        |
-+--------------+---------+-------------+---------------------------------------------------+
-| ``onlink``   | boolean |  ``False``  | When enabled, gateway is on link even if the      |
-|              |         |             | gateway does not match any interface prefix       |
-+--------------+---------+-------------+---------------------------------------------------+
+========== ======= =========== ==========================================
+key name   type    default     description
+========== ======= =========== ==========================================
+``type``   string  ``unicast`` unicast, local, broadcast, multicast,
+                               unreachable prohibit, blackhole, anycast
+``mtu``    string  ``None``    MTU for route, only numbers are allowed
+``table``  string  ``None``    Routing table id, only numbers are allowed
+``onlink`` boolean ``False``   When enabled, gateway is on link even if
+                               the gateway does not match any interface
+                               prefix
+========== ======= =========== ==========================================
 
 Static route example
 ~~~~~~~~~~~~~~~~~~~~
@@ -2026,18 +2055,20 @@ The following *configuration dictionary*:
                 "source": "192.168.1.10",
                 "table": "2",
                 "onlink": True,
-                "mtu": "1450"
+                "mtu": "1450",
             },
             {
                 "device": "eth1",
                 "destination": "fd89::1/128",
                 "next": "fd88::1",
                 "cost": 0,
-            }
+            },
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -2062,35 +2093,29 @@ Policy routing
 --------------
 
 The policy routing settings reside in the ``ip_rule`` key of the
-*configuration dictionary*, which is a custom NetJSON extension not present in the
-original NetJSON RFC.
+*configuration dictionary*, which is a custom NetJSON extension not
+present in the original NetJSON RFC.
 
-The ``ip_rule`` key must contain a list of rules, each rule allows the following options:
+The ``ip_rule`` key must contain a list of rules, each rule allows the
+following options:
 
-+-------------------+---------+
-| key name          | type    |
-+===================+=========+
-| ``in``            | string  |
-+-------------------+---------+
-| ``out``           | string  |
-+-------------------+---------+
-| ``src``           | string  |
-+-------------------+---------+
-| ``tos``           | string  |
-+-------------------+---------+
-| ``mark``          | string  |
-+-------------------+---------+
-| ``invert``        | boolean |
-+-------------------+---------+
-| ``lookup``        | string  |
-+-------------------+---------+
-| ``goto``          | integer |
-+-------------------+---------+
-| ``action``        | string  |
-+-------------------+---------+
+========== =======
+key name   type
+========== =======
+``in``     string
+``out``    string
+``src``    string
+``tos``    string
+``mark``   string
+``invert`` boolean
+``lookup`` string
+``goto``   integer
+``action`` string
+========== =======
 
-For the function and meaning of each key consult the relevant
-`OpenWrt documentation about rule directives <https://wiki.openwrt.org/doc/uci/network#ip_rules>`_.
+For the function and meaning of each key consult the relevant `OpenWrt
+documentation about rule directives
+<https://wiki.openwrt.org/doc/uci/network#ip_rules>`_.
 
 Policy routing example
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -2110,27 +2135,17 @@ The following *configuration dictionary*:
                 "mark": "0x0/0x1",
                 "invert": True,
                 "lookup": "0",
-                "action": "blackhole"
+                "action": "blackhole",
             },
-            {
-                "src": "192.168.1.0/24",
-                "dest": "192.168.3.0/24",
-                "goto": 0
-            },
-            {
-                "in": "vpn",
-                "dest": "fdca:1234::/64",
-                "action": "prohibit"
-            },
-            {
-                "in": "vpn",
-                "src": "fdca:1235::/64",
-                "action": "prohibit"
-            }
+            {"src": "192.168.1.0/24", "dest": "192.168.3.0/24", "goto": 0},
+            {"in": "vpn", "dest": "fdca:1234::/64", "action": "prohibit"},
+            {"in": "vpn", "src": "fdca:1235::/64", "action": "prohibit"},
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -2163,39 +2178,37 @@ Will be rendered as follows::
 Programmable switch settings
 ----------------------------
 
-The programmable switch settings reside in the ``switch`` key of the *configuration dictionary*,
-which is a custom NetJSON extension not present in the original NetJSON RFC.
+The programmable switch settings reside in the ``switch`` key of the
+*configuration dictionary*, which is a custom NetJSON extension not
+present in the original NetJSON RFC.
 
-The ``switch`` key must contain a list of dictionaries, all the following keys are required:
+The ``switch`` key must contain a list of dictionaries, all the following
+keys are required:
 
-+-------------------+---------+
-| key name          | type    |
-+===================+=========+
-| ``name``          | string  |
-+-------------------+---------+
-| ``reset``         | boolean |
-+-------------------+---------+
-| ``enable_vlan``   | boolean |
-+-------------------+---------+
-| ``vlan``          | list    |
-+-------------------+---------+
+=============== =======
+key name        type
+=============== =======
+``name``        string
+``reset``       boolean
+``enable_vlan`` boolean
+``vlan``        list
+=============== =======
 
-The elements of the ``vlan`` list must be dictionaries, all the following keys are required:
+The elements of the ``vlan`` list must be dictionaries, all the following
+keys are required:
 
-+-------------------+---------+
-| key name          | type    |
-+===================+=========+
-| ``device``        | string  |
-+-------------------+---------+
-| ``reset``         | boolean |
-+-------------------+---------+
-| ``vlan``          | integer |
-+-------------------+---------+
-| ``ports``         | string  |
-+-------------------+---------+
+========== =======
+key name   type
+========== =======
+``device`` string
+``reset``  boolean
+``vlan``   integer
+``ports``  string
+========== =======
 
-For the function and meaning of each key consult the relevant
-`OpenWrt documentation about switch directives <https://wiki.openwrt.org/doc/uci/network#switch>`_.
+For the function and meaning of each key consult the relevant `OpenWrt
+documentation about switch directives
+<https://wiki.openwrt.org/doc/uci/network#switch>`_.
 
 Switch example
 ~~~~~~~~~~~~~~
@@ -2211,22 +2224,16 @@ The following *configuration dictionary*:
                 "reset": True,
                 "enable_vlan": True,
                 "vlan": [
-                    {
-                        "device": "switch0",
-                        "vlan": 1,
-                        "ports": "0t 2 3 4 5"
-                    },
-                    {
-                        "device": "switch0",
-                        "vlan": 2,
-                        "ports": "0t 1"
-                    }
-                ]
+                    {"device": "switch0", "vlan": 1, "ports": "0t 2 3 4 5"},
+                    {"device": "switch0", "vlan": 2, "ports": "0t 1"},
+                ],
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -2250,8 +2257,9 @@ Will be rendered as follows::
 Overriding or disabling ``vid`` UCI option
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The OpenWRT/LEDE UCI ``vid`` option of ``switch_vlan`` sections is automatically inferred
-from the ``vlan`` number, although it's possible to override it or disable it if needed:
+The OpenWRT/LEDE UCI ``vid`` option of ``switch_vlan`` sections is
+automatically inferred from the ``vlan`` number, although it's possible to
+override it or disable it if needed:
 
 .. code-block:: python
 
@@ -2266,7 +2274,7 @@ from the ``vlan`` number, although it's possible to override it or disable it if
                         "device": "switch0",
                         "vlan": 1,
                         "vid": 110,  # manual override
-                        "ports": "0t 2 3 4 5"
+                        "ports": "0t 2 3 4 5",
                     },
                     {
                         "device": "switch0",
@@ -2274,14 +2282,16 @@ from the ``vlan`` number, although it's possible to override it or disable it if
                         # ``None`` or empty string will remove
                         # ``vid`` output from the UCI result
                         "vid": None,
-                        "ports": "0t 1"
-                    }
-                ]
+                        "ports": "0t 1",
+                    },
+                ],
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package network
 
@@ -2305,20 +2315,18 @@ NTP settings
 ------------
 
 The Network Time Protocol settings reside in the ``ntp`` key of the
-*configuration dictionary*, which is a custom NetJSON extension not present in
-the original NetJSON RFC.
+*configuration dictionary*, which is a custom NetJSON extension not
+present in the original NetJSON RFC.
 
 The ``ntp`` key must contain a dictionary, the allowed options are:
 
-+-------------------+---------+---------------------+
-| key name          | type    | function            |
-+===================+=========+=====================+
-| ``enabled``       | boolean | ntp client enabled  |
-+-------------------+---------+---------------------+
-| ``enable_server`` | boolean | ntp server enabled  |
-+-------------------+---------+---------------------+
-| ``server``        | list    | list of ntp servers |
-+-------------------+---------+---------------------+
+================= ======= ===================
+key name          type    function
+================= ======= ===================
+``enabled``       boolean ntp client enabled
+``enable_server`` boolean ntp server enabled
+``server``        list    list of ntp servers
+================= ======= ===================
 
 NTP settings example
 ~~~~~~~~~~~~~~~~~~~~
@@ -2329,17 +2337,20 @@ The following *configuration dictionary*:
 
     {
         "ntp": {
-        "enabled": True,
-        "enable_server": False,
-        "server": [
-            "0.openwrt.pool.ntp.org",
-            "1.openwrt.pool.ntp.org",
-            "2.openwrt.pool.ntp.org",
-            "3.openwrt.pool.ntp.org"
-        ]
+            "enabled": True,
+            "enable_server": False,
+            "server": [
+                "0.openwrt.pool.ntp.org",
+                "1.openwrt.pool.ntp.org",
+                "2.openwrt.pool.ntp.org",
+                "3.openwrt.pool.ntp.org",
+            ],
+        }
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package system
 
@@ -2354,43 +2365,37 @@ Will be rendered as follows::
 LED settings
 ------------
 
-The led settings reside in the ``led`` key of the *configuration dictionary*,
-which is a custom NetJSON extension not present in the original NetJSON RFC.
+The led settings reside in the ``led`` key of the *configuration
+dictionary*, which is a custom NetJSON extension not present in the
+original NetJSON RFC.
 
-The ``led`` key must contain a list of dictionaries, the allowed options are:
+The ``led`` key must contain a list of dictionaries, the allowed options
+are:
 
-+-------------------+---------+
-| key name          | type    |
-+===================+=========+
-| ``name``          | string  |
-+-------------------+---------+
-| ``default``       | boolean |
-+-------------------+---------+
-| ``dev``           | string  |
-+-------------------+---------+
-| ``sysfs``         | string  |
-+-------------------+---------+
-| ``trigger``       | string  |
-+-------------------+---------+
-| ``delayoff``      | integer |
-+-------------------+---------+
-| ``delayon``       | integer |
-+-------------------+---------+
-| ``interval``      | integer |
-+-------------------+---------+
-| ``message``       | string  |
-+-------------------+---------+
-| ``mode``          | string  |
-+-------------------+---------+
+============ =======
+key name     type
+============ =======
+``name``     string
+``default``  boolean
+``dev``      string
+``sysfs``    string
+``trigger``  string
+``delayoff`` integer
+``delayon``  integer
+``interval`` integer
+``message``  string
+``mode``     string
+============ =======
 
 The required keys are:
 
-* ``name``
-* ``sysfs``
-* ``trigger``
+- ``name``
+- ``sysfs``
+- ``trigger``
 
-For the function and meaning of each key consult the relevant
-`OpenWrt documentation about led directives <https://wiki.openwrt.org/doc/uci/system#leds>`_.
+For the function and meaning of each key consult the relevant `OpenWrt
+documentation about led directives
+<https://wiki.openwrt.org/doc/uci/system#leds>`_.
 
 LED settings example
 ~~~~~~~~~~~~~~~~~~~~
@@ -2406,24 +2411,26 @@ The following *configuration dictionary*:
                 "sysfs": "tp-link:green:usb1",
                 "trigger": "usbdev",
                 "dev": "1-1.1",
-                "interval": 50
+                "interval": 50,
             },
             {
                 "name": "USB2",
                 "sysfs": "tp-link:green:usb2",
                 "trigger": "usbdev",
                 "dev": "1-1.2",
-                "interval": 50
+                "interval": 50,
             },
             {
                 "name": "WLAN2G",
                 "sysfs": "tp-link:blue:wlan2g",
-                "trigger": "phy0tpt"
-            }
+                "trigger": "phy0tpt",
+            },
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package system
 
@@ -2452,30 +2459,34 @@ Including custom options
 It is very easy to add configuration options that are not explicitly
 defined in the schema of the ``OpenWrt`` backend.
 
-For example, in some cases you may need to define a "ppp" interface,
-which can use quite a few properties that are not defined in the schema:
+For example, in some cases you may need to define a "ppp" interface, which
+can use quite a few properties that are not defined in the schema:
 
 .. code-block:: python
 
     from netjsonconfig import OpenWrt
 
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "ppp0",
-                "type": "other",
-                "proto": "ppp",
-                "device": "/dev/usb/modem1",
-                "username": "user1",
-                "password": "pwd0123",
-                "keepalive": 3,
-                "ipv6": True
-            }
-        ]
-    })
+    o = OpenWrt(
+        {
+            "interfaces": [
+                {
+                    "name": "ppp0",
+                    "type": "other",
+                    "proto": "ppp",
+                    "device": "/dev/usb/modem1",
+                    "username": "user1",
+                    "password": "pwd0123",
+                    "keepalive": 3,
+                    "ipv6": True,
+                }
+            ]
+        }
+    )
     print(o.render())
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -2491,16 +2502,18 @@ UCI output::
 Including custom lists
 ----------------------
 
-Under specific circumstances, OpenWRT allows adding configuration options in the form of lists.
-Many of these UCI options are not defined in the *JSON-Schema* of the ``OpenWrt`` backend,
-but the schema allows adding custom properties.
+Under specific circumstances, OpenWRT allows adding configuration options
+in the form of lists. Many of these UCI options are not defined in the
+*JSON-Schema* of the ``OpenWrt`` backend, but the schema allows adding
+custom properties.
 
-The ``OpenWrt`` backend recognizes list options for the following sections:
+The ``OpenWrt`` backend recognizes list options for the following
+sections:
 
- * interface settings
- * ip address settings
- * wireless settings
- * radio settings
+    - interface settings
+    - ip address settings
+    - wireless settings
+    - radio settings
 
 Interface list setting example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2509,18 +2522,22 @@ The following example shows how to set a list of ``ip6class`` options:
 
 .. code-block:: python
 
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet",
-                "ip6class": ["wan6", "backbone"]
-            }
-        ]
-    })
+    o = OpenWrt(
+        {
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "ip6class": ["wan6", "backbone"],
+                }
+            ]
+        }
+    )
     print(o.render())
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -2533,28 +2550,33 @@ UCI Output::
 Address list setting example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows how to set a list of dhcp ``reqopts`` settings:
+The following example shows how to set a list of dhcp ``reqopts``
+settings:
 
 .. code-block:: python
 
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "eth0",
-                "type": "ethernet",
-                "addresses": [
-                    {
-                        "proto": "dhcp",
-                        "family": "ipv4",
-                        "reqopts": ["43", "54"]
-                    }
-                ]
-            }
-        ]
-    })
+    o = OpenWrt(
+        {
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "type": "ethernet",
+                    "addresses": [
+                        {
+                            "proto": "dhcp",
+                            "family": "ipv4",
+                            "reqopts": ["43", "54"],
+                        }
+                    ],
+                }
+            ]
+        }
+    )
     print(o.render())
 
-UCI Output::
+UCI Output:
+
+::
 
     package network
 
@@ -2567,27 +2589,31 @@ UCI Output::
 Radio list setting example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows how to set a list of advanced capabilities supported
-by the radio using ``ht_capab``:
+The following example shows how to set a list of advanced capabilities
+supported by the radio using ``ht_capab``:
 
 .. code-block:: python
 
-    o = OpenWrt({
-        "radios": [
-            {
-                "name": "radio0",
-                "phy": "phy0",
-                "driver": "mac80211",
-                "protocol": "802.11n",
-                "channel": 1,
-                "channel_width": 20,
-                "ht_capab": ["SMPS-STATIC", "SHORT-GI-20"]
-            }
-        ]
-    })
+    o = OpenWrt(
+        {
+            "radios": [
+                {
+                    "name": "radio0",
+                    "phy": "phy0",
+                    "driver": "mac80211",
+                    "protocol": "802.11n",
+                    "channel": 1,
+                    "channel_width": 20,
+                    "ht_capab": ["SMPS-STATIC", "SHORT-GI-20"],
+                }
+            ]
+        }
+    )
     print(o.render())
 
-UCI output::
+UCI output:
+
+::
 
     package wireless
 
@@ -2608,23 +2634,27 @@ wireless interface using ``basic_rate``:
 
 .. code-block:: python
 
-    o = OpenWrt({
-        "interfaces": [
-            {
-                "name": "wlan0",
-                "type": "wireless",
-                "wireless": {
-                    "radio": "radio0",
-                    "mode": "access_point",
-                    "ssid": "open",
-                    "basic_rate": ["6000", "9000"]
+    o = OpenWrt(
+        {
+            "interfaces": [
+                {
+                    "name": "wlan0",
+                    "type": "wireless",
+                    "wireless": {
+                        "radio": "radio0",
+                        "mode": "access_point",
+                        "ssid": "open",
+                        "basic_rate": ["6000", "9000"],
+                    },
                 }
-            }
-        ]
-    })
+            ]
+        }
+    )
     print(o.render())
 
-UCI output::
+UCI output:
+
+::
 
     package network
 
@@ -2646,49 +2676,52 @@ UCI output::
 Including additional files
 --------------------------
 
-The ``OpenWrt`` backend supports inclusion of arbitrary plain text files through
-the ``files`` key of the *configuration dictionary*. The value of the ``files``
-key must be a list in which each item is a dictionary representing a file, each
-dictionary is structured as follows:
+The ``OpenWrt`` backend supports inclusion of arbitrary plain text files
+through the ``files`` key of the *configuration dictionary*. The value of
+the ``files`` key must be a list in which each item is a dictionary
+representing a file, each dictionary is structured as follows:
 
-+-------------------+----------------+----------+----------------------------------------------------------+
-| key name          | type           | required |function                                                  |
-+===================+================+==========+==========================================================+
-| ``path``          | string         | yes      | filesystem path, will be encoded in the tar.gz archive   |
-+-------------------+----------------+----------+----------------------------------------------------------+
-| ``contents``      | string         | yes      | plain text contents of the file, new lines must be       |
-|                   |                |          | encoded as ``\n``                                        |
-+-------------------+----------------+----------+----------------------------------------------------------+
-| ``mode``          | string         | yes      | filesystem permissions, defaults to ``0644``             |
-+-------------------+----------------+----------+----------------------------------------------------------+
+============ ====== ======== ============================================
+key name     type   required function
+============ ====== ======== ============================================
+``path``     string yes      filesystem path, will be encoded in the
+                             tar.gz archive
+``contents`` string yes      plain text contents of the file, new lines
+                             must be encoded as ``\n``
+``mode``     string yes      filesystem permissions, defaults to ``0644``
+============ ====== ======== ============================================
 
-The ``files`` key of the *configuration dictionary* is a custom NetJSON extension not
-present in the original NetJSON RFC.
+The ``files`` key of the *configuration dictionary* is a custom NetJSON
+extension not present in the original NetJSON RFC.
 
 .. warning::
-    The files are included in the output of the ``render`` method unless you pass
-    ``files=False``, eg: ``openwrt.render(files=False)``
+
+    The files are included in the output of the ``render`` method unless
+    you pass ``files=False``, eg: ``openwrt.render(files=False)``
 
 Plain file example
 ~~~~~~~~~~~~~~~~~~
 
-The following example code will generate an archive with one file in ``/etc/crontabs/root``:
+The following example code will generate an archive with one file in
+``/etc/crontabs/root``:
 
 .. code-block:: python
 
     from netjsonconfig import OpenWrt
 
-    o = OpenWrt({
-        "files": [
-            {
-                "path": "/etc/crontabs/root",
-                "mode": "0644",
-                # new lines must be escaped with ``\n``
-                "contents": '* * * * * echo "test" > /etc/testfile\n'
-                            '* * * * * echo "test2" > /etc/testfile2'
-            }
-        ]
-    })
+    o = OpenWrt(
+        {
+            "files": [
+                {
+                    "path": "/etc/crontabs/root",
+                    "mode": "0644",
+                    # new lines must be escaped with ``\n``
+                    "contents": '* * * * * echo "test" > /etc/testfile\n'
+                    '* * * * * echo "test2" > /etc/testfile2',
+                }
+            ]
+        }
+    )
     o.generate()
 
 Executable script file example
@@ -2698,35 +2731,39 @@ The following example will create an executable shell script:
 
 .. code-block:: python
 
-    o = OpenWrt({
-        "files": [
-            {
-                "path": "/bin/hello_world",
-                "mode": "0755",
-                "contents": "#!/bin/sh\n"
-                            "echo 'Hello world'"
-            }
-        ]
-    })
+    o = OpenWrt(
+        {
+            "files": [
+                {
+                    "path": "/bin/hello_world",
+                    "mode": "0755",
+                    "contents": "#!/bin/sh\n" "echo 'Hello world'",
+                }
+            ]
+        }
+    )
     o.generate()
 
 OpenVPN
 -------
 
-This backend includes the schema of the ``OpenVpn`` backend, inheriting its features.
+This backend includes the schema of the ``OpenVpn`` backend, inheriting
+its features.
 
-For details regarding the OpenVPN schema please see :ref:`openvpn_backend_schema`.
+For details regarding the OpenVPN schema please see
+:ref:`openvpn_backend_schema`.
 
 Schema additions
 ~~~~~~~~~~~~~~~~
 
-The ``OpenWrt`` backend adds a few properties to the OpenVPN schema, see below.
+The ``OpenWrt`` backend adds a few properties to the OpenVPN schema, see
+below.
 
-+--------------------------+---------+--------------+-------------------------------------------------------------+
-| key name                 | type    | default      | allowed values                                              |
-+==========================+=========+==============+=============================================================+
-| ``disabled``             | boolean | ``False``    |                                                             |
-+--------------------------+---------+--------------+-------------------------------------------------------------+
+============ ======= ========= ==============
+key name     type    default   allowed values
+============ ======= ========= ==============
+``disabled`` boolean ``False``
+============ ======= ========= ==============
 
 OpenVPN example
 ~~~~~~~~~~~~~~~
@@ -2748,12 +2785,14 @@ The following *configuration dictionary*:
                 "mode": "server",
                 "name": "test-vpn-server",
                 "proto": "udp",
-                "tls_server": True
+                "tls_server": True,
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package openvpn
 
@@ -2772,45 +2811,50 @@ Will be rendered as follows::
 WireGuard
 ---------
 
-This backend includes the schema of the ``Wireguard`` backend, inheriting its features.
+This backend includes the schema of the ``Wireguard`` backend, inheriting
+its features.
 
-For details regarding the **WireGuard** schema please see :ref:`wireguard_backend_schema`.
+For details regarding the **WireGuard** schema please see
+:ref:`wireguard_backend_schema`.
 
 Schema additions
 ~~~~~~~~~~~~~~~~
 
-The ``OpenWrt`` backend adds a few properties to the WireGuard schema, see below.
+The ``OpenWrt`` backend adds a few properties to the WireGuard schema, see
+below.
 
-+-----------------+---------+--------------+-------------------------------------------------------------+
-| key name        | type    | default      | description                                                 |
-+=================+=========+==============+=============================================================+
-| ``network``     | string  | ``None``     | logical interface name (UCI specific),                      |
-|                 |         |              |                                                             |
-|                 |         |              | 2 to 15 alphanumeric characters, dashes and underscores     |
-+-----------------+---------+--------------+-------------------------------------------------------------+
-| ``nohostroute`` | boolean | ``False``    | do not add routes to ensure the tunnel endpoints are routed |
-|                 |         |              | via non-tunnel device                                       |
-+-----------------+---------+--------------+-------------------------------------------------------------+
-| ``fwmark``      | string  | ``None``     | firewall mark to apply to tunnel endpoint packets           |
-+-----------------+---------+--------------+-------------------------------------------------------------+
-| ``ip6prefix``   | list    | ``[]``       | IPv6 prefixes to delegate to other interfaces               |
-+-----------------+---------+--------------+-------------------------------------------------------------+
-| ``addresses``   | list    | ``[]``       | list of unique IPv4 or IPv6 addresses                       |
-+-----------------+---------+--------------+-------------------------------------------------------------+
+=============== ======= ========= =======================================
+key name        type    default   description
+=============== ======= ========= =======================================
+``network``     string  ``None``  logical interface name (UCI specific),
 
-The ``OpenWrt`` backend also adds ``wireguard_peers`` option for sepecifying a list of
-WireGuard Peers. It add the following properties to the ``wireguard_peers`` property of
-WireGuard schema.
+                                  2 to 15 alphanumeric characters, dashes
+                                  and underscores
+``nohostroute`` boolean ``False`` do not add routes to ensure the tunnel
+                                  endpoints are routed via non-tunnel
+                                  device
+``fwmark``      string  ``None``  firewall mark to apply to tunnel
+                                  endpoint packets
+``ip6prefix``   list    ``[]``    IPv6 prefixes to delegate to other
+                                  interfaces
+``addresses``   list    ``[]``    list of unique IPv4 or IPv6 addresses
+=============== ======= ========= =======================================
 
-+-----------------------+---------+-----------+------------------------------------------------------------------------+
-| key name              | type    | default   | description                                                            |
-+=======================+=========+===========+========================================================================+
-| ``interface``         | string  | ``None``  | name of the wireguard interface,                                       |
-|                       |         |           |                                                                        |
-|                       |         |           | 2 to 15 alphanumeric characters, dashes and underscores                |
-+-----------------------+---------+-----------+------------------------------------------------------------------------+
-| ``route_allowed_ips`` | boolean | ``False`` | automatically create a route for each of the Allowed IPs for this peer |
-+-----------------------+---------+-----------+------------------------------------------------------------------------+
+The ``OpenWrt`` backend also adds ``wireguard_peers`` option for
+sepecifying a list of WireGuard Peers. It add the following properties to
+the ``wireguard_peers`` property of WireGuard schema.
+
+===================== ======= ========= ================================
+key name              type    default   description
+===================== ======= ========= ================================
+``interface``         string  ``None``  name of the wireguard interface,
+
+                                        2 to 15 alphanumeric characters,
+                                        dashes and underscores
+``route_allowed_ips`` boolean ``False`` automatically create a route for
+                                        each of the Allowed IPs for this
+                                        peer
+===================== ======= ========= ================================
 
 WireGuard example
 ~~~~~~~~~~~~~~~~~
@@ -2852,7 +2896,7 @@ The following *configuration dictionary*:
                 "persistent_keepalive": 60,
                 "route_allowed_ips": True,
             }
-        ]
+        ],
     }
 
 Will be rendered as follows:
@@ -2883,33 +2927,29 @@ VXLAN
 ``OpenWrt`` backend includes the schema requied for generating VXLAN
 interface configouration. This is useful of setting up layer 2 tunnels.
 
-
 VXLAN Settings
 ~~~~~~~~~~~~~~
 
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| key name    | type              | default      | description                                                 |
-+=============+===================+==============+=============================================================+
-| ``network`` | string            |  ``None``    | name of interface,                                          |
-|             |                   |              |                                                             |
-|             |                   |              | 2 to 15 alphanumeric characters, dashes and underscores     |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``vtep``    | string            | ``False``    | VXLAN tunnel endpoint                                       |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``port``    | integer           | ``4789``     | port for VXLAN connection                                   |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``vni``     | integer or string |  ``None``    | VXLAN Network Identifier                                    |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``tunlink`` | list              | ``[]``       | interface to which the VXLAN tunnel will be bound           |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``rxcsum``  | boolean           | ``True``     | use checksum validation in RX direction                     |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``txcsum``  | boolean           | ``True``     | use checksum validation in TX direction                     |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``mtu``     | integer           | ``1280``     | MTU for route, only numbers are allowed                     |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
-| ``ttl``     | integer           | ``64``       | TTL of the encapsulation packets                            |
-+-------------+-------------------+--------------+-------------------------------------------------------------+
+=========== ================= ========= ================================
+key name    type              default   description
+=========== ================= ========= ================================
+``network`` string            ``None``  name of interface,
+
+                                        2 to 15 alphanumeric characters,
+                                        dashes and underscores
+``vtep``    string            ``False`` VXLAN tunnel endpoint
+``port``    integer           ``4789``  port for VXLAN connection
+``vni``     integer or string ``None``  VXLAN Network Identifier
+``tunlink`` list              ``[]``    interface to which the VXLAN
+                                        tunnel will be bound
+``rxcsum``  boolean           ``True``  use checksum validation in RX
+                                        direction
+``txcsum``  boolean           ``True``  use checksum validation in TX
+                                        direction
+``mtu``     integer           ``1280``  MTU for route, only numbers are
+                                        allowed
+``ttl``     integer           ``64``    TTL of the encapsulation packets
+=========== ================= ========= ================================
 
 VXLAN example
 ~~~~~~~~~~~~~
@@ -3014,7 +3054,7 @@ The following *configuration dictionary*:
                 "persistent_keepalive": 60,
                 "route_allowed_ips": True,
             }
-        ]
+        ],
     }
 
 Will be rendered as follows:
@@ -3055,20 +3095,23 @@ Will be rendered as follows:
 All the other settings
 ----------------------
 
-Do you need to include some configuration directives that are not defined in
-the NetJSON spec nor in the schema of the ``OpenWrt`` backend? **Don't panic!**
+Do you need to include some configuration directives that are not defined
+in the NetJSON spec nor in the schema of the ``OpenWrt`` backend? **Don't
+panic!**
 
-Because netjsonconfig aims to be very flexible, it ships code that will try
-to render extra parts of the *configuration dictionary* into meaningful UCI output.
+Because netjsonconfig aims to be very flexible, it ships code that will
+try to render extra parts of the *configuration dictionary* into
+meaningful UCI output.
 
-In order to accomplish this, you must add extra keys to the *configuration dictionary*
-which have to meet the following requirements:
+In order to accomplish this, you must add extra keys to the *configuration
+dictionary* which have to meet the following requirements:
 
-* the name of the key must be the name of the package that needs to be configured
-* the value of the key must be a ``list``
-* each element in the list must be a ``dict``
-* each ``dict`` MUST contain a key named ``config_name``
-* each ``dict`` MAY contain a key named ``config_value``
+- the name of the key must be the name of the package that needs to be
+  configured
+- the value of the key must be a ``list``
+- each element in the list must be a ``dict``
+- each ``dict`` MUST contain a key named ``config_name``
+- each ``dict`` MAY contain a key named ``config_value``
 
 This feature is best explained with a few examples.
 
@@ -3086,12 +3129,14 @@ The following *configuration dictionary*:
                 "config_value": "dropbear_1",
                 "PasswordAuth": "on",
                 "RootPasswordAuth": "on",
-                "Port": 22
+                "Port": 22,
             }
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package dropbear
 
@@ -3113,28 +3158,26 @@ The following *configuration dictionary*:
                 "config_name": "global",
                 "config_value": "global",
                 "pidfile": "/var/run/olsrd2.pid",
-                "lockfile": "/var/lock/olsrd2"
+                "lockfile": "/var/lock/olsrd2",
             },
             {
                 "config_name": "log",
                 "config_value": "log",
                 "syslog": "true",
                 "stderr": "true",
-                "file": "/var/log/olsrd2.log"
+                "file": "/var/log/olsrd2.log",
             },
             {
                 "config_name": "interface",
                 "config_value": "olsr2_common",
-                "ifname": [
-                    "loopback",
-                    "wlan0",
-                    "wlan1"
-                ]
-            }
+                "ifname": ["loopback", "wlan0", "wlan1"],
+            },
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+::
 
     package olsrd2
 

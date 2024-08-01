@@ -1,27 +1,31 @@
-====================
 OpenWISP 1.x Backend
 ====================
 
-The OpenWISP 1.x Backend is based on the OpenWRT backend, therefore it inherits all
-its features with some differences that are explained in this page.
+The OpenWISP 1.x Backend is based on the OpenWRT backend, therefore it
+inherits all its features with some differences that are explained in this
+page.
 
 Generate method
 ---------------
 
-The ``generate`` method of the ``OpenWisp`` backend differs from the ``OpenWrt`` backend
-in a few ways.
+The ``generate`` method of the ``OpenWisp`` backend differs from the
+``OpenWrt`` backend in a few ways.
 
-1. the generated tar.gz archive is not designed to be installed with ``sysupgrade -r``
-2. the ``generate`` method will automatically add a few additional executable scripts:
+1. the generated tar.gz archive is not designed to be installed with
+   ``sysupgrade -r``
+2. the ``generate`` method will automatically add a few additional
+   executable scripts:
 
- * ``install.sh`` to install the configuration
- * ``uninstall.sh`` to uninstall the configuration
- * ``tc_script.sh`` to start/stop traffic control settings
- * one "up" script for each tap VPN configured
- * one "down" script for each tap VPN configured
+       - ``install.sh`` to install the configuration
+       - ``uninstall.sh`` to uninstall the configuration
+       - ``tc_script.sh`` to start/stop traffic control settings
+       - one "up" script for each tap VPN configured
+       - one "down" script for each tap VPN configured
 
-3. the openvpn certificates are expected to be located the following path: ``/openvpn/x509/``
-4. the crontabs are expected in to be located at the following path: ``/crontabs/``
+3. the openvpn certificates are expected to be located the following path:
+   ``/openvpn/x509/``
+4. the crontabs are expected in to be located at the following path:
+   ``/crontabs/``
 
 General settings
 ----------------
@@ -31,22 +35,22 @@ The ``hostname`` attribute in the ``general`` key is **required**.
 Traffic Control
 ---------------
 
-For backward compatibility with `OpenWISP Manager <https://github.com/openwisp/OpenWISP-Manager>`_
-the schema of the ``OpenWisp`` backend allows to define a ``tc_options`` section that will
+For backward compatibility with `OpenWISP Manager
+<https://github.com/openwisp/OpenWISP-Manager>`_ the schema of the
+``OpenWisp`` backend allows to define a ``tc_options`` section that will
 be used to generate ``tc_script.sh``.
 
-The ``tc_options`` key must be a list, each element of the list must be a dictionary which
-allows the following keys:
+The ``tc_options`` key must be a list, each element of the list must be a
+dictionary which allows the following keys:
 
-+----------------------+---------+----------------------------------------------------------------------+
-| key name             | type    | function                                                             |
-+======================+=========+======================================================================+
-| ``name``             | string  | **required**, name of the network interface that needs to be limited |
-+----------------------+---------+----------------------------------------------------------------------+
-| ``input_bandwidth``  | integer | maximum input bandwidth in kbps                                      |
-+----------------------+---------+----------------------------------------------------------------------+
-| ``output_bandwidth`` | integer | maximum output bandwidth in kbps                                     |
-+----------------------+---------+----------------------------------------------------------------------+
+==================== ======= ===========================================
+key name             type    function
+==================== ======= ===========================================
+``name``             string  **required**, name of the network interface
+                             that needs to be limited
+``input_bandwidth``  integer maximum input bandwidth in kbps
+``output_bandwidth`` integer maximum output bandwidth in kbps
+==================== ======= ===========================================
 
 Traffic control example
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,7 +64,7 @@ The following *configuration dictionary*:
             {
                 "name": "tap0",
                 "input_bandwidth": 2048,
-                "output_bandwidth": 1024
+                "output_bandwidth": 1024,
             }
         ]
     }
@@ -161,27 +165,20 @@ Will generate the following ``tc_script.sh``:
 Full OpenWISP configuration example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows a full working *configuration dictionary* for the
-``OpenWisp`` backend.
+The following example shows a full working *configuration dictionary* for
+the ``OpenWisp`` backend.
 
 .. code-block:: python
 
     {
-        "general": {
-            "hostname": "OpenWISP"
-        },
+        "general": {"hostname": "OpenWISP"},
         "interfaces": [
-            {
-                "name": "tap0",
-                "type": "virtual"
-            },
+            {"name": "tap0", "type": "virtual"},
             {
                 "network": "service",
                 "name": "br-service",
                 "type": "bridge",
-                "bridge_members": [
-                    "tap0"
-                ]
+                "bridge_members": ["tap0"],
             },
             {
                 "name": "wlan0",
@@ -191,9 +188,9 @@ The following example shows a full working *configuration dictionary* for the
                     "mode": "access_point",
                     "ssid": "provinciawifi",
                     "isolate": True,
-                    "network": ["service"]
-                }
-            }
+                    "network": ["service"],
+                },
+            },
         ],
         "radios": [
             {
@@ -204,7 +201,7 @@ The following example shows a full working *configuration dictionary* for the
                 "channel": 11,
                 "channel_width": 20,
                 "tx_power": 10,
-                "country": "IT"
+                "country": "IT",
             }
         ],
         "openvpn": [
@@ -233,39 +230,34 @@ The following example shows a full working *configuration dictionary* for the
                 "down": "/tmp/owispmanager/openvpn/vpn_2693_script_down.sh",
                 "dev": "tap0",
                 "nobind": True,
-                "remote": [
-                    {
-                        "host": "vpn.openwisp.org",
-                        "port": 12128
-                    }
-                ],
+                "remote": [{"host": "vpn.openwisp.org", "port": 12128}],
                 "tls_client": True,
                 "resolv_retry": True,
-                "up_restart": True
+                "up_restart": True,
             }
         ],
         "tc_options": [
             {
                 "name": "tap0",
                 "input_bandwidth": 2048,
-                "output_bandwidth": 1024
+                "output_bandwidth": 1024,
             }
         ],
         "files": [
             {
                 "path": "/openvpn/x509/ca.pem",
                 "mode": "0644",
-                "contents": "-----BEGIN CERTIFICATE-----\nstripped_down\n-----END CERTIFICATE-----\n"
+                "contents": "-----BEGIN CERTIFICATE-----\nstripped_down\n-----END CERTIFICATE-----\n",
             },
             {
                 "path": "/openvpn/x509/l2vpn_client_1_2325_2693.pem",
                 "mode": "0644",
-                "contents": "-----BEGIN CERTIFICATE-----\nstripped_down\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nstripped_down\n-----END RSA PRIVATE KEY-----\n"
+                "contents": "-----BEGIN CERTIFICATE-----\nstripped_down\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nstripped_down\n-----END RSA PRIVATE KEY-----\n",
             },
             {
                 "path": "/crontabs/root",
                 "mode": "0644",
-                "contents": "* * * * * echo 'test' > /tmp/test-cron"
-            }
-        ]
+                "contents": "* * * * * echo 'test' > /tmp/test-cron",
+            },
+        ],
     }

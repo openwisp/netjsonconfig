@@ -1,10 +1,9 @@
-============================
 VXLAN over WireGuard Backend
 ============================
 
-The ``VXLAN over WireGuard`` backend extends :doc:`Wireguard backend </backends/wireguard>`
-to add configurations required for configuring VXLAN tunnels encapsulated in
-WireGuard tunnels.
+The ``VXLAN over WireGuard`` backend extends :doc:`Wireguard backend
+</backends/wireguard>` to add configurations required for configuring
+VXLAN tunnels encapsulated in WireGuard tunnels.
 
 Automatic generation of clients
 -------------------------------
@@ -22,17 +21,19 @@ Example:
         "port": 51820,
         "public_key": "94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=",
         "server_ip_network": "10.0.0.1/32",
-        "server_ip_address": "10.0.0.1"
+        "server_ip_address": "10.0.0.1",
     }
-    client_config = OpenWrt.vxlan_wireguard_auto_client(host='wireguard.test.com',
-                                        vni=1,
-                                        server_ip_address=server_config['server_ip_address'],
-                                        server=server_config,
-                                        public_key=server_config['public_key'],
-                                        port=51820,
-                                        private_key='QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=',
-                                        ip_address='10.0.0.5/32',
-                                        server_ip_network=server_config['server_ip_network'])
+    client_config = OpenWrt.vxlan_wireguard_auto_client(
+        host="wireguard.test.com",
+        vni=1,
+        server_ip_address=server_config["server_ip_address"],
+        server=server_config,
+        public_key=server_config["public_key"],
+        port=51820,
+        private_key="QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
+        ip_address="10.0.0.5/32",
+        server_ip_network=server_config["server_ip_network"],
+    )
     print(OpenWrt(client_config).render())
 
 Will be rendered as:
@@ -72,6 +73,6 @@ Will be rendered as:
 
 .. note::
 
-    The current implementation of **VXLAN over WireGuard** VPN backend is implemented with
-    **OpenWrt** backend. Hence, the example above shows configuration generated for
-    OpenWrt.
+    The current implementation of **VXLAN over WireGuard** VPN backend is
+    implemented with **OpenWrt** backend. Hence, the example above shows
+    configuration generated for OpenWrt.

@@ -1,0 +1,23 @@
+[tool.coverage.run]
+source = ["netjsonconfig"]
+parallel = true
+concurrency = ["multiprocessing"]
+omit = [
+    "/tests",
+    "netjsonconfig/__init__.py",
+    "/setup.py",
+    "*version.py"
+]
+
+[tool.docstrfmt]
+extend_exclude = ["**/*.py"]
+
+[tool.isort]
+known_third_party = ["jsonschema"]
+known_first_party = ["netjsonconfig"]
+default_section = "THIRDPARTY"
+line_length = 88
+multi_line_output = 3
+use_parentheses = true
+include_trailing_comma = true
+force_grid_wrap = 0
