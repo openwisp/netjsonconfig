@@ -642,37 +642,41 @@ key name                    type    default   allowed values
 ``max_age``                 integer ``20``    timeout in seconds until
                                               topology updates on link
                                               loss
-``vlan_filtering``          list    ``[]```   a list of ``dict ({})`` defining VLANs for the bridge
+``vlan_filtering``          list    ``[]```   a list of ``dict ({})``
+                                              defining VLANs for the
+                                              bridge
 
-                                              Refer to the :ref:`VLAN options table <bridge_vlan_options>` below
-                                              for a list of available options.
+                                              Refer to the :ref:`VLAN
+                                              options table
+                                              <bridge_vlan_options>` below
+                                              for a list of available
+                                              options.
 =========================== ======= ========= ============================
 
 .. _bridge_vlan_options:
 
 VLAN options:
 
-+-----------+---------+--------------------------------------------------------------------+
-| key name  | type    | allowed values                                                     |
-+===========+=========+====================================================================+
-| ``vlan``  | integer | VLAN ID                                                            |
-+-----------+---------+--------------------------------------------------------------------+
-| ``ports`` | list    | A list of ``dict`` defining interfaces participating in the VLAN   |
-|           |         |                                                                    |
-|           |         | +-----------------+---------+------------------------------------+ |
-|           |         | | key name        | type    | allowed values                     | |
-|           |         | +=================+=========+====================================+ |
-|           |         | | ``ifname``      | string  | interface name (this interface     | |
-|           |         | |                 |         | should be a bridge member)         | |
-|           |         | +-----------------+---------+------------------------------------+ |
-|           |         | | ``tagging``     | string  | whether the port is tagged (``t``) | |
-|           |         | |                 |         | or untagged (``u``)                | |
-|           |         | +-----------------+---------+------------------------------------+ |
-|           |         | | ``primary_vid`` | boolean | whether the current VLAN should be | |
-|           |         | |                 |         | used for all untagged incoming     | |
-|           |         | |                 |         | traffic on this interface          | |
-|           |         | +-----------------+---------+------------------------------------+ |
-+-----------+---------+--------------------------------------------------------------------+
+========= ======= =======================================================
+key name  type    allowed values
+========= ======= =======================================================
+``vlan``  integer VLAN ID
+``ports`` list    A list of ``dict`` defining interfaces participating in
+                  the VLAN
+
+                  =============== ======= ===============================
+                  key name        type    allowed values
+                  =============== ======= ===============================
+                  ``ifname``      string  interface name (this interface
+                                          should be a bridge member)
+                  ``tagging``     string  whether the port is tagged
+                                          (``t``) or untagged (``u``)
+                  ``primary_vid`` boolean whether the current VLAN should
+                                          be used for all untagged
+                                          incoming traffic on this
+                                          interface
+                  =============== ======= ===============================
+========= ======= =======================================================
 
 Bridge interface example
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -752,15 +756,27 @@ The following *configuration dictionary*:
                     {
                         "vlan": 1,
                         "ports": [
-                            {"ifname": "lan1", "tagging": "t", "primary_vid": True},
+                            {
+                                "ifname": "lan1",
+                                "tagging": "t",
+                                "primary_vid": True,
+                            },
                             {"ifname": "lan2", "tagging": "t"},
                         ],
                     },
                     {
                         "vlan": 2,
                         "ports": [
-                            {"ifname": "lan1", "tagging": "t", "primary_vid": False},
-                            {"ifname": "lan3", "tagging": "u", "primary_vid": True},
+                            {
+                                "ifname": "lan1",
+                                "tagging": "t",
+                                "primary_vid": False,
+                            },
+                            {
+                                "ifname": "lan3",
+                                "tagging": "u",
+                                "primary_vid": True,
+                            },
                         ],
                     },
                 ],
@@ -768,7 +784,9 @@ The following *configuration dictionary*:
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+.. code-block::
 
     package network
 
@@ -803,7 +821,6 @@ Will be rendered as follows::
     config interface 'br_lan'
             option device 'br-lan'
             option proto 'none'
-
 
 Wireless settings
 -----------------
@@ -1911,32 +1928,32 @@ VLAN 802.1q / VLAN 802.1ad settings
 
 .. note::
 
-    The configuration setting for **VLAN 802.1q** and **VLAN 802.1ad**
-    are exactly same, except the ``type`` setting. Hence, the
-    documentation only explains **VLAN 802.1q**.
+    The configuration setting for **VLAN 802.1q** and **VLAN 802.1ad** are
+    exactly same, except the ``type`` setting. Hence, the documentation
+    only explains **VLAN 802.1q**.
 
-Interfaces of type ``vlan_8021q`` contain a few options that are specific to
-VLAN 802.1q interfaces.
+Interfaces of type ``vlan_8021q`` contain a few options that are specific
+to VLAN 802.1q interfaces.
 
-These are the ``OpenWrt`` backend NetJSON extensions for VLAN 802.1q interfaces:
+These are the ``OpenWrt`` backend NetJSON extensions for VLAN 802.1q
+interfaces:
 
-+-------------------------+---------+-----------------+--------------------------------------------+
-| key name                | type    | default         | allowed values                             |
-+=========================+=========+=================+============================================+
-| ``type``                | string  | ``vlan_8021q``  | type of interface (``vlan_8021ad`` for     |
-|                         |         |                 | VLAN 802.1ad)                              |
-+-------------------------+---------+-----------------+--------------------------------------------+
-| ``vid``                 | integer | empty           | VLAN ID                                    |
-+-------------------------+---------+-----------------+--------------------------------------------+
-| ``ingress_qos_mapping`` | string  | empty           | Defines a mapping of VLAN header priority  |
-|                         |         |                 | to the Linux internal packet priority on   |
-|                         |         |                 | incoming frames                            |
-+-------------------------+---------+-----------------+--------------------------------------------+
-| ``egress_qos_mapping``  | string  | empty           | Defines a mapping of Linux internal packet |
-|                         |         |                 | priority to VLAN header priority but for   |
-|                         |         |                 | outgoing frames                            |
-+-------------------------+---------+-----------------+--------------------------------------------+
-
+======================= ======= ============== ===========================
+key name                type    default        allowed values
+======================= ======= ============== ===========================
+``type``                string  ``vlan_8021q`` type of interface
+                                               (``vlan_8021ad`` for VLAN
+                                               802.1ad)
+``vid``                 integer empty          VLAN ID
+``ingress_qos_mapping`` string  empty          Defines a mapping of VLAN
+                                               header priority to the
+                                               Linux internal packet
+                                               priority on incoming frames
+``egress_qos_mapping``  string  empty          Defines a mapping of Linux
+                                               internal packet priority to
+                                               VLAN header priority but
+                                               for outgoing frames
+======================= ======= ============== ===========================
 
 VLAN 802.1q example
 ~~~~~~~~~~~~~~~~~~~
@@ -1959,7 +1976,9 @@ The following *configuration dictionary*:
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+.. code-block:: text
 
     package network
 
@@ -1994,7 +2013,9 @@ The following *configuration dictionary*:
         ]
     }
 
-Will be rendered as follows::
+Will be rendered as follows:
+
+.. code-block:: text
 
     package network
 
