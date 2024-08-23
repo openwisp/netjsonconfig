@@ -60,7 +60,7 @@ base_wireguard_schema = {
                         "minimum": 68,
                         "propertyOrder": 5,
                         "default": 1420,
-                        "description": ("Interface MTU, set to 1280 if using IPv6."),
+                        "description": "Interface MTU, set to 1280 if using IPv6.",
                     },
                     "table": {
                         "title": "Table",
