@@ -103,6 +103,20 @@ key name        type    default   allowed values
                                   underscores
 ``port``        integer ``51820`` integers
 ``private_key`` string            base64-encoded private key
+``dns``         list    ``[]``    list of strings containing DNS servers
+``mtu``         integer ``1420``  Interface MTU, set to 1280 if using IPv6
+``table``       string  ``auto``  Controls the routing table to which routes are
+                                  added
+``pre_up``      string            Script snippet which will be executed before
+                                  setting up the interface.
+``post_up``     string            Script snippet which will be executed after setting
+                                  up the interface.
+``pre_down``    string            Script snippet which will be executed before
+                                  tearing down the interface.
+``post_down``   string            Script snippet which will be executed after tearing
+                                  down the interface.
+``save_config`` boolean ``false`` Save the configuration from the current state of
+                                  interface upon shutdown.
 ``peers``       list    ``[]``    list of dictionaries containing following
                                   information of each peer:
 
