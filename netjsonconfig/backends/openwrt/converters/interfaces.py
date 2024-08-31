@@ -28,7 +28,7 @@ class Interfaces(OpenWrtConverter):
             'hash_max',
             'robustness',
         ],
-        'all': ['vlan_filtering', 'macaddr'],
+        'all': ['vlan_filtering', 'macaddr', 'mtu'],
     }
     _device_config = {}
     _custom_protocols = ['ppp']
@@ -57,7 +57,7 @@ class Interfaces(OpenWrtConverter):
         interface = self.__intermediate_interface(block, uci_name)
         self.__set_dsa_interface(interface)
         if self.dsa_interface:
-            uci_device = self.__intermediate_device(interface)
+            uci_device = self.__intermediate_device(interface, address_list)
             if uci_device:
                 result.setdefault('network', [])
                 result['network'].append(self.sorted_dict(uci_device))
@@ -176,7 +176,7 @@ class Interfaces(OpenWrtConverter):
         if 'addresses' in interface:
             del interface['addresses']
         # specific transformation
-        type_ = self._get_uci_name(interface["type"])
+        type_ = self._get_uci_name(interface['type'])
         method = getattr(self, f'_intermediate_{type_}', None)
         if method:
             interface = method(interface)
@@ -210,31 +210,30 @@ class Interfaces(OpenWrtConverter):
                 del address[key]
         return address
 
-    def __intermediate_device(self, interface):
+    def __intermediate_device(self, interface, address_list):
         """
         Converts NetJSON bridge to intermediate
         data structure compatible with new syntax
         introduced in OpenWrt 21.02.
         """
         device = {}
-        # ignore wireless interfaces
-        if interface['type'] == 'wireless':
-            return device
         # Add L2 options (needed for > OpenWrt 21.02)
         self._add_l2_options(device, interface)
-        device.update(
-            {
-                '.type': 'device',
-                '.name': 'device_{}'.format(interface['.name']),
-                'name': interface['ifname'],
-            }
-        )
+        base = {
+            '.type': 'device',
+            '.name': 'device_{}'.format(interface['.name']),
+            'name': interface['ifname'],
+        }
+        device.update(base)
+
         # Add 'device' option in related interface configuration
         if not interface.get('device', None):
             interface['device'] = device['name']
 
         if interface['type'] != 'bridge':
             # A non-bridge interface that contains L2 options.
+            if device == base:
+                return {}
             return device
         device['type'] = 'bridge'
         if not interface['ifname'].startswith('br-'):
@@ -486,13 +485,17 @@ class Interfaces(OpenWrtConverter):
                         else:
                             interface[option] = device_config[option]
                 # Merging L2 options to interface
-                for options in (
+                for option in (
                     self._bridge_interface_options['all']
                     + self._bridge_interface_options['stp']
                     + self._bridge_interface_options['igmp_snooping']
                 ):
-                    if options in device_config:
-                        interface[options] = device_config.pop(options)
+                    if option in device_config:
+                        interface[option] = device_config.pop(option)
+            # if device_config is empty but the interface references
+            # remove its reference from the interface
+            elif 'device' in interface:
+                del interface['device']
         return interface
 
     def __netjson_device(self, interface):

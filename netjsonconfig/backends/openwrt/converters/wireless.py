@@ -73,8 +73,13 @@ class Wireless(OpenWrtConverter):
             try:
                 bridges = self._bridged_wifi[interface['name']]
             except KeyError:
-                # don't bridge to anything unless explicitly specified
-                network = []
+                # if interface has any address specified,
+                # we need to attach it in the OpenWrt config
+                if interface.get('addresses', []):
+                    network = [interface['name']]
+                else:
+                    # don't bridge to anything unless explicitly specified
+                    network = []
             else:
                 network = bridges
             wireless['network'] = network
@@ -295,7 +300,8 @@ class Wireless(OpenWrtConverter):
         wps = False
         # move encryption keys
         for key in self._encryption_keys:
-            if key in wifi:
+            value = wifi.get(key, None)
+            if key in wifi and value:
                 settings[key] = wifi.pop(key)
                 if key.startswith('wps_'):
                     wps = True
