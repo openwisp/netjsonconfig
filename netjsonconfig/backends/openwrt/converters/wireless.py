@@ -63,30 +63,35 @@ class Wireless(OpenWrtConverter):
             encryption = self.__intermediate_encryption(wireless)
             wireless.update(encryption)
         wireless = self.__intermediate_roaming(wireless)
-        # attached networks (openwrt specific)
-        # by default the wifi interface is attached
-        # to its defining interface
-        # but this behaviour can be overridden
-        if not wireless.get('network'):
-            # try to automatically determine whether
-            # we should attach this interface to a bridge
-            try:
-                bridges = self._bridged_wifi[interface['name']]
-            except KeyError:
-                # if interface has any address specified,
-                # we need to attach it in the OpenWrt config
-                if interface.get('addresses', []):
-                    network = [interface['name']]
-                else:
-                    # don't bridge to anything unless explicitly specified
-                    network = []
-            else:
-                network = bridges
-            wireless['network'] = network
+        wireless = self.__intermediate_auto_network(wireless, interface)
         wireless['network'] = (
             ' '.join(wireless['network']).replace('.', '_').replace('-', '_')
         )
         return self.sorted_dict(wireless)
+
+    def __intermediate_auto_network(self, wireless, interface):
+        # attached networks (openwrt specific)
+        # by default the wifi interface is attached
+        # to its defining interface
+        # but this behaviour can be overridden
+        if wireless.get('network'):
+            return wireless
+        # try to automatically determine whether
+        # we should attach this interface to a bridge
+        try:
+            bridges = self._bridged_wifi[interface['name']]
+        except KeyError:
+            # if interface has any address specified,
+            # we need to attach it in the OpenWrt config
+            if interface.get('addresses', []):
+                network = [interface['name']]
+            else:
+                # don't bridge to anything unless explicitly specified
+                network = []
+        else:
+            network = bridges
+        wireless['network'] = network
+        return wireless
 
     def __get_auto_name(self, interface):
         wifi_name = self._get_uci_name(interface['name'])
