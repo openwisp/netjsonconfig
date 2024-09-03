@@ -184,9 +184,6 @@ config wifi-iface 'wifi_wlan1'
     }
     _wifi_bridge_uci = """package network
 
-config device 'device_eth0_1'
-    option name 'eth0.1'
-
 config interface 'eth0_1'
     option device 'eth0.1'
     option proto 'none'

@@ -492,10 +492,14 @@ class Interfaces(OpenWrtConverter):
                 ):
                     if option in device_config:
                         interface[option] = device_config.pop(option)
-            # if device_config is empty but the interface references
-            # remove its reference from the interface
+            # if device_config is empty but the interface references it
             elif 'device' in interface:
-                del interface['device']
+                # .name may have '.' substituted with _,
+                # which will yield unexpected results
+                # for this reason we use the name stored
+                # in the device property before removing it
+                if 'ifname' not in interface:
+                    interface['ifname'] = interface.pop('device')
         return interface
 
     def __netjson_device(self, interface):
