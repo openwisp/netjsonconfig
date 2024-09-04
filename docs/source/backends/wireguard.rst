@@ -6,7 +6,7 @@ The ``WireGuard`` backend allows to generate WireGuard configurations.
 Its schema is limited to a subset of the features available in WireGuard
 and it doesn't recognize interfaces, radios, wireless settings and so on.
 
-The main methods work just like the :doc:`OpenWRT backend
+The main methods work just like the :doc:`OpenWrt backend
 </backends/openwrt>`:
 
 - ``__init__``

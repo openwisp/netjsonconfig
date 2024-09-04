@@ -1,7 +1,7 @@
-OpenWRT Backend
+OpenWrt Backend
 ===============
 
-The ``OpenWrt`` backend allows to generate OpenWRT compatible
+The ``OpenWrt`` backend allows to generate OpenWrt compatible
 configurations.
 
 .. note::
@@ -10,8 +10,7 @@ configurations.
 
     UCI stands for `Unified Configuration Interface
     <https://wiki.openwrt.org/doc/uci>`_ and it is the default
-    configuration system installed on `OpenWRT <http://openwrt.org>`_ and
-    its fork `LEDE <https://www.lede-project.org/>`_.
+    configuration system installed on `OpenWrt <http://openwrt.org>`_.
 
 .. important::
 
@@ -172,7 +171,7 @@ file object with the following file structure:
     /etc/config/network
 
 The configuration archive can then be written to disk, served via HTTP or
-uploaded directly on the OpenWRT router where it can be finally "restored"
+uploaded directly on the OpenWrt router where it can be finally "restored"
 with ``sysupgrade``:
 
 ::
@@ -234,7 +233,7 @@ This method is automatically called when initializing the backend with the
 The argument passed to ``native`` can be a string containing a dump
 obtained via ``uci export``, or a file object (real file or ``BytesIO``
 instance) representing a configuration archive in tar.gz format typically
-used in OpenWRT/LEDE.
+used in OpenWrt.
 
 JSON method
 -----------
@@ -551,7 +550,7 @@ Will be rendered as follows:
 Using different protocols
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-OpenWRT supports many protocols (pppoe, pppoa, pptp, l2tp, ecc) and the
+OpenWrt supports many protocols (pppoe, pppoa, pptp, l2tp, ecc) and the
 list of supported protocols evolves over time.
 
 OpenWISP and netjsonconfig try to stay out of your way by leaving you
@@ -866,7 +865,7 @@ network, usually the LAN bridge:
                 },
             },
             {
-                "name": "lan",  # the bridge will be named br-lan by OpenWRT
+                "name": "lan",  # the bridge will be named br-lan by OpenWrt
                 "type": "bridge",
                 "bridge_members": ["eth0", "wlan0"],
                 "addresses": [{"proto": "dhcp", "family": "ipv4"}],
@@ -908,7 +907,7 @@ Wireless access point with macfilter ACL
 
 The ``OpenWrt`` backend supports a custom NetJSON extension for wireless
 access point interfaces: ``macfilter`` (read more about ``macfilter`` and
-``maclist`` on the `OpenWRT documentation for Wireless configuration
+``maclist`` on the `OpenWrt documentation for Wireless configuration
 <https://wiki.openwrt.org/doc/uci/wireless#common_options>`_).
 
 In the following example we ban two mac addresses from connecting to a
@@ -952,7 +951,7 @@ Wireless access point with roaming (802.11r)
 
 The ``OpenWrt`` backend supports custom NetJSON extensions to support
 (802.11r) in wireless access point interfaces (refer `"Fast BSS transition
-options" section in the OpenWRT documentation for Wireless configuration
+options" section in the OpenWrt documentation for Wireless configuration
 <https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r>`_).
 
 In the following example we configure roaming options for a wireless
@@ -1238,7 +1237,7 @@ WPA2 Enterprise (802.1x) ap
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example shows a typical wireless access point using *WPA2
-Enterprise (802.1x)* security on **OpenWRT**, you can use this type of
+Enterprise (802.1x)* security on **OpenWrt**, you can use this type of
 configuration for networks like `eduroam <https://www.eduroam.org/>`_:
 
 .. code-block:: python
@@ -1385,7 +1384,7 @@ WPA3 Enterprise (802.1x) AP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example shows a typical wireless access point using *WPA3
-Enterprise (802.1x)* security on **OpenWRT**, you can use this type of
+Enterprise (802.1x)* security on **OpenWrt**, you can use this type of
 configuration for networks like `eduroam <https://www.eduroam.org/>`_:
 
 .. code-block:: python
@@ -1790,9 +1789,9 @@ Will be rendered as follows:
 Automatic channel selection example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you need to use the "automatic channel selection" feature of OpenWRT,
+If you need to use the "automatic channel selection" feature of OpenWrt,
 you must set the channel to ``0``. You must also set the ``band`` property
-to tell OpenWRT which band to use (``2g`` for 2.4 Ghz, ``5g`` for 5 GHz,
+to tell OpenWrt which band to use (``2g`` for 2.4 Ghz, ``5g`` for 5 GHz,
 ``6g`` for 6 GHz, ``60g`` for 60 GHz).
 
 The following example sets "automatic channel selection" for two radios,
@@ -2159,7 +2158,7 @@ Will be rendered as follows:
 Overriding or disabling ``vid`` UCI option
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The OpenWRT/LEDE UCI ``vid`` option of ``switch_vlan`` sections is
+The OpenWrt UCI ``vid`` option of ``switch_vlan`` sections is
 automatically inferred from the ``vlan`` number, although it's possible to
 override it or disable it if needed:
 
@@ -2404,7 +2403,7 @@ UCI output:
 Including custom lists
 ----------------------
 
-Under specific circumstances, OpenWRT allows adding configuration options
+Under specific circumstances, OpenWrt allows adding configuration options
 in the form of lists. Many of these UCI options are not defined in the
 *JSON-Schema* of the ``OpenWrt`` backend, but the schema allows adding
 custom properties.

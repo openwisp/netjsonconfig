@@ -9,7 +9,7 @@ to manage ZeroTier networks on `Self-hosted ZeroTier controllers
 Its schema is limited to a subset of the features available in ZeroTier
 and it doesn't recognize interfaces, radios, wireless settings and so on.
 
-The main methods work just like the :doc:`OpenWRT backend
+The main methods work just like the :doc:`OpenWrt backend
 </backends/openwrt>`:
 
     - ``__init__``
@@ -437,5 +437,5 @@ Now add ``local_conf`` option to ``/etc/config/zerotier``:
 
 - `ZeroTier Controller Local Configuration
   <https://docs.zerotier.com/zerotier/zerotier.conf/#local-configuration-options>`_
-- `OpenWRT ZeroTier Advance Configuration
+- `OpenWrt ZeroTier Advance Configuration
   <https://openwrt.org/docs/guide-user/services/vpn/zerotier#advanced_configuration>`_

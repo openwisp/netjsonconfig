@@ -9,7 +9,7 @@ Motivations
 
 Federico Capoano (`@nemesisdesign <https://twitter.com/nemesisdesign>`_)
 has written in detail the motivations that brought us here in a blog post:
-`netjsonconfig: convert NetJSON to OpenWRT UCI
+`netjsonconfig: convert NetJSON to OpenWrt UCI
 <http://nemesisdesign.net/blog/coding/netjsonconfig-convert-netjson-to-openwrt-uci/>`_.
 
 Goals
@@ -33,8 +33,8 @@ this brings many advantages:
 
 Another important goal is to build a tool which is **flexible** and
 **powerful**. We do not want to limit our system to OpenWISP Firmware
-only, we want to be able to control vanilla OpenWRT devices or other
-OpenWRT based devices too.
+only, we want to be able to control vanilla OpenWrt devices or other
+OpenWrt based devices too.
 
 We did this by starting out with the :doc:`OpenWrt backend
 <../backends/openwrt>` first, only afterwards we built the :doc:`OpenWisp

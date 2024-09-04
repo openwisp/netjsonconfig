@@ -1,7 +1,7 @@
 OpenWISP 1.x Backend
 ====================
 
-The OpenWISP 1.x Backend is based on the OpenWRT backend, therefore it
+The OpenWISP 1.x Backend is based on the OpenWrt backend, therefore it
 inherits all its features with some differences that are explained in this
 page.
 
