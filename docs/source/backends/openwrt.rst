@@ -1326,15 +1326,15 @@ UCI Output:
     package wireless
 
     config wifi-iface 'wifi_wlan0'
-                option bssid '00:26:b9:20:5f:09'
-                option device 'radio0'
-                option eap_type 'tls'
-                option encryption 'wpa2'
-                option identity 'test-identity'
-                option ifname 'wlan0'
-                option mode 'sta'
-                option password 'test-password'
-                option ssid 'enterprise-client'
+            option bssid '00:26:b9:20:5f:09'
+            option device 'radio0'
+            option eap_type 'tls'
+            option encryption 'wpa2'
+            option identity 'test-identity'
+            option ifname 'wlan0'
+            option mode 'sta'
+            option password 'test-password'
+            option ssid 'enterprise-client'
 
 WPA3 Personal (Simultaneous Authentication of Equals)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1373,13 +1373,13 @@ UCI output:
     package wireless
 
     config wifi-iface 'wifi_wlan0'
-                option device 'radio0'
-                option encryption 'sae+ccmp'
-                option ieee80211w '2'
-                option ifname 'wlan0'
-                option key 'passphrase012345'
-                option mode 'ap'
-                option ssid 'wpa3-personal'
+            option device 'radio0'
+            option encryption 'sae+ccmp'
+            option ieee80211w '2'
+            option ifname 'wlan0'
+            option key 'passphrase012345'
+            option mode 'ap'
+            option ssid 'wpa3-personal'
 
 WPA3 Enterprise (802.1x) AP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1423,22 +1423,22 @@ UCI Output:
     package wireless
 
     config wifi-iface 'wifi_wlan0'
-                option acct_port '1813'
-                option acct_secret 'radius_secret'
-                option acct_server '192.168.0.2'
-                option auth_port '1812'
-                option auth_secret 'radius_secret'
-                option auth_server '192.168.0.1'
-                option device 'radio0'
-                option encryption 'wpa3+ccmp'
-                option ieee80211w '2'
-                option ifname 'wlan0'
-                option key 'radius_secret'
-                option mode 'ap'
-                option nasid 'hostname'
-                option port '1812'
-                option server '192.168.0.1'
-                option ssid 'eduroam'
+            option acct_port '1813'
+            option acct_secret 'radius_secret'
+            option acct_server '192.168.0.2'
+            option auth_port '1812'
+            option auth_secret 'radius_secret'
+            option auth_server '192.168.0.1'
+            option device 'radio0'
+            option encryption 'wpa3+ccmp'
+            option ieee80211w '2'
+            option ifname 'wlan0'
+            option key 'radius_secret'
+            option mode 'ap'
+            option nasid 'hostname'
+            option port '1812'
+            option server '192.168.0.1'
+            option ssid 'eduroam'
 
 WPA3 Enterprise (802.1x) client
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1523,16 +1523,16 @@ UCI Output:
     package wireless
 
     config wifi-iface 'wifi_wlan0'
-                option auth 'MSCHAPV2'
-                option bssid '00:26:b9:20:5f:09'
-                option device 'radio0'
-                option eap_type 'ttls'
-                option encryption 'wpa2'
-                option identity 'test-identity'
-                option ifname 'wlan0'
-                option mode 'sta'
-                option password 'test-password'
-                option ssid 'enterprise-client'
+            option auth 'MSCHAPV2'
+            option bssid '00:26:b9:20:5f:09'
+            option device 'radio0'
+            option eap_type 'ttls'
+            option encryption 'wpa2'
+            option identity 'test-identity'
+            option ifname 'wlan0'
+            option mode 'sta'
+            option password 'test-password'
+            option ssid 'enterprise-client'
 
 *WPA2 Enterprise (802.1x)* client with EAP-PEAP example:
 
