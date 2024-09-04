@@ -407,7 +407,7 @@ Will be rendered as follows:
     package network
 
     config interface 'lo'
-            option ifname 'lo'
+            option device 'lo'
             option ipaddr '127.0.0.1'
             option netmask '255.0.0.0'
             option proto 'static'
@@ -449,7 +449,7 @@ Will be rendered as follows:
     package network
 
     config interface 'eth0'
-        option ifname 'eth0'
+        option device 'eth0'
         option ip6addr 'fdb4:5f35:e8fd::1/48'
         option ipaddr '10.27.251.1'
         option netmask '255.255.255.0'
@@ -506,18 +506,18 @@ Will return the following UCI output:
     config interface 'eth0'
             option dns '10.11.12.13 8.8.8.8'
             option dns_search 'openwisp.org netjson.org'
-            option ifname 'eth0'
+            option device 'eth0'
             option ipaddr '192.168.1.1'
             option netmask '255.255.255.0'
             option proto 'static'
 
     config interface 'eth1'
             option dns_search 'openwisp.org netjson.org'
-            option ifname 'eth1'
+            option device 'eth1'
             option proto 'dhcp'
 
     config interface 'eth1_31'
-            option ifname 'eth1.31'
+            option device 'eth1.31'
             option proto 'none'
 
 DHCP ipv6 ethernet interface
@@ -545,14 +545,14 @@ Will be rendered as follows:
     package network
 
     config interface 'lan'
-            option ifname 'eth0'
+            option device 'eth0'
             option proto 'dchpv6'
 
 Using different protocols
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-OpenWRT and LEDE support many protocols (pppoe, pppoa, pptp, l2tp, ecc)
-and the list of supported protocols evolves over time.
+OpenWRT supports many protocols (pppoe, pppoa, pptp, l2tp, ecc) and the
+list of supported protocols evolves over time.
 
 OpenWISP and netjsonconfig try to stay out of your way by leaving you
 maximum flexibility to use any protocol and any configuration option you
@@ -680,11 +680,11 @@ Will be rendered as follows:
     package network
 
     config interface 'lan'
-            option ifname 'eth0.1'
+            option device 'eth0.1'
             option proto 'none'
 
     config interface 'wan'
-            option ifname 'eth0.2'
+            option device 'eth0.2'
             option proto 'none'
 
     config device 'device_br_lan'
@@ -697,13 +697,9 @@ Will be rendered as follows:
 
     config interface 'br_lan'
             option device 'br-lan'
-            option ifname 'eth0.1 eth0.2'
-            option igmp_snooping '1'
             option ipaddr '172.17.0.2'
             option netmask '255.255.255.0'
             option proto 'static'
-            option stp '1'
-            option type 'bridge'
 
 Wireless settings
 -----------------
@@ -828,12 +824,6 @@ UCI output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
@@ -841,7 +831,6 @@ UCI output:
             option ifname 'wlan0'
             option isolate '1'
             option mode 'ap'
-            option network 'wlan0'
             option ssid 'myWiFi'
             option wmm '1'
 
@@ -892,23 +881,18 @@ Will be rendered as follows:
     package network
 
     config interface 'eth0'
-            option ifname 'eth0'
-            option proto 'none'
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
+            option device 'eth0'
             option proto 'none'
 
     config device 'device_lan'
-            option name 'lan'
+            option name 'br-lan'
             list ports 'eth0'
             list ports 'wlan0'
             option type 'bridge'
 
     config interface 'lan'
-            option ifname 'eth0 wlan0'
+            option device 'br-lan'
             option proto 'dhcp'
-            option type 'bridge'
 
     package wireless
 
@@ -952,12 +936,6 @@ UCI output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
@@ -967,7 +945,6 @@ UCI output:
             list maclist 'E8:94:F6:33:8C:1D'
             list maclist '42:6c:8f:95:0f:00'
             option mode 'ap'
-            option network 'wlan0'
             option ssid 'MyWifiAP'
 
 Wireless access point with roaming (802.11r)
@@ -1006,12 +983,6 @@ access point:
 UCI output:
 
 ::
-
-    package network
-
-    config interface 'wlan0'
-        option ifname 'wlan0'
-        option proto 'none'
 
     package wireless
 
@@ -1077,25 +1048,20 @@ UCI output:
     package network
 
     config interface 'eth0'
-            option ifname 'eth0'
-            option proto 'none'
-
-    config interface 'mesh0'
-            option ifname 'mesh0'
+            option device 'eth0'
             option proto 'none'
 
     config device 'device_lan'
-            option name 'lan'
+            option name 'br-lan'
             list ports 'eth0'
             list ports 'mesh0'
             option type 'bridge'
 
     config interface 'lan'
-            option ifname 'eth0 mesh0'
+            option device 'br-lan'
             option ipaddr '192.168.0.1'
             option netmask '255.255.255.0'
             option proto 'static'
-            option type 'bridge'
 
     package wireless
 
@@ -1134,12 +1100,6 @@ Will result in:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
@@ -1147,7 +1107,6 @@ Will result in:
             option device 'radio0'
             option ifname 'wlan0'
             option mode 'adhoc'
-            option network 'wlan0'
             option ssid 'freifunk'
 
 WDS repeater example
@@ -1204,14 +1163,6 @@ Will result in:
 
     package network
 
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
-    config interface 'wlan1'
-            option ifname 'wlan1'
-            option proto 'none'
-
     config device 'device_wds_bridge'
             option name 'br-wds'
             list ports 'wlan0'
@@ -1219,9 +1170,8 @@ Will result in:
             option type 'bridge'
 
     config interface 'wds_bridge'
-            option ifname 'wlan0 wlan1'
+            option device 'br-wds'
             option proto 'dhcp'
-            option type 'bridge'
 
     package wireless
 
@@ -1274,12 +1224,6 @@ UCI output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
@@ -1288,7 +1232,6 @@ UCI output:
             option ifname 'wlan0'
             option key 'passphrase012345'
             option mode 'ap'
-            option network 'wlan0'
             option ssid 'wpa2-personal'
 
 WPA2 Enterprise (802.1x) ap
@@ -1328,24 +1271,21 @@ UCI Output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
             option acct_port '1813'
+            option acct_secret 'radius_secret'
             option acct_server '192.168.0.2'
+            option auth_port '1812'
+            option auth_secret 'radius_secret'
+            option auth_server '192.168.0.1'
             option device 'radio0'
             option encryption 'wpa2'
             option ifname 'wlan0'
             option key 'radius_secret'
             option mode 'ap'
             option nasid 'hostname'
-            option network 'wlan0'
             option port '1812'
             option server '192.168.0.1'
             option ssid 'eduroam'
@@ -1383,12 +1323,6 @@ UCI Output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
@@ -1399,7 +1333,6 @@ UCI Output:
             option identity 'test-identity'
             option ifname 'wlan0'
             option mode 'sta'
-            option network 'wlan0'
             option password 'test-password'
             option ssid 'enterprise-client'
 
@@ -1437,12 +1370,6 @@ UCI output:
 
 ::
 
-    package network
-
-    config interface `'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
@@ -1452,10 +1379,9 @@ UCI output:
             option ifname 'wlan0'
             option key 'passphrase012345'
             option mode 'ap'
-            option network 'wlan0'
             option ssid 'wpa3-personal'
 
-WPA3 Enterprise (802.1x) ap
+WPA3 Enterprise (802.1x) AP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example shows a typical wireless access point using *WPA3
@@ -1494,17 +1420,15 @@ UCI Output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
             option acct_port '1813'
+            option acct_secret 'radius_secret'
             option acct_server '192.168.0.2'
+            option auth_port '1812'
+            option auth_secret 'radius_secret'
+            option auth_server '192.168.0.1'
             option device 'radio0'
             option encryption 'wpa3+ccmp'
             option ieee80211w '2'
@@ -1512,7 +1436,6 @@ UCI Output:
             option key 'radius_secret'
             option mode 'ap'
             option nasid 'hostname'
-            option network 'wlan0'
             option port '1812'
             option server '192.168.0.1'
             option ssid 'eduroam'
@@ -1552,12 +1475,6 @@ UCI Output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-            option ifname 'wlan0'
-            option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
@@ -1569,7 +1486,6 @@ UCI Output:
             option ieee80211w '2'
             option ifname 'wlan0'
             option mode 'sta'
-            option network 'wlan0'
             option password 'test-password'
             option ssid 'enterprise-client'
 
@@ -1604,26 +1520,19 @@ UCI Output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-        option ifname 'wlan0'
-        option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
-        option auth 'MSCHAPV2'
-        option bssid '00:26:b9:20:5f:09'
-        option device 'radio0'
-        option eap_type 'ttls'
-        option encryption 'wpa2'
-        option identity 'test-identity'
-        option ifname 'wlan0'
-        option mode 'sta'
-        option network 'wlan0'
-        option password 'test-password'
-        option ssid 'enterprise-client'
+            option auth 'MSCHAPV2'
+            option bssid '00:26:b9:20:5f:09'
+            option device 'radio0'
+            option eap_type 'ttls'
+            option encryption 'wpa2'
+            option identity 'test-identity'
+            option ifname 'wlan0'
+            option mode 'sta'
+            option password 'test-password'
+            option ssid 'enterprise-client'
 
 *WPA2 Enterprise (802.1x)* client with EAP-PEAP example:
 
@@ -1656,26 +1565,19 @@ UCI Output:
 
 ::
 
-    package network
-
-    config interface 'wlan0'
-        option ifname 'wlan0'
-        option proto 'none'
-
     package wireless
 
     config wifi-iface 'wifi_wlan0'
-        option auth 'EAP-MSCHAPV2'
-        option bssid '00:26:b9:20:5f:09'
-        option device 'radio0'
-        option eap_type 'peap'
-        option encryption 'wpa2'
-        option identity 'test-identity'
-        option ifname 'wlan0'
-        option mode 'sta'
-        option network 'wlan0'
-        option password 'test-password'
-        option ssid 'enterprise-client'
+            option auth 'EAP-MSCHAPV2'
+            option bssid '00:26:b9:20:5f:09'
+            option device 'radio0'
+            option eap_type 'peap'
+            option encryption 'wpa2'
+            option identity 'test-identity'
+            option ifname 'wlan0'
+            option mode 'sta'
+            option password 'test-password'
+            option ssid 'enterprise-client'
 
 Dialup settings
 ---------------
@@ -1707,6 +1609,7 @@ The following *configuration dictionary*:
             {
                 "name": "dsl0",
                 "network": "xdsl",
+                "type": "dialup",
                 "proto": "pppoe",
                 "password": "jf93nf82o023$",
                 "username": "dsluser",
@@ -1723,10 +1626,10 @@ Will be rendered as follows:
 
     config interface 'xdsl'
             option ifname 'dsl0'
+            option mtu '1448'
+            option password 'jf93nf82o023$'
             option proto 'pppoe'
             option username 'dsluser'
-            option password 'jf93nf82o023$'
-            option mtu '1448'
 
 Modem Manager settings
 ----------------------
@@ -1867,20 +1770,19 @@ Will be rendered as follows:
     package wireless
 
     config wifi-device 'radio0'
+            option band '2g'
             option channel '11'
             option country 'IT'
             option htmode 'HT20'
-            option band '2g'
             option phy 'phy0'
             option txpower '5'
             option type 'mac80211'
 
     config wifi-device 'radio1'
+            option band '5g'
             option channel '36'
             option country 'IT'
-            option disabled '0'
             option htmode 'HT20'
-            option band '5g'
             option phy 'phy1'
             option txpower '4'
             option type 'mac80211'
@@ -1931,16 +1833,16 @@ UCI output:
     package wireless
 
     config wifi-device 'radio0'
+            option band '2g'
             option channel 'auto'
             option htmode 'HT20'
-            option band '2g'
             option phy 'phy0'
             option type 'mac80211'
 
     config wifi-device 'radio1'
+            option band '5g'
             option channel 'auto'
             option htmode 'VHT80'
-            option band '5g'
             option phy 'phy1'
             option type 'mac80211'
 
@@ -1972,9 +1874,9 @@ UCI output:
     package wireless
 
     config wifi-device 'radio0'
+            option band '5g'
             option channel '36'
             option htmode 'VHT80'
-            option band '5g'
             option phy 'phy0'
             option type 'mac80211'
 
@@ -2006,9 +1908,9 @@ UCI output:
     package wireless
 
     config wifi-device 'radio0'
+            option band '5g'
             option channel '36'
             option htmode 'HE80'
-            option band '5g'
             option phy 'phy0'
             option type 'mac80211'
 
