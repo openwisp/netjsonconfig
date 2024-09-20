@@ -900,6 +900,62 @@ schema = merge_config(
                     },
                 }
             },
+            "encryption_wpa_enterprise_sta_base_settings": {
+                "properties": {
+                    "ca_cert_usesystem": {
+                        "title": "Use system certificates",
+                        "type": "boolean",
+                        "default": False,
+                        "format": "checkbox",
+                        "description": (
+                            'Validate server certificate using built-in'
+                            ' system CA bundle, requires the "ca-bundle" package'
+                        ),
+                        "propertyOrder": 7.9,
+                    },
+                    "subject_match": {
+                        "title": "Certificate constraint (Subject)",
+                        "type": "string",
+                        "description": (
+                            "Certificate constraint substring"
+                            " - e.g. /CN=wifi.mycompany.com See `logread -f` during"
+                            " handshake for actual values"
+                        ),
+                        "propertyOrder": 8.9,
+                    },
+                    "altsubject_match": {
+                        "title": "Certificate constraint (SAN)",
+                        "description": (
+                            "Certificate constraint(s) via Subject Alternate"
+                            " Name values (supported attributes: EMAIL, DNS, URI)"
+                            " - e.g. DNS:wifi.mycompany.com"
+                        ),
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "propertyOrder": 8.91,
+                    },
+                    "domain_match": {
+                        "title": "Certificate constraint (Domain)",
+                        "description": (
+                            "Certificate constraint(s) against DNS SAN values"
+                            " (if available) or Subject CN (exact match)"
+                        ),
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "propertyOrder": 8.92,
+                    },
+                    "domain_suffix_match": {
+                        "title": "Certificate constraint (Wildcard)",
+                        "description": (
+                            "Certificate constraint(s) against DNS SAN values "
+                            "(if available) or Subject CN (suffix match)"
+                        ),
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "propertyOrder": 8.93,
+                    },
+                }
+            },
         },
         "properties": {
             "general": {

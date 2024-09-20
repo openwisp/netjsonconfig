@@ -563,8 +563,12 @@ config wifi-iface 'wifi_wlan0'
                         "cipher": "auto",
                         "eap_type": "ttls",
                         "auth": "MSCHAPV2",
+                        "anonymous_identity": "anonymous",
                         "identity": "test-identity",
                         "password": "test-password",
+                        "client_cert": "/etc/ssl/wifi.openwisp.io/cert.crt",
+                        "priv_key": "/etc/ssl/wifi.openwisp.io/private.key",
+                        "domain_match": ["wifi.openwisp.io"],
                     },
                 },
             }
@@ -573,15 +577,19 @@ config wifi-iface 'wifi_wlan0'
     _wpa2_enterprise_ttls_client_uci = """package wireless
 
 config wifi-iface 'wifi_wlan0'
+    option anonymous_identity 'anonymous'
     option auth 'MSCHAPV2'
     option bssid '00:26:b9:20:5f:09'
+    option client_cert '/etc/ssl/wifi.openwisp.io/cert.crt'
     option device 'radio0'
+    list domain_match 'wifi.openwisp.io'
     option eap_type 'ttls'
     option encryption 'wpa2'
     option identity 'test-identity'
     option ifname 'wlan0'
     option mode 'sta'
     option password 'test-password'
+    option priv_key '/etc/ssl/wifi.openwisp.io/private.key'
     option ssid 'enterprise-client'
 """
 
