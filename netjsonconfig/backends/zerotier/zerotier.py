@@ -22,8 +22,12 @@ class ZeroTier(BaseVpnBackend):
         identity_secret='{{secret}}',
         config_path='/etc/openwisp/zerotier',
         disabled=False,
+        client_options=None,
     ):
         networks = networks or []
+        client_options = client_options or {}
+        for network in networks:
+            network.update(client_options)
         return {
             'name': name,
             'networks': networks,

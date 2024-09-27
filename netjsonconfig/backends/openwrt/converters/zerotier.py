@@ -4,8 +4,17 @@ from .base import OpenWrtConverter
 
 
 class ZeroTier(OpenWrtConverter, BaseZeroTier):
-    _uci_types = ['zerotier']
+    _uci_types = ['zerotier', 'network']
     _schema = schema['properties']['zerotier']['items']
+
+    def to_intermediate_loop(self, block, result, index=None):
+        vpn = self.__intermediate_vpn(block)
+        networks = vpn.pop('networks')
+        result.setdefault('zerotier', [])
+        result['zerotier'].append(vpn)
+        for network in networks:
+            result['zerotier'].append(self.__intermediate_network(network))
+        return result
 
     def __intermediate_vpn(self, vpn):
         nwid_ifnames = vpn.get('networks', [])
@@ -21,17 +30,67 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
                 'enabled': not vpn.pop('disabled', False),
             }
         )
-        del vpn['networks']
+        if vpn.get('local_conf'):
+            vpn['local_conf_path'] = vpn.get('local_conf')
+        elif vpn.get('local_conf_path'):
+            vpn['local_conf'] = vpn.get('local_conf_path')
         return super().__intermediate_vpn(vpn, remove=[''])
 
+    def __intermediate_network(self, network):
+        # Generates configuration for ZeroTier > 1.14
+        # where networks are defined in individual blocks.
+        network.update(
+            {
+                '.name': self._get_uci_name(network.pop('ifname')),
+                '.type': 'network',
+            }
+        )
+        return self.sorted_dict(network)
+
+    def to_netjson_loop(self, block, result, index=None):
+        if block.get('.type') == 'zerotier':
+            vpn = self.__netjson_vpn(block)
+            result.setdefault('zerotier', [])
+            result['zerotier'].append(vpn)
+        else:
+            # Handles ZeroTier > 1.14 configuration where
+            # networks are defined in individual blocks.
+            network = self.__netjson_network(block)
+            result['zerotier'][0]['networks'].append(network)
+        return result
+
     def __netjson_vpn(self, vpn):
-        nwids = vpn.pop('join')
         vpn['name'] = vpn.pop('.name')
-        vpn['networks'] = [{"id": nwid, "ifname": f"owzt{nwid[-6:]}"} for nwid in nwids]
         # 'disabled' defaults to False in OpenWRT
         vpn['disabled'] = vpn.pop('enabled', '0') == '0'
         del vpn['.type']
+        # Handles ZeroTier < 1.14 configuration where networks were present
+        # in the zerotier block.
+        nwids = vpn.pop('join', [])
+        vpn['networks'] = [
+            {"id": nwid, "ifname": self._get_ifname_from_id(nwid)} for nwid in nwids
+        ]
+        if 'local_conf' in vpn:
+            vpn['local_conf_path'] = vpn.pop('local_conf')
         return super().__netjson_vpn(vpn)
+
+    def __netjson_network(self, network):
+        for key in ['.name', '.type']:
+            network.pop(key)
+        network['ifname'] = self._get_ifname_from_id(network['id'])
+        # Handle boolean fields
+        if 'allowed_global' in network:
+            network['allowed_global'] = network['allowed_global'] == '1'
+        if 'allowed_default' in network:
+            network['allowed_default'] = network['allowed_default'] == '1'
+        if 'allowed_dns' in network:
+            network['allowed_dns'] = network['allowed_dns'] == '1'
+        if 'allow_managed' in network:
+            network['allow_managed'] = network['allow_managed'] == '1'
+        return network
+
+    def _get_ifname_from_id(self, network_id):
+        return f"owzt{network_id[-6:]}"
 
     def __get_zt_ifname_files(self, vpn, files):
         config_path = vpn.get('config_path', '/etc/openwisp/zerotier')
