@@ -662,6 +662,7 @@ schema = {
                     "propertyOrder": 5,
                 },
                 "identity": {"type": "string", "propertyOrder": 6},
+                "anonymous_identity": {"type": "string", "propertyOrder": 6.1},
                 "password": {"type": "string", "propertyOrder": 7},
                 "ca_cert": {
                     "type": "string",
