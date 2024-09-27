@@ -1310,8 +1310,13 @@ WPA2 Enterprise (802.1x) client
                         "protocol": "wpa2_enterprise",
                         "cipher": "auto",
                         "eap_type": "tls",
+                        "anonymous_identity": "anonymous",
                         "identity": "test-identity",
                         "password": "test-password",
+                        "ca_cert_usesystem": True,
+                        "subject_match": "CN = wifi.openwisp.io",
+                        "altsubject_match": ["DNS Name: wifi.openwisp.io"],
+                        "domain_match": ["wifi.openwisp.io"],
                     },
                 },
             }
@@ -1325,8 +1330,12 @@ UCI Output:
     package wireless
 
     config wifi-iface 'wifi_wlan0'
+            list altsubject_match 'DNS Name: wifi.openwisp.io'
+            option anonymous_identity 'anonymous'
             option bssid '00:26:b9:20:5f:09'
+            option ca_cert_usesystem '1'
             option device 'radio0'
+            list domain_match 'wifi.openwisp.io'
             option eap_type 'tls'
             option encryption 'wpa2'
             option identity 'test-identity'
@@ -1334,6 +1343,7 @@ UCI Output:
             option mode 'sta'
             option password 'test-password'
             option ssid 'enterprise-client'
+            option subject_match 'CN = wifi.openwisp.io'
 
 WPA3 Personal (Simultaneous Authentication of Equals)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
