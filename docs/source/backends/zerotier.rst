@@ -83,6 +83,12 @@ See an example of initialization and rendering below:
                     "tags": [{"default": 1, "id": 1}],
                     "remoteTraceTarget": "7f5d90eb87",
                     "remoteTraceLevel": 1,
+                    "client_options": {
+                        "allow_managed": True,
+                        "allowed_global": False,
+                        "allowed_default": False,
+                        "allowed_dns": False,
+                    },
                 }
             ]
         }
@@ -268,6 +274,20 @@ key name              type    default     description
 ``tags``              list    ``[{}]``    list of network tags dictionaries
 ``remoteTraceTarget`` string              remote target ID for network tracing
 ``remoteTraceLevel``  integer             level of network tracing
+``client_options``    dict    ``{}``      These options are only used for client configurations
+
+                                          =================== ======= ==========================================
+                                          key name            type    description
+                                          =================== ======= ==========================================
+                                          ``allow_managed``   boolean allow ZeroTier to set IP addresses and
+                                                                      routes
+                                          ``allowed_global``  boolean allow ZeroTier to set
+                                                                      global/public/not-private range IPs and
+                                                                      routes
+                                          ``allowed_default`` boolean allow ZeroTier to set the default route on
+                                                                      the system
+                                          ``allowed_dns``     boolean allow ZeroTier to set DNS servers
+                                          =================== ======= ==========================================
 ===================== ======= =========== =======================================================================
 
 Client specific settings
@@ -314,7 +334,7 @@ key name             type    default                    description
                                                         determined
 ``port``             integer ``9993``                   port number of the
                                                         zerotier service
-``local_conf``       string                             path of the local
+``local_conf_path``  string                             path of the local
                                                         zerotier configuration
                                                         (only used for advanced
                                                         configuration)
@@ -404,8 +424,8 @@ OpenWrt device, such as setting up trusted paths, blacklisting physical
 paths, setting up physical path hints for certain nodes, and defining
 trusted upstream devices, this can be achieved by creating a file named
 ``local.conf`` in a persistent filesystem location, such as
-``/etc/openwisp/zerotier/local.conf`` and then adding the ``local_conf``
-option to the ZeroTier UCI configuration.
+``/etc/openwisp/zerotier/local.conf`` and then adding the
+``local_conf_path`` option to the ZeroTier UCI configuration.
 
 For example, let's create a local configuration file at
 ``/etc/openwisp/zerotier/local.conf`` (JSON) to blacklist a specific
@@ -421,7 +441,7 @@ physical network path **(10.0.0.0/24)** from all ZeroTier traffic.
       }
     }
 
-Now add ``local_conf`` option to ``/etc/config/zerotier``:
+Now add ``local_conf_path`` option to ``/etc/config/zerotier``:
 
 .. code-block:: text
 
@@ -431,7 +451,7 @@ Now add ``local_conf`` option to ``/etc/config/zerotier``:
         option enabled '1'
         list join '9536600adf654322'
         option secret '{{secret}}'
-        option local_conf '/etc/openwisp/zerotier/local.conf'
+        option local_conf_path '/etc/openwisp/zerotier/local.conf'
 
 **More information**
 

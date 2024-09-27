@@ -60,6 +60,12 @@ class TestBackend(unittest.TestCase):
                 "tags": [{"default": 1, "id": 1}],
                 "remoteTraceTarget": "7f5d90eb87",
                 "remoteTraceLevel": 1,
+                "client_options": {
+                    "allow_managed": True,
+                    "allowed_global": False,
+                    "allowed_default": False,
+                    "allowed_dns": False,
+                },
             }
         ]
     }
