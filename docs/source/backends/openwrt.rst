@@ -1683,6 +1683,8 @@ The following *configuration dictionary*:
                 "name": "modem0",
                 "mtu": 1500,
                 "signalrate": 5,
+                "loglevel": "ERR",
+                "force_link": True,
             }
         ]
     }
@@ -1700,6 +1702,8 @@ Will be rendered as follows:
     config interface 'modem0'
             option apn 'apn.operator.com'
             option device '/sys/devices/platform/ahb/1b000000.usb/usb1/1-1'
+            option force_link '1'
+            option loglevel 'ERR'
             option lowpower '0'
             option metric '50'
             option password 'pwd123456'
