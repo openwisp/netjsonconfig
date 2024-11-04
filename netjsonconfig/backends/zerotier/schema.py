@@ -67,6 +67,45 @@ base_zerotier_schema = {
                     "description": "Time when the network was created",
                 },
                 # Configurable properties
+                "client_options": {
+                    "type": "object",
+                    "title": "Client Options",
+                    "propertyOrder": 14,
+                    "properties": {
+                        "allow_managed": {
+                            "type": "boolean",
+                            "title": "Allow Managed",
+                            "default": True,
+                            "format": "checkbox",
+                            "description": (
+                                "Allow ZeroTier to set IP Addresses and Routes (local/private ranges only)",
+                            ),
+                        },
+                        "allow_global": {
+                            "type": "boolean",
+                            "title": "Allow Global",
+                            "default": False,
+                            "format": "checkbox",
+                            "description": (
+                                "Allow ZeroTier to set Global/Public/Not-Private range IPs and Routes"
+                            ),
+                        },
+                        "allow_default": {
+                            "type": "boolean",
+                            "title": "Allow Default",
+                            "format": "checkbox",
+                            "description": (
+                                "Allow ZeroTier to set the Default Route on the system"
+                            ),
+                        },
+                        "allow_dns": {
+                            "type": "boolean",
+                            "title": "Allow DNS",
+                            "format": "checkbox",
+                            "description": "Allow ZeroTier to set DNS servers",
+                        },
+                    },
+                },
                 "capabilities": {
                     "type": "array",
                     "items": {"type": "object"},

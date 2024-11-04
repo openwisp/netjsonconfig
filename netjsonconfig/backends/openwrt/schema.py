@@ -1222,14 +1222,13 @@ schema = merge_config(
                         "name": {
                             "type": "string",
                             "propertyOrder": 2,
-                            "default": "ow_zt",
+                            "default": "global",
                             "minLength": 1,
                             "description": "Name of the zerotier network member configuration",
                         },
                         "networks": {
                             "type": "array",
                             "title": "Networks",
-                            "minItems": 1,
                             "propertyOrder": 3,
                             "uniqueItems": True,
                             "additionalProperties": True,
@@ -1251,6 +1250,41 @@ schema = merge_config(
                                         "minLength": 1,
                                         "maxLength": 10,
                                         "description": "Name of zerotier interface",
+                                    },
+                                    "allow_managed": {
+                                        "type": "boolean",
+                                        "title": "Allow Managed",
+                                        "default": True,
+                                        "format": "checkbox",
+                                        "description": (
+                                            "Allow ZeroTier to set IP Addresses"
+                                            " and Routes (local/private ranges only)",
+                                        ),
+                                    },
+                                    "allow_global": {
+                                        "type": "boolean",
+                                        "title": "Allow Global",
+                                        "default": False,
+                                        "format": "checkbox",
+                                        "description": (
+                                            "Allow ZeroTier to set Global/Public/Not-Private"
+                                            " range IPs and Routes"
+                                        ),
+                                    },
+                                    "allow_default": {
+                                        "type": "boolean",
+                                        "title": "Allow Default",
+                                        "format": "checkbox",
+                                        "description": (
+                                            "Allow ZeroTier to set the Default Route on the"
+                                            " system"
+                                        ),
+                                    },
+                                    "allow_dns": {
+                                        "type": "boolean",
+                                        "title": "Allow DNS",
+                                        "format": "checkbox",
+                                        "description": "Allow ZeroTier to set DNS servers",
                                     },
                                 },
                             },
@@ -1295,7 +1329,7 @@ schema = merge_config(
                             "propertyOrder": 7,
                             "description": "Port number of the zerotier service",
                         },
-                        "local_conf": {
+                        "local_conf_path": {
                             "type": "string",
                             "propertyOrder": 8,
                             "description": (
