@@ -14,6 +14,7 @@ class ZeroTier(BaseConverter):
         return result
 
     def __intermediate_vpn(self, config, remove=None):
+        config.pop('client_options', None)
         return self.sorted_dict(config)
 
     def to_netjson_loop(self, block, result, index=None):

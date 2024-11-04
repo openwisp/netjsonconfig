@@ -1110,6 +1110,171 @@ config interface 'wan'
         o = OpenWrt(native=self._l2_options_interface_uci)
         self.assertEqual(o.config, self._l2_options_interface_netjson)
 
+    _vlan_filtering_bridge_netjson = {
+        "interfaces": [
+            {
+                "type": "bridge",
+                "bridge_members": ["lan1", "lan2", "lan3"],
+                "name": "br-lan",
+                "network": "home_vlan",
+                "vlan_filtering": [
+                    {
+                        "vlan": 1,
+                        "ports": [
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": True},
+                            {"ifname": "lan2", "tagging": "t"},
+                        ],
+                    },
+                    {
+                        "vlan": 2,
+                        "ports": [
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": False},
+                            {"ifname": "lan3", "tagging": "u", "primary_vid": True},
+                        ],
+                    },
+                ],
+            }
+        ]
+    }
+
+    _vlan_filtering_bridge_uci = """package network
+
+config device 'device_home_vlan'
+    option name 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2'
+    list ports 'lan3'
+    option type 'bridge'
+    option vlan_filtering '1'
+
+config bridge-vlan 'home_vlan_1'
+    option device 'br-lan'
+    list ports 'lan1:t*'
+    list ports 'lan2:t'
+    option vlan '1'
+
+config bridge-vlan 'home_vlan_2'
+    option device 'br-lan'
+    list ports 'lan1:t'
+    list ports 'lan3:u*'
+    option vlan '2'
+
+config interface 'home_vlan_1'
+    option device 'br-lan.1'
+    option proto 'none'
+
+config interface 'home_vlan_2'
+    option device 'br-lan.2'
+    option proto 'none'
+
+config interface 'home_vlan'
+    option device 'br-lan'
+    option proto 'none'
+"""
+
+    def test_render_bridge_vlan_filtering(self):
+        o = OpenWrt(self._vlan_filtering_bridge_netjson)
+        self.assertEqual(self._tabs(self._vlan_filtering_bridge_uci), o.render())
+
+        with self.subTest('Test setting PVID on same port on different VLANS'):
+            netjson = deepcopy(self._vlan_filtering_bridge_netjson)
+            netjson['interfaces'][0]['vlan_filtering'][1]['ports'][0][
+                'primary_vid'
+            ] = True
+            with self.assertRaises(ValidationError) as error:
+                OpenWrt(netjson).validate()
+            self.assertEqual(
+                error.exception.message,
+                (
+                    'Invalid configuration triggered by "#/interfaces/0"'
+                    ' says: Primary VID can be set only one VLAN for a port.'
+                ),
+            )
+
+    def test_parse_bridge_vlan_filtering(self):
+        o = OpenWrt(native=self._vlan_filtering_bridge_uci)
+        expected = deepcopy(self._vlan_filtering_bridge_netjson)
+        expected['interfaces'][0]['vlan_filtering'][0]['ports'][1][
+            'primary_vid'
+        ] = False
+        self.assertEqual(o.config, expected)
+
+    _vlan_filtering_bridge_override_netjson = {
+        "interfaces": [
+            {
+                "type": "bridge",
+                "bridge_members": ["lan1", "lan2", "lan3"],
+                "name": "br-lan",
+                "vlan_filtering": [
+                    {
+                        "vlan": 1,
+                        "ports": [
+                            {"ifname": "lan1", "tagging": "t", "primary_vid": False},
+                            {"ifname": "lan2", "tagging": "u", "primary_vid": False},
+                        ],
+                    }
+                ],
+            },
+            {
+                "type": "ethernet",
+                "name": "br-lan.1",
+                "mtu": 1500,
+                "mac": "61:4A:A0:D7:3F:0E",
+                "addresses": [
+                    {
+                        "proto": "static",
+                        "family": "ipv4",
+                        "address": "192.168.2.1",
+                        "mask": 24,
+                    }
+                ],
+            },
+        ]
+    }
+    _vlan_filtering_bridge_override_uci = """package network
+
+config device 'device_br_lan'
+    option name 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2'
+    list ports 'lan3'
+    option type 'bridge'
+    option vlan_filtering '1'
+
+config bridge-vlan 'vlan_br_lan_1'
+    option device 'br-lan'
+    list ports 'lan1:t'
+    list ports 'lan2:u'
+    option vlan '1'
+
+config interface 'vlan_br_lan_1'
+    option device 'br-lan.1'
+    option proto 'none'
+
+config interface 'br_lan'
+    option device 'br-lan'
+    option proto 'none'
+
+config interface 'br_lan_1'
+    option device 'br-lan.1'
+    option ipaddr '192.168.2.1'
+    option netmask '255.255.255.0'
+    option proto 'static'
+"""
+
+    def test_render_bridge_vlan_filtering_override_interface(self):
+        o = OpenWrt(self._vlan_filtering_bridge_override_netjson)
+        self.assertEqual(
+            self._tabs(self._vlan_filtering_bridge_override_uci), o.render()
+        )
+
+    def test_parse_bridge_vlan_filtering_override_interface(self):
+        o = OpenWrt(native=self._vlan_filtering_bridge_override_uci)
+        expected = deepcopy(self._vlan_filtering_bridge_override_netjson)
+        del expected['interfaces'][1]['mtu']
+        del expected['interfaces'][1]['mac']
+        self.assertEqual(o.config, expected)
+
     def test_render_dns(self):
         o = OpenWrt(
             {
@@ -1821,3 +1986,74 @@ config interface 'eth0'
 """
         )
         self.assertEqual(o.render(), expected)
+
+    _vlan8021q_netjson = {
+        "interfaces": [
+            {
+                "type": "8021q",
+                "vid": 1,
+                "name": "br-lan",
+                "mac": "E8:6A:64:3E:4A:3A",
+                "mtu": 1500,
+                "ingress_qos_mapping": ["1:1"],
+                "egress_qos_mapping": ["2:2"],
+            }
+        ]
+    }
+
+    _vlan8021q_uci = """package network
+
+config device 'device_br_lan_1'
+    list egress_qos_mapping '2:2'
+    option ifname 'br-lan'
+    list ingress_qos_mapping '1:1'
+    option macaddr 'E8:6A:64:3E:4A:3A'
+    option mtu '1500'
+    option name 'br-lan.1'
+    option type '8021q'
+    option vid '1'
+
+config interface 'vlan_br_lan_1'
+    option device 'br-lan.1'
+    option proto 'none'
+"""
+
+    def test_render_vlan8021q(self):
+        o = OpenWrt(self._vlan8021q_netjson)
+        expected = self._tabs(self._vlan8021q_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_vlan8021q(self):
+        o = OpenWrt(native=self._tabs(self._vlan8021q_uci))
+        expected = deepcopy(self._vlan8021q_netjson)
+        expected['interfaces'][0]['network'] = 'vlan_br_lan_1'
+        self.assertEqual(expected, o.config)
+
+    _vlan8021ad_netjson = {
+        "interfaces": [
+            {"type": "8021ad", "vid": 6, "name": "eth0", "network": "iot_vlan"}
+        ]
+    }
+
+    _vlan8021ad_uci = """package network
+
+config device 'device_iot_vlan'
+    option ifname 'eth0'
+    option name 'eth0.6'
+    option type '8021ad'
+    option vid '6'
+
+config interface 'iot_vlan'
+    option device 'eth0.6'
+    option proto 'none'
+"""
+
+    def test_render_vlan8021ad(self):
+        o = OpenWrt(self._vlan8021ad_netjson)
+        expected = self._tabs(self._vlan8021ad_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_vlan8021ad(self):
+        o = OpenWrt(native=self._tabs(self._vlan8021ad_uci))
+        expected = deepcopy(self._vlan8021ad_netjson)
+        self.assertEqual(expected, o.config)

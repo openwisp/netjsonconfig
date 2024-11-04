@@ -7,12 +7,13 @@ from ..openvpn.schema import base_openvpn_schema
 from ..wireguard.schema import base_wireguard_schema
 from .timezones import timezones
 
+QOS_MAPPING_PATTERN = "^[0-9]\d*:[0-9]\d*$"
+
 default_radio_driver = "mac80211"
 
 wireguard = base_wireguard_schema["properties"]["wireguard"]["items"]["properties"]
 wireguard_peers = wireguard["peers"]["items"]["properties"]
 interface_settings = default_schema["definitions"]["interface_settings"]["properties"]
-
 
 schema = merge_config(
     default_schema,
@@ -28,6 +29,49 @@ schema = merge_config(
                         "pattern": "^[a-zA-z0-9_\\.\\-]*$",
                         "propertyOrder": 7,
                     }
+                }
+            },
+            "vlan_interface_settings": {
+                "properties": {
+                    "name": {"title": "Base device"},
+                    "vid": {
+                        "type": "integer",
+                        "title": "VLAN ID",
+                        "propertyOrder": 2,
+                        "minimum": 0,
+                    },
+                    "ingress_qos_mapping": {
+                        "type": "array",
+                        "title": "Ingress QoS mapping",
+                        "description": (
+                            "Defines a mapping of VLAN header priority to the Linux"
+                            " internal packet priority on incoming frames"
+                        ),
+                        "uniqueItems": True,
+                        "additionalItems": False,
+                        "items": {
+                            "title": "Mapping",
+                            "type": "string",
+                            "pattern": QOS_MAPPING_PATTERN,
+                        },
+                        "propertyOrder": 18,
+                    },
+                    "egress_qos_mapping": {
+                        "type": "array",
+                        "title": "Egress QoS mapping",
+                        "description": (
+                            "Defines a mapping of Linux internal packet priority to VLAN header"
+                            " priority but for outgoing frames"
+                        ),
+                        "uniqueItems": True,
+                        "additionalItems": False,
+                        "items": {
+                            "title": "Mapping",
+                            "type": "string",
+                            "pattern": QOS_MAPPING_PATTERN,
+                        },
+                        "propertyOrder": 19,
+                    },
                 }
             },
             "wireless_interface": {
@@ -264,9 +308,91 @@ schema = merge_config(
                                 "maximum": 40,
                                 "propertyOrder": 4,
                             },
+                            "vlan_filtering": {
+                                "type": "array",
+                                "title": "VLAN Filtering",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "vlan": {
+                                            "title": "VLAN",
+                                            "type": "integer",
+                                            "minimum": 0,
+                                        },
+                                        "ports": {
+                                            "title": "Ports",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": ["ifname", "tagging"],
+                                                "properties": {
+                                                    "ifname": {
+                                                        "type": "string",
+                                                    },
+                                                    "tagging": {
+                                                        "type": "string",
+                                                        "enum": ["t", "u"],
+                                                        "options": {
+                                                            "enum_titles": [
+                                                                "Egress tagged",
+                                                                "Egress untagged",
+                                                            ]
+                                                        },
+                                                    },
+                                                    "primary_vid": {
+                                                        "type": "boolean",
+                                                        "title": "Primary VID",
+                                                        "format": "checkbox",
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
                         }
                     }
                 ]
+            },
+            "vlan_8021q": {
+                "title": "VLAN (802.1q)",
+                "type": "object",
+                "required": ["type", "vid"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["8021q"],
+                                "default": "8021q",
+                                "propertyOrder": 1,
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                    {"$ref": "#/definitions/interface_settings"},
+                    {"$ref": "#/definitions/vlan_interface_settings"},
+                ],
+            },
+            "vlan_8021ad": {
+                "title": "VLAN (802.1ad)",
+                "type": "object",
+                "required": ["type", "vid"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["8021ad"],
+                                "default": "8021ad",
+                                "propertyOrder": 1,
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                    {"$ref": "#/definitions/interface_settings"},
+                    {"$ref": "#/definitions/vlan_interface_settings"},
+                ],
             },
             "dialup_interface": {
                 "title": "Dialup interface",
@@ -373,7 +499,33 @@ schema = merge_config(
                                 "propertyOrder": 1.9,
                                 "description": "singal refresh rate in seconds",
                             },
-                        }
+                            "force_link": {
+                                "type": "boolean",
+                                "title": "Force link",
+                                "format": "checkbox",
+                                "default": True,
+                                "description": (
+                                    "Set interface properties regardless of the link carrier"
+                                    " (If set, carrier sense events do not invoke hotplug handlers)."
+                                ),
+                                "propertyOrder": 1.11,
+                            },
+                            "loglevel": {
+                                "type": "string",
+                                "title": "Log output level",
+                                "default": "ERR",
+                                "enum": ["ERR", "WARN", "INFO", "DEBUG"],
+                                "options": {
+                                    "enum_titles": [
+                                        "Error",
+                                        "Warning",
+                                        "Info",
+                                        "Debug",
+                                    ]
+                                },
+                                "propertyOrder": 1.12,
+                            },
+                        },
                     },
                     {"$ref": "#/definitions/base_interface_settings"},
                 ],
@@ -818,6 +970,8 @@ schema = merge_config(
                         {"$ref": "#/definitions/modemmanager_interface"},
                         {"$ref": "#/definitions/vxlan_interface"},
                         {"$ref": "#/definitions/wireguard_interface"},
+                        {"$ref": "#/definitions/vlan_8021q"},
+                        {"$ref": "#/definitions/vlan_8021ad"},
                     ]
                 }
             },
@@ -1124,14 +1278,13 @@ schema = merge_config(
                         "name": {
                             "type": "string",
                             "propertyOrder": 2,
-                            "default": "ow_zt",
+                            "default": "global",
                             "minLength": 1,
                             "description": "Name of the zerotier network member configuration",
                         },
                         "networks": {
                             "type": "array",
                             "title": "Networks",
-                            "minItems": 1,
                             "propertyOrder": 3,
                             "uniqueItems": True,
                             "additionalProperties": True,
@@ -1153,6 +1306,41 @@ schema = merge_config(
                                         "minLength": 1,
                                         "maxLength": 10,
                                         "description": "Name of zerotier interface",
+                                    },
+                                    "allow_managed": {
+                                        "type": "boolean",
+                                        "title": "Allow Managed",
+                                        "default": True,
+                                        "format": "checkbox",
+                                        "description": (
+                                            "Allow ZeroTier to set IP Addresses"
+                                            " and Routes (local/private ranges only)",
+                                        ),
+                                    },
+                                    "allow_global": {
+                                        "type": "boolean",
+                                        "title": "Allow Global",
+                                        "default": False,
+                                        "format": "checkbox",
+                                        "description": (
+                                            "Allow ZeroTier to set Global/Public/Not-Private"
+                                            " range IPs and Routes"
+                                        ),
+                                    },
+                                    "allow_default": {
+                                        "type": "boolean",
+                                        "title": "Allow Default",
+                                        "format": "checkbox",
+                                        "description": (
+                                            "Allow ZeroTier to set the Default Route on the"
+                                            " system"
+                                        ),
+                                    },
+                                    "allow_dns": {
+                                        "type": "boolean",
+                                        "title": "Allow DNS",
+                                        "format": "checkbox",
+                                        "description": "Allow ZeroTier to set DNS servers",
                                     },
                                 },
                             },
@@ -1197,7 +1385,7 @@ schema = merge_config(
                             "propertyOrder": 7,
                             "description": "Port number of the zerotier service",
                         },
-                        "local_conf": {
+                        "local_conf_path": {
                             "type": "string",
                             "propertyOrder": 8,
                             "description": (
