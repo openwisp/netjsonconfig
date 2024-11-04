@@ -31,7 +31,6 @@ class Interfaces(OpenWrtConverter):
         'all': ['vlan_filtering', 'macaddr', 'mtu'],
     }
     _custom_protocols = ['ppp']
-    _proto_dsa_conflict = ['modemmanager', 'modem-manager']
     _interface_dsa_types = [
         'loopback',
         'ethernet',
@@ -39,7 +38,7 @@ class Interfaces(OpenWrtConverter):
         'wireless',
         '8021q',
         '8021ad',
-    ] + _proto_dsa_conflict
+    ]
 
     def __init__(self, backend):
         super().__init__(backend)
@@ -551,8 +550,6 @@ class Interfaces(OpenWrtConverter):
     def __get_device_config_for_interface(self, interface):
         device = interface.get('device', '')
         name = interface.get('name')
-        if not name and interface.get('proto') in self._proto_dsa_conflict:
-            name = interface.get('.name')
         device_config = self._device_config.get(device, self._device_config.get(name))
         if not device_config:
             if '.' in device:
@@ -562,13 +559,8 @@ class Interfaces(OpenWrtConverter):
                 return device_config
         if interface.get('type') == 'bridge-vlan':
             return device_config
-        if interface.get('proto') in self._proto_dsa_conflict:
-            del device_config['type']
         # ifname has been renamed to device in OpenWrt 21.02
-        if device_config.get('type') == 'bridge':
-            interface['ifname'] = interface.pop('device')
-        elif interface.get('proto') not in self._proto_dsa_conflict:
-            interface['ifname'] = interface.pop('device')
+        interface['ifname'] = interface.pop('device')
         return device_config
 
     def __update_interface_device_config(self, interface, device_config):
@@ -577,10 +569,7 @@ class Interfaces(OpenWrtConverter):
         interface = self._handle_bridge_vlan(interface, device_config)
         if not interface:
             return
-        if (
-            device_config.pop('bridge_21', None)
-            or interface.get('proto') in self._proto_dsa_conflict
-        ):
+        if device_config.pop('bridge_21', None):
             for option in device_config:
                 # ifname has been renamed to ports in OpenWrt 21.02 bridge
                 if option == 'ports':

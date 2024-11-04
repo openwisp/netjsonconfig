@@ -22,22 +22,24 @@ class TestModemManager(unittest.TestCase, _TabsMixin):
                 "lowpower": False,
                 "mtu": 1500,
                 "signalrate": 5,
+                "loglevel": "ERR",
+                "force_link": True,
             }
         ]
     }
 
     _modemmanager_interface_uci = """package network
 
-config device 'device_wwan0'
-    option mtu '1500'
-    option name 'wwan0'
-
 config interface 'wwan0'
     option apn 'apn.vodafone.com'
     option device '/sys/devices/platform/ahb/1b000000.usb/usb1/1-1'
+    option force_link '1'
+    option ifname 'wwan0'
     option iptype 'ipv4v6'
+    option loglevel 'ERR'
     option lowpower '0'
     option metric '50'
+    option mtu '1500'
     option password 'pwd123456'
     option pincode '1234'
     option proto 'modemmanager'

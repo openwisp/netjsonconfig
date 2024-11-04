@@ -499,7 +499,33 @@ schema = merge_config(
                                 "propertyOrder": 1.9,
                                 "description": "singal refresh rate in seconds",
                             },
-                        }
+                            "force_link": {
+                                "type": "boolean",
+                                "title": "Force link",
+                                "format": "checkbox",
+                                "default": True,
+                                "description": (
+                                    "Set interface properties regardless of the link carrier"
+                                    " (If set, carrier sense events do not invoke hotplug handlers)."
+                                ),
+                                "propertyOrder": 1.11,
+                            },
+                            "loglevel": {
+                                "type": "string",
+                                "title": "Log output level",
+                                "default": "ERR",
+                                "enum": ["ERR", "WARN", "INFO", "DEBUG"],
+                                "options": {
+                                    "enum_titles": [
+                                        "Error",
+                                        "Warning",
+                                        "Info",
+                                        "Debug",
+                                    ]
+                                },
+                                "propertyOrder": 1.12,
+                            },
+                        },
                     },
                     {"$ref": "#/definitions/base_interface_settings"},
                 ],
