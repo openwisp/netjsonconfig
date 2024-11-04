@@ -51,6 +51,7 @@ config wifi-iface 'wifi_wlan0'
     option hidden '1'
     option ifname 'wlan0'
     option mode 'ap'
+    option network 'wlan0'
     option rts '1300'
     option ssid 'MyWifiAP'
 """
@@ -132,6 +133,7 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
+    option network 'wlan0'
     option ssid 'ap-ssid'
 
 config wifi-iface 'wifi_wlan1'
@@ -139,6 +141,7 @@ config wifi-iface 'wifi_wlan1'
     option device 'radio1'
     option ifname 'wlan1'
     option mode 'adhoc'
+    option network 'wlan1'
     option ssid 'adhoc-ssid'
 """
 

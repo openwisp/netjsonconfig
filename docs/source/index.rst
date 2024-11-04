@@ -26,13 +26,13 @@ it's the official configuration engine of `OpenWISP 2
 
 **netjsonconfig** is a python library that converts `NetJSON
 <http://netjson.org>`_ *DeviceConfiguration* objects into real router
-configurations that can be installed on systems like `OpenWRT
+configurations that can be installed on systems like `OpenWrt
 <http://openwrt.org>`_, or `OpenWisp Firmware
 <https://github.com/openwisp/OpenWISP-Firmware>`_.
 
 Its main features are:
 
-    - `OpenWRT <http://openwrt.org>`_ / `LEDE
+    - `OpenWrt <http://openwrt.org>`_ / `LEDE
       <https://www.lede-project.org/>`_ support
     - `OpenWisp Firmware <https://github.com/openwisp/OpenWISP-Firmware>`_
       support

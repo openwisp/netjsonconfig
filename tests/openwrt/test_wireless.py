@@ -38,6 +38,7 @@ class TestWireless(unittest.TestCase, _TabsMixin):
     _wifi_uci = """package network
 
 config interface 'wlan0'
+    option device 'wlan0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
@@ -52,6 +53,7 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option isolate '1'
     option mode 'ap'
+    option network 'wlan0'
     option rts '1300'
     option ssid 'MyWifiAP'
 """
@@ -123,9 +125,11 @@ config wifi-iface 'wifi_wlan0'
     _multiple_wifi_uci = """package network
 
 config interface 'wlan0'
+    option device 'wlan0'
     option proto 'dhcp'
 
 config interface 'wlan1'
+    option device 'wlan1'
     option proto 'dhcp'
 
 package wireless
@@ -134,6 +138,7 @@ config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
+    option network 'wlan0'
     option ssid 'ap-ssid'
 
 config wifi-iface 'wifi_wlan1'
@@ -141,6 +146,7 @@ config wifi-iface 'wifi_wlan1'
     option device 'radio1'
     option ifname 'wlan1'
     option mode 'adhoc'
+    option network 'wlan1'
     option ssid 'adhoc-ssid'
 """
 
@@ -177,9 +183,6 @@ config wifi-iface 'wifi_wlan1'
         ]
     }
     _wifi_bridge_uci = """package network
-
-config device 'device_eth0_1'
-    option name 'eth0.1'
 
 config interface 'eth0_1'
     option device 'eth0.1'
@@ -234,6 +237,7 @@ config wifi-iface 'wifi_wlan0'
     _wifi_networks_uci = """package network
 
 config interface 'wsta0'
+    option device 'wsta0'
     option proto 'dhcp'
 
 package wireless
@@ -242,6 +246,7 @@ config wifi-iface 'wifi_wsta0'
     option device 'radio0'
     option ifname 'wsta0'
     option mode 'sta'
+    option network 'wsta0'
     option ssid 'open'
     option wds '0'
 """
@@ -1167,3 +1172,101 @@ config wifi-iface 'wifi_wlan1'
     def test_parse_wireless_only(self):
         o = OpenWrt(native=self._wireless_only_uci)
         self.assertDictEqual(o.config, self._wireless_only_netjson)
+
+    _sta_in_dhcp_client_json = {
+        "interfaces": [
+            {
+                "name": "wwan",
+                "type": "wireless",
+                "mac": "00:11:22:33:44:55",
+                "mtu": 1500,
+                "addresses": [{"proto": "dhcp", "family": "ipv4"}],
+                "wireless": {
+                    "mode": "station",
+                    "radio": "radio1",
+                    "ssid": "SSID",
+                    "wds": False,
+                    "encryption": {
+                        "cipher": "auto",
+                        "ieee80211w": "1",
+                        "protocol": "wpa2_enterprise",
+                        "eap_type": "ttls",
+                        "auth": "PAP",
+                        "identity": "username",
+                        "password": "password123",
+                    },
+                },
+            }
+        ]
+    }
+    _sta_in_dhcp_client_uci = """package network
+
+config device 'device_wwan'
+    option mtu '1500'
+    option name 'wwan'
+
+config interface 'wwan'
+    option device 'wwan'
+    option proto 'dhcp'
+
+package wireless
+
+config wifi-iface 'wifi_wwan'
+    option auth 'PAP'
+    option device 'radio1'
+    option eap_type 'ttls'
+    option encryption 'wpa2'
+    option identity 'username'
+    option ieee80211w '1'
+    option ifname 'wwan'
+    option macaddr '00:11:22:33:44:55'
+    option mode 'sta'
+    option network 'wwan'
+    option password 'password123'
+    option ssid 'SSID'
+    option wds '0'
+"""
+
+    _sta_in_dhcp_client_no_mtu_json = deepcopy(_sta_in_dhcp_client_json)
+    del _sta_in_dhcp_client_no_mtu_json['interfaces'][0]['mtu']
+    _sta_in_dhcp_client_no_mtu_uci = """package network
+
+config interface 'wwan'
+    option device 'wwan'
+    option proto 'dhcp'
+
+package wireless
+
+config wifi-iface 'wifi_wwan'
+    option auth 'PAP'
+    option device 'radio1'
+    option eap_type 'ttls'
+    option encryption 'wpa2'
+    option identity 'username'
+    option ieee80211w '1'
+    option ifname 'wwan'
+    option macaddr '00:11:22:33:44:55'
+    option mode 'sta'
+    option network 'wwan'
+    option password 'password123'
+    option ssid 'SSID'
+    option wds '0'
+"""
+
+    def test_render_sta_in_dhcp_client(self):
+        o = OpenWrt(self._sta_in_dhcp_client_json)
+        expected = self._tabs(self._sta_in_dhcp_client_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_sta_in_dhcp_client(self):
+        o = OpenWrt(native=self._sta_in_dhcp_client_uci)
+        self.assertDictEqual(o.config, self._sta_in_dhcp_client_json)
+
+    def test_render_sta_in_dhcp_client_no_mtu(self):
+        o = OpenWrt(self._sta_in_dhcp_client_no_mtu_json)
+        expected = self._tabs(self._sta_in_dhcp_client_no_mtu_uci)
+        self.assertEqual(o.render(), expected)
+
+    def test_parse_sta_in_dhcp_client_no_mtu(self):
+        o = OpenWrt(native=self._sta_in_dhcp_client_no_mtu_uci)
+        self.assertDictEqual(o.config, self._sta_in_dhcp_client_no_mtu_json)

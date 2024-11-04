@@ -55,7 +55,7 @@ Here's the common use cases explained:
     # generate tar.gz from a NetJSON DeviceConfiguration object and save its output to a file
     netjsonconfig --config config.json --backend openwrt --method generate > config.tar.gz
 
-    # convert an OpenWRT tar.gz to NetJSON and print to standard output (with 4 space indentation)
+    # convert an OpenWrt tar.gz to NetJSON and print to standard output (with 4 space indentation)
     netjsonconfig --native config.tar.gz --backend openwrt --method json -a indent="    "
 
     # use write configuration archive to disk in /tmp/routerA.tar.gz
