@@ -78,7 +78,7 @@ base_zerotier_schema = {
                             "default": True,
                             "format": "checkbox",
                             "description": (
-                                "Allow ZeroTier to set IP Addresses and Routes (local/private ranges only)",
+                                "Allow ZeroTier to set IP Addresses and Routes (local/private ranges only)"
                             ),
                         },
                         "allow_global": {
