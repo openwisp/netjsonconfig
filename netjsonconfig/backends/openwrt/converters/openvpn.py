@@ -6,6 +6,8 @@ class OpenVpn(OpenWrtConverter, BaseOpenVpn):
     _uci_types = ['openvpn']
 
     def __intermediate_vpn(self, vpn):
+        if vpn.get('fragment') == 0:
+            del vpn['fragment']
         vpn.update(
             {
                 '.name': self._get_uci_name(vpn.pop('name')),
