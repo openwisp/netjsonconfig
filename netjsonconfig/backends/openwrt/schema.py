@@ -1314,7 +1314,7 @@ schema = merge_config(
                                         "format": "checkbox",
                                         "description": (
                                             "Allow ZeroTier to set IP Addresses"
-                                            " and Routes (local/private ranges only)",
+                                            " and Routes (local/private ranges only)"
                                         ),
                                     },
                                     "allow_global": {

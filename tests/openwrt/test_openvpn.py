@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 
 from netjsonconfig import OpenWrt
 from netjsonconfig.utils import _TabsMixin
@@ -71,7 +72,6 @@ config openvpn 'test_server'
     option enabled '1'
     option engine 'rsax'
     option fast_io '1'
-    option fragment '0'
     option group 'nogroup'
     option keepalive '20 60'
     option key 'key.pem'
@@ -104,7 +104,9 @@ config openvpn 'test_server'
 
     def test_parse_server_mode(self):
         c = OpenWrt(native=self._server_uci)
-        self.assertEqual(c.config, self._server_netjson)
+        expected = deepcopy(self._server_netjson)
+        del expected['openvpn'][0]['fragment']
+        self.assertEqual(c.config, expected)
 
     _client_netjson = {
         "openvpn": [
@@ -119,7 +121,7 @@ config openvpn 'test_server'
                 "down": "/home/user/down-command.sh",
                 "disabled": False,
                 "fast_io": False,
-                "fragment": 0,
+                "fragment": 68,
                 "key": "key.pem",
                 "log": "/var/log/openvpn.log",
                 "mode": "p2p",
@@ -165,7 +167,7 @@ config openvpn 'test_client'
     option down '/home/user/down-command.sh'
     option enabled '1'
     option fast_io '0'
-    option fragment '0'
+    option fragment '68'
     option key 'key.pem'
     option log '/var/log/openvpn.log'
     option mode 'p2p'
