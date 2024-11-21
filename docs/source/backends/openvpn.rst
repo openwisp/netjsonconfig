@@ -86,70 +86,85 @@ Required properties:
 - proto
 - dev
 
-======================== ======= ============ ============================
-key name                 type    default      allowed values
-======================== ======= ============ ============================
-``name``                 string               2 to 24 alphanumeric
-                                              characters, dashes and
-                                              underscores
-``mode``                 string               ``p2p`` or ``server``
-``proto``                string               ``udp``, ``tcp-client``,
-                                              ``tcp-server``
-``port``                 integer ``1194``     integers
-``dev_type``             string               ``tun``, ``tap``
-``dev``                  string               any non-whitespace character
-                                              (max length: 15)
-``local``                string               any string
-``comp_lzo``             string  ``adaptive`` ``yes``, ``no`` or
-                                              ``adaptive``
-``auth``                 string  ``SHA1``     see `auth property source
-                                              code`_
-``cipher``               string  ``BF-CBC``   see `cipher property source
-                                              code`_
-``engine``               string               ``bsd``, ``rsax``,
-                                              ``dynamic`` or empty string
-``ca``                   string               any non whitespace character
-``cert``                 string               any non whitespace character
-``key``                  string               any non whitespace character
-``pkcs12``               string               any non whitespace character
-``tls_auth``             string               string containing TLS Auth
-                                              key
-``ns_cert_type``         string               ``client``, ``server`` or
-                                              empty string
-``mtu_disc``             string  ``no``       ``no``, ``maybe`` or ``yes``
-``mtu_test``             boolean ``False``
-``fragment``             integer ``0``        any positive integer
-``mssfix``               integer ``1450``     any positive integer
-``keepalive``            string               two numbers separated by one
-                                              space
-``persist_tun``          boolean ``False``
-``persist_key``          boolean ``False``
-``up``                   string               any non whitespace character
-``up_delay``             integer ``0``        any positive integer
-``down``                 string               any non whitespace character
-``script_security``      integer ``1``        ``0``, ``1``, ``2``, ``3``
-``user``                 string               any string
-``group``                string               any string
-``mute``                 integer ``0``        any positive integer
-``status``               string               string and number separated
-                                              by space, eg:
-                                              ``/var/log/openvpn.status
-                                              10``
-``status_version``       integer ``1``        ``1``, ``2``, ``3``
-``mute_replay_warnings`` boolean ``False``
-``secret``               string               any non whitespace character
-``reneg_sec``            integer ``3600``     any positive integer
-``tls_timeout``          integer ``2``        any positive integer
-``tls_cipher``           string               any string
-``remote_cert_tls``      string               ``client``, ``server`` or
-                                              empty string
-``float``                boolean ``False``
-``auth_nocache``         boolean ``False``
-``fast_io``              boolean ``False``
-``log``                  string               filesystem path
-``verb``                 integer ``1``        from ``0`` (disabled) to
-                                              ``11`` (very verbose)
-======================== ======= ============ ============================
+========================= ======= ============ ===========================
+key name                  type    default      allowed values
+========================= ======= ============ ===========================
+``name``                  string               2 to 24 alphanumeric
+                                               characters, dashes and
+                                               underscores
+``mode``                  string               ``p2p`` or ``server``
+``proto``                 string               ``udp``, ``tcp-client``,
+                                               ``tcp-server``
+``port``                  integer ``1194``     integers
+``data_ciphers``          list                 list of dicts, each dict
+                                               need to have ``cipher`` and
+                                               ``optional``, see `cipher
+                                               property source code`_ for
+                                               the allowed ciphers
+``data_ciphers_fallback`` string               see `cipher property source
+                                               code`_
+``dev_type``              string               ``tun``, ``tap``
+``dev``                   string               any non-whitespace
+                                               character (max length: 15)
+``local``                 string               any string
+``comp_lzo``              string  ``adaptive`` ``yes``, ``no`` or
+                                               ``adaptive``
+``auth``                  string  ``SHA1``     see `auth property source
+                                               code`_
+``cipher``                string  ``BF-CBC``   see `cipher property source
+                                               code`_
+``engine``                string               ``bsd``, ``rsax``,
+                                               ``dynamic`` or empty string
+``ca``                    string               any non whitespace
+                                               character
+``cert``                  string               any non whitespace
+                                               character
+``key``                   string               any non whitespace
+                                               character
+``pkcs12``                string               any non whitespace
+                                               character
+``tls_auth``              string               string containing TLS Auth
+                                               key
+``ns_cert_type``          string               ``client``, ``server`` or
+                                               empty string
+``mtu_disc``              string  ``no``       ``no``, ``maybe`` or
+                                               ``yes``
+``mtu_test``              boolean ``False``
+``fragment``              integer ``0``        any positive integer
+``mssfix``                integer ``1450``     any positive integer
+``keepalive``             string               two numbers separated by
+                                               one space
+``persist_tun``           boolean ``False``
+``persist_key``           boolean ``False``
+``up``                    string               any non whitespace
+                                               character
+``up_delay``              integer ``0``        any positive integer
+``down``                  string               any non whitespace
+                                               character
+``script_security``       integer ``1``        ``0``, ``1``, ``2``, ``3``
+``user``                  string               any string
+``group``                 string               any string
+``mute``                  integer ``0``        any positive integer
+``status``                string               string and number separated
+                                               by space, eg:
+                                               ``/var/log/openvpn.status
+                                               10``
+``status_version``        integer ``1``        ``1``, ``2``, ``3``
+``mute_replay_warnings``  boolean ``False``
+``secret``                string               any non whitespace
+                                               character
+``reneg_sec``             integer ``3600``     any positive integer
+``tls_timeout``           integer ``2``        any positive integer
+``tls_cipher``            string               any string
+``remote_cert_tls``       string               ``client``, ``server`` or
+                                               empty string
+``float``                 boolean ``False``
+``auth_nocache``          boolean ``False``
+``fast_io``               boolean ``False``
+``log``                   string               filesystem path
+``verb``                  integer ``1``        from ``0`` (disabled) to
+                                               ``11`` (very verbose)
+========================= ======= ============ ===========================
 
 Client specific settings
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,9 +224,9 @@ For a list of all the OpenVPN configuration settings, refer to the
 `OpenVPN 2.3 manual
 <https://community.openvpn.net/openvpn/wiki/Openvpn23ManPage>`_.
 
-.. _auth property source code: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openvpn/schema.py#L79-L89
+.. _auth property source code: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openvpn/schema.py#L157-L186
 
-.. _cipher property source code: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openvpn/schema.py#L90-L103
+.. _cipher property source code: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openvpn/schema.py#L8-L91
 
 Automatic generation of clients
 -------------------------------
