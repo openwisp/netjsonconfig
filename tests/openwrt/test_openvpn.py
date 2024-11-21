@@ -54,6 +54,17 @@ class TestOpenVpn(_TabsMixin, unittest.TestCase):
             }
         ]
     }
+    _server_netjson_data_ciphers = deepcopy(_server_netjson)
+    _server_netjson_data_ciphers['openvpn'][0].update(
+        {
+            'data_ciphers': [
+                {'cipher': 'AES-256-GCM', 'optional': False},
+                {'cipher': 'AES-128-GCM', 'optional': False},
+                {'cipher': 'CHACHA20-POLY1305', 'optional': True},
+            ],
+            'data_ciphers_fallback': 'AES-128-GCM',
+        }
+    )
     _server_uci = """package openvpn
 
 config openvpn 'test_server'
@@ -96,15 +107,70 @@ config openvpn 'test_server'
     option username_as_common_name '0'
     option verb '3'
 """
+    _server_uci_data_ciphers = """package openvpn
+
+config openvpn 'test_server'
+    option auth 'SHA1'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option cipher 'BF-CBC'
+    option client_cert_not_required '0'
+    option client_to_client '0'
+    option comp_lzo 'yes'
+    option crl_verify 'crl.pem'
+    option data_ciphers 'AES-256-GCM:AES-128-GCM:?CHACHA20-POLY1305'
+    option data_ciphers_fallback 'AES-128-GCM'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option duplicate_cn '1'
+    option enabled '1'
+    option engine 'rsax'
+    option fast_io '1'
+    option group 'nogroup'
+    option keepalive '20 60'
+    option key 'key.pem'
+    option log '/var/log/openvpn.log'
+    option mode 'server'
+    option mssfix '1450'
+    option mtu_disc 'no'
+    option mtu_test '0'
+    option mute '0'
+    option mute_replay_warnings '1'
+    option persist_key '1'
+    option persist_tun '1'
+    option port '1194'
+    option proto 'udp'
+    option script_security '0'
+    option status '/var/log/openvpn.status 10'
+    option status_version '1'
+    option tls_server '1'
+    option tun_ipv6 '0'
+    option up_delay '0'
+    option user 'nobody'
+    option username_as_common_name '0'
+    option verb '3'
+"""
 
     def test_render_server_mode(self):
         c = OpenWrt(self._server_netjson)
         expected = self._tabs(self._server_uci)
         self.assertEqual(c.render(), expected)
 
+    def test_render_server_mode_data_ciphers(self):
+        c = OpenWrt(self._server_netjson_data_ciphers)
+        expected = self._tabs(self._server_uci_data_ciphers)
+        self.assertEqual(c.render(), expected)
+
     def test_parse_server_mode(self):
         c = OpenWrt(native=self._server_uci)
         expected = deepcopy(self._server_netjson)
+        del expected['openvpn'][0]['fragment']
+        self.assertEqual(c.config, expected)
+
+    def test_parse_server_mode_data_ciphers(self):
+        c = OpenWrt(native=self._server_uci_data_ciphers)
+        expected = deepcopy(self._server_netjson_data_ciphers)
         del expected['openvpn'][0]['fragment']
         self.assertEqual(c.config, expected)
 

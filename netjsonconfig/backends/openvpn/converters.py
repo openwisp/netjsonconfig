@@ -53,8 +53,22 @@ class OpenVpn(BaseConverter):
         # do not display status-version if status directive not present
         if 'status' not in config and 'status_version' in config:
             del config['status_version']
+        config = self.__output_data_ciphers(config)
         config = self.__add_tls_auth_key(config)
         return self.sorted_dict(config)
+
+    def __output_data_ciphers(self, config):
+        data_ciphers = config.get('data_ciphers', None)
+        if not data_ciphers:
+            return config
+        output = ''
+        for cipher in data_ciphers:
+            cipher_text = cipher['cipher']
+            if cipher['optional']:
+                cipher_text = f'?{cipher_text}'
+            output = f'{output}:{cipher_text}'
+        config['data_ciphers'] = output[1:]
+        return config
 
     def __add_tls_auth_key(self, config):
         tls_auth = config.get('tls_auth', None)
@@ -109,4 +123,18 @@ class OpenVpn(BaseConverter):
                 else:
                     remote.append(dict(host=items[0], port=int(items[1])))
             vpn['remote'] = remote
+        vpn = self.__netjson_data_ciphers(vpn)
+        return vpn
+
+    def __netjson_data_ciphers(self, vpn):
+        data_ciphers_text = vpn.get('data_ciphers')
+        if not data_ciphers_text:
+            return vpn
+        data_ciphers = []
+        ciphers = data_ciphers_text.split(':')
+        for cipher in ciphers:
+            optional = cipher.startswith('?')
+            cipher_text = cipher if not optional else cipher[1:]
+            data_ciphers.append({'cipher': cipher_text, 'optional': optional})
+        vpn['data_ciphers'] = data_ciphers
         return vpn

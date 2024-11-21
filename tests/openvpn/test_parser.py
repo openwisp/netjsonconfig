@@ -43,6 +43,166 @@ tls-server
         }
         self.assertDictEqual(o.config, expected)
 
+    def test_parse_server(self):
+        native = """# openvpn config: test-server
+
+auth SHA1
+auth-nocache
+ca ca.pem
+cert cert.pem
+cipher AES-128-GCM
+comp-lzo adaptive
+crl-verify crl.pem
+dev tap0
+dev-type tap
+dh dh.pem
+duplicate-cn
+engine rsax
+fast-io
+group nogroup
+keepalive 20 60
+key key.pem
+log /var/log/openvpn.log
+mode server
+mssfix 1450
+mtu-disc no
+mute-replay-warnings
+persist-key
+persist-tun
+port 1194
+proto udp
+script-security 0
+status /var/log/openvpn.status 10
+status-version 1
+tls-server
+user nobody
+verb 3
+"""
+        expected = {
+            "openvpn": [
+                {
+                    "auth": "SHA1",
+                    "auth_nocache": True,
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "cipher": "AES-128-GCM",
+                    "comp_lzo": "adaptive",
+                    "crl_verify": "crl.pem",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "duplicate_cn": True,
+                    "engine": "rsax",
+                    "fast_io": True,
+                    "group": "nogroup",
+                    "keepalive": "20 60",
+                    "key": "key.pem",
+                    "log": "/var/log/openvpn.log",
+                    "mode": "server",
+                    "name": "test-server",
+                    "mssfix": 1450,
+                    "mtu_disc": "no",
+                    "mute_replay_warnings": True,
+                    "persist_key": True,
+                    "persist_tun": True,
+                    "port": 1194,
+                    "proto": "udp",
+                    "script_security": 0,
+                    "status": "/var/log/openvpn.status 10",
+                    "status_version": 1,
+                    "tls_server": True,
+                    "user": "nobody",
+                    "verb": 3,
+                }
+            ]
+        }
+        o = OpenVpn(native=native)
+        self.assertDictEqual(o.config, expected)
+
+    def test_parse_data_ciphers(self):
+        native = """# openvpn config: test-server
+
+auth SHA1
+auth-nocache
+ca ca.pem
+cert cert.pem
+cipher AES-128-GCM
+comp-lzo adaptive
+crl-verify crl.pem
+data-ciphers AES-256-GCM:AES-128-GCM:?CHACHA20-POLY1305
+data-ciphers-fallback AES-128-GCM
+dev tap0
+dev-type tap
+dh dh.pem
+duplicate-cn
+engine rsax
+fast-io
+group nogroup
+keepalive 20 60
+key key.pem
+log /var/log/openvpn.log
+mode server
+mssfix 1450
+mtu-disc no
+mute-replay-warnings
+persist-key
+persist-tun
+port 1194
+proto udp
+script-security 0
+status /var/log/openvpn.status 10
+status-version 1
+tls-server
+user nobody
+verb 3
+"""
+        expected = {
+            "openvpn": [
+                {
+                    "auth": "SHA1",
+                    "auth_nocache": True,
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "cipher": "AES-128-GCM",
+                    "comp_lzo": "adaptive",
+                    "crl_verify": "crl.pem",
+                    "data_ciphers": [
+                        {"cipher": "AES-256-GCM", "optional": False},
+                        {"cipher": "AES-128-GCM", "optional": False},
+                        {"cipher": "CHACHA20-POLY1305", "optional": True},
+                    ],
+                    "data_ciphers_fallback": "AES-128-GCM",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "duplicate_cn": True,
+                    "engine": "rsax",
+                    "fast_io": True,
+                    "group": "nogroup",
+                    "keepalive": "20 60",
+                    "key": "key.pem",
+                    "log": "/var/log/openvpn.log",
+                    "mode": "server",
+                    "name": "test-server",
+                    "mssfix": 1450,
+                    "mtu_disc": "no",
+                    "mute_replay_warnings": True,
+                    "persist_key": True,
+                    "persist_tun": True,
+                    "port": 1194,
+                    "proto": "udp",
+                    "script_security": 0,
+                    "status": "/var/log/openvpn.status 10",
+                    "status_version": 1,
+                    "tls_server": True,
+                    "user": "nobody",
+                    "verb": 3,
+                }
+            ]
+        }
+        o = OpenVpn(native=native)
+        self.assertDictEqual(o.config, expected)
+
     def test_parse_exception(self):
         try:
             OpenVpn(native=10)

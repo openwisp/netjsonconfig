@@ -106,6 +106,107 @@ verb 3
 """
         self.assertEqual(c.render(), expected)
 
+    def test_server_mode_with_data_ciphers(self):
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "auth": "SHA1",
+                        "auth_user_pass_verify": "",
+                        "auth_nocache": True,
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "data_ciphers": [
+                            {"cipher": "AES-256-GCM", "optional": False},
+                            {"cipher": "AES-128-GCM", "optional": False},
+                            {"cipher": "CHACHA20-POLY1305", "optional": True},
+                        ],
+                        "data_ciphers_fallback": "AES-128-GCM",
+                        "cipher": "AES-128-GCM",
+                        "client_cert_not_required": False,
+                        "client_to_client": False,
+                        "comp_lzo": "adaptive",
+                        "crl_verify": "crl.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "down": "",
+                        "duplicate_cn": True,
+                        "engine": "rsax",
+                        "fast_io": True,
+                        "fragment": 0,
+                        "group": "nogroup",
+                        "keepalive": "20 60",
+                        "key": "key.pem",
+                        "local": "",
+                        "log": "/var/log/openvpn.log",
+                        "mode": "server",
+                        "name": "test-server",
+                        "mssfix": 1450,
+                        "mtu_disc": "no",
+                        "mtu_test": False,
+                        "mute": 0,
+                        "mute_replay_warnings": True,
+                        "ns_cert_type": "",
+                        "persist_key": True,
+                        "persist_tun": True,
+                        "port": 1194,
+                        "proto": "udp",
+                        "script_security": 0,
+                        "secret": "",
+                        "status": "/var/log/openvpn.status 10",
+                        "status_version": 1,
+                        "tls_server": True,
+                        "tls_auth": "tls_auth.key 0",
+                        "tun_ipv6": False,
+                        "up": "",
+                        "up_delay": 0,
+                        "user": "nobody",
+                        "username_as_common_name": False,
+                        "verb": 3,
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-server
+
+auth SHA1
+auth-nocache
+ca ca.pem
+cert cert.pem
+cipher AES-128-GCM
+comp-lzo adaptive
+crl-verify crl.pem
+data-ciphers AES-256-GCM:AES-128-GCM:?CHACHA20-POLY1305
+data-ciphers-fallback AES-128-GCM
+dev tap0
+dev-type tap
+dh dh.pem
+duplicate-cn
+engine rsax
+fast-io
+group nogroup
+keepalive 20 60
+key key.pem
+log /var/log/openvpn.log
+mode server
+mssfix 1450
+mtu-disc no
+mute-replay-warnings
+persist-key
+persist-tun
+port 1194
+proto udp
+script-security 0
+status /var/log/openvpn.status 10
+status-version 1
+tls-auth tls_auth.key 0
+tls-server
+user nobody
+verb 3
+"""
+        self.assertEqual(c.render(), expected)
+
     def test_client_mode(self):
         c = OpenVpn(
             {
@@ -174,6 +275,119 @@ ca ca.pem
 cert cert.pem
 cipher AES-128-CBC
 comp-lzo adaptive
+dev tun0
+dev-type tun
+down /home/user/down-command.sh
+key key.pem
+log /var/log/openvpn.log
+mode p2p
+mssfix 1450
+mtu-disc yes
+mtu-test
+mute 10
+mute-replay-warnings
+nobind
+ns-cert-type server
+persist-key
+persist-tun
+port 1195
+proto tcp-client
+pull
+remote vpn1.test.com 1194
+remote 176.9.43.231 1195 udp4
+remote 176.9.43.232 1195
+remote 176.9.43.233 1196 udp6
+resolv-retry infinite
+script-security 1
+status /var/log/openvpn.status 30
+status-version 1
+tls-auth tls_auth.key 1
+tls-client
+topology p2p
+tun-ipv6
+up /home/user/up-command.sh
+up-delay 10
+user nobody
+verb 1
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_client_mode_data_cihpers(self):
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "auth": "SHA256",
+                        "auth_user_pass": "",
+                        "auth_nocache": True,
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "cipher": "AES-128-GCM",
+                        "data_ciphers": [
+                            {"cipher": "AES-256-GCM", "optional": False},
+                            {"cipher": "AES-128-GCM", "optional": False},
+                            {"cipher": "CHACHA20-POLY1305", "optional": True},
+                        ],
+                        "data_ciphers_fallback": "AES-128-GCM",
+                        "comp_lzo": "adaptive",
+                        "dev": "tun0",
+                        "dev_type": "tun",
+                        "down": "/home/user/down-command.sh",
+                        "engine": "",
+                        "fast_io": False,
+                        "fragment": 0,
+                        "group": "",
+                        "keepalive": "",
+                        "key": "key.pem",
+                        "local": "",
+                        "log": "/var/log/openvpn.log",
+                        "mode": "p2p",
+                        "mssfix": 1450,
+                        "mtu_disc": "yes",
+                        "mtu_test": True,
+                        "mute": 10,
+                        "mute_replay_warnings": True,
+                        "name": "test-client",
+                        "nobind": True,
+                        "ns_cert_type": "server",
+                        "persist_key": True,
+                        "persist_tun": True,
+                        "port": 1195,
+                        "proto": "tcp-client",
+                        "pull": True,
+                        "remote": [
+                            {"host": "vpn1.test.com", "port": 1194},
+                            {"host": "176.9.43.231", "port": 1195, "proto": "udp4"},
+                            {"host": "176.9.43.232", "port": 1195, "proto": "auto"},
+                            {"host": "176.9.43.233", "port": 1196, "proto": "udp6"},
+                        ],
+                        "resolv_retry": "infinite",
+                        "script_security": 1,
+                        "secret": "",
+                        "status": "/var/log/openvpn.status 30",
+                        "status_version": 1,
+                        "tls_client": True,
+                        "tls_auth": "tls_auth.key 1",
+                        "topology": "p2p",
+                        "tun_ipv6": True,
+                        "up": "/home/user/up-command.sh",
+                        "up_delay": 10,
+                        "user": "nobody",
+                        "verb": 1,
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-client
+
+auth SHA256
+auth-nocache
+ca ca.pem
+cert cert.pem
+cipher AES-128-GCM
+comp-lzo adaptive
+data-ciphers AES-256-GCM:AES-128-GCM:?CHACHA20-POLY1305
+data-ciphers-fallback AES-128-GCM
 dev tun0
 dev-type tun
 down /home/user/down-command.sh
