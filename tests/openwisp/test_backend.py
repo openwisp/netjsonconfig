@@ -3,6 +3,7 @@ import unittest
 from copy import deepcopy
 from hashlib import md5
 from time import sleep
+from unittest.mock import patch
 
 from netjsonconfig import OpenWisp
 from netjsonconfig.exceptions import ValidationError
@@ -122,6 +123,17 @@ config 'system' 'system'
         o = OpenWisp({"general": {"timezone": "UTC"}})
         with self.assertRaises(ValidationError):
             o.validate()
+
+    @patch.object(OpenWisp, 'validate')
+    def test_fallback_hostname(self, *args):
+        config = deepcopy(self.config)
+        del config['general']['hostname']
+        o = OpenWisp(config)
+        tar = tarfile.open(fileobj=o.generate(), mode='r')
+        install = tar.getmember('install.sh')
+        contents = tar.extractfile(install).read().decode()
+        self.assertIn('echo "Changing hostname"', contents)
+        self.assertIn('echo "OpenWISP1" > /proc/sys/kernel/hostname', contents)
 
     def test_install_script(self):
         config = deepcopy(self.config)
