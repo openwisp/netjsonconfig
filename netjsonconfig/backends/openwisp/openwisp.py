@@ -79,7 +79,7 @@ class OpenWisp(OpenWrt):
                 break
         # return context
         return dict(
-            hostname=config['general']['hostname'],  # hostname is required
+            hostname=config.get('general', {}).get('hostname', 'OpenWISP1'),
             l2vpn=l2vpn,
             bridges=bridges,
             radios=config.get('radios', []),  # radios might be empty
