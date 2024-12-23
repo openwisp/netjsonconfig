@@ -1,6 +1,15 @@
 Change log
 ==========
 
+Version 1.1.1 [2024-12-23]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Added a fallback for the ``hostname`` property in the
+  **OpenWISP 1.x Backend** to ensure consistent configurations.
+
 Version 1.1.0 [2024-11-22]
 --------------------------
 
