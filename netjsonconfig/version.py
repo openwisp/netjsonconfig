@@ -1,4 +1,4 @@
-VERSION = (1, 1, 1, 'final')
+VERSION = (1, 1, 1, 'post1')
 __version__ = VERSION
 
 
