@@ -62,9 +62,9 @@ class TestBackend(unittest.TestCase):
                 "remoteTraceLevel": 1,
                 "client_options": {
                     "allow_managed": True,
-                    "allowed_global": False,
-                    "allowed_default": False,
-                    "allowed_dns": False,
+                    "allow_global": False,
+                    "allow_default": False,
+                    "allow_dns": False,
                 },
             }
         ]
