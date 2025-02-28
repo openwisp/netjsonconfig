@@ -85,9 +85,9 @@ See an example of initialization and rendering below:
                     "remoteTraceLevel": 1,
                     "client_options": {
                         "allow_managed": True,
-                        "allowed_global": False,
-                        "allowed_default": False,
-                        "allowed_dns": False,
+                        "allow_global": False,
+                        "allow_default": False,
+                        "allow_dns": False,
                     },
                 }
             ]
@@ -276,18 +276,17 @@ key name              type    default     description
 ``remoteTraceLevel``  integer             level of network tracing
 ``client_options``    dict    ``{}``      These options are only used for client configurations
 
-                                          =================== ======= ==========================================
-                                          key name            type    description
-                                          =================== ======= ==========================================
-                                          ``allow_managed``   boolean allow ZeroTier to set IP addresses and
-                                                                      routes
-                                          ``allowed_global``  boolean allow ZeroTier to set
-                                                                      global/public/not-private range IPs and
-                                                                      routes
-                                          ``allowed_default`` boolean allow ZeroTier to set the default route on
-                                                                      the system
-                                          ``allowed_dns``     boolean allow ZeroTier to set DNS servers
-                                          =================== ======= ==========================================
+                                          ================= ======= =============================================
+                                          key name          type    description
+                                          ================= ======= =============================================
+                                          ``allow_managed`` boolean allow ZeroTier to set IP addresses and routes
+                                          ``allow_global``  boolean allow ZeroTier to set
+                                                                    global/public/not-private range IPs and
+                                                                    routes
+                                          ``allow_default`` boolean allow ZeroTier to set the default route on
+                                                                    the system
+                                          ``allow_dns``     boolean allow ZeroTier to set DNS servers
+                                          ================= ======= =============================================
 ===================== ======= =========== =======================================================================
 
 Client specific settings
