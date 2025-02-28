@@ -79,12 +79,12 @@ class ZeroTier(OpenWrtConverter, BaseZeroTier):
             network.pop(key)
         network['ifname'] = self._get_ifname_from_id(network['id'])
         # Handle boolean fields
-        if 'allowed_global' in network:
-            network['allowed_global'] = network['allowed_global'] == '1'
-        if 'allowed_default' in network:
-            network['allowed_default'] = network['allowed_default'] == '1'
-        if 'allowed_dns' in network:
-            network['allowed_dns'] = network['allowed_dns'] == '1'
+        if 'allow_global' in network:
+            network['allow_global'] = network['allow_global'] == '1'
+        if 'allow_default' in network:
+            network['allow_default'] = network['allow_default'] == '1'
+        if 'allow_dns' in network:
+            network['allow_dns'] = network['allow_dns'] == '1'
         if 'allow_managed' in network:
             network['allow_managed'] = network['allow_managed'] == '1'
         return network

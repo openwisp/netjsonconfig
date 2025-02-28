@@ -18,17 +18,17 @@ class TestZeroTier(unittest.TestCase, _TabsMixin):
                         "id": "9536600adf654321",
                         "ifname": "owzt654321",
                         "allow_managed": True,
-                        "allowed_global": False,
-                        "allowed_default": False,
-                        "allowed_dns": False,
+                        "allow_global": False,
+                        "allow_default": False,
+                        "allow_dns": False,
                     },
                     {
                         "id": "9536600adf654322",
                         "ifname": "owzt654322",
                         "allow_managed": True,
-                        "allowed_global": False,
-                        "allowed_default": False,
-                        "allowed_dns": False,
+                        "allow_global": False,
+                        "allow_default": False,
+                        "allow_dns": False,
                     },
                 ],
             },
@@ -46,17 +46,17 @@ config zerotier 'ow_zt'
     option local_conf_path '/etc/openwisp/zerotier/zerotier.conf'
 
 config network 'owzt654321'
+    option allow_default '0'
+    option allow_dns '0'
+    option allow_global '0'
     option allow_managed '1'
-    option allowed_default '0'
-    option allowed_dns '0'
-    option allowed_global '0'
     option id '9536600adf654321'
 
 config network 'owzt654322'
+    option allow_default '0'
+    option allow_dns '0'
+    option allow_global '0'
     option allow_managed '1'
-    option allowed_default '0'
-    option allowed_dns '0'
-    option allowed_global '0'
     option id '9536600adf654322'
 
 # ---------- files ---------- #
@@ -132,10 +132,10 @@ config network
 
 config network
     option id '9536600adf654322'
+    option allow_default '0'
+    option allow_dns '0'
+    option allow_global '0'
     option allow_managed '1'
-    option allowed_default '0'
-    option allowed_dns '0'
-    option allowed_global '0'
 """
         )
         expected = {
@@ -148,9 +148,9 @@ config network
                             "id": "9536600adf654322",
                             "ifname": "owzt654322",
                             "allow_managed": True,
-                            "allowed_global": False,
-                            "allowed_default": False,
-                            "allowed_dns": False,
+                            "allow_global": False,
+                            "allow_default": False,
+                            "allow_dns": False,
                         },
                     ],
                     "name": "ow_zt",
