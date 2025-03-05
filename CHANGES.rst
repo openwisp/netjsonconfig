@@ -6,6 +6,25 @@ Version 1.2.0 [Unreleased]
 
 Work in progress.
 
+Version 1.1.2 [2025-03-05]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed typo in fields of ZeroTier backend
+- Update ZeroTier default name from ``ow_zt`` to ``global``
+
+Version 1.1.1 [2024-12-23]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Added a fallback for the ``hostname`` property in the **OpenWISP 1.x
+  Backend** to ensure consistent configurations.
+- Fixed readthedocs.org documentation build
+
 Version 1.1.0 [2024-11-22]
 --------------------------
 
