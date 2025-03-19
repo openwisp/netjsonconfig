@@ -2029,6 +2029,13 @@ config interface 'vlan_br_lan_1'
         expected['interfaces'][0]['network'] = 'vlan_br_lan_1'
         self.assertEqual(expected, o.config)
 
+    def test_render_vlan8021q_empty_network(self):
+        netjson = deepcopy(self._vlan8021q_netjson)
+        netjson['interfaces'][0]['network'] = ''
+        o = OpenWrt(netjson)
+        expected = self._tabs(self._vlan8021q_uci)
+        self.assertEqual(o.render(), expected)
+
     _vlan8021ad_netjson = {
         "interfaces": [
             {"type": "8021ad", "vid": 6, "name": "eth0", "network": "iot_vlan"}
