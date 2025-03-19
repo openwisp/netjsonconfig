@@ -232,8 +232,8 @@ class Interfaces(OpenWrtConverter):
 
     def _intermediate_8021_vlan(self, interface):
         interface['name'] = '{}.{}'.format(interface['ifname'], interface['vid'])
-        interface['.name'] = interface.get(
-            'network', 'vlan_{}_{}'.format(interface['.name'], interface['vid'])
+        interface['.name'] = interface.get('network') or 'vlan_{}_{}'.format(
+            interface['.name'], interface['vid']
         )
         return interface
 
