@@ -580,3 +580,62 @@ config wifi-iface 'wifi_wlan0'
                 ),
                 expected,
             )
+
+    def test_duplicate_interface_name(self):
+        conf = {
+            'interfaces': [
+                {
+                    "type": "bridge",
+                    "stp": False,
+                    "bridge_members": [],
+                    "name": "br-wifi",
+                    "network": "wifi"
+                },
+                {
+                    "type": "8021q",
+                    "name": "br-wifi",
+                    "disabled": False,
+                    "vid": 200,
+                    "ingress_qos_mapping": [],
+                    "egress_qos_mapping": []
+                }
+            ]
+        }
+        template = {
+            'interfaces': [
+                {
+                    "name": "lo",
+                    "type": "loopback",
+                }
+            ],
+        }
+        o = OpenWrt(conf, templates=[template])
+        expected = """
+package network
+
+config interface 'lo'
+    option device 'lo'
+    option proto 'none'
+
+config device 'device_wifi'
+    option bridge_empty '1'
+    option name 'br-wifi'
+    option stp '0'
+    option type 'bridge'
+
+config interface 'wifi'
+    option device 'br-wifi'
+    option proto 'none'
+
+config device 'device_br_wifi_200'
+    option ifname 'br-wifi'
+    option name 'br-wifi.200'
+    option type '8021q'
+    option vid '200'
+
+config interface 'vlan_br_wifi_200'
+    option device 'br-wifi.200'
+    option enabled '1'
+    option proto 'none'
+"""
+        self.assertEqual(o.render(), self._tabs(expected))
