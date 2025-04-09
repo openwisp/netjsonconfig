@@ -316,7 +316,8 @@ tls-server
     def test_parse_tar_file(self):
         o = OpenVpn(self._multiple_vpn)
         o.write(name='test', path='/tmp')
-        OpenVpn(native=open('/tmp/test.tar.gz'))
+        with open('/tmp/test.tar.gz', 'rb') as f:
+            OpenVpn(native=f)
         os.remove('/tmp/test.tar.gz')
         self.assertDictEqual(o.config, self._multiple_vpn)
 

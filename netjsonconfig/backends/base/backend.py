@@ -7,13 +7,14 @@ from collections import OrderedDict
 from copy import deepcopy
 from io import BytesIO
 
-from jsonschema import Draft4Validator, draft4_format_checker
+from jsonschema import Draft4Validator
 from jsonschema.exceptions import ValidationError as JsonSchemaError
 
 from ...exceptions import ValidationError
 from ...schema import DEFAULT_FILE_MODE
 from ...utils import evaluate_vars, merge_config
 
+format_checker = Draft4Validator.FORMAT_CHECKER
 _host_name_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9\.\-]{1,255}$")
 
 
@@ -126,7 +127,7 @@ class BaseBackend(object):
             files_dict[file['path']] = file
         self.config['files'] = list(files_dict.values())
 
-    @draft4_format_checker.checks('cidr', AssertionError)
+    @format_checker.checks('cidr', AssertionError)
     def _cidr_notation(value):
         try:
             ipaddress.ip_network(value)
@@ -134,7 +135,7 @@ class BaseBackend(object):
             assert False, str(e)
         return True
 
-    @draft4_format_checker.checks('hostname', JsonSchemaError)
+    @format_checker.checks('hostname', JsonSchemaError)
     def _is_hostname(value):
         """
         The hostname validation has been taken from jsonschema~=3.2.0
@@ -154,7 +155,7 @@ class BaseBackend(object):
 
     def validate(self):
         try:
-            Draft4Validator(self.schema, format_checker=draft4_format_checker).validate(
+            Draft4Validator(self.schema, format_checker=format_checker).validate(
                 self.config
             )
         except JsonSchemaError as e:

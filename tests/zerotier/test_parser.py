@@ -517,7 +517,9 @@ class TestParser(unittest.TestCase):
     def test_parse_tar_file(self):
         o = ZeroTier(self._TEST_MULTIPLE_CONFIG)
         o.write(name='test', path='/tmp')
-        ZeroTier(native=open('/tmp/test.tar.gz'))
+        with open('/tmp/test.tar.gz', 'rb') as f:
+            ZeroTier(native=f)
+
         os.remove('/tmp/test.tar.gz')
         self.assertDictEqual(o.config, self._TEST_MULTIPLE_CONFIG)
 

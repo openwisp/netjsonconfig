@@ -263,7 +263,7 @@ config rule 'rule1'
             o.validate()
         rule['ip_rules'][0]['src'] = '192.168.1.0/24'
         o = OpenWrt(rule)
-        with self.assertRaisesRegexp(ValidationError, "'wrong1' is not a 'cidr'"):
+        with self.assertRaisesRegex(ValidationError, "'wrong1' is not a 'cidr'"):
             o.validate()
         # fix 'dest' and expect no ValidationError raised
         rule['ip_rules'][0]['dest'] = '192.168.1.0/24'
@@ -271,7 +271,7 @@ config rule 'rule1'
         o.validate()
 
     def test_parse_rules_zone(self):
-        with self.assertRaisesRegexp(ValidationError, "'wrong' is not a 'cidr'"):
+        with self.assertRaisesRegex(ValidationError, "'wrong' is not a 'cidr'"):
             OpenWrt(
                 native="""package network
 
