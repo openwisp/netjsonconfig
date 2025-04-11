@@ -216,7 +216,8 @@ config interface 'lan'
     def test_parse_tar_file(self):
         o = OpenWrt({"general": {"hostname": "parse-tar-file"}})
         o.write(name='test', path='/tmp')
-        o = OpenWrt(native=open('/tmp/test.tar.gz'))
+        with open('/tmp/test.tar.gz', 'rb') as f:
+            OpenWrt(native=f)
         expected = {
             "system": [
                 {".type": "system", ".name": "system", "hostname": "parse-tar-file"}

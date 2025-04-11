@@ -4,8 +4,8 @@ from json import loads
 
 from ..base.parser import BaseParser
 
-vpn_pattern = re.compile('^// zerotier controller config:\s', flags=re.MULTILINE)
-config_pattern = re.compile('^([^\s]*) ?(.*)$')
+vpn_pattern = re.compile(r'^// zerotier controller config:\s', flags=re.MULTILINE)
+config_pattern = re.compile(r'^([^\s]*) ?(.*)$')
 config_suffix = '.json'
 
 

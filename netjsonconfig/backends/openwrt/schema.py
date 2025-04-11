@@ -7,7 +7,7 @@ from ..openvpn.schema import base_openvpn_schema
 from ..wireguard.schema import base_wireguard_schema
 from .timezones import timezones
 
-QOS_MAPPING_PATTERN = "^[0-9]\d*:[0-9]\d*$"
+QOS_MAPPING_PATTERN = r"^[0-9]\d*:[0-9]\d*$"
 
 default_radio_driver = "mac80211"
 
