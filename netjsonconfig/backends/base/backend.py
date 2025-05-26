@@ -24,7 +24,7 @@ class BaseBackend(object):
     """
 
     schema = None
-    FILE_SECTION_DELIMITER = '# ---------- files ---------- #'
+    FILE_SECTION_DELIMITER = "# ---------- files ---------- #"
     list_identifiers = []
 
     def __init__(self, config=None, native=None, templates=None, context=None):
@@ -52,8 +52,8 @@ class BaseBackend(object):
             self.parse(native)
         else:
             raise ValueError(
-                'Expecting either config or native argument to be '
-                'passed during the initialization of the backend'
+                "Expecting either config or native argument to be "
+                "passed during the initialization of the backend"
             )
 
     def _load(self, config):
@@ -67,7 +67,7 @@ class BaseBackend(object):
                 pass
         if not isinstance(config, dict):
             raise TypeError(
-                'config block must be an instance of dict or a valid NetJSON string'
+                "config block must be an instance of dict or a valid NetJSON string"
             )
         return config
 
@@ -79,7 +79,7 @@ class BaseBackend(object):
             return config
         # type check
         if not isinstance(templates, list):
-            raise TypeError('templates argument must be an instance of list')
+            raise TypeError("templates argument must be an instance of list")
         # merge templates with main configuration
         result = {}
         config_list = templates + [config]
@@ -101,33 +101,33 @@ class BaseBackend(object):
         """
         Renders additional files specified in ``self.config['files']``
         """
-        output = ''
+        output = ""
         # render files
-        files = self.config.get('files', [])
+        files = self.config.get("files", [])
         # add delimiter
         if files:
-            output += '\n{0}\n\n'.format(self.FILE_SECTION_DELIMITER)
+            output += "\n{0}\n\n".format(self.FILE_SECTION_DELIMITER)
         for f in files:
-            mode = f.get('mode', DEFAULT_FILE_MODE)
+            mode = f.get("mode", DEFAULT_FILE_MODE)
             # add file to output
             file_output = (
-                '# path: {0}\n'
-                '# mode: {1}\n\n'
-                '{2}\n\n'.format(f['path'], mode, f['contents'])
+                "# path: {0}\n"
+                "# mode: {1}\n\n"
+                "{2}\n\n".format(f["path"], mode, f["contents"])
             )
             output += file_output
         return output
 
     def _deduplicate_files(self):
-        files = self.config.get('files', [])
+        files = self.config.get("files", [])
         if not files:
             return
         files_dict = OrderedDict()
         for file in files:
-            files_dict[file['path']] = file
-        self.config['files'] = list(files_dict.values())
+            files_dict[file["path"]] = file
+        self.config["files"] = list(files_dict.values())
 
-    @format_checker.checks('cidr', AssertionError)
+    @format_checker.checks("cidr", AssertionError)
     def _cidr_notation(value):
         try:
             ipaddress.ip_network(value)
@@ -135,7 +135,7 @@ class BaseBackend(object):
             assert False, str(e)
         return True
 
-    @format_checker.checks('hostname', JsonSchemaError)
+    @format_checker.checks("hostname", JsonSchemaError)
     def _is_hostname(value):
         """
         The hostname validation has been taken from jsonschema~=3.2.0
@@ -175,9 +175,9 @@ class BaseBackend(object):
             self.to_intermediate()
         self._deduplicate_files()
         # support multiple renderers
-        renderers = getattr(self, 'renderers', None) or [self.renderer]
+        renderers = getattr(self, "renderers", None) or [self.renderer]
         # convert intermediate data structure to native configuration
-        output = ''
+        output = ""
         for renderer_class in renderers:
             renderer = renderer_class(self)
             output += renderer.render()
@@ -190,7 +190,7 @@ class BaseBackend(object):
             files_output = self._render_files()
             if files_output:
                 # max 2 new lines
-                output += files_output.replace('\n\n\n', '\n\n')
+                output += files_output.replace("\n\n\n", "\n\n")
         # return the configuration
         return output
 
@@ -207,7 +207,7 @@ class BaseBackend(object):
             self.validate()
         # automatically adds NetJSON type
         config = deepcopy(self.config)
-        config.update({'type': 'DeviceConfiguration'})
+        config.update({"type": "DeviceConfiguration"})
         return json.dumps(config, *args, **kwargs)
 
     def generate(self):
@@ -218,7 +218,7 @@ class BaseBackend(object):
         :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
         tar_bytes = BytesIO()
-        tar = tarfile.open(fileobj=tar_bytes, mode='w')
+        tar = tarfile.open(fileobj=tar_bytes, mode="w")
         self._generate_contents(tar)
         self._process_files(tar)
         tar.close()
@@ -228,7 +228,7 @@ class BaseBackend(object):
         # to achieve this we must use the python `gzip` library because the `tarfile`
         # library does not seem to offer the possibility to modify the gzip `mtime`.
         gzip_bytes = BytesIO()
-        gz = gzip.GzipFile(fileobj=gzip_bytes, mode='wb', mtime=0)
+        gz = gzip.GzipFile(fileobj=gzip_bytes, mode="wb", mtime=0)
         gz.write(tar_bytes.getvalue())
         gz.close()
         gzip_bytes.seek(0)  # set pointer to beginning of stream
@@ -237,7 +237,7 @@ class BaseBackend(object):
     def _generate_contents(self, tar):
         raise NotImplementedError()
 
-    def write(self, name, path='./'):
+    def write(self, name, path="./"):
         """
         Like ``generate`` but writes to disk.
 
@@ -246,10 +246,10 @@ class BaseBackend(object):
         :returns: None
         """
         byte_object = self.generate()
-        file_name = '{0}.tar.gz'.format(name)
-        if not path.endswith('/'):
-            path += '/'
-        f = open('{0}{1}'.format(path, file_name), 'wb')
+        file_name = "{0}.tar.gz".format(name)
+        if not path.endswith("/"):
+            path += "/"
+        f = open("{0}{1}".format(path, file_name), "wb")
         f.write(byte_object.getvalue())
         f.close()
 
@@ -261,16 +261,16 @@ class BaseBackend(object):
         :returns: None
         """
         # insert additional files
-        for file_item in self.config.get('files', []):
-            path = file_item['path']
+        for file_item in self.config.get("files", []):
+            path = file_item["path"]
             # remove leading slashes from path
-            if path.startswith('/'):
+            if path.startswith("/"):
                 path = path[1:]
             self._add_file(
                 tar=tar,
                 name=path,
-                contents=file_item['contents'],
-                mode=file_item.get('mode', DEFAULT_FILE_MODE),
+                contents=file_item["contents"],
+                mode=file_item.get("mode", DEFAULT_FILE_MODE),
             )
 
     def _add_file(self, tar, name, contents, mode=DEFAULT_FILE_MODE):
@@ -283,7 +283,7 @@ class BaseBackend(object):
         :param mode: string representing file mode, defaults to 644
         :returns: None
         """
-        byte_contents = BytesIO(contents.encode('utf8'))
+        byte_contents = BytesIO(contents.encode("utf8"))
         info = tarfile.TarInfo(name=name)
         info.size = len(contents)
         # mtime must be 0 or any checksum operation
@@ -314,7 +314,7 @@ class BaseBackend(object):
                 value = OrderedDict(value)
             if value:
                 self.intermediate_data = merge_config(
-                    self.intermediate_data, value, list_identifiers=['.name']
+                    self.intermediate_data, value, list_identifiers=[".name"]
                 )
 
     def parse(self, native):
@@ -322,8 +322,8 @@ class BaseBackend(object):
         Parses a native configuration and converts
         it to a NetJSON configuration dictionary
         """
-        if not hasattr(self, 'parser') or not self.parser:
-            raise NotImplementedError('Parser class not specified')
+        if not hasattr(self, "parser") or not self.parser:
+            raise NotImplementedError("Parser class not specified")
         parser = self.parser(native)
         self.intermediate_data = parser.intermediate_data
         del parser
@@ -376,20 +376,20 @@ class BaseVpnBackend(BaseBackend):
         text = self.render(files=False)
         # create a list with all the packages (and remove empty entries)
         vpn_instances = self.vpn_pattern.split(text)
-        if '' in vpn_instances:
-            vpn_instances.remove('')
+        if "" in vpn_instances:
+            vpn_instances.remove("")
         # create a file for each VPN
         for vpn in vpn_instances:
-            lines = vpn.split('\n')
+            lines = vpn.split("\n")
             # It's better to split lines[0] using
             # `config_suffix` to extract the correct vpn_name
             vpn_name = lines[0].split(self.config_suffix)[0]
-            text_contents = '\n'.join(lines[2:])
+            text_contents = "\n".join(lines[2:])
             # do not end with double new line
-            if text_contents.endswith('\n\n'):
+            if text_contents.endswith("\n\n"):
                 text_contents = text_contents[0:-1]
             self._add_file(
                 tar=tar,
-                name='{0}{1}'.format(vpn_name, self.config_suffix),
+                name="{0}{1}".format(vpn_name, self.config_suffix),
                 contents=text_contents,
             )

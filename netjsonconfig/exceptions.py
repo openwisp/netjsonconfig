@@ -25,8 +25,8 @@ class NetJsonConfigException(Exception):
             self.details,
         )
         errors = _list_errors(self.details)
-        separator = '\nAgainst schema %s\n%s\n'
-        details = reduce(lambda x, y: x + separator % y, errors, '')
+        separator = "\nAgainst schema %s\n%s\n"
+        details = reduce(lambda x, y: x + separator % y, errors, "")
         return message + details
 
 

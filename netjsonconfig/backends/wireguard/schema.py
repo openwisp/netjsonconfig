@@ -1,6 +1,7 @@
 """
 Wireguard specific JSON-Schema definition
 """
+
 from copy import deepcopy
 
 from ...schema import schema as default_schema
@@ -161,7 +162,7 @@ base_wireguard_schema = {
                                     "type": "integer",
                                     "description": (
                                         "Wireguard port. Will be ignored if "
-                                        "\"endpoint host\" is left empty."
+                                        '"endpoint host" is left empty.'
                                     ),
                                     "default": 51820,
                                     "maximum": 65535,
@@ -190,5 +191,5 @@ base_wireguard_schema = {
 }
 
 schema = deepcopy(base_wireguard_schema)
-schema['required'] = ['wireguard']
-schema['properties']['files'] = default_schema['properties']['files']
+schema["required"] = ["wireguard"]
+schema["properties"]["files"] = default_schema["properties"]["files"]

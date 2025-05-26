@@ -33,36 +33,36 @@ from netjsonconfig.version import VERSION, get_version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
-    'openwisp.sphinx.theme',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
+    "openwisp.sphinx.theme",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = u'netjsonconfig'
-copyright = u'{0}, OpenWISP.org'.format(datetime.date.today().year)
-author = u'Federico Capoano'
+project = "netjsonconfig"
+copyright = "{0}, OpenWISP.org".format(datetime.date.today().year)
+author = "Federico Capoano"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '{0}.{1}'.format(VERSION[0], VERSION[1])
+version = "{0}.{1}".format(VERSION[0], VERSION[1])
 # The full version, including alpha/beta/rc tags.
 release = get_version()
 
@@ -71,7 +71,7 @@ release = get_version()
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'en'
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -99,7 +99,7 @@ exclude_patterns = []
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -115,9 +115,9 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'openwisp-sphinx-theme'
-html_favicon = 'assets/design/favicon.png'
-html_logo = 'assets/design/netjson-logo-dark.png'
+html_theme = "openwisp-sphinx-theme"
+html_favicon = "assets/design/favicon.png"
+html_logo = "assets/design/netjson-logo-dark.png"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -209,13 +209,13 @@ html_static_path = []
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'netjsonconfigdoc'
+htmlhelp_basename = "netjsonconfigdoc"
 
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, 'netjsonconfig', u'netjsonconfig Documentation', [author], 1)]
+man_pages = [(master_doc, "netjsonconfig", "netjsonconfig Documentation", [author], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -229,12 +229,12 @@ man_pages = [(master_doc, 'netjsonconfig', u'netjsonconfig Documentation', [auth
 texinfo_documents = [
     (
         master_doc,
-        'netjsonconfig',
-        u'netjsonconfig documentation',
+        "netjsonconfig",
+        "netjsonconfig documentation",
         author,
-        'netjsonconfig',
-        'Python library that converts NetJSON DeviceConfiguration objects to real router configurations.',
-        'Miscellaneous',
+        "netjsonconfig",
+        "Python library that converts NetJSON DeviceConfiguration objects to real router configurations.",
+        "Miscellaneous",
     ),
 ]
 
@@ -297,7 +297,7 @@ epub_copyright = copyright
 # epub_post_files = []
 
 # A list of files that should not be packed into the epub file.
-epub_exclude_files = ['search.html']
+epub_exclude_files = ["search.html"]
 
 # The depth of the table of contents in toc.ncx.
 # epub_tocdepth = 3

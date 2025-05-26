@@ -334,9 +334,7 @@ channel on certain access points:
         ]
     }
 
-    router1 = OpenWrt(
-        config=specific_radio_config, templates=[general_radio_template]
-    )
+    router1 = OpenWrt(config=specific_radio_config, templates=[general_radio_template])
 
     print(router1.render())
 
@@ -398,9 +396,7 @@ Here's a more complex example involving multiple overrides:
         ]
     }
 
-    united_states_radio_template = {
-        "radios": [{"name": "radio0", "country": "US"}]
-    }
+    united_states_radio_template = {"radios": [{"name": "radio0", "country": "US"}]}
 
     specific_radio_config = {
         "radios": [

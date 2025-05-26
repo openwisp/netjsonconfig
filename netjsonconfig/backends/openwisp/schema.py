@@ -2,6 +2,7 @@
 OpenWisp specific JSON-Schema definition
 (extends OpenWrt JSON-Schema)
 """
+
 from ...utils import merge_config
 from ..openwrt.schema import schema as openwrt_schema
 
@@ -43,14 +44,14 @@ schema = merge_config(
     },
 )
 
-schema['definitions']['tunnel']['properties']['comp_lzo']['enum'] = [
-    'adaptive',
-    '1',
-    'yes',
-    '0',
-    'no',
+schema["definitions"]["tunnel"]["properties"]["comp_lzo"]["enum"] = [
+    "adaptive",
+    "1",
+    "yes",
+    "0",
+    "no",
 ]
-schema['definitions']['tunnel']['properties']['comp_lzo']['options'] = {
+schema["definitions"]["tunnel"]["properties"]["comp_lzo"]["options"] = {
     "enum_titles": [
         "adaptive",
         "enabled (legacy, OpenVPN <= 2.0)",

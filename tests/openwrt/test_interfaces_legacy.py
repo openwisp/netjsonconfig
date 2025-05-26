@@ -622,8 +622,8 @@ config interface 'custom_if0'
                     "type": "other",
                     "proto": "custom",
                     "device": "/dev/usb/modem1",
-                    "keepalive": '3',
-                    "ipv6": '1',
+                    "keepalive": "3",
+                    "ipv6": "1",
                 }
             ]
         }
@@ -816,9 +816,9 @@ config interface 'lan_2'
         # performed test is slightly asymmetric in order to
         # increase code coverage using less lines of code
         netjson = deepcopy(self._complex_bridge_netjson)
-        netjson['interfaces'][2]['name'] = 'br-lan'
-        del netjson['interfaces'][2]['addresses'][2]
-        netjson['interfaces'].append(
+        netjson["interfaces"][2]["name"] = "br-lan"
+        del netjson["interfaces"][2]["addresses"][2]
+        netjson["interfaces"].append(
             {
                 "name": "br-lan",
                 "network": "lan_2",
@@ -880,11 +880,11 @@ config interface 'lan'
         o = OpenWrt({"interfaces": [{"name": "lan", "type": "bridge"}]}, dsa=False)
         with self.assertRaises(ValidationError):
             o.validate()
-        o.config['interfaces'][0]['bridge_members'] = [3]
+        o.config["interfaces"][0]["bridge_members"] = [3]
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['bridge_members'] = ['eth0', 'wlan0']
+        o.config["interfaces"][0]["bridge_members"] = ["eth0", "wlan0"]
         o.validate()
 
     def test_bridge_members_pattern(self):
@@ -899,7 +899,7 @@ config interface 'lan'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['bridge_members'][0] = 'e-t_h@=0.1'
+        o.config["interfaces"][0]["bridge_members"][0] = "e-t_h@=0.1"
         o.validate()
 
     def test_bridge_members_unique(self):
@@ -918,7 +918,7 @@ config interface 'lan'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['bridge_members'][0] = 'eth1'
+        o.config["interfaces"][0]["bridge_members"][0] = "eth1"
         o.validate()
 
     _bridge_uci = """package network
@@ -1121,7 +1121,7 @@ config interface 'eth0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['name'] = 'ifname0'
+        o.config["interfaces"][0]["name"] = "ifname0"
         o.validate()
 
     def test_ifname_pattern(self):
@@ -1129,7 +1129,7 @@ config interface 'eth0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['name'] = 'e-t_h@=0.1'
+        o.config["interfaces"][0]["name"] = "e-t_h@=0.1"
         o.validate()
 
     def test_network_maxlength(self):
@@ -1148,7 +1148,7 @@ config interface 'eth0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['network'] = 'lan'
+        o.config["interfaces"][0]["network"] = "lan"
         o.validate()
 
     def test_network_pattern(self):
@@ -1158,11 +1158,11 @@ config interface 'eth0'
         )
         with self.assertRaises(ValidationError):
             o.validate()
-        o.config['interfaces'][0]['network'] = 'lan/0'
+        o.config["interfaces"][0]["network"] = "lan/0"
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['network'] = 'lan'
+        o.config["interfaces"][0]["network"] = "lan"
         o.validate()
 
     def test_render_network_attribute(self):
@@ -1263,18 +1263,18 @@ config interface 'lan_0'
         )
         o.validate()
         # too short
-        o.config['interfaces'][0]['mac'] = '00:11:22:33:44'
+        o.config["interfaces"][0]["mac"] = "00:11:22:33:44"
         with self.assertRaises(ValidationError):
             o.validate()
         # valid
-        o.config['interfaces'][0]['mac'] = '00-11-22-33-44-55'
+        o.config["interfaces"][0]["mac"] = "00-11-22-33-44-55"
         o.validate()
         # should not be valid
-        o.config['interfaces'][0]['mac'] = '00:11:22:33:44:ZY'
+        o.config["interfaces"][0]["mac"] = "00:11:22:33:44:ZY"
         with self.assertRaises(ValidationError):
             o.validate()
         # empty is valid (will be ignored)
-        o.config['interfaces'][0]['mac'] = ''
+        o.config["interfaces"][0]["mac"] = ""
         o.validate()
 
     def test_default_addresses(self):
@@ -1451,7 +1451,7 @@ config interface 'br_lan'
         )
         self.assertEqual(o.render(), expected)
         # try entering an invalid value
-        o.config['interfaces'][0]['stp'] = 'wrong'
+        o.config["interfaces"][0]["stp"] = "wrong"
         with self.assertRaises(ValidationError):
             o.validate()
 
@@ -1481,7 +1481,7 @@ config interface 'br_lan'
         )
         self.assertEqual(o.render(), expected)
         # try entering an invalid value
-        o.config['interfaces'][0]['igmp_snooping'] = 'wrong'
+        o.config["interfaces"][0]["igmp_snooping"] = "wrong"
         with self.assertRaises(ValidationError):
             o.validate()
 

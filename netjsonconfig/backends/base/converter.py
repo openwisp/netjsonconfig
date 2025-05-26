@@ -43,22 +43,22 @@ class BaseConverter(object):
         """
         if schema is None:
             schema = self._schema
-        properties = schema['properties']
+        properties = schema["properties"]
         for key, value in item.items():
             if key not in properties:
                 continue
             try:
-                json_type = properties[key]['type']
+                json_type = properties[key]["type"]
             except KeyError:
                 json_type = None
             # if multiple types are supported, the first
             # one takes precedence when parsing
             if isinstance(json_type, list) and json_type:
                 json_type = json_type[0]
-            if json_type == 'integer' and not isinstance(value, int):
+            if json_type == "integer" and not isinstance(value, int):
                 value = int(value)
-            elif json_type == 'boolean' and not isinstance(value, bool):
-                value = value == '1'
+            elif json_type == "boolean" and not isinstance(value, bool):
+                value = value == "1"
             item[key] = value
         return item
 

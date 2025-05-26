@@ -1,6 +1,7 @@
 """
 OpenWrt specific JSON-Schema definition
 """
+
 from ...schema import schema as default_schema
 from ...utils import merge_config
 from ..openvpn.schema import base_openvpn_schema
@@ -81,7 +82,7 @@ schema = merge_config(
                             "network": {
                                 "type": "array",
                                 "title": "Attached Networks",
-                                "description": "override OpenWRT \"network\" config option of of wifi-iface "
+                                "description": 'override OpenWRT "network" config option of of wifi-iface '
                                 "directive; will be automatically determined if left blank",
                                 "uniqueItems": True,
                                 "additionalItems": True,
@@ -164,9 +165,9 @@ schema = merge_config(
                             "macfilter": {
                                 "type": "string",
                                 "title": "MAC Filter",
-                                "description": "specifies the mac filter policy, \"disable\" to disable "
-                                "the filter, \"allow\" to treat it as whitelist or "
-                                "\"deny\" to treat it as blacklist",
+                                "description": 'specifies the mac filter policy, "disable" to disable '
+                                'the filter, "allow" to treat it as whitelist or '
+                                '"deny" to treat it as blacklist',
                                 "enum": ["disable", "allow", "deny"],
                                 "default": "disable",
                                 "propertyOrder": 15,
@@ -175,7 +176,7 @@ schema = merge_config(
                                 "type": "array",
                                 "title": "MAC List",
                                 "description": "mac addresses that will be filtered according to the policy "
-                                "specified in the \"macfilter\" option",
+                                'specified in the "macfilter" option',
                                 "propertyOrder": 16,
                                 "items": {
                                     "type": "string",
@@ -196,7 +197,7 @@ schema = merge_config(
                             "igmp_snooping": {
                                 "type": "boolean",
                                 "title": "IGMP snooping",
-                                "description": "sets the \"multicast_snooping\" kernel setting for a bridge",
+                                "description": 'sets the "multicast_snooping" kernel setting for a bridge',
                                 "default": False,
                                 "format": "checkbox",
                                 "propertyOrder": 5,
@@ -874,8 +875,8 @@ schema = merge_config(
                         "type": "string",
                         "description": (
                             "Dynamic Authorization Extension client."
-                            " This client can send \"Disconnect-Request\""
-                            " or \"CoA-Request\" packets to forcibly disconnect a client"
+                            ' This client can send "Disconnect-Request"'
+                            ' or "CoA-Request" packets to forcibly disconnect a client'
                             " or change connection parameters."
                         ),
                         "propertyOrder": 11,
@@ -908,7 +909,7 @@ schema = merge_config(
                         "default": False,
                         "format": "checkbox",
                         "description": (
-                            'Validate server certificate using built-in'
+                            "Validate server certificate using built-in"
                             ' system CA bundle, requires the "ca-bundle" package'
                         ),
                         "propertyOrder": 7.9,

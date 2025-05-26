@@ -72,7 +72,7 @@ class TestBackend(unittest.TestCase):
 
     # Multiple test config
     _TEST_MULTIPLE_CONFIG = deepcopy(_TEST_CONFIG)
-    _TEST_MULTIPLE_CONFIG['zerotier'].append(
+    _TEST_MULTIPLE_CONFIG["zerotier"].append(
         {
             "id": "9536600adf654322",
             "nwid": "9536600adf654322",
@@ -391,21 +391,21 @@ class TestBackend(unittest.TestCase):
 
     def test_auto_client(self):
         test_config = self._TEST_CONFIG["zerotier"][0]
-        nw_id = test_config['id']
+        nw_id = test_config["id"]
         expected = {
-            'name': 'global',
-            'networks': [{'id': '9536600adf654321', 'ifname': 'owzt654321'}],
-            'secret': 'test_secret',
-            'config_path': '/etc/openwisp/zerotier',
-            'disabled': False,
+            "name": "global",
+            "networks": [{"id": "9536600adf654321", "ifname": "owzt654321"}],
+            "secret": "test_secret",
+            "config_path": "/etc/openwisp/zerotier",
+            "disabled": False,
         }
         self.assertEqual(
             ZeroTier.auto_client(
                 name="global",
                 networks=[
                     {
-                        'id': nw_id,
-                        'ifname': f'owzt{nw_id[-6:]}',
+                        "id": nw_id,
+                        "ifname": f"owzt{nw_id[-6:]}",
                     }
                 ],
                 identity_secret="test_secret",

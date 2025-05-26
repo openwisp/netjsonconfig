@@ -209,7 +209,7 @@ verb 3
         except Exception as e:
             self.assertIsInstance(e, ParseError)
         else:
-            self.fail('Exception not raised')
+            self.fail("Exception not raised")
 
     def test_server_bridge_proxy(self):
         native = """# openvpn config: bridged-proxy
@@ -315,10 +315,10 @@ tls-server
 
     def test_parse_tar_file(self):
         o = OpenVpn(self._multiple_vpn)
-        o.write(name='test', path='/tmp')
-        with open('/tmp/test.tar.gz', 'rb') as f:
+        o.write(name="test", path="/tmp")
+        with open("/tmp/test.tar.gz", "rb") as f:
             OpenVpn(native=f)
-        os.remove('/tmp/test.tar.gz')
+        os.remove("/tmp/test.tar.gz")
         self.assertDictEqual(o.config, self._multiple_vpn)
 
     def test_file_path_min_length(self):

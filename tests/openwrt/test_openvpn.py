@@ -55,14 +55,14 @@ class TestOpenVpn(_TabsMixin, unittest.TestCase):
         ]
     }
     _server_netjson_data_ciphers = deepcopy(_server_netjson)
-    _server_netjson_data_ciphers['openvpn'][0].update(
+    _server_netjson_data_ciphers["openvpn"][0].update(
         {
-            'data_ciphers': [
-                {'cipher': 'AES-256-GCM', 'optional': False},
-                {'cipher': 'AES-128-GCM', 'optional': False},
-                {'cipher': 'CHACHA20-POLY1305', 'optional': True},
+            "data_ciphers": [
+                {"cipher": "AES-256-GCM", "optional": False},
+                {"cipher": "AES-128-GCM", "optional": False},
+                {"cipher": "CHACHA20-POLY1305", "optional": True},
             ],
-            'data_ciphers_fallback': 'AES-128-GCM',
+            "data_ciphers_fallback": "AES-128-GCM",
         }
     )
     _server_uci = """package openvpn
@@ -165,13 +165,13 @@ config openvpn 'test_server'
     def test_parse_server_mode(self):
         c = OpenWrt(native=self._server_uci)
         expected = deepcopy(self._server_netjson)
-        del expected['openvpn'][0]['fragment']
+        del expected["openvpn"][0]["fragment"]
         self.assertEqual(c.config, expected)
 
     def test_parse_server_mode_data_ciphers(self):
         c = OpenWrt(native=self._server_uci_data_ciphers)
         expected = deepcopy(self._server_netjson_data_ciphers)
-        del expected['openvpn'][0]['fragment']
+        del expected["openvpn"][0]["fragment"]
         self.assertEqual(c.config, expected)
 
     _client_netjson = {
@@ -564,7 +564,7 @@ config openvpn 'test_disabled'
     option proto 'udp'
     option tls_server '1'"""
         )
-        self.assertTrue(c.config['openvpn'][0]['disabled'])
+        self.assertTrue(c.config["openvpn"][0]["disabled"])
 
     def test_parse_disabled_default(self):
         c = OpenWrt(
@@ -581,4 +581,4 @@ config openvpn 'test_disabled'
     option proto 'udp'
     option tls_server '1'"""
         )
-        self.assertTrue(c.config['openvpn'][0]['disabled'])
+        self.assertTrue(c.config["openvpn"][0]["disabled"])

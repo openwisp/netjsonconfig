@@ -106,8 +106,8 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 
     def test_uci(self):
         o = OpenWisp({"general": {"hostname": "openwisp-test"}})
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        system = tar.getmember('uci/system.conf')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        system = tar.getmember("uci/system.conf")
         contents = tar.extractfile(system).read().decode()
         expected = self._tabs(
             """package system
@@ -124,13 +124,13 @@ config 'system' 'system'
         with self.assertRaises(ValidationError):
             o.validate()
 
-    @patch.object(OpenWisp, 'validate')
+    @patch.object(OpenWisp, "validate")
     def test_fallback_hostname(self, *args):
         config = deepcopy(self.config)
-        del config['general']['hostname']
+        del config["general"]["hostname"]
         o = OpenWisp(config)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        install = tar.getmember('install.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        install = tar.getmember("install.sh")
         contents = tar.extractfile(install).read().decode()
         self.assertIn('echo "Changing hostname"', contents)
         self.assertIn('echo "OpenWISP1" > /proc/sys/kernel/hostname', contents)
@@ -138,36 +138,36 @@ config 'system' 'system'
     def test_install_script(self):
         config = deepcopy(self.config)
         o = OpenWisp(config)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        install = tar.getmember('install.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        install = tar.getmember("install.sh")
         contents = tar.extractfile(install).read().decode()
-        self.assertIn('openvpn --mktun --dev 2693 --dev-type tap', contents)
-        self.assertIn('ifup br-serv', contents)
-        self.assertIn('$(ip address show dev br-serv | grep 192.168.1.2)', contents)
-        self.assertIn('wifi up radio0', contents)
-        self.assertNotIn('Starting Cron', contents)
+        self.assertIn("openvpn --mktun --dev 2693 --dev-type tap", contents)
+        self.assertIn("ifup br-serv", contents)
+        self.assertIn("$(ip address show dev br-serv | grep 192.168.1.2)", contents)
+        self.assertIn("wifi up radio0", contents)
+        self.assertNotIn("Starting Cron", contents)
         # esure is executable
         self.assertEqual(install.mode, 493)
         tar.close()
 
     def test_ensure_tun_vpn_ignored(self):
         config = deepcopy(self.config)
-        config['openvpn'][0]['dev_type'] = 'tun'
+        config["openvpn"][0]["dev_type"] = "tun"
         o = OpenWisp(config)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        install = tar.getmember('install.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        install = tar.getmember("install.sh")
         contents = tar.extractfile(install).read().decode()
-        self.assertNotIn('openvpn --mktun --dev 2693 --dev-type tap', contents)
+        self.assertNotIn("openvpn --mktun --dev 2693 --dev-type tap", contents)
         tar.close()
 
     def test_uninstall_script(self):
         config = deepcopy(self.config)
         o = OpenWisp(config)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        uninstall = tar.getmember('uninstall.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        uninstall = tar.getmember("uninstall.sh")
         contents = tar.extractfile(uninstall).read().decode()
-        self.assertIn('openvpn --rmtun --dev 2693 --dev-type tap', contents)
-        self.assertNotIn('Stopping Cron', contents)
+        self.assertIn("openvpn --rmtun --dev 2693 --dev-type tap", contents)
+        self.assertNotIn("Stopping Cron", contents)
         # esure is executable
         self.assertEqual(uninstall.mode, 493)
         tar.close()
@@ -175,14 +175,14 @@ config 'system' 'system'
     def test_up_and_down_scripts(self):
         config = deepcopy(self.config)
         o = OpenWisp(config)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        up = tar.getmember('openvpn/vpn_2693_script_up.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        up = tar.getmember("openvpn/vpn_2693_script_up.sh")
         contents = tar.extractfile(up).read().decode()
-        self.assertIn('rm -f /tmp/will_reboot', contents)
+        self.assertIn("rm -f /tmp/will_reboot", contents)
         self.assertEqual(up.mode, 493)  # esure is executable
-        down = tar.getmember('openvpn/vpn_2693_script_down.sh')
+        down = tar.getmember("openvpn/vpn_2693_script_down.sh")
         contents = tar.extractfile(down).read().decode()
-        self.assertIn('REBOOT_DELAY', contents)
+        self.assertIn("REBOOT_DELAY", contents)
         self.assertEqual(down.mode, 493)  # esure is executable
         tar.close()
 
@@ -192,38 +192,38 @@ config 'system' 'system'
         o.generate()
 
     def test_wireless_radio_disabled_0(self):
-        o = OpenWisp({'radios': self.config['radios']})
+        o = OpenWisp({"radios": self.config["radios"]})
         output = o.render()
         self.assertIn("option 'disabled' '0'", output)
 
     def test_tc_script(self):
         config = deepcopy(self.config)
         o = OpenWisp(config)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        tc = tar.getmember('tc_script.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        tc = tar.getmember("tc_script.sh")
         contents = tar.extractfile(tc).read().decode()
-        self.assertIn('tc qdisc del dev tap0 root', contents)
-        self.assertIn('tc qdisc del dev tap0 ingress', contents)
-        self.assertIn('tc qdisc add dev tap0 root handle 1: htb default 2', contents)
+        self.assertIn("tc qdisc del dev tap0 root", contents)
+        self.assertIn("tc qdisc del dev tap0 ingress", contents)
+        self.assertIn("tc qdisc add dev tap0 root handle 1: htb default 2", contents)
         self.assertIn(
-            'tc class add dev tap0 parent 1 classid 1:1 htb rate 1024kbit burst 191k',
+            "tc class add dev tap0 parent 1 classid 1:1 htb rate 1024kbit burst 191k",
             contents,
         )
         self.assertIn(
-            'tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit',
+            "tc class add dev tap0 parent 1:1 classid 1:2 htb rate 512kbit ceil 1024kbit",
             contents,
         )
-        self.assertIn('tc qdisc add dev tap0 ingress', contents)
+        self.assertIn("tc qdisc add dev tap0 ingress", contents)
         line = (
-            'tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police '
-            'rate 2048kbit burst 383k drop flowid :1'
+            "tc filter add dev tap0 parent ffff: preference 0 u32 match u32 0x0 0x0 police "
+            "rate 2048kbit burst 383k drop flowid :1"
         )
         self.assertIn(line, contents)
         tar.close()
 
     def test_cron(self):
         config = deepcopy(self.config)
-        config['files'] = [
+        config["files"] = [
             {
                 "path": "/crontabs/root",
                 "mode": "0644",
@@ -231,13 +231,13 @@ config 'system' 'system'
             }
         ]
         o = OpenWisp(config)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        install = tar.getmember('install.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        install = tar.getmember("install.sh")
         contents = tar.extractfile(install).read().decode()
-        self.assertIn('Starting Cron', contents)
-        uninstall = tar.getmember('uninstall.sh')
+        self.assertIn("Starting Cron", contents)
+        uninstall = tar.getmember("uninstall.sh")
         contents = tar.extractfile(uninstall).read().decode()
-        self.assertIn('Stopping Cron', contents)
+        self.assertIn("Stopping Cron", contents)
         tar.close()
 
     def test_checksum(self):

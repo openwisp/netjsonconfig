@@ -447,14 +447,14 @@ verb 1
     def test_no_status_file(self):
         c = OpenVpn(self._simple_conf)
         output = c.render()
-        self.assertNotIn('status', output)
-        self.assertNotIn('status-version', output)
+        self.assertNotIn("status", output)
+        self.assertNotIn("status-version", output)
 
     def test_status_file_no_seconds(self):
         conf = copy.deepcopy(self._simple_conf)
-        conf['openvpn'][0]['status'] = '/var/run/openvpn.status'
+        conf["openvpn"][0]["status"] = "/var/run/openvpn.status"
         c = OpenVpn(conf)
-        self.assertIn('status /var/run/openvpn.status', c.render())
+        self.assertIn("status /var/run/openvpn.status", c.render())
 
     def test_server_bridge(self):
         c = OpenVpn(
@@ -695,10 +695,10 @@ tls-server
                 ]
             }
         )
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
         self.assertEqual(len(tar.getmembers()), 2)
         # network
-        vpn1 = tar.getmember('test-1.conf')
+        vpn1 = tar.getmember("test-1.conf")
         contents = tar.extractfile(vpn1).read().decode()
         expected = """ca ca.pem
 cert cert.pem
@@ -712,7 +712,7 @@ tls-server
 """
         self.assertEqual(contents, expected)
         # vpn 2
-        vpn2 = tar.getmember('test-2.conf')
+        vpn2 = tar.getmember("test-2.conf")
         contents = tar.extractfile(vpn2).read().decode()
         expected = """ca ca.pem
 cert cert.pem
@@ -729,7 +729,7 @@ tls-server
 
     def test_auto_client_simple(self):
         client_config = OpenVpn.auto_client(
-            'vpn1.test.com',
+            "vpn1.test.com",
             {
                 "ca": "ca.pem",
                 "cert": "cert.pem",
@@ -760,7 +760,7 @@ resolv-retry infinite
 
     def test_auto_client_tls(self):
         client_config = OpenVpn.auto_client(
-            'vpn2.test.com',
+            "vpn2.test.com",
             {
                 "ca": "ca.pem",
                 "cert": "cert.pem",
@@ -813,14 +813,14 @@ tls-client
             "log": "/var/log/openvpn/tap0.log",
         }
         client_config = OpenVpn.auto_client(
-            'vpn1.test.com',
+            "vpn1.test.com",
             config,
-            ca_path='{{ca_path_1}}',
-            ca_contents='{{ca_contents_1}}',
-            cert_path='{{cert_path_1}}',
-            cert_contents='{{cert_contents_1}}',
-            key_path='{{key_path_1}}',
-            key_contents='{{key_contents_1}}',
+            ca_path="{{ca_path_1}}",
+            ca_contents="{{ca_contents_1}}",
+            cert_path="{{cert_path_1}}",
+            cert_contents="{{cert_contents_1}}",
+            key_path="{{key_path_1}}",
+            key_contents="{{key_contents_1}}",
         )
         o = OpenVpn(client_config)
         expected = """# openvpn config: example-vpn
@@ -866,7 +866,7 @@ tls-client
 
     def test_auto_client_ns_cert_type_empty(self):
         client_config = OpenVpn.auto_client(
-            'vpn1.test.com',
+            "vpn1.test.com",
             {
                 "ca": "ca.pem",
                 "cert": "cert.pem",
@@ -902,7 +902,7 @@ tls-client
 
     def _get_client(self):
         return OpenVpn.auto_client(
-            'vpn1.test.com',
+            "vpn1.test.com",
             {
                 "ca": "ca.pem",
                 "cert": "cert.pem",
@@ -918,31 +918,31 @@ tls-client
 
     def test_resolv_retry_number(self):
         client = self._get_client()
-        client['openvpn'][0]['resolv_retry'] = '10'
+        client["openvpn"][0]["resolv_retry"] = "10"
         o = OpenVpn(client)
-        self.assertIn('resolv-retry 10', o.render())
+        self.assertIn("resolv-retry 10", o.render())
 
     def test_resolv_retry_disabled(self):
         client = self._get_client()
-        client['openvpn'][0]['resolv_retry'] = '0'
+        client["openvpn"][0]["resolv_retry"] = "0"
         o = OpenVpn(client)
-        self.assertIn('resolv-retry 0', o.render())
+        self.assertIn("resolv-retry 0", o.render())
 
     def test_resolv_retry_infinite(self):
         client = self._get_client()
-        client['openvpn'][0]['resolv_retry'] = 'infinite'
+        client["openvpn"][0]["resolv_retry"] = "infinite"
         o = OpenVpn(client)
-        self.assertIn('resolv-retry infinite', o.render())
+        self.assertIn("resolv-retry infinite", o.render())
 
     def test_resolv_retry_not_present(self):
         client = self._get_client()
-        del client['openvpn'][0]['resolv_retry']
+        del client["openvpn"][0]["resolv_retry"]
         o = OpenVpn(client)
-        self.assertNotIn('resolv-retry', o.render())
+        self.assertNotIn("resolv-retry", o.render())
 
     def test_resolv_retry_invalid(self):
         client = self._get_client()
-        client['openvpn'][0]['resolv_retry'] = 'true'
+        client["openvpn"][0]["resolv_retry"] = "true"
         o = OpenVpn(client)
         with self.assertRaises(ValidationError):
             o.validate()
@@ -1099,8 +1099,8 @@ tls-auth-key
         server = OpenVpn(self._openvpn_server_tls_auth_config)
         self.assertEqual(server.render(), self._openvpn_server_tls_auth_render)
         client_config = OpenVpn.auto_client(
-            'vpn1.test.com',
-            self._openvpn_server_tls_auth_config['openvpn'][0],
+            "vpn1.test.com",
+            self._openvpn_server_tls_auth_config["openvpn"][0],
         )
         client = OpenVpn(client_config)
         self.assertEqual(client.render(), self._openvpn_client_tls_auth_render)
@@ -1142,4 +1142,4 @@ tls-auth-key
         try:
             client.render()
         except ValidationError:
-            self.fail('ValidationError raised!')
+            self.fail("ValidationError raised!")

@@ -34,7 +34,7 @@ class OpenWrt(BaseBackend):
     ]
     parser = OpenWrtParser
     renderer = OpenWrtRenderer
-    list_identifiers = ['name', 'config_value', 'id']
+    list_identifiers = ["name", "config_value", "id"]
 
     def __init__(
         self, config=None, native=None, templates=None, context=None, dsa=True
@@ -60,21 +60,21 @@ class OpenWrt(BaseBackend):
         super().validate()
         # When VLAN filtering is enabled on a "bridge" interfaces,
         # primary VLAN ID can be set for only one VLAN.
-        for index, interface in enumerate(self.config.get('interfaces', [])):
+        for index, interface in enumerate(self.config.get("interfaces", [])):
             pvid_mapping = []
-            if interface.get('type') != 'bridge':
+            if interface.get("type") != "bridge":
                 continue
-            for vlan in interface.get('vlan_filtering', []):
-                for port in vlan.get('ports', []):
-                    if port.get('primary_vid', False):
-                        if port['ifname'] in pvid_mapping:
+            for vlan in interface.get("vlan_filtering", []):
+                for port in vlan.get("ports", []):
+                    if port.get("primary_vid", False):
+                        if port["ifname"] in pvid_mapping:
                             raise ValidationError(
                                 JsonSchemaError(
                                     f'Invalid configuration triggered by "#/interfaces/{index}"'
-                                    ' says: Primary VID can be set only one VLAN for a port.'
+                                    " says: Primary VID can be set only one VLAN for a port."
                                 )
                             )
-                        pvid_mapping.append(port['ifname'])
+                        pvid_mapping.append(port["ifname"])
 
     def _generate_contents(self, tar):
         """
@@ -86,16 +86,16 @@ class OpenWrt(BaseBackend):
         uci = self.render(files=False)
         # create a list with all the packages (and remove empty entries)
         packages = packages_pattern.split(uci)
-        if '' in packages:
-            packages.remove('')
+        if "" in packages:
+            packages.remove("")
         # create an UCI file for each configuration package used
         for package in packages:
-            lines = package.split('\n')
+            lines = package.split("\n")
             package_name = lines[0]
-            text_contents = '\n'.join(lines[2:])
+            text_contents = "\n".join(lines[2:])
             self._add_file(
                 tar=tar,
-                name='{0}{1}'.format(config_path, package_name),
+                name="{0}{1}".format(config_path, package_name),
                 contents=text_contents,
             )
 
@@ -103,42 +103,42 @@ class OpenWrt(BaseBackend):
     def wireguard_auto_client(cls, **kwargs):
         data = Wireguard.auto_client(**kwargs)
         config = {
-            'interfaces': [
+            "interfaces": [
                 {
-                    'name': data['interface_name'],
-                    'type': 'wireguard',
-                    'private_key': data['client']['private_key'],
-                    'port': data['client']['port'],
+                    "name": data["interface_name"],
+                    "type": "wireguard",
+                    "private_key": data["client"]["private_key"],
+                    "port": data["client"]["port"],
                     # Default values for Wireguard Interface
-                    'mtu': 1420,
-                    'nohostroute': False,
-                    'fwmark': '',
-                    'ip6prefix': [],
-                    'addresses': [],
-                    'network': '',
+                    "mtu": 1420,
+                    "nohostroute": False,
+                    "fwmark": "",
+                    "ip6prefix": [],
+                    "addresses": [],
+                    "network": "",
                 }
             ],
-            'wireguard_peers': [
+            "wireguard_peers": [
                 {
-                    'interface': data['interface_name'],
-                    'public_key': data['server']['public_key'],
-                    'allowed_ips': data['server']['allowed_ips'],
-                    'endpoint_host': data['server']['endpoint_host'],
-                    'endpoint_port': data['server']['endpoint_port'],
+                    "interface": data["interface_name"],
+                    "public_key": data["server"]["public_key"],
+                    "allowed_ips": data["server"]["allowed_ips"],
+                    "endpoint_host": data["server"]["endpoint_host"],
+                    "endpoint_port": data["server"]["endpoint_port"],
                     # Default values for Wireguard Peers
-                    'preshared_key': '',
-                    'persistent_keepalive': 60,
-                    'route_allowed_ips': True,
+                    "preshared_key": "",
+                    "persistent_keepalive": 60,
+                    "route_allowed_ips": True,
                 }
             ],
         }
-        if data['client']['ip_address']:
-            config['interfaces'][0]['addresses'] = [
+        if data["client"]["ip_address"]:
+            config["interfaces"][0]["addresses"] = [
                 {
-                    'proto': 'static',
-                    'family': 'ipv4',
-                    'address': data['client']['ip_address'],
-                    'mask': 32,
+                    "proto": "static",
+                    "family": "ipv4",
+                    "address": data["client"]["ip_address"],
+                    "mask": 32,
                 },
             ]
         return config
@@ -148,28 +148,28 @@ class OpenWrt(BaseBackend):
         config = cls.wireguard_auto_client(**kwargs)
         vxlan_config = VxlanWireguard.auto_client(**kwargs)
         vxlan_interface = {
-            'name': vxlan_config['name'],
-            'type': 'vxlan',
-            'vtep': vxlan_config['server_ip_address'],
-            'port': 4789,
-            'vni': vxlan_config['vni'],
-            'tunlink': config['interfaces'][0]['name'],
+            "name": vxlan_config["name"],
+            "type": "vxlan",
+            "vtep": vxlan_config["server_ip_address"],
+            "port": 4789,
+            "vni": vxlan_config["vni"],
+            "tunlink": config["interfaces"][0]["name"],
             # Default values for VXLAN interface
-            'rxcsum': True,
-            'txcsum': True,
-            'mtu': 1280,
-            'ttl': 64,
-            'mac': '',
-            'disabled': False,
-            'network': '',
+            "rxcsum": True,
+            "txcsum": True,
+            "mtu": 1280,
+            "ttl": 64,
+            "mac": "",
+            "disabled": False,
+            "network": "",
         }
-        config['interfaces'].append(vxlan_interface)
+        config["interfaces"].append(vxlan_interface)
         return config
 
     @classmethod
     def zerotier_auto_client(cls, **kwargs):
         data = ZeroTier.auto_client(**kwargs)
-        return {'zerotier': [data]}
+        return {"zerotier": [data]}
 
     def _validate_radios(self):
         # We use "hwmode" or "band" property of "radio" configuration
@@ -178,13 +178,13 @@ class OpenWrt(BaseBackend):
         # are used to predict the radio frequency. If the channel is
         # set to "auto" (0) in the configuration, then netjsonconfig
         # cannot predict the radio frequency. Thus, raises an error.
-        for radio in self.config.get('radios', []):
-            if radio['protocol'] not in ['802.11n', '802.11ax']:
+        for radio in self.config.get("radios", []):
+            if radio["protocol"] not in ["802.11n", "802.11ax"]:
                 continue
             if (
-                radio.get('band') is None
-                and radio.get('hwmode') is None
-                and radio.get('channel') == 0
+                radio.get("band") is None
+                and radio.get("hwmode") is None
+                and radio.get("channel") == 0
             ):
                 raise JsonSchemaError(
                     '"channel" cannot be set to "auto" when'

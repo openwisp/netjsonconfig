@@ -13,10 +13,10 @@ class BaseParser(object):
             data = self.parse_text(config)
         # presence of read() method
         # indicates a file-like object
-        elif hasattr(config, 'read'):
+        elif hasattr(config, "read"):
             data = self.parse_tar(config)
         else:
-            raise ParseError('Unrecognized format')
+            raise ParseError("Unrecognized format")
         self.intermediate_data = data
 
     def parse_text(self, config):

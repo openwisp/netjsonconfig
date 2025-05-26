@@ -48,10 +48,10 @@ def merge_list(list1, list2, identifiers=None):
     :returns: merged ``list``
     """
     identifiers = identifiers or []
-    dict_map = {'list1': OrderedDict(), 'list2': OrderedDict()}
+    dict_map = {"list1": OrderedDict(), "list2": OrderedDict()}
     counter = 1
     for list_ in [list1, list2]:
-        container = dict_map['list{0}'.format(counter)]
+        container = dict_map["list{0}".format(counter)]
         for el in list_:
             # merge by internal python id by default
             key = id(el)
@@ -60,7 +60,7 @@ def merge_list(list1, list2, identifiers=None):
             # This is needed because some templates may share
             # one or multiple common files and these do not
             # not have to be duplicated.
-            if counter == 2 and el in dict_map['list1'].values():
+            if counter == 2 and el in dict_map["list1"].values():
                 continue
             # if el is a dict, merge by keys specified in ``identifiers``
             if isinstance(el, dict):
@@ -74,7 +74,7 @@ def merge_list(list1, list2, identifiers=None):
                 key = tuple(key)
             container[key] = deepcopy(el)
         counter += 1
-    merged = merge_config(dict_map['list1'], dict_map['list2'])
+    merged = merge_config(dict_map["list1"], dict_map["list2"])
     return list(merged.values())
 
 
@@ -82,7 +82,7 @@ def sorted_dict(dict_):
     return OrderedDict(sorted(dict_.items()))
 
 
-var_pattern = re.compile(r'\{\{\s*(\w*)\s*\}\}')
+var_pattern = re.compile(r"\{\{\s*(\w*)\s*\}\}")
 
 
 def evaluate_vars(data, context=None):
@@ -110,7 +110,7 @@ def evaluate_vars(data, context=None):
             # variable, otherwise different variables would get the same value
             # (see https://github.com/openwisp/netjsonconfig/issues/55)
             if len(vars_found) > 1:
-                pattern = r'\{\{(\s*%s\s*)\}\}' % var
+                pattern = r"\{\{(\s*%s\s*)\}\}" % var
             # in case of single variables, use the precompiled
             # regexp pattern to save computation
             else:
@@ -140,4 +140,4 @@ class _TabsMixin(object):  # pragma: nocover
         """
         replace 4 spaces with 1 tab
         """
-        return string.replace('    ', '\t')
+        return string.replace("    ", "\t")

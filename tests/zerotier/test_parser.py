@@ -64,7 +64,7 @@ class TestParser(unittest.TestCase):
 
     # Multiple test config
     _TEST_MULTIPLE_CONFIG = deepcopy(_TEST_CONFIG)
-    _TEST_MULTIPLE_CONFIG['zerotier'].append(
+    _TEST_MULTIPLE_CONFIG["zerotier"].append(
         {
             "id": "9536600adf654322",
             "nwid": "9536600adf654322",
@@ -95,7 +95,7 @@ class TestParser(unittest.TestCase):
         except Exception as e:
             self.assertIsInstance(e, ParseError)
         else:
-            self.fail('Exception not raised')
+            self.fail("Exception not raised")
 
     def test_parse_text(self):
         native = """// zerotier controller config: 9536600adf654321.json
@@ -516,11 +516,11 @@ class TestParser(unittest.TestCase):
 
     def test_parse_tar_file(self):
         o = ZeroTier(self._TEST_MULTIPLE_CONFIG)
-        o.write(name='test', path='/tmp')
-        with open('/tmp/test.tar.gz', 'rb') as f:
+        o.write(name="test", path="/tmp")
+        with open("/tmp/test.tar.gz", "rb") as f:
             ZeroTier(native=f)
 
-        os.remove('/tmp/test.tar.gz')
+        os.remove("/tmp/test.tar.gz")
         self.assertDictEqual(o.config, self._TEST_MULTIPLE_CONFIG)
 
     def test_file_path_min_length(self):

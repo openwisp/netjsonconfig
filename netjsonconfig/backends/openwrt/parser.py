@@ -5,10 +5,10 @@ from collections import OrderedDict
 from ...utils import sorted_dict
 from ..base.parser import BaseParser
 
-packages_pattern = re.compile(r'^package\s', flags=re.MULTILINE)
-block_pattern = re.compile(r'^config\s', flags=re.MULTILINE)
-config_pattern = re.compile(r'^(option|list)\s*([^\s]*)\s*(.*)')
-config_path = 'etc/config/'
+packages_pattern = re.compile(r"^package\s", flags=re.MULTILINE)
+block_pattern = re.compile(r"^config\s", flags=re.MULTILINE)
+config_pattern = re.compile(r"^(option|list)\s*([^\s]*)\s*(.*)")
+config_path = "etc/config/"
 
 
 class OpenWrtParser(BaseParser):
@@ -16,22 +16,22 @@ class OpenWrtParser(BaseParser):
         return self._get_uci_packages(config)
 
     def parse_tar(self, tar):
-        fileobj = tar.buffer if hasattr(tar, 'buffer') else tar
+        fileobj = tar.buffer if hasattr(tar, "buffer") else tar
         tar = tarfile.open(fileobj=fileobj)
-        text = ''
+        text = ""
         for member in tar.getmembers():
             if not member.name.startswith(config_path):
                 continue
-            text += 'package {name}\n\n{contents}'.format(
+            text += "package {name}\n\n{contents}".format(
                 **{
-                    'name': member.name.replace(config_path, ''),
-                    'contents': tar.extractfile(member).read().decode(),
+                    "name": member.name.replace(config_path, ""),
+                    "contents": tar.extractfile(member).read().decode(),
                 }
             )
         return self._get_uci_packages(text)
 
     def _strip_quotes(self, value):
-        return value.replace('\'', '').replace('\"', '')
+        return value.replace("'", "").replace('"', "")
 
     def _get_uci_packages(self, text):
         results = re.split(packages_pattern, text)
@@ -40,7 +40,7 @@ class OpenWrtParser(BaseParser):
             result = result.strip()
             if not result:
                 continue
-            lines = result.split('\n')
+            lines = result.split("\n")
             name = lines[0]
             # fmt: off
             contents = result[len(name):]
@@ -57,16 +57,16 @@ class OpenWrtParser(BaseParser):
             if not result:
                 continue
             counter += 1
-            lines = result.split('\n')
+            lines = result.split("\n")
             parts = lines[0].split()
             config_type = self._strip_quotes(parts[0])
             try:
                 config_name = self._strip_quotes(parts[1])
             except IndexError:
-                config_name = '{0}_{1}'.format(config_type, counter)
+                config_name = "{0}_{1}".format(config_type, counter)
             block = OrderedDict()
-            block['.type'] = config_type
-            block['.name'] = config_name
+            block[".type"] = config_type
+            block[".name"] = config_name
             # loop over rest of lines
             for line in lines[1:]:
                 match = re.search(config_pattern, line.strip())
@@ -76,7 +76,7 @@ class OpenWrtParser(BaseParser):
                 key = self._strip_quotes(parts[1])
                 value = self._strip_quotes(parts[2])
                 # simple options
-                if parts[0] == 'option':
+                if parts[0] == "option":
                     block[key] = value
                 # list options
                 else:
@@ -90,11 +90,11 @@ class OpenWrtParser(BaseParser):
         # under "device" config_type. netjsonconfig
         # process bridges using the interface converter,
         # therefore we need to update block type here.
-        if block['.type'] in ['device', 'bridge-vlan']:
-            if block.get('type') in ['bridge', '8021q', '8021ad']:
-                block['bridge_21'] = True
-            elif block['.type'] == 'bridge-vlan':
-                block['type'] = 'bridge-vlan'
-            elif not block.get('type', None):
-                block['type'] = 'device'
-            block['.type'] = 'interface'
+        if block[".type"] in ["device", "bridge-vlan"]:
+            if block.get("type") in ["bridge", "8021q", "8021ad"]:
+                block["bridge_21"] = True
+            elif block[".type"] == "bridge-vlan":
+                block["type"] = "bridge-vlan"
+            elif not block.get("type", None):
+                block["type"] = "device"
+            block[".type"] = "interface"

@@ -17,10 +17,10 @@ class ZeroTier(BaseVpnBackend):
     @classmethod
     def auto_client(
         cls,
-        name='global',
+        name="global",
         networks=None,
-        identity_secret='{{secret}}',
-        config_path='/etc/openwisp/zerotier',
+        identity_secret="{{secret}}",
+        config_path="/etc/openwisp/zerotier",
         disabled=False,
         client_options=None,
     ):
@@ -29,9 +29,9 @@ class ZeroTier(BaseVpnBackend):
         for network in networks:
             network.update(client_options)
         return {
-            'name': name,
-            'networks': networks,
-            'secret': identity_secret,
-            'config_path': config_path,
-            'disabled': disabled,
+            "name": name,
+            "networks": networks,
+            "secret": identity_secret,
+            "config_path": config_path,
+            "disabled": disabled,
         }

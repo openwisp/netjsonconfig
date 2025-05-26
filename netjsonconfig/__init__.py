@@ -9,11 +9,11 @@ from .version import VERSION, __version__, get_version  # noqa
 
 def get_backends():
     default = {
-        'openwrt': OpenWrt,
-        'openwisp': OpenWisp,
-        'openvpn': OpenVpn,
-        'wireguard': Wireguard,
-        'vxlan': VxlanWireguard,
-        'zerotier': ZeroTier,
+        "openwrt": OpenWrt,
+        "openwisp": OpenWisp,
+        "openvpn": OpenVpn,
+        "wireguard": Wireguard,
+        "vxlan": VxlanWireguard,
+        "zerotier": ZeroTier,
     }
     return default

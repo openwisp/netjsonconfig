@@ -142,7 +142,7 @@ config route 'route1'
         o = OpenWrt(native=self._routes_nogw_uci)
         self.assertEqual(o.config, self._routes_nogw_netjson)
 
-        with self.subTest('minimalistic route'):
+        with self.subTest("minimalistic route"):
             minimal_uci = """package network
 
 config route 'route1'
@@ -261,12 +261,12 @@ config rule 'rule1'
         o = OpenWrt(rule)
         with self.assertRaisesRegex(ValidationError, "'wrong' is not a 'cidr'"):
             o.validate()
-        rule['ip_rules'][0]['src'] = '192.168.1.0/24'
+        rule["ip_rules"][0]["src"] = "192.168.1.0/24"
         o = OpenWrt(rule)
         with self.assertRaisesRegex(ValidationError, "'wrong1' is not a 'cidr'"):
             o.validate()
         # fix 'dest' and expect no ValidationError raised
-        rule['ip_rules'][0]['dest'] = '192.168.1.0/24'
+        rule["ip_rules"][0]["dest"] = "192.168.1.0/24"
         o = OpenWrt(rule)
         o.validate()
 

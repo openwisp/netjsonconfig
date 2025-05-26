@@ -19,7 +19,7 @@ class BaseRenderer(object):
     @property
     def template_env(self):
         return Environment(
-            loader=PackageLoader(self.env_path, 'templates'), trim_blocks=True
+            loader=PackageLoader(self.env_path, "templates"), trim_blocks=True
         )
 
     @classmethod
@@ -27,7 +27,7 @@ class BaseRenderer(object):
         """
         Returns the name of the render class without its prefix
         """
-        return str(cls.__name__).replace('Renderer', '').lower()
+        return str(cls.__name__).replace("Renderer", "").lower()
 
     def cleanup(self, output):
         """
@@ -42,9 +42,9 @@ class BaseRenderer(object):
         Renders configuration by using the jinja2 templating engine
         """
         # get jinja2 template
-        template_name = '{0}.jinja2'.format(self.get_name())
+        template_name = "{0}.jinja2".format(self.get_name())
         template = self.template_env.get_template(template_name)
         # render template and cleanup
-        context = getattr(self.backend, 'intermediate_data', {})
+        context = getattr(self.backend, "intermediate_data", {})
         output = template.render(data=context)
         return self.cleanup(output)

@@ -138,10 +138,10 @@ PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
                 ]
             }
         )
-        tar = tarfile.open(fileobj=c.generate(), mode='r')
+        tar = tarfile.open(fileobj=c.generate(), mode="r")
         self.assertEqual(len(tar.getmembers()), 1)
         # network
-        vpn1 = tar.getmember('test1.conf')
+        vpn1 = tar.getmember("test1.conf")
         contents = tar.extractfile(vpn1).read().decode()
         expected = """[Interface]
 Address = 10.0.0.1/24
@@ -155,44 +155,44 @@ PublicKey = jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=
         self.assertEqual(contents, expected)
 
     def test_auto_client(self):
-        with self.subTest('No arguments are provided'):
+        with self.subTest("No arguments are provided"):
             expected = {
-                'interface_name': '',
-                'client': {
-                    'port': 51820,
-                    'private_key': '{{private_key}}',
-                    'ip_address': None,
+                "interface_name": "",
+                "client": {
+                    "port": 51820,
+                    "private_key": "{{private_key}}",
+                    "ip_address": None,
                 },
-                'server': {
-                    'public_key': '',
-                    'endpoint_host': '',
-                    'endpoint_port': 51820,
-                    'allowed_ips': [''],
+                "server": {
+                    "public_key": "",
+                    "endpoint_host": "",
+                    "endpoint_port": 51820,
+                    "allowed_ips": [""],
                 },
             }
             self.assertDictEqual(Wireguard.auto_client(), expected)
-        with self.subTest('Required arguments are provided'):
+        with self.subTest("Required arguments are provided"):
             expected = {
-                'interface_name': 'wg',
-                'client': {
-                    'port': 51820,
-                    'private_key': '{{private_key}}',
-                    'ip_address': '10.0.0.2',
+                "interface_name": "wg",
+                "client": {
+                    "port": 51820,
+                    "private_key": "{{private_key}}",
+                    "ip_address": "10.0.0.2",
                 },
-                'server': {
-                    'public_key': 'server_public_key',
-                    'endpoint_host': '0.0.0.0',
-                    'endpoint_port': 51820,
-                    'allowed_ips': ['10.0.0.1/24'],
+                "server": {
+                    "public_key": "server_public_key",
+                    "endpoint_host": "0.0.0.0",
+                    "endpoint_port": 51820,
+                    "allowed_ips": ["10.0.0.1/24"],
                 },
             }
             self.assertDictEqual(
                 Wireguard.auto_client(
-                    host='0.0.0.0',
-                    public_key='server_public_key',
-                    server={'name': 'wg', 'port': 51820},
-                    server_ip_network='10.0.0.1/24',
-                    ip_address='10.0.0.2',
+                    host="0.0.0.0",
+                    public_key="server_public_key",
+                    server={"name": "wg", "port": 51820},
+                    server_ip_network="10.0.0.1/24",
+                    ip_address="10.0.0.2",
                 ),
                 expected,
             )

@@ -1,6 +1,7 @@
 """
 OpenVpn 2.3 specific JSON-Schema definition
 """
+
 from copy import deepcopy
 
 from ...schema import schema as default_schema
@@ -448,7 +449,7 @@ base_openvpn_schema = {
                 "status": {
                     "title": "status file",
                     "description": "Write operational status to file every n seconds; "
-                    "eg: \"/var/run/openvpn.status 10\"",
+                    'eg: "/var/run/openvpn.status 10"',
                     "type": "string",
                     "pattern": "^((\\S*) ([0-9]*)|(\\S*)|)$",
                     "propertyOrder": 35,
@@ -690,7 +691,7 @@ base_openvpn_schema = {
                         },
                         "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "
-                            "nsCertType designation of \"server\"",
+                            'nsCertType designation of "server"',
                             "enum": ["", "server"],
                             "options": {"enum_titles": ["disabled", "server"]},
                         },
@@ -765,7 +766,7 @@ base_openvpn_schema = {
                 },
                 "ns_cert_type": {
                     "description": "Require that peer certificate was signed with an explicit "
-                    "nsCertType designation of \"client\"",
+                    'nsCertType designation of "client"',
                     "enum": ["", "client"],
                     "options": {"enum_titles": ["disabled", "client"]},
                 },
@@ -836,7 +837,7 @@ base_openvpn_schema = {
                     "properties": {
                         "server_bridge": {
                             "title": "server-bridge",
-                            "description": "Example usage: \"10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254\". "
+                            "description": 'Example usage: "10.8.0.4 255.255.255.0 10.8.0.128 10.8.0.254". '
                             "If server-bridge is used without any parameters, it will "
                             "enable a DHCP-proxy mode, where connecting OpenVPN clients "
                             "will receive an IP address for their TAP adapter from the "
@@ -863,10 +864,10 @@ base_openvpn_schema = {
                     "properties": {
                         "server": {
                             "title": "server",
-                            "description": "Example usage: \"10.8.0.0 255.255.255.0\". "
+                            "description": 'Example usage: "10.8.0.0 255.255.255.0". '
                             "This directive will set up an OpenVPN server which will "
                             "allocate addresses to clients out of the given network/netmask. "
-                            "The server itself will take the \".1\" address of the given "
+                            'The server itself will take the ".1" address of the given '
                             "network for use as the server-side endpoint of the local "
                             "TUN/TAP interface.",
                             "type": "string",
@@ -903,4 +904,4 @@ base_openvpn_schema = {
 }
 
 schema = deepcopy(base_openvpn_schema)
-schema['properties']['files'] = default_schema['properties']['files']
+schema["properties"]["files"] = default_schema["properties"]["files"]

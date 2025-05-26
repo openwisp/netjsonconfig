@@ -2,9 +2,9 @@ import re
 
 from ..base.parser import BaseParser
 
-vpn_pattern = re.compile(r'^# wireguard config:\s', flags=re.MULTILINE)
-config_pattern = re.compile(r'^([^\s]*) ?(.*)$')
-config_suffix = '.conf'
+vpn_pattern = re.compile(r"^# wireguard config:\s", flags=re.MULTILINE)
+config_pattern = re.compile(r"^([^\s]*) ?(.*)$")
+config_suffix = ".conf"
 
 
 class WireguardParser(BaseParser):

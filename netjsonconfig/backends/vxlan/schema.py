@@ -51,4 +51,4 @@ base_vxlan_properties = {
 
 
 schema = deepcopy(base_schema)
-schema['properties'].update(base_vxlan_properties)
+schema["properties"].update(base_vxlan_properties)

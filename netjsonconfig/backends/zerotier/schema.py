@@ -345,5 +345,5 @@ base_zerotier_schema = {
 }
 
 schema = deepcopy(base_zerotier_schema)
-schema['required'] = ['zerotier']
-schema['properties']['files'] = default_schema['properties']['files']
+schema["required"] = ["zerotier"]
+schema["properties"]["files"] = default_schema["properties"]["files"]

@@ -38,12 +38,12 @@ config system system
         self.assertDictEqual(o.intermediate_data, self._system_intermediate)
 
     def test_parse_no_quotes(self):
-        native = self._tabs(self._system_uci.replace('\'', ''))
+        native = self._tabs(self._system_uci.replace("'", ""))
         o = OpenWrt(native=native)
         self.assertDictEqual(o.intermediate_data, self._system_intermediate)
 
     def test_parse_double_quotes(self):
-        native = self._tabs(self._system_uci.replace('\'', '"'))
+        native = self._tabs(self._system_uci.replace("'", '"'))
         o = OpenWrt(native=native)
         self.assertDictEqual(o.intermediate_data, self._system_intermediate)
 
@@ -215,15 +215,15 @@ config interface 'lan'
 
     def test_parse_tar_file(self):
         o = OpenWrt({"general": {"hostname": "parse-tar-file"}})
-        o.write(name='test', path='/tmp')
-        with open('/tmp/test.tar.gz', 'rb') as f:
+        o.write(name="test", path="/tmp")
+        with open("/tmp/test.tar.gz", "rb") as f:
             OpenWrt(native=f)
         expected = {
             "system": [
                 {".type": "system", ".name": "system", "hostname": "parse-tar-file"}
             ]
         }
-        os.remove('/tmp/test.tar.gz')
+        os.remove("/tmp/test.tar.gz")
         self.assertDictEqual(o.intermediate_data, expected)
 
     def test_parse_exception(self):
@@ -232,13 +232,13 @@ config interface 'lan'
         except Exception as e:
             self.assertIsInstance(e, ParseError)
         else:
-            self.fail('Exception not raised')
+            self.fail("Exception not raised")
 
     # ensure parser doesn't break when
     # dealing with dirty configurations
 
     def test_parse_empty(self):
-        OpenWrt(native='')
+        OpenWrt(native="")
 
     def test_parse_empty_package(self):
         native = self._tabs(

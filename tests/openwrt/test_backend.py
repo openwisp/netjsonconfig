@@ -14,10 +14,10 @@ class TestBackend(unittest.TestCase, _TabsMixin):
     maxDiff = None
 
     def test_config_copy(self):
-        config = {'interfaces': []}
+        config = {"interfaces": []}
         o = OpenWrt(config)
         o.validate()
-        self.assertDictEqual(config, {'interfaces': []})
+        self.assertDictEqual(config, {"interfaces": []})
 
     def test_json_method(self):
         config = {
@@ -41,27 +41,27 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         self.assertEqual(json.loads(o.json()), config)
 
     def test_string_argument(self):
-        OpenWrt('{}')
+        OpenWrt("{}")
 
     def test_validate(self):
-        o = OpenWrt({'interfaces': 'WRONG'})
+        o = OpenWrt({"interfaces": "WRONG"})
         with self.assertRaises(ValidationError):
             o.validate()
 
-        o = OpenWrt({'interfaces': []})
+        o = OpenWrt({"interfaces": []})
         o.validate()
 
-        o.config['interfaces'] = 'CHANGED'
+        o.config["interfaces"] = "CHANGED"
         try:
             o.validate()
         except ValidationError as e:
-            self.assertEqual(e.details.instance, 'CHANGED')
+            self.assertEqual(e.details.instance, "CHANGED")
             self.assertIn("ValidationError 'CHANGED' is not of type 'array'", str(e))
         else:
-            self.fail('ValidationError not raised')
+            self.fail("ValidationError not raised")
 
     def test_find_bridge_skip_error(self):
-        o = OpenWrt({'interfaces': ['WRONG']})
+        o = OpenWrt({"interfaces": ["WRONG"]})
         with self.assertRaises(ValidationError):
             o.validate()
 
@@ -69,7 +69,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         with self.assertRaises(TypeError):
             OpenWrt([])
         with self.assertRaises(TypeError):
-            OpenWrt(r'NOTJSON[]\{\}')
+            OpenWrt(r"NOTJSON[]\{\}")
 
     def test_system_invalid_timezone(self):
         o = OpenWrt({"general": {"hostname": "test_system", "timezone": "WRONG"}})
@@ -150,10 +150,10 @@ class TestBackend(unittest.TestCase, _TabsMixin):
 
     def test_generate(self):
         o = OpenWrt(self._config1)
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
         self.assertEqual(len(tar.getmembers()), 2)
         # network
-        network = tar.getmember('etc/config/network')
+        network = tar.getmember("etc/config/network")
         contents = tar.extractfile(network).read().decode()
         expected = self._tabs(
             """config interface 'wlan0'
@@ -166,7 +166,7 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         )
         self.assertEqual(contents, expected)
         # wireless
-        wireless = tar.getmember('etc/config/wireless')
+        wireless = tar.getmember("etc/config/wireless")
         contents = tar.extractfile(wireless).read().decode()
         expected = self._tabs(
             """config wifi-device 'radio0'
@@ -195,21 +195,21 @@ config wifi-iface 'wifi_wlan0'
 
     def test_write(self):
         o = OpenWrt({"general": {"hostname": "test"}})
-        o.write(name='test', path='/tmp')
-        tar = tarfile.open('/tmp/test.tar.gz', mode='r')
+        o.write(name="test", path="/tmp")
+        tar = tarfile.open("/tmp/test.tar.gz", mode="r")
         self.assertEqual(len(tar.getmembers()), 1)
         tar.close()
-        os.remove('/tmp/test.tar.gz')
+        os.remove("/tmp/test.tar.gz")
 
     def test_templates_type_error(self):
         config = {"general": {"hostname": "test_templates"}}
         with self.assertRaises(TypeError):
-            OpenWrt(config, templates={'a': 'a'})
+            OpenWrt(config, templates={"a": "a"})
 
     def test_templates_config_error(self):
         config = {"general": {"hostname": "test_templates"}}
         with self.assertRaises(TypeError):
-            OpenWrt(config, templates=['O{]O'])
+            OpenWrt(config, templates=["O{]O"])
 
     def test_templates(self):
         loopback_template = {
@@ -263,14 +263,14 @@ config wifi-iface 'wifi_wlan0'
         }
         config = {"general": {"hostname": "test_templates"}}
         o = OpenWrt(config, templates=[loopback_template, radio_template])
-        self.assertEqual(o.config['general']['hostname'], 'test_templates')
-        self.assertIn('radios', o.config)
-        self.assertEqual(len(o.config['radios']), 1)
-        self.assertEqual(o.config['radios'][0]['name'], 'radio0')
-        self.assertIn('interfaces', o.config)
-        self.assertEqual(len(o.config['interfaces']), 2)
-        self.assertEqual(o.config['interfaces'][0]['name'], 'lo')
-        self.assertEqual(o.config['interfaces'][1]['name'], 'wlan0')
+        self.assertEqual(o.config["general"]["hostname"], "test_templates")
+        self.assertIn("radios", o.config)
+        self.assertEqual(len(o.config["radios"]), 1)
+        self.assertEqual(o.config["radios"][0]["name"], "radio0")
+        self.assertIn("interfaces", o.config)
+        self.assertEqual(len(o.config["interfaces"]), 2)
+        self.assertEqual(o.config["interfaces"][0]["name"], "lo")
+        self.assertEqual(o.config["interfaces"][1]["name"], "wlan0")
 
     def test_file_inclusion(self):
         o = OpenWrt(
@@ -287,21 +287,21 @@ config wifi-iface 'wifi_wlan0'
             }
         )
         output = o.render()
-        self.assertNotIn('package files', output)
-        self.assertIn('* * * * * echo', output)
+        self.assertNotIn("package files", output)
+        self.assertIn("* * * * * echo", output)
         # ensure the additional files are there present in the tar.gz archive
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
         self.assertEqual(len(tar.getmembers()), 2)
         # first file
-        crontab = tar.getmember('etc/crontabs/root')
+        crontab = tar.getmember("etc/crontabs/root")
         contents = tar.extractfile(crontab).read().decode()
-        self.assertEqual(contents, o.config['files'][0]['contents'])
+        self.assertEqual(contents, o.config["files"][0]["contents"])
         self.assertEqual(crontab.mtime, 0)
         self.assertEqual(crontab.mode, 420)
         # second file
-        dummy = tar.getmember('etc/dummy.conf')
+        dummy = tar.getmember("etc/dummy.conf")
         contents = tar.extractfile(dummy).read().decode()
-        self.assertEqual(contents, o.config['files'][1]['contents'])
+        self.assertEqual(contents, o.config["files"][1]["contents"])
         self.assertEqual(dummy.mode, 420)
         tar.close()
 
@@ -317,8 +317,8 @@ config wifi-iface 'wifi_wlan0'
                 ]
             }
         )
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
-        script = tar.getmember('tmp/hello.sh')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        script = tar.getmember("tmp/hello.sh")
         # check permissions
         self.assertEqual(script.mode, 493)
         tar.close()
@@ -334,25 +334,25 @@ config wifi-iface 'wifi_wlan0'
             ]
         }
         # valid
-        c['files'][0]['mode'] = '3555'
+        c["files"][0]["mode"] = "3555"
         o = OpenWrt(c)
         o.validate()
         # valid
-        c['files'][0]['mode'] = '755'
+        c["files"][0]["mode"] = "755"
         o = OpenWrt(c)
         o.validate()
         # too long
-        c['files'][0]['mode'] = '00777'
+        c["files"][0]["mode"] = "00777"
         o = OpenWrt(c)
         with self.assertRaises(ValidationError):
             o.validate()
         # too short
-        c['files'][0]['mode'] = '75'
+        c["files"][0]["mode"] = "75"
         o = OpenWrt(c)
         with self.assertRaises(ValidationError):
             o.validate()
         # invalid
-        c['files'][0]['mode'] = '0855'
+        c["files"][0]["mode"] = "0855"
         o = OpenWrt(c)
         with self.assertRaises(ValidationError):
             o.validate()
@@ -374,7 +374,7 @@ config wifi-iface 'wifi_wlan0'
             "interfaces": [{"name": "eth0", "type": "ethernet", "disabled": True}]
         }
         o = OpenWrt(config, templates=[template])
-        self.assertFalse(o.config['interfaces'][0]['disabled'])
+        self.assertFalse(o.config["interfaces"][0]["disabled"])
 
     def test_value_error(self):
         with self.assertRaises(ValueError):
@@ -419,35 +419,35 @@ config wifi-iface 'wifi_wlan0'
 """
         self.assertEqual(o.render(), expected)
         # ensure the additional files are there present in the tar.gz archive
-        tar = tarfile.open(fileobj=o.generate(), mode='r')
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
         self.assertEqual(len(tar.getmembers()), 1)
 
     def _get_wireguard_empty_configuration(self):
         return {
-            'interfaces': [
+            "interfaces": [
                 {
-                    'addresses': [],
-                    'fwmark': '',
-                    'ip6prefix': [],
-                    'mtu': 1420,
-                    'name': '',
-                    'network': '',
-                    'nohostroute': False,
-                    'port': 51820,
-                    'private_key': '{{private_key}}',
-                    'type': 'wireguard',
+                    "addresses": [],
+                    "fwmark": "",
+                    "ip6prefix": [],
+                    "mtu": 1420,
+                    "name": "",
+                    "network": "",
+                    "nohostroute": False,
+                    "port": 51820,
+                    "private_key": "{{private_key}}",
+                    "type": "wireguard",
                 }
             ],
-            'wireguard_peers': [
+            "wireguard_peers": [
                 {
-                    'allowed_ips': [''],
-                    'endpoint_host': '',
-                    'endpoint_port': 51820,
-                    'interface': '',
-                    'persistent_keepalive': 60,
-                    'preshared_key': '',
-                    'public_key': '',
-                    'route_allowed_ips': True,
+                    "allowed_ips": [""],
+                    "endpoint_host": "",
+                    "endpoint_port": 51820,
+                    "interface": "",
+                    "persistent_keepalive": 60,
+                    "preshared_key": "",
+                    "public_key": "",
+                    "route_allowed_ips": True,
                 }
             ],
         }
@@ -455,128 +455,128 @@ config wifi-iface 'wifi_wlan0'
     def _get_vxlan_wireguard_empty_configuration(self):
         wireguard_config = self._get_wireguard_empty_configuration()
         vxlan_config = {
-            'disabled': False,
-            'mac': '',
-            'mtu': 1280,
-            'name': 'vxlan',
-            'network': '',
-            'port': 4789,
-            'rxcsum': True,
-            'ttl': 64,
-            'tunlink': '',
-            'txcsum': True,
-            'type': 'vxlan',
-            'vni': 0,
-            'vtep': '',
+            "disabled": False,
+            "mac": "",
+            "mtu": 1280,
+            "name": "vxlan",
+            "network": "",
+            "port": 4789,
+            "rxcsum": True,
+            "ttl": 64,
+            "tunlink": "",
+            "txcsum": True,
+            "type": "vxlan",
+            "vni": 0,
+            "vtep": "",
         }
-        wireguard_config['interfaces'].append(vxlan_config)
+        wireguard_config["interfaces"].append(vxlan_config)
         return wireguard_config
 
     def test_wireguard_auto_client(self):
-        with self.subTest('No arguments provided'):
+        with self.subTest("No arguments provided"):
             expected = self._get_wireguard_empty_configuration()
             self.assertDictEqual(OpenWrt.wireguard_auto_client(), expected)
-        with self.subTest('Required arguments provided'):
+        with self.subTest("Required arguments provided"):
             expected = self._get_wireguard_empty_configuration()
-            expected['interfaces'][0].update(
+            expected["interfaces"][0].update(
                 {
-                    'name': 'wg',
-                    'private_key': '{{private_key}}',
-                    'addresses': [
+                    "name": "wg",
+                    "private_key": "{{private_key}}",
+                    "addresses": [
                         {
-                            'address': '10.0.0.2',
-                            'family': 'ipv4',
-                            'mask': 32,
-                            'proto': 'static',
+                            "address": "10.0.0.2",
+                            "family": "ipv4",
+                            "mask": 32,
+                            "proto": "static",
                         },
                     ],
                 }
             )
-            expected['wireguard_peers'][0].update(
+            expected["wireguard_peers"][0].update(
                 {
-                    'allowed_ips': ['10.0.0.1/24'],
-                    'endpoint_host': '0.0.0.0',
-                    'public_key': 'server_public_key',
-                    'interface': 'wg',
+                    "allowed_ips": ["10.0.0.1/24"],
+                    "endpoint_host": "0.0.0.0",
+                    "public_key": "server_public_key",
+                    "interface": "wg",
                 }
             )
             self.assertDictEqual(
                 OpenWrt.wireguard_auto_client(
-                    host='0.0.0.0',
-                    public_key='server_public_key',
-                    server={'name': 'wg', 'port': 51820},
-                    server_ip_network='10.0.0.1/24',
-                    ip_address='10.0.0.2',
+                    host="0.0.0.0",
+                    public_key="server_public_key",
+                    server={"name": "wg", "port": 51820},
+                    server_ip_network="10.0.0.1/24",
+                    ip_address="10.0.0.2",
                 ),
                 expected,
             )
 
     def test_vxlan_wireguard_auto_client(self):
-        with self.subTest('No arguments provided'):
+        with self.subTest("No arguments provided"):
             expected = self._get_vxlan_wireguard_empty_configuration()
             self.assertDictEqual(OpenWrt.vxlan_wireguard_auto_client(), expected)
-        with self.subTest('Required arguments provided'):
+        with self.subTest("Required arguments provided"):
             expected = self._get_vxlan_wireguard_empty_configuration()
-            expected['interfaces'][0].update(
-                {'name': 'wg', 'private_key': '{{private_key}}'}
+            expected["interfaces"][0].update(
+                {"name": "wg", "private_key": "{{private_key}}"}
             )
-            expected['wireguard_peers'][0].update(
+            expected["wireguard_peers"][0].update(
                 {
-                    'allowed_ips': ['10.0.0.1/24'],
-                    'endpoint_host': '0.0.0.0',
-                    'public_key': 'server_public_key',
-                    'interface': 'wg',
+                    "allowed_ips": ["10.0.0.1/24"],
+                    "endpoint_host": "0.0.0.0",
+                    "public_key": "server_public_key",
+                    "interface": "wg",
                 }
             )
-            expected['interfaces'][1].update(
-                {'tunlink': 'wg', 'vni': 1, 'vtep': '10.0.0.1'}
+            expected["interfaces"][1].update(
+                {"tunlink": "wg", "vni": 1, "vtep": "10.0.0.1"}
             )
             self.assertDictEqual(
                 OpenWrt.vxlan_wireguard_auto_client(
-                    host='0.0.0.0',
-                    public_key='server_public_key',
-                    server={'name': 'wg', 'port': 51820},
-                    server_ip_network='10.0.0.1/24',
+                    host="0.0.0.0",
+                    public_key="server_public_key",
+                    server={"name": "wg", "port": 51820},
+                    server_ip_network="10.0.0.1/24",
                     vni=1,
-                    server_ip_address='10.0.0.1',
+                    server_ip_address="10.0.0.1",
                 ),
                 expected,
             )
 
     def test_zerotier_auto_client(self):
-        with self.subTest('No arguments provided'):
+        with self.subTest("No arguments provided"):
             expected = {
-                'zerotier': [
+                "zerotier": [
                     {
-                        'name': 'global',
-                        'networks': [],
-                        'secret': '{{secret}}',
-                        'config_path': '/etc/openwisp/zerotier',
-                        'disabled': False,
+                        "name": "global",
+                        "networks": [],
+                        "secret": "{{secret}}",
+                        "config_path": "/etc/openwisp/zerotier",
+                        "disabled": False,
                     }
                 ]
             }
             self.assertDictEqual(OpenWrt.zerotier_auto_client(), expected)
-        with self.subTest('Required arguments provided'):
+        with self.subTest("Required arguments provided"):
             expected = {
-                'zerotier': [
+                "zerotier": [
                     {
-                        'name': 'global',
-                        'networks': [
-                            {'id': '9536600adf654321', 'ifname': 'owzt654321'}
+                        "name": "global",
+                        "networks": [
+                            {"id": "9536600adf654321", "ifname": "owzt654321"}
                         ],
-                        'secret': '{{secret}}',
-                        'config_path': '/etc/ow_zerotier_test',
-                        'disabled': False,
+                        "secret": "{{secret}}",
+                        "config_path": "/etc/ow_zerotier_test",
+                        "disabled": False,
                     }
                 ]
             }
-            nw_id = '9536600adf654321'
+            nw_id = "9536600adf654321"
             self.assertDictEqual(
                 OpenWrt.zerotier_auto_client(
                     # Test it is possible to change default `config_path`
-                    config_path='/etc/ow_zerotier_test',
-                    networks=[{'id': nw_id, 'ifname': f'owzt{nw_id[-6:]}'}],
+                    config_path="/etc/ow_zerotier_test",
+                    networks=[{"id": nw_id, "ifname": f"owzt{nw_id[-6:]}"}],
                 ),
                 expected,
             )

@@ -12,10 +12,10 @@ from .channels import (
 )
 from .countries import countries
 
-DEFAULT_FILE_MODE = '0644'
-X509_FILE_MODE = '0600'
-MAC_PATTERN = '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
-MAC_PATTERN_BLANK = '^({0}|)$'.format(MAC_PATTERN)
+DEFAULT_FILE_MODE = "0644"
+X509_FILE_MODE = "0600"
+MAC_PATTERN = "([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})"
+MAC_PATTERN_BLANK = "^({0}|)$".format(MAC_PATTERN)
 
 schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
@@ -265,7 +265,7 @@ schema = {
                 "mode": {"type": "string", "propertyOrder": 1},
                 "radio": {
                     "type": "string",
-                    "description": "reference to one of the elements defined in the \"radios\" section",
+                    "description": 'reference to one of the elements defined in the "radios" section',
                     "minLength": 2,
                     "propertyOrder": 2,
                 },
@@ -944,24 +944,24 @@ schema = {
         },
         "radio_2ghz_channels": {
             "properties": {
-                "channel": {"enum": channels_2ghz, "options": {"enum_titles": ['auto']}}
+                "channel": {"enum": channels_2ghz, "options": {"enum_titles": ["auto"]}}
             }
         },
         "radio_5ghz_channels": {
             "properties": {
-                "channel": {"enum": channels_5ghz, "options": {"enum_titles": ['auto']}}
+                "channel": {"enum": channels_5ghz, "options": {"enum_titles": ["auto"]}}
             }
         },
         "radio_6ghz_channels": {
             "properties": {
-                "channel": {"enum": channels_6ghz, "options": {"enum_titles": ['auto']}}
+                "channel": {"enum": channels_6ghz, "options": {"enum_titles": ["auto"]}}
             }
         },
         "radio_60ghz_channels": {
             "properties": {
                 "channel": {
                     "enum": channels_60ghz,
-                    "options": {"enum_titles": ['auto']},
+                    "options": {"enum_titles": ["auto"]},
                 }
             }
         },
@@ -969,7 +969,7 @@ schema = {
             "properties": {
                 "channel": {
                     "enum": channels_2and5,
-                    "options": {"enum_titles": ['auto']},
+                    "options": {"enum_titles": ["auto"]},
                 }
             }
         },

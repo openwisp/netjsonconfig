@@ -15,19 +15,19 @@ class TestBaseParser(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             WireguardParser(config="")
 
-    @patch.object(WireguardParser, 'parse_text', return_value=None)
+    @patch.object(WireguardParser, "parse_text", return_value=None)
     def test_parse_tar(self, mocked):
         parser = WireguardParser(config="")
         with self.assertRaises(NotImplementedError):
             parser.parse_tar(tar=None)
 
-    @patch.object(WireguardParser, 'parse_text', return_value=None)
+    @patch.object(WireguardParser, "parse_text", return_value=None)
     def test_get_vpns(self, mocked):
         parser = WireguardParser(config="")
         with self.assertRaises(NotImplementedError):
             parser._get_vpns(text=None)
 
-    @patch.object(WireguardParser, 'parse_text', return_value=None)
+    @patch.object(WireguardParser, "parse_text", return_value=None)
     def test_get_config(self, mocked):
         parser = WireguardParser(config="")
         with self.assertRaises(NotImplementedError):

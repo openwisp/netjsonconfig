@@ -176,12 +176,12 @@ config custom 'custom'
 
     def test_skip(self):
         o = OpenWrt({"skipme": {"enabled": True}})
-        self.assertEqual(o.render(), '')
+        self.assertEqual(o.render(), "")
 
     @capture_stdout()
     def test_warning(self):
         o = OpenWrt({"luci": [{"unrecognized": True}]})
-        self.assertEqual(o.render(), '')
+        self.assertEqual(o.render(), "")
 
     def test_merge(self):
         template = {
@@ -220,8 +220,8 @@ config custom 'custom'
         self.assertEqual(o.config, expected)
 
     def test_skip_nonlists(self):
-        o = OpenWrt({"custom_package": {'unknown': True}})
-        self.assertEqual(o.render(), '')
+        o = OpenWrt({"custom_package": {"unknown": True}})
+        self.assertEqual(o.render(), "")
 
     def test_render_invalid_uci_name(self):
         o = OpenWrt(

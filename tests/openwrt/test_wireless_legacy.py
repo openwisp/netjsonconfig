@@ -306,11 +306,11 @@ config wifi-iface 'wifi_wlan0'
         with self.assertRaises(ValidationError):
             o.validate()
         # maxLength does not validate
-        o.config['interfaces'][0]['wireless']['network'] = ['lan0123456789012345']
+        o.config["interfaces"][0]["wireless"]["network"] = ["lan0123456789012345"]
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['wireless']['network'] = ['lan']
+        o.config["interfaces"][0]["wireless"]["network"] = ["lan"]
         o.validate()
 
     _interface_network_netjson = {
@@ -612,18 +612,18 @@ config wifi-iface 'wifi_wlan0'
         )
         o.validate()
         # too short
-        o.config['interfaces'][0]['wireless']['maclist'][0] = '00:11:22:33:44'
+        o.config["interfaces"][0]["wireless"]["maclist"][0] = "00:11:22:33:44"
         with self.assertRaises(ValidationError):
             o.validate()
         # valid
-        o.config['interfaces'][0]['wireless']['maclist'][0] = '00-11-22-33-44-55'
+        o.config["interfaces"][0]["wireless"]["maclist"][0] = "00-11-22-33-44-55"
         o.validate()
         # should not be valid
-        o.config['interfaces'][0]['wireless']['maclist'][0] = '00:11:22:33:44:ZY'
+        o.config["interfaces"][0]["wireless"]["maclist"][0] = "00:11:22:33:44:ZY"
         with self.assertRaises(ValidationError):
             o.validate()
         # empty is not valid
-        o.config['interfaces'][0]['wireless']['maclist'][0] = ''
+        o.config["interfaces"][0]["wireless"]["maclist"][0] = ""
         with self.assertRaises(ValidationError):
             o.validate()
 
@@ -739,14 +739,14 @@ config wifi-iface 'wifi_wlan0'
         o = OpenWrt(native=self._80211r_uci, dsa=False)
         self.assertDictEqual(o.config, self._80211r_netjson)
 
-        with self.subTest('ignore bogus reassociation_deadline'):
+        with self.subTest("ignore bogus reassociation_deadline"):
             bogus_uci = self._80211r_uci
             bogus_uci = bogus_uci.replace(
                 "reassociation_deadline '1000'", "reassociation_deadline 'bogus'"
             )
             o = OpenWrt(native=bogus_uci, dsa=False)
             netjson_80211r = deepcopy(self._80211r_netjson)
-            del netjson_80211r['interfaces'][0]['wireless']['reassociation_deadline']
+            del netjson_80211r["interfaces"][0]["wireless"]["reassociation_deadline"]
             self.assertDictEqual(o.config, netjson_80211r)
 
     _80211s_netjson = {
@@ -823,37 +823,37 @@ config wifi-iface 'wifi_mesh0'
         o = OpenWrt(self._bssid_netjson, dsa=False)
         o.validate()
         # too short
-        o.config['interfaces'][0]['wireless']['bssid'] = '00:11:22:33:44'
+        o.config["interfaces"][0]["wireless"]["bssid"] = "00:11:22:33:44"
         with self.assertRaises(ValidationError):
             o.validate()
         # valid
-        o.config['interfaces'][0]['wireless']['bssid'] = '00-11-22-33-44-55'
+        o.config["interfaces"][0]["wireless"]["bssid"] = "00-11-22-33-44-55"
         o.validate()
         # should not be valid
-        o.config['interfaces'][0]['wireless']['bssid'] = '00:11:22:33:44:ZY'
+        o.config["interfaces"][0]["wireless"]["bssid"] = "00:11:22:33:44:ZY"
         with self.assertRaises(ValidationError):
             o.validate()
 
     def test_bssid_adhoc(self):
         o = OpenWrt(self._bssid_netjson, dsa=False)
         # bssid is required
-        del o.config['interfaces'][0]['wireless']['bssid']
+        del o.config["interfaces"][0]["wireless"]["bssid"]
         with self.assertRaises(ValidationError):
             o.validate()
         # empty is not valid
-        o.config['interfaces'][0]['wireless']['bssid'] = ''
+        o.config["interfaces"][0]["wireless"]["bssid"] = ""
         with self.assertRaises(ValidationError):
             o.validate()
 
     def test_bssid_station(self):
         o = OpenWrt(self._bssid_netjson, dsa=False)
-        o.config['interfaces'][0]['wireless']['mode'] = 'station'
+        o.config["interfaces"][0]["wireless"]["mode"] = "station"
         o.validate()
         # bssid is not required
-        del o.config['interfaces'][0]['wireless']['bssid']
+        del o.config["interfaces"][0]["wireless"]["bssid"]
         o.validate()
         # empty is valid
-        o.config['interfaces'][0]['wireless']['bssid'] = ''
+        o.config["interfaces"][0]["wireless"]["bssid"] = ""
         o.validate()
 
     _list_option_netjson = {
@@ -910,7 +910,7 @@ config wifi-iface 'wifi_wlan0'
         )
         self.assertIn("option isolate '1'", o.render())
         # try entering an invalid value
-        o.config['interfaces'][0]['wireless']['isolate'] = 'wrong'
+        o.config["interfaces"][0]["wireless"]["isolate"] = "wrong"
         with self.assertRaises(ValidationError):
             o.validate()
 

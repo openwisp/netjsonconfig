@@ -668,8 +668,8 @@ config interface 'custom_if0'
                     "type": "other",
                     "proto": "custom",
                     "device": "/dev/usb/modem1",
-                    "keepalive": '3',
-                    "ipv6": '1',
+                    "keepalive": "3",
+                    "ipv6": "1",
                 }
             ]
         }
@@ -878,9 +878,9 @@ config interface 'lan_2'
         # performed test is slightly asymmetric in order to
         # increase code coverage using less lines of code
         netjson = deepcopy(self._complex_bridge_netjson)
-        netjson['interfaces'][2]['name'] = 'br-lan'
-        del netjson['interfaces'][2]['addresses'][2]
-        netjson['interfaces'].append(
+        netjson["interfaces"][2]["name"] = "br-lan"
+        del netjson["interfaces"][2]["addresses"][2]
+        netjson["interfaces"].append(
             {
                 "name": "br-lan",
                 "network": "lan_2",
@@ -949,11 +949,11 @@ config interface 'lan'
         o = OpenWrt({"interfaces": [{"name": "lan", "type": "bridge"}]})
         with self.assertRaises(ValidationError):
             o.validate()
-        o.config['interfaces'][0]['bridge_members'] = [3]
+        o.config["interfaces"][0]["bridge_members"] = [3]
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['bridge_members'] = ['eth0', 'wlan0']
+        o.config["interfaces"][0]["bridge_members"] = ["eth0", "wlan0"]
         o.validate()
 
     def test_bridge_members_pattern(self):
@@ -967,7 +967,7 @@ config interface 'lan'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['bridge_members'][0] = 'e-t_h@=0.1'
+        o.config["interfaces"][0]["bridge_members"][0] = "e-t_h@=0.1"
         o.validate()
 
     def test_bridge_members_unique(self):
@@ -985,7 +985,7 @@ config interface 'lan'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['bridge_members'][0] = 'eth1'
+        o.config["interfaces"][0]["bridge_members"][0] = "eth1"
         o.validate()
 
     _bridge_21_bridge_uci = """package network
@@ -1024,17 +1024,17 @@ config interface 'lan'
                 "type": "bridge",
                 "bridge_members": ["eth0", "eth1"],
                 "mac": "E8:94:F6:33:8C:00",
-                'rpfilter': 'strict',
-                'txqueuelen': 1000,
-                'neighreachabletime': 30000,
-                'neighgcstaletime': 3000,
-                'neighlocktime': 3000,
-                'igmpversion': 2,
-                'mldversion': 2,
-                'promisc': True,
-                'acceptlocal': True,
-                'sendredirects': True,
-                'multicast': True,
+                "rpfilter": "strict",
+                "txqueuelen": 1000,
+                "neighreachabletime": 30000,
+                "neighgcstaletime": 3000,
+                "neighlocktime": 3000,
+                "igmpversion": 2,
+                "mldversion": 2,
+                "promisc": True,
+                "acceptlocal": True,
+                "sendredirects": True,
+                "multicast": True,
             },
         ]
     }
@@ -1176,10 +1176,10 @@ config interface 'home_vlan'
         o = OpenWrt(self._vlan_filtering_bridge_netjson)
         self.assertEqual(self._tabs(self._vlan_filtering_bridge_uci), o.render())
 
-        with self.subTest('Test setting PVID on same port on different VLANS'):
+        with self.subTest("Test setting PVID on same port on different VLANS"):
             netjson = deepcopy(self._vlan_filtering_bridge_netjson)
-            netjson['interfaces'][0]['vlan_filtering'][1]['ports'][0][
-                'primary_vid'
+            netjson["interfaces"][0]["vlan_filtering"][1]["ports"][0][
+                "primary_vid"
             ] = True
             with self.assertRaises(ValidationError) as error:
                 OpenWrt(netjson).validate()
@@ -1187,15 +1187,15 @@ config interface 'home_vlan'
                 error.exception.message,
                 (
                     'Invalid configuration triggered by "#/interfaces/0"'
-                    ' says: Primary VID can be set only one VLAN for a port.'
+                    " says: Primary VID can be set only one VLAN for a port."
                 ),
             )
 
     def test_parse_bridge_vlan_filtering(self):
         o = OpenWrt(native=self._vlan_filtering_bridge_uci)
         expected = deepcopy(self._vlan_filtering_bridge_netjson)
-        expected['interfaces'][0]['vlan_filtering'][0]['ports'][1][
-            'primary_vid'
+        expected["interfaces"][0]["vlan_filtering"][0]["ports"][1][
+            "primary_vid"
         ] = False
         self.assertEqual(o.config, expected)
 
@@ -1271,8 +1271,8 @@ config interface 'br_lan_1'
     def test_parse_bridge_vlan_filtering_override_interface(self):
         o = OpenWrt(native=self._vlan_filtering_bridge_override_uci)
         expected = deepcopy(self._vlan_filtering_bridge_override_netjson)
-        del expected['interfaces'][1]['mtu']
-        del expected['interfaces'][1]['mac']
+        del expected["interfaces"][1]["mtu"]
+        del expected["interfaces"][1]["mac"]
         self.assertEqual(o.config, expected)
 
     def test_render_dns(self):
@@ -1451,7 +1451,7 @@ config interface 'eth0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['name'] = 'ifname0'
+        o.config["interfaces"][0]["name"] = "ifname0"
         o.validate()
 
     def test_ifname_pattern(self):
@@ -1459,7 +1459,7 @@ config interface 'eth0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['name'] = 'e-t_h@=0.1'
+        o.config["interfaces"][0]["name"] = "e-t_h@=0.1"
         o.validate()
 
     def test_network_maxlength(self):
@@ -1477,7 +1477,7 @@ config interface 'eth0'
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['network'] = 'lan'
+        o.config["interfaces"][0]["network"] = "lan"
         o.validate()
 
     def test_network_pattern(self):
@@ -1486,11 +1486,11 @@ config interface 'eth0'
         )
         with self.assertRaises(ValidationError):
             o.validate()
-        o.config['interfaces'][0]['network'] = 'lan/0'
+        o.config["interfaces"][0]["network"] = "lan/0"
         with self.assertRaises(ValidationError):
             o.validate()
         # ensure fix works
-        o.config['interfaces'][0]['network'] = 'lan'
+        o.config["interfaces"][0]["network"] = "lan"
         o.validate()
 
     def test_render_network_attribute(self):
@@ -1586,18 +1586,18 @@ config interface 'lan_0'
         )
         o.validate()
         # too short
-        o.config['interfaces'][0]['mac'] = '00:11:22:33:44'
+        o.config["interfaces"][0]["mac"] = "00:11:22:33:44"
         with self.assertRaises(ValidationError):
             o.validate()
         # valid
-        o.config['interfaces'][0]['mac'] = '00-11-22-33-44-55'
+        o.config["interfaces"][0]["mac"] = "00-11-22-33-44-55"
         o.validate()
         # should not be valid
-        o.config['interfaces'][0]['mac'] = '00:11:22:33:44:ZY'
+        o.config["interfaces"][0]["mac"] = "00:11:22:33:44:ZY"
         with self.assertRaises(ValidationError):
             o.validate()
         # empty is valid (will be ignored)
-        o.config['interfaces'][0]['mac'] = ''
+        o.config["interfaces"][0]["mac"] = ""
         o.validate()
 
     def test_default_addresses(self):
@@ -1788,13 +1788,13 @@ config interface 'br_lan'
         expected = self._tabs(self._spanning_tree_bridge_uci)
         self.assertEqual(o.render(), expected)
         # try entering an invalid value
-        o.config['interfaces'][0]['stp'] = 'wrong'
+        o.config["interfaces"][0]["stp"] = "wrong"
         with self.assertRaises(ValidationError):
             o.validate()
 
         stp_disabled_netjson = deepcopy(self._spanning_tree_bridge_netjson)
-        stp_disabled_netjson['interfaces'][0]['stp'] = False
-        self.assertNotIn('option stp \'1\'', OpenWrt(stp_disabled_netjson).render())
+        stp_disabled_netjson["interfaces"][0]["stp"] = False
+        self.assertNotIn("option stp '1'", OpenWrt(stp_disabled_netjson).render())
 
     def test_parse_spanning_tree_bridge(self):
         o = OpenWrt(native=self._spanning_tree_bridge_uci)
@@ -1805,7 +1805,7 @@ config interface 'br_lan'
             "option forward_delay '15'", "option forward_delay 'wrong'"
         )
         o = OpenWrt(native=bogus_uci)
-        self.assertNotIn('forward_delay', o.config['interfaces'][0])
+        self.assertNotIn("forward_delay", o.config["interfaces"][0])
 
     _igmp_bridge_netjson = {
         "interfaces": [
@@ -1849,12 +1849,12 @@ config interface 'br_lan'
         self.assertEqual(o.render(), expected)
 
         # try entering an invalid value
-        o.config['interfaces'][0]['igmp_snooping'] = 'wrong'
+        o.config["interfaces"][0]["igmp_snooping"] = "wrong"
         with self.assertRaises(ValidationError):
             o.validate()
 
         igmp_snooping_disabled_netjson = deepcopy(self._igmp_bridge_netjson)
-        igmp_snooping_disabled_netjson['interfaces'][0]['igmp_snooping'] = False
+        igmp_snooping_disabled_netjson["interfaces"][0]["igmp_snooping"] = False
         self.assertIn(
             "option igmp_snooping '0'",
             OpenWrt(igmp_snooping_disabled_netjson).render(),
@@ -1869,7 +1869,7 @@ config interface 'br_lan'
             "option robustness '2'", "option robustness 'wrong'"
         )
         o = OpenWrt(native=bogus_uci)
-        self.assertNotIn('robustness', o.config['interfaces'][0])
+        self.assertNotIn("robustness", o.config["interfaces"][0])
 
     def test_render_autostart_false(self):
         o = OpenWrt(
@@ -2026,12 +2026,12 @@ config interface 'vlan_br_lan_1'
     def test_parse_vlan8021q(self):
         o = OpenWrt(native=self._tabs(self._vlan8021q_uci))
         expected = deepcopy(self._vlan8021q_netjson)
-        expected['interfaces'][0]['network'] = 'vlan_br_lan_1'
+        expected["interfaces"][0]["network"] = "vlan_br_lan_1"
         self.assertEqual(expected, o.config)
 
     def test_render_vlan8021q_empty_network(self):
         netjson = deepcopy(self._vlan8021q_netjson)
-        netjson['interfaces'][0]['network'] = ''
+        netjson["interfaces"][0]["network"] = ""
         o = OpenWrt(netjson)
         expected = self._tabs(self._vlan8021q_uci)
         self.assertEqual(o.render(), expected)

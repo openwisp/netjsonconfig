@@ -8,6 +8,6 @@ class ZeroTierRenderer(BaseRenderer):
 
     def cleanup(self, output):
         # remove last newline
-        if output.endswith('\n\n'):
+        if output.endswith("\n\n"):
             output = output[0:-1]
         return output

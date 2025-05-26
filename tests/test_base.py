@@ -19,11 +19,11 @@ class TestBase(unittest.TestCase):
     def test_cleanup(self):
         b = BaseBackend({})
         r = BaseRenderer(b)
-        self.assertEqual(r.cleanup(''), '')
+        self.assertEqual(r.cleanup(""), "")
 
     def test_parse_text_not_implemented(self):
         with self.assertRaises(NotImplementedError):
-            BaseParser('')
+            BaseParser("")
 
     def test_parse_tar_not_implemented(self):
         with self.assertRaises(NotImplementedError):
@@ -31,4 +31,4 @@ class TestBase(unittest.TestCase):
 
     def test_base_backend_parse_not_implemented(self):
         with self.assertRaises(NotImplementedError):
-            BaseBackend(native='')
+            BaseBackend(native="")

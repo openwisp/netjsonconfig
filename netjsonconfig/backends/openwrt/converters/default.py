@@ -18,7 +18,7 @@ class Default(OpenWrtConverter):
 
     def to_intermediate(self):
         # determine config keys to ignore
-        ignore_list = list(self.backend.schema['properties'].keys())
+        ignore_list = list(self.backend.schema["properties"].keys())
         # determine extra packages used
         extra_packages = OrderedDict()
         for key, value in self.netjson.items():
@@ -33,22 +33,22 @@ class Default(OpenWrtConverter):
                 # config block must be a dict
                 # with a key named "config_name"
                 # otherwise it's skipped with a warning
-                if not isinstance(block, dict) or 'config_name' not in block:
+                if not isinstance(block, dict) or "config_name" not in block:
                     json_block = json.dumps(block, indent=4)
                     print(
-                        'Unrecognized config block was skipped:\n\n'
-                        '{0}\n\n'.format(json_block)
+                        "Unrecognized config block was skipped:\n\n"
+                        "{0}\n\n".format(json_block)
                     )
                     continue
-                block['.type'] = block.pop('config_name')
-                block['.name'] = block.pop(
-                    'config_value',
+                block[".type"] = block.pop("config_name")
+                block[".name"] = block.pop(
+                    "config_value",
                     # default value in case the
                     # UCI name is not defined
-                    '{0}_{1}'.format(block['.type'], i),
+                    "{0}_{1}".format(block[".type"], i),
                 )
                 # ensure UCI name is valid
-                block['.name'] = self._get_uci_name(block['.name'])
+                block[".name"] = self._get_uci_name(block[".name"])
                 block_list.append(sorted_dict(block))
                 i += 1
             if block_list:
@@ -64,12 +64,12 @@ class Default(OpenWrtConverter):
                 continue
             result.setdefault(package, [])
             for index, block in enumerate(contents):
-                _name = block.pop('.name')
-                _type = block.pop('.type')
+                _name = block.pop(".name")
+                _type = block.pop(".type")
                 # set `config_value` only if it hasn't
                 # been automatically generated
-                if _name != '{0}_{1}'.format(_type, index + 1):
-                    block['config_value'] = _name
-                block['config_name'] = _type
+                if _name != "{0}_{1}".format(_type, index + 1):
+                    block["config_value"] = _name
+                block["config_name"] = _type
                 result[package].append(block)
         return result
