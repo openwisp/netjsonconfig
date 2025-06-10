@@ -3,6 +3,12 @@ from collections import OrderedDict
 from copy import deepcopy
 
 
+class ValidationError(Exception):
+    """exception for validation errors during config merge"""
+
+    pass
+
+
 def merge_config(template, config, list_identifiers=None):
     """
     Merges ``config`` on top of ``template``.
@@ -23,10 +29,24 @@ def merge_config(template, config, list_identifiers=None):
     result = deepcopy(template)
     for key, value in config.items():
         if isinstance(value, dict):
-            node = result.get(key, OrderedDict())
-            result[key] = merge_config(node, value)
-        elif isinstance(value, list) and isinstance(result.get(key), list):
-            result[key] = merge_list(result[key], value, list_identifiers)
+            if isinstance(result.get(key), dict) or key not in result:
+                node = result.get(key, OrderedDict())
+                result[key] = merge_config(node, value)
+            else:
+                raise ValidationError(
+                    f"Cannot merge dict into non-dict for key '{key}': "
+                    f"{type(result.get(key)).__name__} vs dict"
+                )
+        elif isinstance(value, list):
+            if isinstance(result.get(key), list):
+                result[key] = merge_list(result[key], value, list_identifiers)
+            elif key in result:
+                raise ValidationError(
+                    f"Cannot merge list into non-list for key '{key}': "
+                    f"{type(result.get(key)).__name__} vs list"
+                )
+            else:
+                result[key] = value
         else:
             result[key] = value
     return result
