@@ -6,6 +6,18 @@ Version 1.2.0 [Unreleased]
 
 Work in progress.
 
+Version 1.1.3 [2025-07-31]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- `Automatically generate a logical name for VLAN 802.1X interfaces
+  <https://github.com/openwisp/netjsonconfig/pull/346>`_ in the **OpenWRT
+  Backend** when the ``network`` field is missing in the NetJSON
+  configuration. This prevents misconfiguration due to missing interface
+  names.
+
 Version 1.1.2 [2025-03-05]
 --------------------------
 
