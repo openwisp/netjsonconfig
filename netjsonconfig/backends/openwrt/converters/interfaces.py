@@ -44,6 +44,8 @@ class Interfaces(OpenWrtConverter):
         super().__init__(backend)
         self._device_config = {}
         self._bridge_vlan_config_uci = []
+        self._deferred_interfaces = []
+        self._processing_deferred = False
 
     def __set_dsa_interface(self, interface):
         """
@@ -498,6 +500,34 @@ class Interfaces(OpenWrtConverter):
         """
         return interface.get("type", None) == "device"
 
+    def to_netjson(self, remove_block=True):
+        result = super().to_netjson(remove_block)
+        index = len(result.get(self.netjson_key, []))
+        self._processing_deferred = True
+        for interface in self._deferred_interfaces:
+            result = self.to_netjson_loop(interface, result, index)
+            index += 1
+        for name, config in deepcopy(self._device_config).items():
+            interface_name = config.get(".name", name)
+            if "device" in interface_name:
+                interface_name = interface_name.replace("device", "int")
+            else:
+                interface_name = f"int_{interface_name}"
+            result = self.to_netjson_loop(
+                OrderedDict(
+                    {
+                        ".type": "interface",
+                        ".name": interface_name,
+                        "device": name,
+                        "proto": "none",
+                    }
+                ),
+                result,
+                index,
+            )
+            index += 1
+        return result
+
     def to_netjson_loop(self, block, result, index):
         _type = block.get(".type")
         if _type == "globals":
@@ -569,6 +599,10 @@ class Interfaces(OpenWrtConverter):
         interface = self._handle_bridge_vlan(interface, device_config)
         if not interface:
             return
+        if device_config.get('bridge_21') and not self._processing_deferred:
+            self._deferred_interfaces.append(interface)
+            interface["device"] = interface.pop('ifname')
+            return
         if device_config.pop("bridge_21", None):
             for option in device_config:
                 # ifname has been renamed to ports in OpenWrt 21.02 bridge
@@ -586,10 +620,11 @@ class Interfaces(OpenWrtConverter):
                 interface[options] = device_config.pop(options)
         if device_config.get("type", "").startswith("8021"):
             interface["ifname"] = "".join(device_config["name"].split(".")[:-1])
+        del self._device_config[device_config["name"]]
         return interface
 
     def _handle_bridge_vlan(self, interface, device_config):
-        if "." in interface.get("ifname", ""):
+        if interface.get("proto", "none") == "none" and "." in interface.get("ifname", ""):
             _, _, vlan_id = interface["ifname"].rpartition(".")
             if device_config.get("vlan_filtering", []):
                 for vlan in device_config["vlan_filtering"]:
@@ -650,14 +685,19 @@ class Interfaces(OpenWrtConverter):
         self._device_config[name] = interface
 
     def __netjson_vlan(self, vlan, device_config):
+        # Clean up VLAN filtering option from the native config
+        if device_config.get("vlan_filtering") == "1":
+            device_config.pop("vlan_filtering")
         netjson_vlan = {"vlan": int(vlan["vlan"]), "ports": []}
         for port in vlan.get("ports", []):
             port_config = port.split(":")
             port = {"ifname": port_config[0]}
-            tagging = port_config[1][0]
             pvid = False
-            if len(port_config[1]) > 1:
-                pvid = True
+            tagging = "u"
+            if len(port_config) > 1:
+                tagging = port_config[1][0]
+                if len(port_config[1]) > 1:
+                    pvid = True
             port.update(
                 {
                     "tagging": tagging,
@@ -665,9 +705,9 @@ class Interfaces(OpenWrtConverter):
                 }
             )
             netjson_vlan["ports"].append(port)
-        if isinstance(device_config["vlan_filtering"], list):
+        try:
             device_config["vlan_filtering"].append(netjson_vlan)
-        else:
+        except KeyError:
             device_config["vlan_filtering"] = [netjson_vlan]
         return
 

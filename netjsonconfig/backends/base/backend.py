@@ -314,7 +314,9 @@ class BaseBackend(object):
                 value = OrderedDict(value)
             if value:
                 self.intermediate_data = merge_config(
-                    self.intermediate_data, value, list_identifiers=[".name"]
+                    self.intermediate_data,
+                    value,
+                    list_identifiers=self.list_identifiers,
                 )
 
     def parse(self, native):
