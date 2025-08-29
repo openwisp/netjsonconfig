@@ -2,6 +2,7 @@ from collections import OrderedDict
 from copy import deepcopy
 from ipaddress import ip_address, ip_interface
 
+from ....utils import merge_list
 from ..schema import schema
 from .base import OpenWrtConverter
 
@@ -44,7 +45,7 @@ class Interfaces(OpenWrtConverter):
         super().__init__(backend)
         self._device_config = {}
         self._bridge_vlan_config_uci = []
-        self._deferred_interfaces = []
+        self._deferred_interfaces = OrderedDict()
         self._processing_deferred = False
 
     def __set_dsa_interface(self, interface):
@@ -103,7 +104,14 @@ class Interfaces(OpenWrtConverter):
             if address:
                 uci_interface.update(address)
             result.setdefault("network", [])
-            result["network"].append(self.sorted_dict(uci_interface))
+            # The user may want to override the auto-generated
+            # interface (e.g. when using VLAN filtering on bridge),
+            # thus instead of appending the interface, we use merge_list here.
+            result["network"] = merge_list(
+                result["network"],
+                [self.sorted_dict(uci_interface)],
+                identifiers=[".name", ".type"],
+            )
             i += 1
         return result
 
@@ -268,7 +276,7 @@ class Interfaces(OpenWrtConverter):
             uci_vlan[".name"] = "vlan_{}".format(uci_vlan[".name"])
         uci_vlan_interface = {
             ".type": "interface",
-            ".name": uci_vlan[".name"],
+            ".name": f"if_{uci_name}_{vid}",
             "device": "{ifname}.{vid}".format(ifname=interface["ifname"], vid=vid),
             "proto": "none",
         }
@@ -503,28 +511,48 @@ class Interfaces(OpenWrtConverter):
     def to_netjson(self, remove_block=True):
         result = super().to_netjson(remove_block)
         index = len(result.get(self.netjson_key, []))
+        # On OpenWrt < 21 (pre-DSA), each interface block container the completed
+        # information of the interface.
+        # Since OpenWrt 21, DSA has been implemented in OpenWrt, which means that
+        # interface blocks are no longer self-contained. E.g. for VLAN filtering on
+        # bridge, the information is split among device, bridge-vlan and interface
+        # sections. Thus, it is not possible to generate netjson based on only one
+        # block per interface. Therefore, some of the interfaces are deferred and
+        # are processed when all converter has gone through all the blocks building
+        # device_config for each interface.
         self._processing_deferred = True
-        for interface in self._deferred_interfaces:
-            result = self.to_netjson_loop(interface, result, index)
-            index += 1
         for name, config in deepcopy(self._device_config).items():
-            interface_name = config.get(".name", name)
-            if "device" in interface_name:
-                interface_name = interface_name.replace("device", "int")
-            else:
-                interface_name = f"int_{interface_name}"
-            result = self.to_netjson_loop(
-                OrderedDict(
-                    {
-                        ".type": "interface",
-                        ".name": interface_name,
-                        "device": name,
-                        "proto": "none",
-                    }
-                ),
-                result,
-                index,
-            )
+            interfaces = self._deferred_interfaces.pop(name, [])
+            if not interfaces:
+                interface_name = config.get(".name", name)
+                if "device" in interface_name:
+                    interface_name = interface_name.replace("device", "int")
+                else:
+                    interface_name = f"int_{interface_name}"
+                interfaces = [
+                    OrderedDict(
+                        {
+                            ".type": "interface",
+                            ".name": interface_name,
+                            "device": name,
+                            "proto": "none",
+                        }
+                    )
+                ]
+            for interface in interfaces:
+                result = self.to_netjson_loop(
+                    interface,
+                    result,
+                    index,
+                )
+            index += 1
+        for interfaces in self._deferred_interfaces.values():
+            for interface in interfaces:
+                result = self.to_netjson_loop(
+                    interface,
+                    result,
+                    index,
+                )
             index += 1
         return result
 
@@ -582,7 +610,7 @@ class Interfaces(OpenWrtConverter):
         name = interface.get("name")
         device_config = self._device_config.get(device, self._device_config.get(name))
         if not device_config:
-            if "." in device:
+            if not self._processing_deferred and "." in device:
                 cleaned_device, _, _ = device.rpartition(".")
                 device_config = self._device_config.get(cleaned_device)
             if not device_config:
@@ -599,9 +627,10 @@ class Interfaces(OpenWrtConverter):
         interface = self._handle_bridge_vlan(interface, device_config)
         if not interface:
             return
-        if device_config.get('bridge_21') and not self._processing_deferred:
-            self._deferred_interfaces.append(interface)
-            interface["device"] = interface.pop('ifname')
+        if device_config.get("bridge_21") and not self._processing_deferred:
+            self._deferred_interfaces.setdefault(interface["ifname"], [])
+            self._deferred_interfaces[interface["ifname"]].append(interface)
+            interface["device"] = interface.pop("ifname")
             return
         if device_config.pop("bridge_21", None):
             for option in device_config:
@@ -624,7 +653,9 @@ class Interfaces(OpenWrtConverter):
         return interface
 
     def _handle_bridge_vlan(self, interface, device_config):
-        if interface.get("proto", "none") == "none" and "." in interface.get("ifname", ""):
+        if interface.get("proto", "none") == "none" and "." in interface.get(
+            "ifname", ""
+        ):
             _, _, vlan_id = interface["ifname"].rpartition(".")
             if device_config.get("vlan_filtering", []):
                 for vlan in device_config["vlan_filtering"]:
