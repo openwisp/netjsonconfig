@@ -805,11 +805,11 @@ Will be rendered as follows:
             list ports 'lan3:u*'
             option vlan '2'
 
-    config interface 'vlan_br_lan_1'
+    config interface 'if_br_lan_1'
             option device 'br-lan.1'
             option proto 'none'
 
-    config interface 'vlan_br_lan_2'
+    config interface 'if_br_lan_2'
             option device 'br-lan.2'
             option proto 'none'
 
