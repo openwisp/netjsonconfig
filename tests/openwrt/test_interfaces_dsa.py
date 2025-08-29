@@ -1163,11 +1163,11 @@ config bridge-vlan 'home_vlan_2'
     list ports 'lan3:u*'
     option vlan '2'
 
-config interface 'home_vlan_1'
+config interface 'if_home_vlan_1'
     option device 'br-lan.1'
     option proto 'none'
 
-config interface 'home_vlan_2'
+config interface 'if_home_vlan_2'
     option device 'br-lan.2'
     option proto 'none'
 
@@ -1224,6 +1224,7 @@ config interface 'home_vlan'
                 "name": "br-lan.1",
                 "mtu": 1500,
                 "mac": "61:4A:A0:D7:3F:0E",
+                "network": "if_br_lan_1",
                 "addresses": [
                     {
                         "proto": "static",
@@ -1251,19 +1252,15 @@ config bridge-vlan 'vlan_br_lan_1'
     list ports 'lan2:u'
     option vlan '1'
 
-config interface 'vlan_br_lan_1'
+config interface 'if_br_lan_1'
     option device 'br-lan.1'
-    option proto 'none'
+    option proto 'static'
+    option ipaddr '192.168.2.1'
+    option netmask '255.255.255.0'
 
 config interface 'br_lan'
     option device 'br-lan'
     option proto 'none'
-
-config interface 'br_lan_1'
-    option device 'br-lan.1'
-    option ipaddr '192.168.2.1'
-    option netmask '255.255.255.0'
-    option proto 'static'
 """
 
     def test_render_bridge_vlan_filtering_override_interface(self):
@@ -1333,7 +1330,6 @@ config device 'device_home_vlan'
     list ports 'lan2'
     list ports 'lan3'
     option type 'bridge'
-    option vlan_filtering '1'
 
 config interface 'home_vlan'
     option device 'br-lan'
