@@ -496,8 +496,13 @@ base_openvpn_schema = {
                 "tls_cipher": {
                     "title": "TLS cipher",
                     "description": "A list of allowable TLS ciphers delimited by a colon (':')",
-                    "type": "string",
+                    "type": "array",
                     "propertyOrder": 41,
+                    "additionalItems": True,
+                    "items": {
+                        "title": "cipher",
+                        "type": "string",
+                    },
                 },
                 "remote_cert_tls": {
                     "title": "Remote certificate TLS",

@@ -155,7 +155,7 @@ key name                  type    default      allowed values
                                                character
 ``reneg_sec``             integer ``3600``     any positive integer
 ``tls_timeout``           integer ``2``        any positive integer
-``tls_cipher``            string               any string
+``tls_cipher``            list                 list of strings
 ``remote_cert_tls``       string               ``client``, ``server`` or
                                                empty string
 ``float``                 boolean ``False``
