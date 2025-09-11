@@ -775,7 +775,21 @@ The following *configuration dictionary*:
                         ],
                     },
                 ],
-            }
+            },
+            # Auto-generated interfaces for bridge-vlans (e.g. "br-lan.1", "br-lan.2")
+            # can be overridden by defining them explicitly in the configuration.
+            {
+                "type": "ethernet",
+                "name": "br-lan.2",
+                "mtu": 1500,
+                "mac": "61:4A:A0:D7:3F:0E",
+                "addresses": [
+                    {
+                        "proto": "dhcp",
+                        "family": "ipv4",
+                    }
+                ],
+            },
         ]
     }
 
@@ -805,13 +819,13 @@ Will be rendered as follows:
             list ports 'lan3:u*'
             option vlan '2'
 
-    config interface 'if_br_lan_1'
+    config interface 'br_lan_1'
             option device 'br-lan.1'
             option proto 'none'
 
-    config interface 'if_br_lan_2'
+    config interface 'br_lan_2'
             option device 'br-lan.2'
-            option proto 'none'
+            option proto 'dhcp'
 
     config interface 'br_lan'
             option device 'br-lan'

@@ -272,13 +272,12 @@ class Interfaces(OpenWrtConverter):
             "vlan": vid,
             "device": interface["ifname"],
         }
-        if uci_name == self._get_uci_name(interface["ifname"]):
-            uci_vlan[".name"] = "vlan_{}".format(uci_vlan[".name"])
+        uci_vlan[".name"] = "vlan_{}".format(uci_vlan[".name"])
         uci_vlan_interface = {
             ".type": "interface",
             # To avoid conflicts, auto-generated interfaces are prefixed with "if"
             # because UCI does not support multiple blocks with the same name.
-            ".name": f"if_{uci_name}_{vid}",
+            ".name": f"{uci_name}_{vid}",
             "device": "{ifname}.{vid}".format(ifname=interface["ifname"], vid=vid),
             "proto": "none",
         }
@@ -524,10 +523,7 @@ class Interfaces(OpenWrtConverter):
 
         def make_fallback_interface(name, config):
             interface_name = config.get(".name", name)
-            if "device" in interface_name:
-                interface_name = interface_name.replace("device", "int")
-            else:
-                interface_name = f"int_{interface_name}"
+            interface_name = interface_name.lstrip("device_")
             return OrderedDict(
                 {
                     ".type": "interface",
@@ -627,7 +623,7 @@ class Interfaces(OpenWrtConverter):
     def __update_interface_device_config(self, interface, device_config):
         if interface.get("type") == "bridge-vlan":
             return self.__netjson_vlan(interface, device_config)
-        interface = self._handle_bridge_vlan(interface, device_config)
+        interface = self._handle_bridge_vlan_interface(interface, device_config)
         if not interface:
             return
         # For OpenWrt ≥ 21 (DSA), bridge VLAN filtering requires deferring
@@ -657,17 +653,23 @@ class Interfaces(OpenWrtConverter):
         del self._device_config[device_config["name"]]
         return interface
 
-    def _handle_bridge_vlan(self, interface, device_config):
-        # For auto-generated VLAN-style interfaces (e.g. "br-lan.10") with no protocol,
-        # check if the VLAN ID is already defined in the bridge config.
-        if interface.get("proto", "none") == "none" and "." in interface.get(
-            "ifname", ""
-        ):
-            _, _, vlan_id = interface["ifname"].rpartition(".")
-            if device_config.get("vlan_filtering", []):
-                for vlan in device_config["vlan_filtering"]:
-                    if vlan["vlan"] == int(vlan_id):
-                        return
+    def _handle_bridge_vlan_interface(self, interface, device_config):
+        ifname = interface.get("ifname", "")
+        if "." not in ifname:
+            # no VLAN suffix, nothing to do
+            return interface
+
+        _, _, vlan_id = interface["ifname"].rpartition(".")
+        for vlan in device_config.get("vlan_filtering", []):
+            if vlan["vlan"] == int(vlan_id):
+                if interface.get("proto") == "none":
+                    # Return None to ignore this auto-generated interface.
+                    return
+                # Auto-generated interface is being overridden by user.
+                # Override the ".name" to avoid setting "network" field
+                # in NetJSON output.
+                interface[".name"] = self._get_uci_name(interface["ifname"])
+                break
         return interface
 
     def __netjson_dsa_interface(self, interface):
