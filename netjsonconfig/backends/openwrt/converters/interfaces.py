@@ -662,7 +662,12 @@ class Interfaces(OpenWrtConverter):
         _, _, vlan_id = interface["ifname"].rpartition(".")
         for vlan in device_config.get("vlan_filtering", []):
             if vlan["vlan"] == int(vlan_id):
-                if interface.get("proto") == "none":
+                if interface.get("proto") == "none" and interface.keys() == {
+                    ".type",
+                    ".name",
+                    "ifname",
+                    "proto",
+                }:
                     # Return None to ignore this auto-generated interface.
                     return
                 # Auto-generated interface is being overridden by user.
