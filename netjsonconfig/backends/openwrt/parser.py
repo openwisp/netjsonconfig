@@ -91,9 +91,12 @@ class OpenWrtParser(BaseParser):
         # process bridges using the interface converter,
         # therefore we need to update block type here.
         if block[".type"] in ["device", "bridge-vlan"]:
-            if block.get("type") in ["bridge", "8021q", "8021ad"]:
+            if (
+                block.get("type") in ["bridge", "8021q", "8021ad"]
+                or block[".type"] == "bridge-vlan"
+            ):
                 block["bridge_21"] = True
-            elif block[".type"] == "bridge-vlan":
+            if block[".type"] == "bridge-vlan":
                 block["type"] = "bridge-vlan"
             elif not block.get("type", None):
                 block["type"] = "device"

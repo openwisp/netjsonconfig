@@ -1323,12 +1323,6 @@ config interface 'home_vlan_2'
 config globals 'globals'
     option ula_prefix 'fd48:e132:af34::/48'
 
-config device 'device_home'
-    option name 'br-lan'
-    list ports 'lan1'
-    list ports 'lan2'
-    list ports 'lan3'
-    option type 'bridge'
 
 config interface 'home'
     option device 'br-lan'
@@ -1353,6 +1347,13 @@ config interface 'cctv'
 config interface 'iot'
     option device 'br-lan.2'
     option proto 'dhcp'
+
+config device 'home'
+    option name 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2'
+    list ports 'lan3'
+    option type 'bridge'
 """
 
     def test_parse_vlan_filtering_bridge_interface_unordered(self):
