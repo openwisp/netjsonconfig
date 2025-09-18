@@ -518,8 +518,8 @@ class Interfaces(OpenWrtConverter):
         Parsing order:
         1. Parse all ``device`` and ``bridge-vlan`` blocks.
         2. Parse ``interface`` blocks not referencing VLAN interfaces.
-        3. Parse remaining ``interface`` blocks (including VLAN interfaces).
-        4. Add fallback interfaces for any unconsumed ``device_config``.
+        3. Add fallback interfaces for any unconsumed ``device_config``.
+        4. Parse remaining ``interface`` blocks (including VLAN interfaces).
         """
 
         result = OrderedDict()
@@ -532,10 +532,15 @@ class Interfaces(OpenWrtConverter):
         )
         # Parse non VLAN interfaces
         result = self.__process_blocks(result, remove_block, self.__skip_vlan_block)
+        # Add fallback interfaces before parsing VLAN interfaces.
+        # This ensures that the primary bridge/device interfaces are already present so
+        # subsequently parsed VLAN/interface blocks can correctly reference or
+        # override them. This preserves the required ordering for producing
+        # a consistent NetJSON -> UCI mapping.
+        result = self.__add_fallback_interfaces(result)
         # Parse remaining interfaces
         result = self.__process_blocks(result, remove_block, self.should_skip_block)
 
-        result = self.__add_fallback_interfaces(result)
         return result
 
     def __is_device_config(self, interface):
