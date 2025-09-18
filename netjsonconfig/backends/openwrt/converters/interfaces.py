@@ -45,8 +45,6 @@ class Interfaces(OpenWrtConverter):
         super().__init__(backend)
         self._device_config = {}
         self._bridge_vlan_config_uci = []
-        self._deferred_interfaces_to_parse = OrderedDict()
-        self._parsing_deferred = False
 
     def __set_dsa_interface(self, interface):
         """
