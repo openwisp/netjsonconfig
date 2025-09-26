@@ -3,7 +3,7 @@ import unittest
 from openwisp_utils.tests import capture_stdout
 
 from netjsonconfig import OpenWrt
-from netjsonconfig.utils import _TabsMixin
+from netjsonconfig.utils import ValidationError, _TabsMixin
 
 
 class TestDefault(unittest.TestCase, _TabsMixin):
@@ -251,3 +251,30 @@ config olsrv2 'internet_hna'
 """
         )
         self.assertEqual(o.render(), expected)
+
+    def test_merge_invalid_format(self):
+        invalid = {
+            "dhcp": {
+                "lan": {
+                    "interface": "lan",
+                    "start": 100,
+                    "limit": 150,
+                    "leasetime": "12h",
+                }
+            }
+        }
+        valid = {
+            "dhcp": [
+                {
+                    "dhcpv6": "disabled",
+                    "ignore": True,
+                    "ra": "disabled",
+                    "config_value": "lan",
+                    "config_name": "dhcp",
+                }
+            ]
+        }
+        with self.assertRaises(ValidationError) as context:
+            OpenWrt({}, templates=[valid, invalid]).validate()
+
+        self.assertIn("Cannot merge dict into non-dict", str(context.exception))
