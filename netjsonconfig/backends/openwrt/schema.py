@@ -735,6 +735,119 @@ schema = merge_config(
                     {"$ref": "#/definitions/base_interface_settings"},
                 ],
             },
+            "batadv_interface": {
+                "title": "BATMAN-adv Interface",
+                "type": "object",
+                "required": ["type", "proto", "name"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["batadv"],
+                                "default": "batadv",
+                                "propertyOrder": 1,
+                            },
+                            "proto": {
+                                "type": "string",
+                                "enum": ["batadv"],
+                                "default": "batadv",
+                                "propertyOrder": 2,
+                            },
+                            "name": {"type": "string", "propertyOrder": 3},
+                            "routing_algo": {
+                                "type": "string",
+                                "enum": ["BATMAN_IV", "BATMAN_V"],
+                                "default": "BATMAN_IV",
+                                "propertyOrder": 4,
+                            },
+                            "bridge_loop_avoidance": {
+                                "type": "boolean",
+                                "format": "checkbox",
+                                "default": True,
+                                "propertyOrder": 5,
+                            },
+                            "gw_mode": {
+                                "type": "string",
+                                "enum": ["off", "client", "server"],
+                                "default": "off",
+                                "propertyOrder": 6,
+                            },
+                            "hop_penalty": {
+                                "type": "integer",
+                                "default": 30,
+                                "propertyOrder": 7,
+                            },
+                            "mtu": {
+                                "type": "integer",
+                                "default": 1500,
+                                "propertyOrder": 8,
+                            },
+                            "fragmentation": {
+                                "type": "boolean",
+                                "format": "checkbox",
+                                "default": True,
+                                "propertyOrder": 9,
+                            },
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
+            },
+            "batadv_hardif_interface": {
+                "title": "BATMAN-adv Hard Interface",
+                "type": "object",
+                "required": ["type", "proto", "name", "device", "master"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["batadv_hardif"],
+                                "default": "batadv_hardif",
+                                "propertyOrder": 1,
+                            },
+                            "proto": {
+                                "type": "string",
+                                "enum": ["batadv_hardif"],
+                                "default": "batadv_hardif",
+                                "propertyOrder": 2,
+                            },
+                            "name": {"type": "string", "propertyOrder": 3},
+                            "device": {"type": "string", "propertyOrder": 4},
+                            "master": {"type": "string", "propertyOrder": 5},
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
+            },
+            "mesh_interface": {
+                "title": "Mesh Interface (802.11s)",
+                "type": "object",
+                "required": ["type", "proto", "name", "device", "master"],
+                "allOf": [
+                    {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["mesh"],
+                                "default": "mesh",
+                                "propertyOrder": 1,
+                            },
+                            "proto": {
+                                "type": "string",
+                                "enum": ["batadv_hardif"],
+                                "default": "batadv_hardif",
+                                "propertyOrder": 2,
+                            },
+                            "name": {"type": "string", "propertyOrder": 3},
+                            "device": {"type": "string", "propertyOrder": 4},
+                            "master": {"type": "string", "propertyOrder": 5},
+                        }
+                    },
+                    {"$ref": "#/definitions/base_interface_settings"},
+                ],
+            },
             "base_radio_settings": {
                 "properties": {
                     "driver": {
@@ -973,6 +1086,9 @@ schema = merge_config(
                         {"$ref": "#/definitions/wireguard_interface"},
                         {"$ref": "#/definitions/vlan_8021q"},
                         {"$ref": "#/definitions/vlan_8021ad"},
+                        {"$ref": "#/definitions/batadv_interface"},
+                        {"$ref": "#/definitions/batadv_hardif_interface"},
+                        {"$ref": "#/definitions/mesh_interface"},
                     ]
                 }
             },
