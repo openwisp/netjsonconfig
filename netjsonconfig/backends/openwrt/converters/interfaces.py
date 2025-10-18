@@ -238,6 +238,32 @@ class Interfaces(OpenWrtConverter):
         interface["vid"] = interface.pop("vni")
         return interface
 
+    def _intermediate_batadv(self, interface):
+        interface["proto"] = "batadv"
+        interface.setdefault("routing_algo", "BATMAN_IV")
+        interface["bridge_loop_avoidance"] = int(
+            interface.get("bridge_loop_avoidance", True)
+        )
+        interface.setdefault("gw_mode", "off")
+        interface.setdefault("hop_penalty", 30)
+        interface.setdefault("mtu", 1500)
+        interface["fragmentation"] = int(interface.get("fragmentation", True))
+        interface.pop("ifname", None)
+        return interface
+
+    def _intermediate_batadv_hardif(self, interface):
+        interface["proto"] = "batadv_hardif"
+        interface["device"] = interface.pop("device", interface.get("ifname", None))
+        interface.setdefault("master", "bat0")
+        interface.pop("enabled", None)
+        interface.pop("ifname", None)
+        return interface
+
+    def _intermediate_mesh(self, interface):
+        interface = self._intermediate_batadv_hardif(interface)
+        interface["proto"] = "batadv_hardif"
+        return interface
+
     def _intermediate_8021_vlan(self, interface):
         interface["name"] = "{}.{}".format(interface["ifname"], interface["vid"])
         interface[".name"] = interface.get("network") or "vlan_{}_{}".format(
@@ -930,6 +956,38 @@ class Interfaces(OpenWrtConverter):
         interface["vni"] = interface.pop("vid", None)
         interface["port"] = interface["port"]
         return self.type_cast(interface, schema=self._vxlan_schema)
+
+    def _netjson_batadv(self, interface):
+        interface["type"] = "batadv"
+        # Convert numeric values back to booleans/ints for schema compliance
+        interface["bridge_loop_avoidance"] = bool(
+            int(interface.get("bridge_loop_avoidance", 1))
+        )
+        interface["fragmentation"] = bool(int(interface.get("fragmentation", 1)))
+        return interface
+
+    def _netjson_batadv_hardif(self, interface):
+        interface["type"] = "batadv_hardif"
+        # Ensure proto is set
+        if "proto" not in interface:
+            interface["proto"] = "batadv_hardif"
+        # Move device from name to device field
+        if "name" in interface and "device" not in interface:
+            interface["device"] = interface["name"]
+            interface["name"] = interface.get(
+                "network", interface.get("ifname", "batmesh")
+            )
+        if "enabled" in interface:
+            interface["enabled"] = bool(int(interface["enabled"]))
+        # Remove network if it's same as name
+        if interface.get("network") == interface.get("name"):
+            interface.pop("network", None)
+        return interface
+
+    def _netjson_mesh(self, block):
+        data = self._netjson_batadv_hardif(block)
+        data["type"] = "mesh"
+        return data
 
     def __netjson_address(self, address, interface):
         ip = ip_interface(address)
