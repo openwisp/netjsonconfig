@@ -327,6 +327,8 @@ There are 4 main types of interfaces:
 - **bridge interfaces**: must be of type ``bridge``
 - **dialup interfaces**: must be of type ``dialup``
 - **modem manager interfaces**: must be of type ``modem-manager``
+- **mesh interfaces**: must be of type ``mesh`` or ``batadv_hardif``
+- **batman-adv interfaces**: must be of type ``batadv``
 
 Interface object extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3243,6 +3245,201 @@ Will be rendered as follows:
             option persistent_keepalive '60'
             option public_key '94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE='
             option route_allowed_ips '1'
+
+BATMAN-adv (Better Approach To Mobile Ad-hoc Networking)
+---------------------------------------------------------
+
+``OpenWrt`` backend includes support for BATMAN-adv, a mesh networking protocol
+that operates on Layer 2. BATMAN-adv is designed to provide decentralized mesh
+networking capabilities with automatic route optimization.
+
+BATMAN-adv Interface Settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The main BATMAN-adv interface (``batadv`` type) represents the virtual mesh
+interface and supports the following settings:
+
+====================== ======= ============== =====================================
+key name               type    default        allowed values
+====================== ======= ============== =====================================
+``type``               string  ``batadv``     ``batadv``
+``proto``              string  ``batadv``     ``batadv``
+``name``               string  required       interface name (e.g., ``bat0``)
+``routing_algo``       string  ``BATMAN_IV``  ``BATMAN_IV``, ``BATMAN_V``
+``bridge_loop_avoid.`` boolean ``True``       enable bridge loop avoidance
+``gw_mode``            string  ``off``        ``off``, ``client``, ``server``
+``hop_penalty``        integer ``30``         penalty for each hop (0-255)
+``mtu``                integer ``1500``       Maximum Transmission Unit
+``fragmentation``      boolean ``True``       enable fragmentation
+====================== ======= ============== =====================================
+
+.. note::
+    **bridge_loop_avoidance** is shortened as ``bridge_loop_avoid.`` in the
+    table above due to space constraints. Use the full name
+    ``bridge_loop_avoidance`` in your configuration.
+
+BATMAN-adv Hard Interface Settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Hard interfaces (``batadv_hardif`` or ``mesh`` type) are the physical or
+wireless interfaces that participate in the BATMAN-adv mesh network:
+
+============ ====== ========= =============================================
+key name     type   default   description
+============ ====== ========= =============================================
+``type``     string required  ``batadv_hardif`` or ``mesh``
+``proto``    string required  ``batadv_hardif``
+``name``     string required  logical interface name
+``device``   string required  physical device name (e.g., ``phy1-mesh0``)
+``master``   string ``bat0``  name of the BATMAN-adv master interface
+============ ====== ========= =============================================
+
+.. note::
+    The ``mesh`` type is a convenience alias for ``batadv_hardif`` and is
+    typically used with 802.11s wireless mesh interfaces. Both types are
+    converted to the same ``batadv_hardif`` protocol in the OpenWrt
+    configuration.
+
+BATMAN-adv Interface Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "batadv",
+                "proto": "batadv",
+                "name": "bat0",
+                "routing_algo": "BATMAN_V",
+                "bridge_loop_avoidance": True,
+                "gw_mode": "server",
+                "hop_penalty": 30,
+                "mtu": 1500,
+                "fragmentation": True,
+            }
+        ]
+    }
+
+Will be rendered as follows:
+
+::
+
+    package network
+
+    config interface 'bat0'
+            option bridge_loop_avoidance '1'
+            option fragmentation '1'
+            option gw_mode 'server'
+            option hop_penalty '30'
+            option mtu '1500'
+            option proto 'batadv'
+            option routing_algo 'BATMAN_V'
+
+BATMAN-adv Hard Interface Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following *configuration dictionary*:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "batadv_hardif",
+                "proto": "batadv_hardif",
+                "name": "batmesh",
+                "device": "phy1-mesh0",
+                "master": "bat0",
+            }
+        ]
+    }
+
+Will be rendered as follows:
+
+::
+
+    package network
+
+    config interface 'batmesh'
+            option device 'phy1-mesh0'
+            option master 'bat0'
+            option proto 'batadv_hardif'
+
+Mesh Interface (802.11s) Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For wireless mesh interfaces using 802.11s, you can use the ``mesh`` type as
+a convenient alias:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "mesh",
+                "proto": "batadv_hardif",
+                "name": "batmesh",
+                "device": "phy1-mesh0",
+                "master": "bat0",
+            }
+        ]
+    }
+
+This will produce the same output as the previous example.
+
+Complete BATMAN-adv Mesh Network Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here's a complete example showing a BATMAN-adv mesh network with a main
+interface and a hard interface:
+
+.. code-block:: python
+
+    {
+        "interfaces": [
+            {
+                "type": "batadv",
+                "proto": "batadv",
+                "name": "bat0",
+                "routing_algo": "BATMAN_V",
+                "bridge_loop_avoidance": True,
+                "gw_mode": "off",
+                "hop_penalty": 30,
+                "mtu": 1500,
+                "fragmentation": True,
+            },
+            {
+                "type": "mesh",
+                "proto": "batadv_hardif",
+                "name": "batmesh",
+                "device": "phy1-mesh0",
+                "master": "bat0",
+            }
+        ]
+    }
+
+Will be rendered as follows:
+
+::
+
+    package network
+
+    config interface 'bat0'
+            option bridge_loop_avoidance '1'
+            option fragmentation '1'
+            option gw_mode 'off'
+            option hop_penalty '30'
+            option mtu '1500'
+            option proto 'batadv'
+            option routing_algo 'BATMAN_V'
+
+    config interface 'batmesh'
+            option device 'phy1-mesh0'
+            option master 'bat0'
+            option proto 'batadv_hardif'
 
 All the other settings
 ----------------------
