@@ -1,4 +1,6 @@
 version: 2
+sphinx:
+  configuration: docs/source/conf.py
 
 # Build all formats
 formats:

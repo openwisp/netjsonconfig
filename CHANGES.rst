@@ -1,10 +1,41 @@
 Change log
 ==========
 
-Version 1.2.0 [Unreleased]
+Version 1.2.0 [2025-10-23]
 --------------------------
 
-Work in progress.
+Changes
+~~~~~~~
+
+Dependencies
+++++++++++++
+
+- Bumped ``jinja2~=3.1.6``.
+- Bumped ``jsonschema~=4.25.1``.
+- Added support for Python ``3.11``, ``3.12``, and ``3.13``.
+- Dropped support for Python ``3.8``.
+
+Bugfixes
+~~~~~~~~
+
+- Fixed parsing issues with complex bridge VLAN filtering configurations
+  `#356 <https://github.com/openwisp/netjsonconfig/issues/356>`_. Added an
+  example in the documentation showing how to override ``bridge-vlan``
+  interfaces.
+- Fixed missing ``bridge-vlan`` sections when ``ula_prefix`` was present
+  `#357 <https://github.com/openwisp/netjsonconfig/issues/357>`_.
+
+Version 1.1.3 [2025-07-31]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- `Automatically generate a logical name for VLAN 802.1X interfaces
+  <https://github.com/openwisp/netjsonconfig/pull/346>`_ in the **OpenWRT
+  Backend** when the ``network`` field is missing in the NetJSON
+  configuration. This prevents misconfiguration due to missing interface
+  names.
 
 Version 1.1.2 [2025-03-05]
 --------------------------

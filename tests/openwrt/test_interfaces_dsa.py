@@ -1111,12 +1111,13 @@ config interface 'wan'
         self.assertEqual(o.config, self._l2_options_interface_netjson)
 
     _vlan_filtering_bridge_netjson = {
+        "general": {"ula_prefix": "fd48:e132:af34::/48"},
         "interfaces": [
             {
                 "type": "bridge",
                 "bridge_members": ["lan1", "lan2", "lan3"],
                 "name": "br-lan",
-                "network": "home_vlan",
+                "network": "home",
                 "vlan_filtering": [
                     {
                         "vlan": 1,
@@ -1134,12 +1135,15 @@ config interface 'wan'
                     },
                 ],
             }
-        ]
+        ],
     }
 
     _vlan_filtering_bridge_uci = """package network
 
-config device 'device_home_vlan'
+config globals 'globals'
+    option ula_prefix 'fd48:e132:af34::/48'
+
+config device 'device_home'
     option name 'br-lan'
     list ports 'lan1'
     list ports 'lan2'
@@ -1147,27 +1151,27 @@ config device 'device_home_vlan'
     option type 'bridge'
     option vlan_filtering '1'
 
-config bridge-vlan 'home_vlan_1'
+config bridge-vlan 'vlan_home_1'
     option device 'br-lan'
     list ports 'lan1:t*'
     list ports 'lan2:t'
     option vlan '1'
 
-config bridge-vlan 'home_vlan_2'
+config bridge-vlan 'vlan_home_2'
     option device 'br-lan'
     list ports 'lan1:t'
     list ports 'lan3:u*'
     option vlan '2'
 
-config interface 'home_vlan_1'
+config interface 'home_1'
     option device 'br-lan.1'
     option proto 'none'
 
-config interface 'home_vlan_2'
+config interface 'home_2'
     option device 'br-lan.2'
     option proto 'none'
 
-config interface 'home_vlan'
+config interface 'home'
     option device 'br-lan'
     option proto 'none'
 """
@@ -1247,19 +1251,15 @@ config bridge-vlan 'vlan_br_lan_1'
     list ports 'lan2:u'
     option vlan '1'
 
-config interface 'vlan_br_lan_1'
+config interface 'br_lan_1'
     option device 'br-lan.1'
-    option proto 'none'
+    option proto 'static'
+    option ipaddr '192.168.2.1'
+    option netmask '255.255.255.0'
 
 config interface 'br_lan'
     option device 'br-lan'
     option proto 'none'
-
-config interface 'br_lan_1'
-    option device 'br-lan.1'
-    option ipaddr '192.168.2.1'
-    option netmask '255.255.255.0'
-    option proto 'static'
 """
 
     def test_render_bridge_vlan_filtering_override_interface(self):
@@ -1273,6 +1273,102 @@ config interface 'br_lan_1'
         expected = deepcopy(self._vlan_filtering_bridge_override_netjson)
         del expected["interfaces"][1]["mtu"]
         del expected["interfaces"][1]["mac"]
+        self.assertEqual(o.config, expected)
+
+    _vlan_filtering_bridge_interface_absent = """package network
+
+config globals 'globals'
+    option ula_prefix 'fd48:e132:af34::/48'
+
+config device 'device_home'
+    option name 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2'
+    list ports 'lan3'
+    option type 'bridge'
+    option vlan_filtering '1'
+
+config bridge-vlan 'home_vlan_1'
+    option device 'br-lan'
+    list ports 'lan1:t*'
+    list ports 'lan2:t'
+    option vlan '1'
+
+config bridge-vlan 'home_vlan_2'
+    option device 'br-lan'
+    list ports 'lan1:t'
+    list ports 'lan3:u*'
+    option vlan '2'
+
+config interface 'home_vlan_1'
+    option device 'br-lan.1'
+    option proto 'none'
+
+config interface 'home_vlan_2'
+    option device 'br-lan.2'
+    option proto 'none'
+"""
+
+    def test_parse_vlan_filtering_bridge_interface_absent(self):
+        o = OpenWrt(native=self._vlan_filtering_bridge_interface_absent)
+        expected = deepcopy(self._vlan_filtering_bridge_netjson)
+        expected["interfaces"][0]["vlan_filtering"][0]["ports"][1][
+            "primary_vid"
+        ] = False
+        expected["interfaces"][0]["network"] = "br-lan"
+        self.assertEqual(o.config, expected)
+
+    _vlan_filtering_bridge_interface_unordered = """package network
+
+config globals 'globals'
+    option ula_prefix 'fd48:e132:af34::/48'
+
+
+config interface 'home'
+    option device 'br-lan'
+    option proto 'none'
+
+config bridge-vlan 'home_vlan_1'
+    option device 'br-lan'
+    list ports 'lan1:t*'
+    list ports 'lan2:t'
+    option vlan '1'
+
+config bridge-vlan 'home_vlan_2'
+    option device 'br-lan'
+    list ports 'lan1:t'
+    list ports 'lan3:u*'
+    option vlan '2'
+
+config interface 'cctv'
+    option device 'br-lan.1'
+    option proto 'none'
+
+config interface 'iot'
+    option device 'br-lan.2'
+    option proto 'dhcp'
+
+config device 'home'
+    option name 'br-lan'
+    list ports 'lan1'
+    list ports 'lan2'
+    list ports 'lan3'
+    option type 'bridge'
+"""
+
+    def test_parse_vlan_filtering_bridge_interface_unordered(self):
+        o = OpenWrt(native=self._vlan_filtering_bridge_interface_unordered)
+        expected = deepcopy(self._vlan_filtering_bridge_netjson)
+        expected["interfaces"][0]["vlan_filtering"][0]["ports"][1][
+            "primary_vid"
+        ] = False
+        expected["interfaces"].append(
+            {
+                "name": "br-lan.2",
+                "type": "ethernet",
+                "addresses": [{"family": "ipv4", "proto": "dhcp"}],
+            }
+        )
         self.assertEqual(o.config, expected)
 
     def test_render_dns(self):
