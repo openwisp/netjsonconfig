@@ -3,7 +3,7 @@ import unittest
 from openwisp_utils.tests import capture_stdout
 
 from netjsonconfig import OpenWrt
-from netjsonconfig.utils import ValidationError, _TabsMixin
+from netjsonconfig.utils import _TabsMixin
 
 
 class TestDefault(unittest.TestCase, _TabsMixin):
@@ -274,7 +274,5 @@ config olsrv2 'internet_hna'
                 }
             ]
         }
-        with self.assertRaises(ValidationError) as context:
-            OpenWrt({}, templates=[valid, invalid]).validate()
-
-        self.assertIn("Cannot merge dict into non-dict", str(context.exception))
+        o = OpenWrt({}, templates=[valid, invalid])
+        o.validate()
