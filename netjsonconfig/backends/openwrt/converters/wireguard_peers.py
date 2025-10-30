@@ -10,6 +10,13 @@ class WireguardPeers(OpenWrtConverter):
     # wireguard OpenWRT package, this is unpredictable
     _uci_types = None
 
+    def should_skip_block(self, block):
+        """
+        Override should_skip_block to only process blocks with .type starting with 'wireguard_'
+        """
+        _type = block.get(".type", "")
+        return not _type.startswith("wireguard_")
+
     def to_intermediate_loop(self, block, result, index=None):
         result.setdefault("network", [])
         result["network"].append(self.__intermediate_peer(block, index))

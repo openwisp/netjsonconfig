@@ -295,6 +295,19 @@ schema = {
                     "maximum": 2346,
                     "propertyOrder": 12,
                 },
+                "mesh_fwding": {
+                    "type": "string",
+                    "title": "mesh forwarding",
+                    "description": "802.11s mesh forwarding",
+                    "enum": ["0", "1"],
+                    "propertyOrder": 13,
+                },
+                "mesh_rssi_threshold": {
+                    "type": "string",
+                    "title": "mesh RSSI threshold",
+                    "description": "802.11s mesh RSSI threshold",
+                    "propertyOrder": 14,
+                },
             },
         },
         "ssid_wireless_property": {
@@ -407,7 +420,7 @@ schema = {
                     "propertyOrder": 20,
                     "oneOf": [
                         {"$ref": "#/definitions/encryption_none"},
-                        {"$ref": "#/definitions/encryption_wpa3_personal"},
+                        {"$ref": "#/definitions/encryption_wpa3_personal_mesh"},
                         {"$ref": "#/definitions/encryption_wpa_personal"},
                         {"$ref": "#/definitions/encryption_wep"},
                     ],
@@ -472,6 +485,21 @@ schema = {
                 }
             },
         },
+        "encryption_cipher_mesh": {
+            "properties": {
+                "cipher": {
+                    "type": "string",
+                    "enum": ["auto", "ccmp"],
+                    "options": {
+                        "enum_titles": [
+                            "auto",
+                            "Force CCMP (AES)",
+                        ]
+                    },
+                    "propertyOrder": 3,
+                }
+            }
+        },
         "encryption_mfp_property": {
             "properties": {
                 "ieee80211w": {
@@ -534,6 +562,22 @@ schema = {
                 {"$ref": "#/definitions/encryption_base_settings"},
                 {"$ref": "#/definitions/encryption_cipher_ccmp_required"},
                 {"$ref": "#/definitions/encryption_mfp_property_required"},
+                {
+                    "properties": {
+                        "protocol": {
+                            "enum": ["wpa3_personal"],
+                            "options": {"enum_titles": ["WPA3 Personal"]},
+                        },
+                        "key": {"minLength": 8},
+                    }
+                },
+            ],
+        },
+        "encryption_wpa3_personal_mesh": {
+            "title": "WPA3 Personal (Mesh)",
+            "allOf": [
+                {"$ref": "#/definitions/encryption_base_settings"},
+                {"$ref": "#/definitions/encryption_cipher_mesh"},
                 {
                     "properties": {
                         "protocol": {
