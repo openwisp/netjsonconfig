@@ -897,7 +897,7 @@ schema = merge_config(
                         "title": "NAS ID",
                         "type": "string",
                         "description": "NAS ID for RADIUS authentication requests",
-                        "propertyOrder": 13,
+                        "propertyOrder": 14,
                     },
                 }
             },
