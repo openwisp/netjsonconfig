@@ -74,6 +74,7 @@ proto udp
 script-security 0
 status /var/log/openvpn.status 10
 status-version 1
+tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA:@SECLEVEL=0
 tls-server
 user nobody
 verb 3
@@ -110,6 +111,7 @@ verb 3
                     "script_security": 0,
                     "status": "/var/log/openvpn.status 10",
                     "status_version": 1,
+                    "tls_cipher": "TLS-DHE-RSA-WITH-AES-256-CBC-SHA:@SECLEVEL=0",
                     "tls_server": True,
                     "user": "nobody",
                     "verb": 3,
