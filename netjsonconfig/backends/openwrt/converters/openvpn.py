@@ -15,6 +15,8 @@ class OpenVpn(OpenWrtConverter, BaseOpenVpn):
                 "enabled": not vpn.pop("disabled", False),
             }
         )
+        if (cipher := vpn.get("tls_cipher")) and isinstance(cipher, str):
+            vpn["tls_cipher"] = [cipher]
         return super().__intermediate_vpn(vpn, remove=[""])
 
     def __netjson_vpn(self, vpn):
@@ -24,4 +26,6 @@ class OpenVpn(OpenWrtConverter, BaseOpenVpn):
         vpn["disabled"] = vpn.pop("enabled", "0") == "0"
         vpn["name"] = vpn.pop(".name")
         del vpn[".type"]
+        if (cipher := vpn.get("tls_cipher")) and isinstance(cipher, list) and cipher:
+            vpn["tls_cipher"] = cipher[0]
         return super().__netjson_vpn(vpn)

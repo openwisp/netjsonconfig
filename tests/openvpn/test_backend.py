@@ -257,6 +257,7 @@ verb 3
                         "status_version": 1,
                         "tls_client": True,
                         "tls_auth": "tls_auth.key 1",
+                        "tls_cipher": "TLS-DHE-RSA-WITH-AES-256-CBC-SHA:@SECLEVEL=0",
                         "topology": "p2p",
                         "tun_ipv6": True,
                         "up": "/home/user/up-command.sh",
@@ -302,6 +303,7 @@ script-security 1
 status /var/log/openvpn.status 30
 status-version 1
 tls-auth tls_auth.key 1
+tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA:@SECLEVEL=0
 tls-client
 topology p2p
 tun-ipv6
