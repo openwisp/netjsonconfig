@@ -107,8 +107,17 @@ key name                  type    default      allowed values
 ``dev``                   string               any non-whitespace
                                                character (max length: 15)
 ``local``                 string               any string
-``comp_lzo``              string  ``adaptive`` ``yes``, ``no`` or
-                                               ``adaptive``
+``comp_lzo``              string  ``adaptive`` **DEPRECATED** - ``yes``, ``no`` or
+                                               ``adaptive``. Use ``compress`` 
+``compress``              string               Empty string (for migration), 
+                                               ``lzo``, ``lz4``, ``lz4-v2``, 
+                                               ``stub``, ``stub-v2``
+``allow_compression``     string  ``asym``     ``asym`` (compression allowed in
+                                               one direction), ``no`` (disabled),
+                                               ``yes`` (allowed both directions)
+``push_compress``         string               Server-side option to push 
+                                               compression settings to clients.
+                                               Same values as ``compress``
 ``auth``                  string  ``SHA1``     see `auth property source
                                                code`_
 ``cipher``                string  ``BF-CBC``   see `cipher property source

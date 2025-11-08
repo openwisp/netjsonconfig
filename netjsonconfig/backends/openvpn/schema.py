@@ -89,6 +89,15 @@ data_ciphers = [
     "RC2-OFB",
     "none",
 ]
+
+compression_algorithms = [
+    "lzo",
+    "lz4",
+    "lz4-v2",
+    "stub",
+    "stub-v2",
+]
+
 default_cipher = "AES-256-GCM"
 
 base_openvpn_schema = {
@@ -146,11 +155,49 @@ base_openvpn_schema = {
                 "comp_lzo": {
                     "title": "LZO compression",
                     "description": "Use fast LZO compression; may add up to 1 "
-                    "byte per packet for incompressible data",
+                    "byte per packet for incompressible data. Deprecated in favor of --compress",
                     "type": "string",
                     "enum": ["yes", "no", "adaptive"],
                     "default": "adaptive",
                     "propertyOrder": 9,
+                },
+                "compress": {
+                    "title": "compression algorithm",
+                    "description": "Enable compression on the VPN link. Recommended modern option. "
+                    "Use 'lz4' or 'lz4-v2' for best performance, 'lzo' for compatibility, "
+                    "'stub' for placeholder, 'stub-v2' for placeholder with peer info, "
+                    "or empty to migrate from comp-lzo",
+                    "type": "string",
+                    "enum": [""] + compression_algorithms,
+                    "default": "",
+                    "options": {
+                        "enum_titles": [
+                            "Disabled (migrate from comp-lzo)",
+                            "LZO compression (for compatibility)",
+                            "LZ4 compression",
+                            "LZ4-v2 compression (recommended)",
+                            "Compression framing without actual compression",
+                            "Compression framing v2 without actual compression",
+                        ]
+                    },
+                    "propertyOrder": 9.1,
+                },
+                "allow_compression": {
+                    "title": "allow compression",
+                    "description": "Control whether compression is allowed. 'asym' allows compression "
+                    "in one direction only (typically for server pushing to clients). 'no' disables "
+                    "all compression. 'yes' allows compression in both directions.",
+                    "type": "string",
+                    "enum": ["asym", "yes", "no"],
+                    "default": "asym",
+                    "options": {
+                        "enum_titles": [
+                            "Asymmetric (one direction only)",
+                            "No compression allowed",
+                            "Yes - allow compression",
+                        ]
+                    },
+                    "propertyOrder": 9.2,
                 },
                 "auth": {
                     "title": "auth digest algorithm",
