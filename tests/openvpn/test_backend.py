@@ -1143,3 +1143,210 @@ tls-auth-key
             client.render()
         except ValidationError:
             self.fail("ValidationError raised!")
+
+    def test_compression_options(self):
+        """Test modern compress option with various algorithms"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "cipher": "AES-128-CBC",
+                        "compress": "lz4-v2",
+                        "dev": "tun0",
+                        "dev_type": "tun",
+                        "key": "key.pem",
+                        "mode": "p2p",
+                        "name": "test-compress",
+                        "nobind": True,  # ADD THIS
+                        "proto": "udp",
+                        "remote": [{"host": "vpn.example.com", "port": 1194}],
+                        "resolv_retry": "infinite",  # ADD THIS
+                        "tls_client": True,
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-compress
+
+ca ca.pem
+cert cert.pem
+cipher AES-128-CBC
+compress lz4-v2
+dev tun0
+dev-type tun
+key key.pem
+mode p2p
+nobind
+proto udp
+remote vpn.example.com 1194
+resolv-retry infinite
+tls-client
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_allow_compression(self):
+        """Test allow-compression option"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test-server",
+                        "proto": "udp",
+                        "tls_server": True,
+                        "allow_compression": "no",
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-server
+
+allow-compression no
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+tls-server
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_push_compress(self):
+        """Test push-compress option for server"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test-server",
+                        "proto": "udp",
+                        "server": "10.8.0.0 255.255.0.0",
+                        "tls_server": True,
+                        "push_compress": "lz4",
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-server
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+push-compress lz4
+server 10.8.0.0 255.255.0.0
+tls-server
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_compress_with_deprecated_comp_lzo(self):
+        """Test that both old and new compression options can coexist"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "comp_lzo": "adaptive",
+                        "compress": "stub-v2",
+                        "dev": "tun0",
+                        "dev_type": "tun",
+                        "key": "key.pem",
+                        "mode": "p2p",
+                        "name": "test-migration",
+                        "proto": "udp",
+                        "remote": [{"host": "vpn.example.com", "port": 1194}],
+                        "tls_client": True,
+                    }
+                ]
+            }
+        )
+        output = c.render()
+        self.assertIn("comp-lzo adaptive", output)
+        self.assertIn("compress stub-v2", output)
+
+    def test_compress_algorithms(self):
+        """Test all supported compress algorithms"""
+        algorithms = ["lzo", "lz4", "lz4-v2", "stub", "stub-v2"]
+
+        for algo in algorithms:
+            c = OpenVpn(
+                {
+                    "openvpn": [
+                        {
+                            "ca": "ca.pem",
+                            "cert": "cert.pem",
+                            "compress": algo,
+                            "dev": "tun0",
+                            "dev_type": "tun",
+                            "key": "key.pem",
+                            "mode": "p2p",
+                            "name": f"test-{algo}",
+                            "proto": "udp",
+                            "remote": [{"host": "vpn.example.com", "port": 1194}],
+                            "tls_client": True,
+                        }
+                    ]
+                }
+            )
+            output = c.render()
+            self.assertIn(f"compress {algo}", output)
+
+    def test_compress_stub(self):
+        """Test compress with stub for compression framing without compression"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "compress": "stub",
+                        "dev": "tun0",
+                        "dev_type": "tun",
+                        "key": "key.pem",
+                        "mode": "p2p",
+                        "name": "test-stub-compress",
+                        "nobind": True,
+                        "proto": "udp",
+                        "remote": [{"host": "vpn.example.com", "port": 1194}],
+                        "tls_client": True,
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-stub-compress
+
+ca ca.pem
+cert cert.pem
+compress stub
+dev tun0
+dev-type tun
+key key.pem
+mode p2p
+nobind
+proto udp
+remote vpn.example.com 1194
+tls-client
+"""
+        self.assertEqual(c.render(), expected)
