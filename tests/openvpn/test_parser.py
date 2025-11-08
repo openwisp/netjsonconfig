@@ -327,3 +327,55 @@ tls-server
         with self.assertRaises(ValidationError) as err:
             OpenVpn(conf).generate()
         self.assertEqual("'.' is too short", err.exception.message)
+
+    def test_parse_compress(self):
+        """Test parsing compress option"""
+        native = """# openvpn config: test-server
+
+ca ca.pem
+cert cert.pem
+compress lz4-v2
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+tls-server
+"""
+        expected = {
+            "openvpn": [
+                {
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "compress": "lz4-v2",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "key": "key.pem",
+                    "mode": "server",
+                    "name": "test-server",
+                    "proto": "udp",
+                    "tls_server": True,
+                }
+            ]
+        }
+        o = OpenVpn(native=native)
+        self.assertDictEqual(o.config, expected)
+
+    def test_parse_allow_compression(self):
+        """Test parsing allow-compression option"""
+        native = """# openvpn config: test-server
+
+allow-compression no
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+"""
+        o = OpenVpn(native=native)
+        self.assertEqual(o.config["openvpn"][0]["allow_compression"], "no")
