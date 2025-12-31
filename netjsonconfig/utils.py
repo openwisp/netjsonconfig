@@ -22,9 +22,8 @@ def merge_config(template, config, list_identifiers=None):
     """
     result = deepcopy(template)
     for key, value in config.items():
-        if isinstance(value, dict):
-            node = result.get(key, OrderedDict())
-            result[key] = merge_config(node, value)
+        if isinstance(value, dict) and isinstance(result.get(key), dict):
+            result[key] = merge_config(result.get(key), value, list_identifiers)
         elif isinstance(value, list) and isinstance(result.get(key), list):
             result[key] = merge_list(result[key], value, list_identifiers)
         else:

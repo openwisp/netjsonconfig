@@ -251,3 +251,28 @@ config olsrv2 'internet_hna'
 """
         )
         self.assertEqual(o.render(), expected)
+
+    def test_merge_invalid_format(self):
+        invalid = {
+            "dhcp": {
+                "lan": {
+                    "interface": "lan",
+                    "start": 100,
+                    "limit": 150,
+                    "leasetime": "12h",
+                }
+            }
+        }
+        valid = {
+            "dhcp": [
+                {
+                    "dhcpv6": "disabled",
+                    "ignore": True,
+                    "ra": "disabled",
+                    "config_value": "lan",
+                    "config_name": "dhcp",
+                }
+            ]
+        }
+        o = OpenWrt({}, templates=[valid, invalid])
+        o.validate()
