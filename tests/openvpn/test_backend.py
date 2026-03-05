@@ -1159,10 +1159,10 @@ tls-auth-key
                         "key": "key.pem",
                         "mode": "p2p",
                         "name": "test-compress",
-                        "nobind": True,  # ADD THIS
+                        "nobind": True,
                         "proto": "udp",
                         "remote": [{"host": "vpn.example.com", "port": 1194}],
-                        "resolv_retry": "infinite",  # ADD THIS
+                        "resolv_retry": "infinite",
                         "tls_client": True,
                     }
                 ]
@@ -1253,25 +1253,26 @@ tls-server
         algorithms = ["lzo", "lz4", "lz4-v2", "stub", "stub-v2"]
 
         for algo in algorithms:
-            c = OpenVpn(
-                {
-                    "openvpn": [
-                        {
-                            "ca": "ca.pem",
-                            "cert": "cert.pem",
-                            "compress": algo,
-                            "dev": "tun0",
-                            "dev_type": "tun",
-                            "key": "key.pem",
-                            "mode": "p2p",
-                            "name": f"test-{algo}",
-                            "proto": "udp",
-                            "remote": [{"host": "vpn.example.com", "port": 1194}],
-                            "tls_client": True,
-                        }
-                    ]
-                }
-            )
+            with self.subTest(algo=algo):
+                c = OpenVpn(
+                    {
+                        "openvpn": [
+                            {
+                                "ca": "ca.pem",
+                                "cert": "cert.pem",
+                                "compress": algo,
+                                "dev": "tun0",
+                                "dev_type": "tun",
+                                "key": "key.pem",
+                                "mode": "p2p",
+                                "name": f"test-{algo}",
+                                "proto": "udp",
+                                "remote": [{"host": "vpn.example.com", "port": 1194}],
+                                "tls_client": True,
+                            }
+                        ]
+                    }
+                )
             output = c.render()
             self.assertIn(f"compress {algo}", output)
 
@@ -1410,4 +1411,4 @@ tls-server
         output = c.render()
         # comp-lzo adaptive is rendered; compress "" is dropped (falsy) by converter
         self.assertIn("comp-lzo adaptive", output)
-        self.assertNotIn("compress", output)
+        self.assertNotRegex(output, r"\bcompress\b")

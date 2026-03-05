@@ -154,11 +154,12 @@ base_openvpn_schema = {
                 },
                 "comp_lzo": {
                     "title": "LZO compression",
-                    "description": "Use fast LZO compression; may add up to 1 "
-                    "byte per packet for incompressible data. Deprecated in favor of --compress",
+                    "description": (
+                        "DEPRECATED: Should be left empty unless dealing with legacy OpenVPN versions."
+                    ),
                     "type": "string",
                     "enum": ["yes", "no", "adaptive"],
-                    "default": "adaptive",
+                    "default": "",
                     "propertyOrder": 9,
                 },
                 "compress": {
