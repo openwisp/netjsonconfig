@@ -293,8 +293,7 @@ config openvpn 'test_client'
                 ]
             }
         )
-        expected = self._tabs(
-            """package openvpn
+        expected = self._tabs("""package openvpn
 
 config openvpn 'test_no_status'
     option ca 'ca.pem'
@@ -307,8 +306,7 @@ config openvpn 'test_no_status'
     option mode 'server'
     option proto 'udp'
     option tls_server '1'
-"""
-        )
+""")
         self.assertEqual(c.render(), expected)
 
     def test_additional_properties(self):
@@ -336,8 +334,7 @@ config openvpn 'test_no_status'
                 ]
             }
         )
-        expected = self._tabs(
-            """package openvpn
+        expected = self._tabs("""package openvpn
 
 config openvpn 'test_properties'
     option ca 'ca.pem'
@@ -356,8 +353,7 @@ config openvpn 'test_properties'
     option z_number '5'
     option z_string 'string'
     option z_true_val '1'
-"""
-        )
+""")
         self.assertEqual(c.render(), expected)
 
     def test_enabled_missing(self):
@@ -379,8 +375,7 @@ config openvpn 'test_properties'
                 ]
             }
         )
-        expected = self._tabs(
-            """package openvpn
+        expected = self._tabs("""package openvpn
 
 config openvpn 'test_properties'
     option ca 'ca.pem'
@@ -393,8 +388,7 @@ config openvpn 'test_properties'
     option mode 'server'
     option proto 'udp'
     option tls_server '1'
-"""
-        )
+""")
         self.assertEqual(c.render(), expected)
 
     _server_bridge_netjson = {
@@ -549,8 +543,7 @@ config openvpn 'routed'
         self.assertIn("option enabled '0'", c.render())
 
     def test_parse_disabled(self):
-        c = OpenWrt(
-            native="""package openvpn
+        c = OpenWrt(native="""package openvpn
 
 config openvpn 'test_disabled'
     option ca 'ca.pem'
@@ -562,13 +555,11 @@ config openvpn 'test_disabled'
     option key 'key.pem'
     option mode 'server'
     option proto 'udp'
-    option tls_server '1'"""
-        )
+    option tls_server '1'""")
         self.assertTrue(c.config["openvpn"][0]["disabled"])
 
     def test_parse_disabled_default(self):
-        c = OpenWrt(
-            native="""package openvpn
+        c = OpenWrt(native="""package openvpn
 
 config openvpn 'test_disabled'
     option ca 'ca.pem'
@@ -579,6 +570,5 @@ config openvpn 'test_disabled'
     option key 'key.pem'
     option mode 'server'
     option proto 'udp'
-    option tls_server '1'"""
-        )
+    option tls_server '1'""")
         self.assertTrue(c.config["openvpn"][0]["disabled"])

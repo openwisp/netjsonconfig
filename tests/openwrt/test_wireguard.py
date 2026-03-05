@@ -31,8 +31,7 @@ class TestWireguard(unittest.TestCase, _TabsMixin):
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'wg0'
     list addresses '10.0.0.3/24'
@@ -41,13 +40,11 @@ config interface 'wg0'
     option nohostroute '0'
     option private_key 'sGQitlaWF8LJjmNJOPoQkm9BVAtMtdfwpFT6zLSixlQ='
     option proto 'wireguard'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_wireguard_interface(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config interface 'wg0'
     list addresses '10.0.0.3/24'
@@ -56,8 +53,7 @@ config interface 'wg0'
     option nohostroute '0'
     option private_key 'sGQitlaWF8LJjmNJOPoQkm9BVAtMtdfwpFT6zLSixlQ='
     option proto 'wireguard'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -109,8 +105,7 @@ config interface 'wg0'
                 "ip_address_8097b09be57a4b278e2ef2ea9ea809f3": "10.0.0.3",
             },
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'wg0'
     list addresses '10.0.0.3/32'
@@ -119,8 +114,7 @@ config interface 'wg0'
     option nohostroute '0'
     option private_key 'sGQitlaWF8LJjmNJOPoQkm9BVAtMtdfwpFT6zLSixlQ='
     option proto 'wireguard'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_wireguard_peer(self):
@@ -140,8 +134,7 @@ config interface 'wg0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config wireguard_wg0 'wgpeer_wg0'
     list allowed_ips '10.0.0.1/32'
@@ -151,8 +144,7 @@ config wireguard_wg0 'wgpeer_wg0'
     option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
     option public_key 'rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk='
     option route_allowed_ips '1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_wireguard_peer_with_variables(self):
@@ -180,8 +172,7 @@ config wireguard_wg0 'wgpeer_wg0'
                 "pre_key_8097b09be57a4b278e2ef2ea9ea809f3": "oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4=",
             },
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config wireguard_wg0 'wgpeer_wg0'
     list allowed_ips '10.0.0.1/32'
@@ -191,8 +182,7 @@ config wireguard_wg0 'wgpeer_wg0'
     option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
     option public_key 'rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk='
     option route_allowed_ips '1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_wireguard_peer_no_endpoint_host(self):
@@ -211,8 +201,7 @@ config wireguard_wg0 'wgpeer_wg0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config wireguard_wg0 'wgpeer_wg0'
     list allowed_ips '10.0.0.1/32'
@@ -220,13 +209,11 @@ config wireguard_wg0 'wgpeer_wg0'
     option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
     option public_key 'rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk='
     option route_allowed_ips '1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_wireguard_peer(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config wireguard_wg0 'wgpeer_wg0'
     list allowed_ips '10.0.0.1/32'
@@ -236,8 +223,7 @@ config wireguard_wg0 'wgpeer_wg0'
     option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
     option public_key 'rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk='
     option route_allowed_ips '1'
-"""
-        )
+""")
         expected = {
             "wireguard_peers": [
                 {
@@ -319,8 +305,7 @@ config wireguard_wg0 'wgpeer_wg0_2'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config wireguard_wg_dash 'wgpeer_wg_dash'
     list allowed_ips '10.0.0.1/32'
@@ -330,6 +315,5 @@ config wireguard_wg_dash 'wgpeer_wg_dash'
     option preshared_key 'oPZmGdHBseaV1TF0julyElNuJyeKs2Eo+o62R/09IB4='
     option public_key 'rn+isMBpyQ4HX6ZzE709bKnZw5IaLZoIS3hIjmfKCkk='
     option route_allowed_ips '1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)

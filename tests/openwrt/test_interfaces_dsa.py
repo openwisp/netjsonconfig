@@ -28,21 +28,18 @@ class TestInterfaces(unittest.TestCase, _TabsMixin):
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'lo'
     option device 'lo'
     option ipaddr '127.0.0.1'
     option netmask '255.0.0.0'
     option proto 'static'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_loopback(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_lo'
     option name 'lo'
@@ -52,8 +49,7 @@ config interface 'lo'
     option ipaddr '127.0.0.1'
     option netmask '255.0.0.0'
     option proto 'static'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -74,8 +70,7 @@ config interface 'lo'
         self.assertEqual(o.config, expected)
 
     def test_parse_ipv4_cidr(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -85,8 +80,7 @@ config interface 'eth0'
     option ipaddr '192.168.1.2/24'
     option proto 'static'
     option gateway '192.168.1.1'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -108,23 +102,20 @@ config interface 'eth0'
         self.assertEqual(o.config, expected)
 
     def test_parse_mising_proto(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
 
 config interface 'eth0'
     option device 'eth0'
-"""
-        )
+""")
         expected = {"interfaces": [{"name": "eth0", "type": "ethernet"}]}
         o = OpenWrt(native=native)
         self.assertEqual(o.config, expected)
 
     def test_parse_incorrect_ipaddr(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -132,15 +123,13 @@ config device 'device_eth0'
 config interface 'eth0'
     option device 'eth0'
     option ipaddr '/'
-"""
-        )
+""")
         expected = {"interfaces": [{"name": "eth0", "type": "ethernet"}]}
         o = OpenWrt(native=native)
         self.assertEqual(o.config, expected)
 
     def test_parse_incorrect_ipaddr_netmask(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -149,8 +138,7 @@ config interface 'eth0'
     option device 'eth0'
     option ipaddr '/'
     option netmask '255.255.255.0'
-"""
-        )
+""")
         expected = {"interfaces": [{"name": "eth0", "type": "ethernet"}]}
         o = OpenWrt(native=native)
         self.assertEqual(o.config, expected)
@@ -189,8 +177,7 @@ config interface 'eth0'
     }
 
     def test_parse_missing_ipv4_mask(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -199,14 +186,12 @@ config interface 'eth0'
     option device 'eth0'
     option ipaddr '192.168.1.1'
     option proto 'static'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._eth0_32)
 
     def test_parse_forgotten_ipv4_mask(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -215,14 +200,12 @@ config interface 'eth0'
     option device 'eth0'
     option ipaddr '192.168.1.1/'
     option proto 'static'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._eth0_32)
 
     def test_parse_missing_ipv4_mask_list(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -231,14 +214,12 @@ config interface 'eth0'
     option device 'eth0'
     list ipaddr '192.168.1.1'
     option proto 'static'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._eth0_32)
 
     def test_parse_missing_ipv6_mask_list(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -247,14 +228,12 @@ config interface 'eth0'
     option device 'eth0'
     option ip6addr '2aa1:4aaa:2aaa:1d::5/64'
     option proto 'static'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._eth0_64)
 
     def test_parse_ipv4_list(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -265,8 +244,7 @@ config interface 'eth0'
     list ipaddr '192.168.2.1/24'
     list ipaddr '/'
     option proto 'static'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -372,15 +350,13 @@ config interface 'eth0_1'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option ip6addr 'fd87::2/64'
     option proto 'static'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_dhcp(self):
@@ -395,19 +371,16 @@ config interface 'eth0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option proto 'dhcp'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_dhcp(self):
-        native1 = self._tabs(
-            """package network
+        native1 = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -415,16 +388,13 @@ config device 'device_eth0'
 config interface 'eth0'
     option device 'eth0'
     option proto 'dhcp'
-"""
-        )
-        native2 = self._tabs(
-            """package network
+""")
+        native2 = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option proto 'dhcp'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -440,8 +410,7 @@ config interface 'eth0'
         self.assertEqual(o.config, expected)
 
     def test_parse_dhcpv6(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -449,8 +418,7 @@ config device 'device_eth0'
 config interface 'eth0'
     option device 'eth0'
     option proto 'dhcpv6'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -478,8 +446,7 @@ config interface 'eth0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
@@ -488,13 +455,11 @@ config interface 'eth0'
 config interface 'eth0_2'
     option device 'eth0'
     option proto 'dhcpv6'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_multiple_dhcp(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -506,8 +471,7 @@ config interface 'eth0'
 config interface 'eth0_2'
     option device 'eth0'
     option proto 'dhcpv6'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -552,8 +516,7 @@ config interface 'eth0_2'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
@@ -564,13 +527,11 @@ config interface 'eth0'
 config interface 'eth0_2'
     option device 'eth0'
     option proto 'dhcp'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_multiple_ip_and_dhcp(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -584,8 +545,7 @@ config interface 'eth0'
 config interface 'eth0_2'
     option device 'eth0'
     option proto 'dhcp'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -634,8 +594,7 @@ config interface 'eth0_2'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'ppp0'
     option device '/dev/usb/modem1'
@@ -645,13 +604,11 @@ config interface 'ppp0'
     option password 'pwd0123'
     option proto 'ppp'
     option username 'user1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_custom_proto(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config interface 'custom_if0'
     option device '/dev/usb/modem1'
@@ -659,8 +616,7 @@ config interface 'custom_if0'
     option ipv6 '1'
     option keepalive '3'
     option proto 'custom'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -680,20 +636,17 @@ config interface 'custom_if0'
         o = OpenWrt(
             {"interfaces": [{"name": "eth0", "type": "ethernet", "disabled": True}]}
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option enabled '0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_interface_disabled(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -702,8 +655,7 @@ config interface 'eth0'
     option enabled '0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         expected = {
             "interfaces": [{"name": "eth0", "type": "ethernet", "disabled": True}]
         }
@@ -725,21 +677,18 @@ config interface 'eth0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'mobile0'
     option custom_attr 'yes'
     option ifname 'mobile0'
     option mtu '1400'
     option proto '3g'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_interface_custom_attrs(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_mobile0'
     option name 'mobile0'
@@ -749,8 +698,7 @@ config interface 'mobile0'
     option device 'mobile0'
     option mtu '1400'
     option proto 'exotic'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -903,8 +851,7 @@ config interface 'lan_2'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config device 'device_lan'
     option bridge_empty '1'
@@ -914,13 +861,11 @@ config device 'device_lan'
 config interface 'lan'
     option device 'br-lan'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_empty_bridge(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_lan'
     option bridge_empty '1'
@@ -930,8 +875,7 @@ config device 'device_lan'
 config interface 'lan'
     option device 'br-lan'
     option proto 'none'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -1392,8 +1336,7 @@ config device 'home'
                 "dns_search": ["netjson.org", "openwisp.org"],
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
@@ -1402,8 +1345,7 @@ config interface 'eth0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _dns_netjson = {
@@ -1426,8 +1368,7 @@ config interface 'eth0'
     }
 
     def test_parse_dns(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config interface 'eth0'
     option dns '10.11.12.13 8.8.8.8'
@@ -1436,14 +1377,12 @@ config interface 'eth0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._dns_netjson)
 
     def test_parse_dns_list(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -1457,8 +1396,7 @@ config interface 'eth0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertEqual(o.config, self._dns_netjson)
 
@@ -1476,15 +1414,13 @@ config interface 'eth0'
                 "dns_search": ["netjson.org", "openwisp.org"],
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option dns_search 'netjson.org openwisp.org'
     option proto 'dhcp'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_dns_dhcpv6_ignored(self):
@@ -1501,15 +1437,13 @@ config interface 'eth0'
                 "dns_search": ["netjson.org", "openwisp.org"],
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option dns_search 'netjson.org openwisp.org'
     option proto 'dhcpv6'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_dhcp_ignored_proto_none(self):
@@ -1520,26 +1454,22 @@ config interface 'eth0'
                 "dns_search": ["netjson.org", "openwisp.org"],
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_empty_interface(self):
         o = OpenWrt({"interfaces": [{"name": "eth0", "type": "ethernet"}]})
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_ifname_length(self):
@@ -1610,8 +1540,7 @@ config interface 'eth0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'lan'
     option device 'eth0'
@@ -1622,13 +1551,11 @@ config interface 'lan'
 config interface 'lan_2'
     option device 'eth0'
     option proto 'dhcp'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_network_attribute(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -1636,8 +1563,7 @@ config device 'device_eth0'
 config interface 'lan'
     option device 'eth0'
     option proto 'static'
-"""
-        )
+""")
         expected = {
             "interfaces": [{"name": "eth0", "network": "lan", "type": "ethernet"}]
         }
@@ -1648,28 +1574,24 @@ config interface 'lan'
         o = OpenWrt(
             {"interfaces": [{"name": "eth0.1", "type": "ethernet", "network": "lan.1"}]}
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'lan_1'
     option device 'eth0.1'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_network_dash_conversion(self):
         o = OpenWrt(
             {"interfaces": [{"name": "eth-0", "type": "ethernet", "network": "lan-0"}]}
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'lan_0'
     option device 'eth-0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_mac_address_format(self):
@@ -1713,8 +1635,7 @@ config interface 'lan_0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config device 'device_lan'
     option name 'br-lan'
@@ -1725,8 +1646,7 @@ config device 'device_lan'
 config interface 'lan'
     option device 'br-lan'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_interface_list_option(self):
@@ -1741,16 +1661,14 @@ config interface 'lan'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     list ip6class 'wan6'
     list ip6class 'backbone'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_address_list_option(self):
@@ -1767,21 +1685,18 @@ config interface 'eth0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option proto 'dhcp'
     list reqopts '43'
     list reqopts '54'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_interface_list(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -1791,8 +1706,7 @@ config interface 'eth0'
     list ip6class 'wan6'
     list ip6class 'backbone'
     option proto 'none'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {"name": "eth0", "type": "ethernet", "ip6class": ["wan6", "backbone"]}
@@ -1810,16 +1724,14 @@ config interface 'eth0'
                 "dns_servers": ["192.168.3.1", "192.168.3.2"],
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     list dns '8.8.8.8'
     list dns '8.8.4.4'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_dns_search_override(self):
@@ -1835,16 +1747,14 @@ config interface 'eth0'
                 "dns_search": ["domain.com"],
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     list dns_search 'openwisp.org'
     list dns_search 'netjson.org'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _spanning_tree_bridge_netjson = {
@@ -1971,27 +1881,23 @@ config interface 'br_lan'
         o = OpenWrt(
             {"interfaces": [{"name": "eth0", "type": "ethernet", "autostart": False}]}
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option auto '0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_autostart_false(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config interface 'eth0'
     option auto '0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         expected = {
             "interfaces": [{"name": "eth0", "type": "ethernet", "autostart": False}]
         }
@@ -2006,8 +1912,7 @@ config interface 'eth0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config device 'device_eth0'
     option macaddr 'E8:94:F6:33:8C:00'
@@ -2016,13 +1921,11 @@ config device 'device_eth0'
 config interface 'eth0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_macaddr(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config device 'device_eth0'
     option name 'eth0'
@@ -2031,8 +1934,7 @@ config device 'device_eth0'
 config interface 'eth0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {"name": "eth0", "type": "ethernet", "mac": "E8:94:F6:33:8C:00"}
@@ -2055,14 +1957,12 @@ config interface 'eth0'
         o = OpenWrt(
             {"interfaces": [{"name": "eth0", "type": "ethernet", "network": ""}]}
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_empty_dns(self):
@@ -2073,14 +1973,12 @@ config interface 'eth0'
                 "dns_search": [],
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'eth0'
     option device 'eth0'
     option proto 'none'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _vlan8021q_netjson = {

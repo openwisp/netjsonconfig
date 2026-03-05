@@ -273,16 +273,14 @@ config wifi-iface 'wifi_wlan0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
     option ssid 'open'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_wireless_network_attr_validation(self):
@@ -385,8 +383,7 @@ config wifi-iface 'wifi_wlan0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -394,8 +391,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'eth0_1'
     option ssid 'open'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_network_dash_conversion(self):
@@ -416,8 +412,7 @@ config wifi-iface 'wifi_wlan0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -425,8 +420,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'eth0_1'
     option ssid 'open'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _disabled_netjson = {
@@ -542,8 +536,7 @@ config wifi-iface 'wifi_wlan0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -551,8 +544,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option ssid 'MyWifiAP'
     option wmm '1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _macfilter_netjson = {
