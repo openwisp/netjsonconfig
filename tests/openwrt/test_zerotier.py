@@ -93,16 +93,14 @@ config network 'owzt654322'
         self.assertEqual(o.render(), expected)
 
     def test_zt_parse_old(self):
-        native = self._tabs(
-            """package zerotier
+        native = self._tabs("""package zerotier
 
 config zerotier 'global'
     option enabled '0'
     option local_conf '/etc/openwisp/zerotier/zerotier.conf'
     list join '9536600adf654321'
     list join '9536600adf654322'
-"""
-        )
+""")
         expected = {
             "zerotier": [
                 {
@@ -120,8 +118,7 @@ config zerotier 'global'
         self.assertEqual(o.config, expected)
 
     def test_zt_parse_new(self):
-        native = self._tabs(
-            """package zerotier
+        native = self._tabs("""package zerotier
 
 config zerotier 'global'
     option enabled '0'
@@ -136,8 +133,7 @@ config network
     option allow_dns '0'
     option allow_global '0'
     option allow_managed '1'
-"""
-        )
+""")
         expected = {
             "zerotier": [
                 {

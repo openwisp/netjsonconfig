@@ -790,8 +790,7 @@ config wifi-iface 'wifi_wlan0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -799,8 +798,7 @@ config wifi-iface 'wifi_wlan0'
     option ifname 'wlan0'
     option mode 'ap'
     option ssid 'MyNetwork'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _no_encryption_netjson = {

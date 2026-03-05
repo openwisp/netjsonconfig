@@ -109,13 +109,11 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         tar = tarfile.open(fileobj=o.generate(), mode="r")
         system = tar.getmember("uci/system.conf")
         contents = tar.extractfile(system).read().decode()
-        expected = self._tabs(
-            """package system
+        expected = self._tabs("""package system
 
 config 'system' 'system'
     option 'hostname' 'openwisp-test'
-"""
-        )
+""")
         self.assertEqual(contents, expected)
         tar.close()
 

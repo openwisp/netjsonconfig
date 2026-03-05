@@ -230,8 +230,7 @@ config rule6 'rule4'
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config rule 'rule1'
     option action 'blackhole'
@@ -241,8 +240,7 @@ config rule 'rule1'
     option mark '0x0/0x1'
     option out 'eth1'
     option tos '2'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_rule_wrong(self):
@@ -272,8 +270,7 @@ config rule 'rule1'
 
     def test_parse_rules_zone(self):
         with self.assertRaisesRegex(ValidationError, "'wrong' is not a 'cidr'"):
-            OpenWrt(
-                native="""package network
+            OpenWrt(native="""package network
 
 config rule 'rule1'
     option action 'blackhole'
@@ -282,8 +279,7 @@ config rule 'rule1'
     option out 'eth1'
     option src 'wrong'
     option tos '2'
-"""
-            )
+""")
 
     _switch_netjson = {
         "switch": [
