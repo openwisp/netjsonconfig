@@ -184,19 +184,10 @@ base_openvpn_schema = {
                 },
                 "allow_compression": {
                     "title": "allow compression",
-                    "description": "Control whether compression is allowed. 'asym' allows compression "
-                    "in one direction only (typically for server pushing to clients). 'no' disables "
-                    "all compression. 'yes' allows compression in both directions.",
+                    "description": "Control whether compression is allowed.",
                     "type": "string",
-                    "enum": ["asym", "yes", "no"],
-                    "default": "asym",
-                    "options": {
-                        "enum_titles": [
-                            "Asymmetric (one direction only)",
-                            "No compression allowed",
-                            "Yes - allow compression",
-                        ]
-                    },
+                    "enum": ["asym", "no", "yes"],
+                    "default": "no",
                     "propertyOrder": 9.2,
                 },
                 "auth": {

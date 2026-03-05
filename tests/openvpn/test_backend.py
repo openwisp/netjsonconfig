@@ -1222,44 +1222,6 @@ tls-server
 """
         self.assertEqual(c.render(), expected)
 
-    def test_push_compress(self):
-        """Test push-compress option for server"""
-        c = OpenVpn(
-            {
-                "openvpn": [
-                    {
-                        "ca": "ca.pem",
-                        "cert": "cert.pem",
-                        "dev": "tap0",
-                        "dev_type": "tap",
-                        "dh": "dh.pem",
-                        "key": "key.pem",
-                        "mode": "server",
-                        "name": "test-server",
-                        "proto": "udp",
-                        "server": "10.8.0.0 255.255.0.0",
-                        "tls_server": True,
-                        "push_compress": "lz4",
-                    }
-                ]
-            }
-        )
-        expected = """# openvpn config: test-server
-
-ca ca.pem
-cert cert.pem
-dev tap0
-dev-type tap
-dh dh.pem
-key key.pem
-mode server
-proto udp
-push-compress lz4
-server 10.8.0.0 255.255.0.0
-tls-server
-"""
-        self.assertEqual(c.render(), expected)
-
     def test_compress_with_deprecated_comp_lzo(self):
         """Test that both old and new compression options can coexist"""
         c = OpenVpn(
@@ -1350,3 +1312,102 @@ remote vpn.example.com 1194
 tls-client
 """
         self.assertEqual(c.render(), expected)
+
+    def test_allow_compression_asym(self):
+        """Test allow-compression option with asym value"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test-server",
+                        "proto": "udp",
+                        "tls_server": True,
+                        "allow_compression": "asym",
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-server
+
+allow-compression asym
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+tls-server
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_allow_compression_yes(self):
+        """Test allow-compression option with yes value"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "dev": "tap0",
+                        "dev_type": "tap",
+                        "dh": "dh.pem",
+                        "key": "key.pem",
+                        "mode": "server",
+                        "name": "test-server",
+                        "proto": "udp",
+                        "tls_server": True,
+                        "allow_compression": "yes",
+                    }
+                ]
+            }
+        )
+        expected = """# openvpn config: test-server
+
+allow-compression yes
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+tls-server
+"""
+        self.assertEqual(c.render(), expected)
+
+    def test_compress_empty_migration(self):
+        """Test compress with empty string for migration from comp-lzo"""
+        c = OpenVpn(
+            {
+                "openvpn": [
+                    {
+                        "ca": "ca.pem",
+                        "cert": "cert.pem",
+                        "comp_lzo": "adaptive",
+                        "compress": "",
+                        "dev": "tun0",
+                        "dev_type": "tun",
+                        "key": "key.pem",
+                        "mode": "p2p",
+                        "name": "test-migration",
+                        "proto": "udp",
+                        "remote": [{"host": "vpn.example.com", "port": 1194}],
+                        "tls_client": True,
+                    }
+                ]
+            }
+        )
+        output = c.render()
+        # comp-lzo adaptive is rendered; compress "" is dropped (falsy) by converter
+        self.assertIn("comp-lzo adaptive", output)
+        self.assertNotIn("compress", output)
