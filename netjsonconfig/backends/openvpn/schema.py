@@ -152,36 +152,17 @@ base_openvpn_schema = {
                     "If unspecified, OpenVPN will bind to all interfaces.",
                     "propertyOrder": 8,
                 },
-                "comp_lzo": {
-                    "title": "LZO compression",
-                    "description": (
-                        "DEPRECATED: Should be left empty unless dealing with legacy OpenVPN versions."
-                    ),
-                    "type": "string",
-                    "enum": ["", "yes", "no", "adaptive"],
-                    "default": "",
-                    "propertyOrder": 9,
-                },
                 "compress": {
                     "title": "compression algorithm",
-                    "description": "Enable compression on the VPN link. Recommended modern option. "
-                    "Use 'lz4' or 'lz4-v2' for best performance, 'lzo' for compatibility, "
-                    "'stub' for placeholder, 'stub-v2' for placeholder with peer info, "
-                    "or empty to migrate from comp-lzo",
+                    "description": (
+                        "DEPRECATED: Specifies the compression algorithm for the VPN data channel."
+                        " Leaving the value empty removes the compress directive from the"
+                        " generated configuration."
+                    ),
                     "type": "string",
                     "enum": [""] + compression_algorithms,
                     "default": "",
-                    "options": {
-                        "enum_titles": [
-                            "Disabled (migrate from comp-lzo)",
-                            "LZO compression (for compatibility)",
-                            "LZ4 compression",
-                            "LZ4-v2 compression (recommended)",
-                            "Compression framing without actual compression",
-                            "Compression framing v2 without actual compression",
-                        ]
-                    },
-                    "propertyOrder": 9.1,
+                    "propertyOrder": 9,
                 },
                 "allow_compression": {
                     "title": "allow compression",
@@ -189,6 +170,17 @@ base_openvpn_schema = {
                     "type": "string",
                     "enum": ["asym", "no", "yes"],
                     "default": "no",
+                    "propertyOrder": 9.1,
+                },
+                "comp_lzo": {
+                    "title": "LZO compression",
+                    "description": (
+                        "DEPRECATED: Legacy LZO compression option. Use the compress directive instead."
+                        " Leave empty unless compatibility with legacy OpenVPN clients is required."
+                    ),
+                    "type": "string",
+                    "enum": ["", "yes", "no", "adaptive"],
+                    "default": "",
                     "propertyOrder": 9.2,
                 },
                 "auth": {

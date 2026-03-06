@@ -107,18 +107,20 @@ key name                  type    default    allowed values
 ``dev``                   string             any non-whitespace character
                                              (max length: 15)
 ``local``                 string             any string
-``comp_lzo``              string             **DEPRECATED** - ``yes``,
-                                             ``no`` or ``adaptive``.
-                                             Default is empty string ("").
-                                             Use ``compress`` instead
-``compress``              string             Empty string (for migration),
+``compress``              string  ``""``     ``""`` (empty string to
+                                             remove the directive),
                                              ``lzo``, ``lz4``, ``lz4-v2``,
-                                             ``stub``, ``stub-v2``
+                                             ``stub``, ``stub-v2``.
 ``allow_compression``     string  ``no``     ``asym`` (compression allowed
                                              in one direction), ``no``
                                              (disabled, default in OpenVPN
                                              2.6), ``yes`` (allowed both
                                              directions)
+``comp_lzo``              string             **DEPRECATED**: ``yes``,
+                                             ``no`` or ``adaptive``.
+                                             Default is empty string
+                                             (``""``). Use ``compress``
+                                             instead.
 ``auth``                  string  ``SHA1``   see `auth property source
                                              code`_
 ``cipher``                string  ``BF-CBC`` see `cipher property source
