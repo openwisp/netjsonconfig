@@ -378,4 +378,20 @@ mode server
 proto udp
 """
         o = OpenVpn(native=native)
-        self.assertEqual(o.config["openvpn"][0]["allow_compression"], "no")
+        expected = {
+            "openvpn": [
+                {
+                    "allow_compression": "no",
+                    "ca": "ca.pem",
+                    "cert": "cert.pem",
+                    "dev": "tap0",
+                    "dev_type": "tap",
+                    "dh": "dh.pem",
+                    "key": "key.pem",
+                    "mode": "server",
+                    "name": "test-server",
+                    "proto": "udp",
+                }
+            ]
+        }
+        self.assertDictEqual(o.config, expected)

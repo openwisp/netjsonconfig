@@ -1251,10 +1251,9 @@ tls-server
     def test_compress_algorithms(self):
         """Test all supported compress algorithms"""
         algorithms = ["lzo", "lz4", "lz4-v2", "stub", "stub-v2"]
-
         for algo in algorithms:
             with self.subTest(algo=algo):
-                c = OpenVpn(
+                config = OpenVpn(
                     {
                         "openvpn": [
                             {
@@ -1273,8 +1272,8 @@ tls-server
                         ]
                     }
                 )
-            output = c.render()
-            self.assertIn(f"compress {algo}", output)
+                output = config.render()
+                self.assertIn(f"compress {algo}", output)
 
     def test_compress_stub(self):
         """Test compress with stub for compression framing without compression"""

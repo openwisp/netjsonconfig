@@ -158,7 +158,7 @@ base_openvpn_schema = {
                         "DEPRECATED: Should be left empty unless dealing with legacy OpenVPN versions."
                     ),
                     "type": "string",
-                    "enum": ["yes", "no", "adaptive"],
+                    "enum": ["", "yes", "no", "adaptive"],
                     "default": "",
                     "propertyOrder": 9,
                 },
