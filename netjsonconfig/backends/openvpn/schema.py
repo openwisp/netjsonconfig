@@ -96,6 +96,7 @@ compression_algorithms = [
     "lz4-v2",
     "stub",
     "stub-v2",
+    "migrate",
 ]
 
 default_cipher = "AES-256-GCM"
@@ -168,8 +169,8 @@ base_openvpn_schema = {
                     "title": "allow compression",
                     "description": "Control whether compression is allowed.",
                     "type": "string",
-                    "enum": ["asym", "no", "yes"],
-                    "default": "no",
+                    "enum": ["", "asym", "no", "yes"],
+                    "default": "",
                     "propertyOrder": 9.1,
                 },
                 "comp_lzo": {

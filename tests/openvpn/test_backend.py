@@ -1250,7 +1250,7 @@ tls-server
 
     def test_compress_algorithms(self):
         """Test all supported compress algorithms"""
-        algorithms = ["lzo", "lz4", "lz4-v2", "stub", "stub-v2"]
+        algorithms = ["lzo", "lz4", "lz4-v2", "stub", "stub-v2", "migrate"]
         for algo in algorithms:
             with self.subTest(algo=algo):
                 config = OpenVpn(
