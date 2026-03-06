@@ -572,3 +572,91 @@ config openvpn 'test_disabled'
     option proto 'udp'
     option tls_server '1'""")
         self.assertTrue(c.config["openvpn"][0]["disabled"])
+
+    _compress_netjson = {
+        "openvpn": [
+            {
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "compress": "lz4-v2",
+                "dev": "tun0",
+                "dev_type": "tun",
+                "disabled": False,
+                "key": "key.pem",
+                "mode": "p2p",
+                "name": "tun0",
+                "proto": "udp",
+                "remote": [{"host": "vpn.example.com", "port": 1194}],
+                "tls_client": True,
+            }
+        ]
+    }
+    _compress_uci = """package openvpn
+
+config openvpn 'tun0'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option compress 'lz4-v2'
+    option dev 'tun0'
+    option dev_type 'tun'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'p2p'
+    option proto 'udp'
+    list remote 'vpn.example.com 1194'
+    option tls_client '1'
+"""
+
+    def test_render_compress(self):
+        """Render compress option in UCI format"""
+        config = OpenWrt(self._compress_netjson)
+        self.assertEqual(config.render(), self._tabs(self._compress_uci))
+
+    def test_parse_compress(self):
+        """Parse compress option from UCI format"""
+        c = OpenWrt(native=self._compress_uci)
+        self.assertEqual(c.config, self._compress_netjson)
+
+    _allow_compression_netjson = {
+        "openvpn": [
+            {
+                "allow_compression": "no",
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "disabled": False,
+                "key": "key.pem",
+                "mode": "server",
+                "name": "test_allow_compression",
+                "proto": "udp",
+                "tls_server": True,
+            }
+        ]
+    }
+    _allow_compression_uci = """package openvpn
+
+config openvpn 'test_allow_compression'
+    option allow_compression 'no'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option tls_server '1'
+"""
+
+    def test_render_allow_compression(self):
+
+        config = OpenWrt(self._allow_compression_netjson)
+        expected = self._tabs(self._allow_compression_uci)
+        self.assertEqual(config.render(), expected)
+
+    def test_parse_allow_compression(self):
+        config = OpenWrt(native=self._allow_compression_uci)
+        self.assertEqual(config.config, self._allow_compression_netjson)

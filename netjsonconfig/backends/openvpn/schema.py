@@ -89,6 +89,16 @@ data_ciphers = [
     "RC2-OFB",
     "none",
 ]
+
+compression_algorithms = [
+    "lzo",
+    "lz4",
+    "lz4-v2",
+    "stub",
+    "stub-v2",
+    "migrate",
+]
+
 default_cipher = "AES-256-GCM"
 
 base_openvpn_schema = {
@@ -143,14 +153,36 @@ base_openvpn_schema = {
                     "If unspecified, OpenVPN will bind to all interfaces.",
                     "propertyOrder": 8,
                 },
+                "compress": {
+                    "title": "compression algorithm",
+                    "description": (
+                        "DEPRECATED: Specifies the compression algorithm for the VPN data channel."
+                        " Leaving the value empty removes the compress directive from the"
+                        " generated configuration."
+                    ),
+                    "type": "string",
+                    "enum": [""] + compression_algorithms,
+                    "default": "",
+                    "propertyOrder": 9,
+                },
+                "allow_compression": {
+                    "title": "allow compression",
+                    "description": "Control whether compression is allowed.",
+                    "type": "string",
+                    "enum": ["", "asym", "no", "yes"],
+                    "default": "",
+                    "propertyOrder": 9.1,
+                },
                 "comp_lzo": {
                     "title": "LZO compression",
-                    "description": "Use fast LZO compression; may add up to 1 "
-                    "byte per packet for incompressible data",
+                    "description": (
+                        "DEPRECATED: Legacy LZO compression option. Use the compress directive instead."
+                        " Leave empty unless compatibility with legacy OpenVPN clients is required."
+                    ),
                     "type": "string",
-                    "enum": ["yes", "no", "adaptive"],
-                    "default": "adaptive",
-                    "propertyOrder": 9,
+                    "enum": ["", "yes", "no", "adaptive"],
+                    "default": "",
+                    "propertyOrder": 9.2,
                 },
                 "auth": {
                     "title": "auth digest algorithm",
