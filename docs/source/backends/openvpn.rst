@@ -110,8 +110,9 @@ key name                  type    default    allowed values
 ``compress``              string  ``""``     ``""`` (empty string to
                                              remove the directive),
                                              ``lzo``, ``lz4``, ``lz4-v2``,
-                                             ``stub``, ``stub-v2``.
-``allow_compression``     string  ``no``     ``asym`` (compression allowed
+                                             ``stub``, ``stub-v2``,
+                                             ``migrate``.
+``allow_compression``     string  ``""``     ``asym`` (compression allowed
                                              in one direction), ``no``
                                              (disabled, default in OpenVPN
                                              2.6), ``yes`` (allowed both
@@ -225,8 +226,8 @@ type is one the following:
 - lists
 
 For a list of all the OpenVPN configuration settings, refer to the
-`OpenVPN 2.3 manual
-<https://community.openvpn.net/openvpn/wiki/Openvpn23ManPage>`_.
+`OpenVPN 2.6 manual
+<https://openvpn.net/community-docs/community-articles/openvpn-2-6-manual.html>`_.
 
 .. _auth property source code: https://github.com/openwisp/netjsonconfig/blob/master/netjsonconfig/backends/openvpn/schema.py#L157-L186
 
