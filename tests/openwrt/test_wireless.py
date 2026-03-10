@@ -63,6 +63,22 @@ config wifi-iface 'wifi_wlan0'
         expected = self._tabs(self._wifi_uci)
         self.assertEqual(o.render(), expected)
 
+    def test_render_wifi_issue_250_ssid_variants(self):
+        ssid_values = [
+            "TrueGait Living Guest",
+            "FalseGait Living Guest",
+            "MyTrueNetwork",
+            "True",
+            "False",
+        ]
+        for ssid in ssid_values:
+            with self.subTest(ssid=ssid):
+                netjson = deepcopy(self._wifi_netjson)
+                netjson["interfaces"][0]["wireless"]["ssid"] = ssid
+                o = OpenWrt(netjson)
+                expected_uci = self._wifi_uci.replace("'MyWifiAP'", f"'{ssid}'")
+                self.assertEqual(o.render(), self._tabs(expected_uci))
+
     def test_parse_wifi_interface(self):
         o = OpenWrt(native=self._wifi_uci)
         self.assertDictEqual(o.config, self._wifi_netjson)

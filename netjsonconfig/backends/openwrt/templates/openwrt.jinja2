@@ -10,7 +10,13 @@
                         list {{ key }} '{{ list_value }}'
                     {% endfor %}
                 {% else %}
+                {% if value is sameas true %}
+                    option {{ key }} '1'
+                {% elif value is sameas false %}
+                    option {{ key }} '0'
+                {% else %}
                     option {{ key }} '{{ value }}'
+                {% endif %}
                 {% endif %}
             {% endif %}
         {% endfor %}

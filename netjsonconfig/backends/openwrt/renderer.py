@@ -16,8 +16,6 @@ class OpenWrtRenderer(BaseRenderer):
             .replace("\noption", "\n\toption")
             .replace("\nlist", "\n\tlist")
         )
-        # convert True to 1 and False to 0
-        output = output.replace("True", "1").replace("False", "0")
         # max 2 consecutive \n delimiters
         output = output.replace("\n\n\n", "\n\n")
         # if output is present
