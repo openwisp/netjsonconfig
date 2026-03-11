@@ -26,8 +26,7 @@ class TestVxlan(unittest.TestCase, _TabsMixin):
                 ]
             }
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'vxlan1'
     option ifname 'vxlan1'
@@ -40,13 +39,11 @@ config interface 'vxlan1'
     option tunlink 'wg0'
     option txcsum '1'
     option vid '1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_vxlan(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config interface 'vxlan1'
     option ifname 'vxlan1'
@@ -59,8 +56,7 @@ config interface 'vxlan1'
     option tunlink 'wg0'
     option txcsum '1'
     option vid '1'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -103,8 +99,7 @@ config interface 'vxlan1'
                 "vni_e9081f8d67c8470d850ceb9c33bd0314": "2",
             },
         )
-        expected = self._tabs(
-            """package network
+        expected = self._tabs("""package network
 
 config interface 'vxlan2'
     option ifname 'vxlan2'
@@ -117,6 +112,5 @@ config interface 'vxlan2'
     option tunlink 'wg0'
     option txcsum '0'
     option vid '2'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)

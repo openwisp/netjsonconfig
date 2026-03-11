@@ -35,8 +35,7 @@ class TestRadio(unittest.TestCase, _TabsMixin):
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '140'
@@ -55,13 +54,11 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '18'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_radio(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '140'
@@ -80,8 +77,7 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '18'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -135,8 +131,7 @@ config wifi-device 'radio1'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '3'
@@ -153,13 +148,11 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '3'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_radio_2ghz_mac80211(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '3'
@@ -176,8 +169,7 @@ config wifi-device 'radio1'
     option phy 'phy1'
     option txpower '3'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -223,8 +215,7 @@ config wifi-device 'radio1'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '132'
@@ -235,13 +226,11 @@ config wifi-device 'radio0'
     option phy 'phy0'
     option txpower '8'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_radio_ac(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '132'
@@ -252,8 +241,7 @@ config wifi-device 'radio0'
     option phy 'phy0'
     option txpower '8'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -289,8 +277,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '3'
@@ -299,8 +286,7 @@ config wifi-device 'radio0'
     option phy 'phy0'
     option txpower '3'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_radio_mac80211b(self):
@@ -320,8 +306,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '3'
@@ -330,13 +315,11 @@ config wifi-device 'radio0'
     option phy 'phy0'
     option txpower '3'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_radio_mac80211b(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '3'
@@ -345,8 +328,7 @@ config wifi-device 'radio0'
     option phy 'phy0'
     option txpower '3'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -380,8 +362,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -389,13 +370,11 @@ config wifi-device 'radio0'
     option hwmode '11g'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_auto_80211n_2ghz_channel(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -403,8 +382,7 @@ config wifi-device 'radio0'
     option hwmode '11g'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -438,8 +416,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -447,13 +424,11 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_auto_80211n_5ghz_channel(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -461,8 +436,7 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -496,8 +470,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -505,13 +478,11 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_auto_80211ax_5ghz_channel(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -519,8 +490,7 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -554,8 +524,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -563,8 +532,7 @@ config wifi-device 'radio0'
     option hwmode '11g'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_auto_80211ax_5ghz_channel(self):
@@ -584,8 +552,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -593,8 +560,7 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_auto_80211g_channel(self):
@@ -613,8 +579,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -622,8 +587,7 @@ config wifi-device 'radio0'
     option hwmode '11g'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_auto_80211a_channel(self):
@@ -642,8 +606,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -651,8 +614,7 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_radio_list_option(self):
@@ -672,8 +634,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '1'
@@ -683,13 +644,11 @@ config wifi-device 'radio0'
     option hwmode '11g'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_atheros_driver(self):
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'wifi0'
     option channel '6'
@@ -698,8 +657,7 @@ config wifi-device 'wifi0'
     option hwmode '11g'
     option phy 'wifi0'
     option type 'atheros'
-"""
-        )
+""")
         o = OpenWrt(
             {
                 "radios": [
@@ -719,8 +677,7 @@ config wifi-device 'wifi0'
         self.assertEqual(o.render(), expected)
 
     def test_parse_radio_list_option(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '1'
@@ -730,8 +687,7 @@ config wifi-device 'radio0'
     option hwmode '11g'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -765,8 +721,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '140'
@@ -774,13 +729,11 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_parse_htmode_override(self):
-        native = self._tabs(
-            """package wireless
+        native = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '140'
@@ -788,8 +741,7 @@ config wifi-device 'radio0'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         expected = {
             "radios": [
                 {
@@ -824,8 +776,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel '132'
@@ -836,8 +787,7 @@ config wifi-device 'radio0'
     option phy 'phy0'
     option txpower '10'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_render_band_option_80211n(self):
@@ -866,8 +816,7 @@ config wifi-device 'radio0'
             },
             dsa=False,
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-device 'radio0'
     option channel 'auto'
@@ -882,6 +831,5 @@ config wifi-device 'radio1'
     option hwmode '11a'
     option phy 'phy0'
     option type 'mac80211'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
