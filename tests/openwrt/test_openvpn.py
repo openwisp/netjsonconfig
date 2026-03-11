@@ -211,6 +211,11 @@ config openvpn 'test_server'
                 "script_security": 1,
                 "status": "/var/log/openvpn.status 30",
                 "status_version": 1,
+                "tls_cipher": (
+                    "TLS-DHE-RSA-WITH-AES-256-CBC-SHA:"
+                    "TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA:"
+                    "@SECLEVEL=0"
+                ),
                 "tls_client": True,
                 "tun_ipv6": True,
                 "up": "/home/user/up-command.sh",
@@ -254,6 +259,9 @@ config openvpn 'test_client'
     option script_security '1'
     option status '/var/log/openvpn.status 30'
     option status_version '1'
+    list tls_cipher 'TLS-DHE-RSA-WITH-AES-256-CBC-SHA'
+    list tls_cipher 'TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA'
+    list tls_cipher '@SECLEVEL=0'
     option tls_client '1'
     option tun_ipv6 '1'
     option up '/home/user/up-command.sh'
