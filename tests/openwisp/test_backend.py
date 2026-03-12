@@ -196,6 +196,23 @@ config 'system' 'system'
         output = o.render()
         self.assertIn("option 'disabled' '0'", output)
 
+    def test_render_ssid_boolean_bug(self):
+        """Regression test for https://github.com/openwisp/netjsonconfig/issues/383"""
+        ssid_values = [
+            "TrueGait Living Guest",
+            "FalseGait Living Guest",
+            "MyTrueNetwork",
+            "True",
+            "False",
+        ]
+        for ssid in ssid_values:
+            with self.subTest(ssid=ssid):
+                config = deepcopy(self.config)
+                config["interfaces"][2]["wireless"]["ssid"] = ssid
+                o = OpenWisp(config)
+                output = o.render()
+                self.assertIn(f"option 'ssid' '{ssid}'", output)
+
     def test_tc_script(self):
         config = deepcopy(self.config)
         o = OpenWisp(config)

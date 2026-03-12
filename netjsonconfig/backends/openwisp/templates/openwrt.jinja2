@@ -9,6 +9,8 @@
                     {% for list_value in value %}
                         list '{{ key }}' '{{ list_value }}'
                     {% endfor %}
+                {% elif value is boolean %}
+                    option '{{ key }}' '{{ value | int }}'
                 {% else %}
                     option '{{ key }}' '{{ value }}'
                 {% endif %}
