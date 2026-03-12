@@ -602,7 +602,7 @@ base_openvpn_schema = {
                     ),
                     "type": "string",
                     "enum": ["", "asym", "no", "yes"],
-                    "default": "no",
+                    "default": "",
                     "propertyOrder": 54,
                 },
                 "comp_lzo": {
