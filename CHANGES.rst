@@ -1,6 +1,25 @@
 Change log
 ==========
 
+Version 1.2.1 [2026-03-12]
+--------------------------
+
+Changes
+~~~~~~~
+
+Dependencies
+++++++++++++
+
+- Bumped ``jsonschema~=4.26.0``
+
+Bugfixes
+~~~~~~~~
+
+- OpenWrt: turned output of tls_cipher to UCI list `#349
+  <https://github.com/openwisp/netjsonconfig/issues/349>`_
+- Fixed naive boolean coercion `#383
+  <https://github.com/openwisp/netjsonconfig/issues/383>`_
+
 Version 1.2.0 [2025-10-23]
 --------------------------
 
