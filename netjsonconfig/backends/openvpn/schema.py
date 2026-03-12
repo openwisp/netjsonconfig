@@ -125,7 +125,7 @@ base_openvpn_schema = {
                     "description": "tun (layer3) or tap (layer2)",
                     "type": "string",
                     "enum": ["tun", "tap"],
-                    "propertyOrder": 5,
+                    "propertyOrder": 6,
                 },
                 "dev": {
                     "title": "device name",
@@ -134,7 +134,7 @@ base_openvpn_schema = {
                     "minLength": 2,
                     "maxLength": 15,
                     "pattern": "^[^\\s]*$",
-                    "propertyOrder": 6,
+                    "propertyOrder": 5,
                 },
                 "local": {
                     "title": "local",
@@ -584,14 +584,6 @@ base_openvpn_schema = {
                             "default": "udp",
                             "options": {"enum_titles": ["UDP", "TCP"]},
                         },
-                        "nobind": {
-                            "title": "nobind",
-                            "description": "ports are dynamically selected",
-                            "type": "boolean",
-                            "default": True,
-                            "format": "checkbox",
-                            "propertyOrder": 5,
-                        },
                         "remote": {
                             "title": "remote",
                             "type": "array",
@@ -647,9 +639,28 @@ base_openvpn_schema = {
                                 },
                             },
                         },
+                        "remote_random": {
+                            "title": "random remote",
+                            "description": "When multiple remote address/ports are specified, or if "
+                            "connection profiles are being used, initially randomize "
+                            "the order of the list as a basic load-balancing measure",
+                            "type": "boolean",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 8.1,
+                        },
                         "port": {
                             "description": "Use specific local port, ignored if nobind is enabled",
                             "type": "integer",
+                            "default": "",
+                        },
+                        "nobind": {
+                            "title": "nobind",
+                            "description": "ports are dynamically selected",
+                            "type": "boolean",
+                            "default": True,
+                            "format": "checkbox",
+                            "propertyOrder": 4.1,
                         },
                         "resolv_retry": {
                             "title": "resolv-retry",
@@ -678,16 +689,6 @@ base_openvpn_schema = {
                             "default": True,
                             "format": "checkbox",
                             "propertyOrder": 11,
-                        },
-                        "remote_random": {
-                            "title": "random remote",
-                            "description": "When multiple remote address/ports are specified, or if "
-                            "connection profiles are being used, initially randomize "
-                            "the order of the list as a basic load-balancing measure",
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 12,
                         },
                         "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "
