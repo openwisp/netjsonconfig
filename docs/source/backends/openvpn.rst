@@ -177,7 +177,7 @@ Required properties:
 key name           type    default   allowed values
 ================== ======= ========= ==================================
 ``remote``         list    ``[]``    list of dictionaries containing
-                                     ``host`` (str) and ``port`` (str).
+                                     ``host`` (str) and ``port`` (int).
                                      Must contain at least one element
 ``nobind``         boolean ``True``
 ``resolv_retry``   boolean ``True``
