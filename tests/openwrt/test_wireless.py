@@ -63,7 +63,8 @@ config wifi-iface 'wifi_wlan0'
         expected = self._tabs(self._wifi_uci)
         self.assertEqual(o.render(), expected)
 
-    def test_render_wifi_issue_250_ssid_variants(self):
+    def test_render_ssid_boolean_bug(self):
+        """Regression test for https://github.com/openwisp/netjsonconfig/issues/383"""
         ssid_values = [
             "TrueGait Living Guest",
             "FalseGait Living Guest",

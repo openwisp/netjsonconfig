@@ -9,14 +9,10 @@
                     {% for list_value in value %}
                         list {{ key }} '{{ list_value }}'
                     {% endfor %}
-                {% else %}
-                {% if value is sameas true %}
-                    option {{ key }} '1'
-                {% elif value is sameas false %}
-                    option {{ key }} '0'
+                {% elif value is boolean %}
+                    option {{ key }} '{{ value | int }}'
                 {% else %}
                     option {{ key }} '{{ value }}'
-                {% endif %}
                 {% endif %}
             {% endif %}
         {% endfor %}
