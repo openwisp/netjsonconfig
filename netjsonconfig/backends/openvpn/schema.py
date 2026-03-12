@@ -569,6 +569,18 @@ base_openvpn_schema = {
                     "description": "Set output verbosity for logging and debugging",
                     "propertyOrder": 52,
                 },
+                "allow_compression": {
+                    "title": "allow compression",
+                    "description": (
+                        "Controls whether the peer is allowed to negotiate compression for the"
+                        " VPN data channel. OpenVPN discourages the use of compression due to security"
+                        " risks such as the VORACLE attack."
+                    ),
+                    "type": "string",
+                    "enum": ["", "asym", "no", "yes"],
+                    "default": "",
+                    "propertyOrder": 53,
+                },
                 "compress": {
                     "title": "compression algorithm",
                     "description": (
@@ -590,18 +602,6 @@ base_openvpn_schema = {
                             "Migrate (transition from comp-lzo)",
                         ]
                     },
-                    "default": "",
-                    "propertyOrder": 53,
-                },
-                "allow_compression": {
-                    "title": "allow compression",
-                    "description": (
-                        "Controls whether the peer is allowed to negotiate compression for the"
-                        " VPN data channel. OpenVPN discourages the use of compression due to security"
-                        " risks such as the VORACLE attack."
-                    ),
-                    "type": "string",
-                    "enum": ["", "asym", "no", "yes"],
                     "default": "",
                     "propertyOrder": 54,
                 },
