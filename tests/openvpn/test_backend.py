@@ -900,6 +900,45 @@ tls-client
 """
         self.assertEqual(o.render(), expected)
 
+    def test_auto_client_compress_allow_compression(self):
+        client_config = OpenVpn.auto_client(
+            "vpn1.test.com",
+            {
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "key": "key.pem",
+                "mode": "server",
+                "name": "example-vpn",
+                "proto": "udp",
+                "server": "10.8.0.0 255.255.0.0",
+                "tls_server": True,
+                "compress": "lz4-v2",
+                "allow_compression": "asym",
+            },
+        )
+        o = OpenVpn(client_config)
+        expected = """# openvpn config: example-vpn
+
+allow-compression asym
+ca ca.pem
+cert cert.pem
+compress lz4-v2
+dev tap0
+dev-type tap
+key key.pem
+mode p2p
+nobind
+proto udp
+pull
+remote vpn1.test.com 1195
+resolv-retry infinite
+tls-client
+"""
+        self.assertEqual(o.render(), expected)
+
     def _get_client(self):
         return OpenVpn.auto_client(
             "vpn1.test.com",

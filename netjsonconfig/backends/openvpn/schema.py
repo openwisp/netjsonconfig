@@ -1,5 +1,5 @@
 """
-OpenVpn 2.3 specific JSON-Schema definition
+OpenVpn 2.6 specific JSON-Schema definition
 """
 
 from copy import deepcopy
@@ -152,37 +152,6 @@ base_openvpn_schema = {
                     "description": "Local hostname or IP address on which OpenVPN will listen to. "
                     "If unspecified, OpenVPN will bind to all interfaces.",
                     "propertyOrder": 8,
-                },
-                "compress": {
-                    "title": "compression algorithm",
-                    "description": (
-                        "DEPRECATED: Specifies the compression algorithm for the VPN data channel."
-                        " Leaving the value empty removes the compress directive from the"
-                        " generated configuration."
-                    ),
-                    "type": "string",
-                    "enum": [""] + compression_algorithms,
-                    "default": "",
-                    "propertyOrder": 9,
-                },
-                "allow_compression": {
-                    "title": "allow compression",
-                    "description": "Control whether compression is allowed.",
-                    "type": "string",
-                    "enum": ["", "asym", "no", "yes"],
-                    "default": "",
-                    "propertyOrder": 9.1,
-                },
-                "comp_lzo": {
-                    "title": "LZO compression",
-                    "description": (
-                        "DEPRECATED: Legacy LZO compression option. Use the compress directive instead."
-                        " Leave empty unless compatibility with legacy OpenVPN clients is required."
-                    ),
-                    "type": "string",
-                    "enum": ["", "yes", "no", "adaptive"],
-                    "default": "",
-                    "propertyOrder": 9.2,
                 },
                 "auth": {
                     "title": "auth digest algorithm",
@@ -599,6 +568,61 @@ base_openvpn_schema = {
                     "default": 1,
                     "description": "Set output verbosity for logging and debugging",
                     "propertyOrder": 52,
+                },
+                "compress": {
+                    "title": "compression algorithm",
+                    "description": (
+                        "Specifies the compression algorithm for the VPN data channel."
+                        " OpenVPN discourages the use of compression due to security risks such as the"
+                        " VORACLE attack. Leaving the value empty removes the compress directive from the"
+                        " generated configuration."
+                    ),
+                    "type": "string",
+                    "enum": [""] + compression_algorithms,
+                    "options": {
+                        "enum_titles": [
+                            "Disabled",
+                            "LZO",
+                            "LZ4",
+                            "LZ4 v2",
+                            "Stub (framing only)",
+                            "Stub v2 (framing only)",
+                            "Migrate (transition from comp-lzo)",
+                        ]
+                    },
+                    "default": "",
+                    "propertyOrder": 53,
+                },
+                "allow_compression": {
+                    "title": "allow compression",
+                    "description": (
+                        "Controls whether the peer is allowed to negotiate compression for the"
+                        " VPN data channel. OpenVPN discourages the use of compression due to security"
+                        " risks such as the VORACLE attack."
+                    ),
+                    "type": "string",
+                    "enum": ["asym", "no", "yes"],
+                    "default": "no",
+                    "propertyOrder": 54,
+                },
+                "comp_lzo": {
+                    "title": "LZO compression",
+                    "description": (
+                        'DEPRECATED: Legacy LZO compression option. Use the "compression algorithm" option'
+                        " instead. Leave empty unless compatibility with legacy OpenVPN clients is required."
+                    ),
+                    "type": "string",
+                    "enum": ["", "yes", "no", "adaptive"],
+                    "options": {
+                        "enum_titles": [
+                            "Disabled",
+                            "yes",
+                            "no",
+                            "adaptive",
+                        ]
+                    },
+                    "default": "",
+                    "propertyOrder": 55,
                 },
             },
         },
