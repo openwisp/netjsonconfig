@@ -601,7 +601,7 @@ base_openvpn_schema = {
                         " risks such as the VORACLE attack."
                     ),
                     "type": "string",
-                    "enum": ["asym", "no", "yes"],
+                    "enum": ["", "asym", "no", "yes"],
                     "default": "no",
                     "propertyOrder": 54,
                 },
@@ -615,7 +615,7 @@ base_openvpn_schema = {
                     "enum": ["", "yes", "no", "adaptive"],
                     "options": {
                         "enum_titles": [
-                            "Disabled",
+                            "disabled",
                             "yes",
                             "no",
                             "adaptive",
