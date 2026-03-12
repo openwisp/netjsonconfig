@@ -92,6 +92,8 @@ class OpenVpn(BaseVpnBackend):
             "dev_type",
             "dev",
             "comp_lzo",
+            "compress",
+            "allow_compression",
             "auth",
             "cipher",
             "ca",

@@ -1,5 +1,5 @@
 """
-OpenVpn 2.3 specific JSON-Schema definition
+OpenVpn 2.6 specific JSON-Schema definition
 """
 
 from copy import deepcopy
@@ -89,6 +89,16 @@ data_ciphers = [
     "RC2-OFB",
     "none",
 ]
+
+compression_algorithms = [
+    "lzo",
+    "lz4",
+    "lz4-v2",
+    "stub",
+    "stub-v2",
+    "migrate",
+]
+
 default_cipher = "AES-256-GCM"
 
 base_openvpn_schema = {
@@ -142,15 +152,6 @@ base_openvpn_schema = {
                     "description": "Local hostname or IP address on which OpenVPN will listen to. "
                     "If unspecified, OpenVPN will bind to all interfaces.",
                     "propertyOrder": 8,
-                },
-                "comp_lzo": {
-                    "title": "LZO compression",
-                    "description": "Use fast LZO compression; may add up to 1 "
-                    "byte per packet for incompressible data",
-                    "type": "string",
-                    "enum": ["yes", "no", "adaptive"],
-                    "default": "adaptive",
-                    "propertyOrder": 9,
                 },
                 "auth": {
                     "title": "auth digest algorithm",
@@ -567,6 +568,61 @@ base_openvpn_schema = {
                     "default": 1,
                     "description": "Set output verbosity for logging and debugging",
                     "propertyOrder": 52,
+                },
+                "allow_compression": {
+                    "title": "allow compression",
+                    "description": (
+                        "Controls whether the peer is allowed to negotiate compression for the"
+                        " VPN data channel. OpenVPN discourages the use of compression due to security"
+                        " risks such as the VORACLE attack."
+                    ),
+                    "type": "string",
+                    "enum": ["", "asym", "no", "yes"],
+                    "default": "",
+                    "propertyOrder": 53,
+                },
+                "compress": {
+                    "title": "compression algorithm",
+                    "description": (
+                        "Specifies the compression algorithm for the VPN data channel."
+                        " OpenVPN discourages the use of compression due to security risks such as the"
+                        " VORACLE attack. Leaving the value empty removes the compress directive from the"
+                        " generated configuration."
+                    ),
+                    "type": "string",
+                    "enum": [""] + compression_algorithms,
+                    "options": {
+                        "enum_titles": [
+                            "Disabled",
+                            "LZO",
+                            "LZ4",
+                            "LZ4 v2",
+                            "Stub (framing only)",
+                            "Stub v2 (framing only)",
+                            "Migrate (transition from comp-lzo)",
+                        ]
+                    },
+                    "default": "",
+                    "propertyOrder": 54,
+                },
+                "comp_lzo": {
+                    "title": "LZO compression",
+                    "description": (
+                        'DEPRECATED: Legacy LZO compression option. Use the "compression algorithm" option'
+                        " instead. Leave empty unless compatibility with legacy OpenVPN clients is required."
+                    ),
+                    "type": "string",
+                    "enum": ["", "yes", "no", "adaptive"],
+                    "options": {
+                        "enum_titles": [
+                            "disabled",
+                            "yes",
+                            "no",
+                            "adaptive",
+                        ]
+                    },
+                    "default": "",
+                    "propertyOrder": 55,
                 },
             },
         },
