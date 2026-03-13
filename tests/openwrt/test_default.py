@@ -3,6 +3,7 @@ import unittest
 from openwisp_utils.tests import capture_stdout
 
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -268,5 +269,5 @@ config olsrv2 'internet_hna'
                 }
             ]
         }
-        o = OpenWrt({}, templates=[valid, invalid])
-        o.validate()
+        with self.assertRaises(ValidationError):
+            OpenWrt({}, templates=[valid, invalid])
