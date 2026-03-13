@@ -65,14 +65,12 @@ config system 'arbitrary'
         self.assertEqual(o.render(), expected)
 
     def test_parse_system_timezone(self):
-        native = self._tabs(
-            """package system
+        native = self._tabs("""package system
 
 config system 'system'
     option hostname 'test-system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "general": {

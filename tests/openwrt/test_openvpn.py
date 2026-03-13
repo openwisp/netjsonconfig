@@ -211,6 +211,11 @@ config openvpn 'test_server'
                 "script_security": 1,
                 "status": "/var/log/openvpn.status 30",
                 "status_version": 1,
+                "tls_cipher": (
+                    "TLS-DHE-RSA-WITH-AES-256-CBC-SHA:"
+                    "TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA:"
+                    "@SECLEVEL=0"
+                ),
                 "tls_client": True,
                 "tun_ipv6": True,
                 "up": "/home/user/up-command.sh",
@@ -254,6 +259,9 @@ config openvpn 'test_client'
     option script_security '1'
     option status '/var/log/openvpn.status 30'
     option status_version '1'
+    list tls_cipher 'TLS-DHE-RSA-WITH-AES-256-CBC-SHA'
+    list tls_cipher 'TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA'
+    list tls_cipher '@SECLEVEL=0'
     option tls_client '1'
     option tun_ipv6 '1'
     option up '/home/user/up-command.sh'
@@ -293,8 +301,7 @@ config openvpn 'test_client'
                 ]
             }
         )
-        expected = self._tabs(
-            """package openvpn
+        expected = self._tabs("""package openvpn
 
 config openvpn 'test_no_status'
     option ca 'ca.pem'
@@ -307,8 +314,7 @@ config openvpn 'test_no_status'
     option mode 'server'
     option proto 'udp'
     option tls_server '1'
-"""
-        )
+""")
         self.assertEqual(c.render(), expected)
 
     def test_additional_properties(self):
@@ -336,8 +342,7 @@ config openvpn 'test_no_status'
                 ]
             }
         )
-        expected = self._tabs(
-            """package openvpn
+        expected = self._tabs("""package openvpn
 
 config openvpn 'test_properties'
     option ca 'ca.pem'
@@ -356,8 +361,7 @@ config openvpn 'test_properties'
     option z_number '5'
     option z_string 'string'
     option z_true_val '1'
-"""
-        )
+""")
         self.assertEqual(c.render(), expected)
 
     def test_enabled_missing(self):
@@ -379,8 +383,7 @@ config openvpn 'test_properties'
                 ]
             }
         )
-        expected = self._tabs(
-            """package openvpn
+        expected = self._tabs("""package openvpn
 
 config openvpn 'test_properties'
     option ca 'ca.pem'
@@ -393,8 +396,7 @@ config openvpn 'test_properties'
     option mode 'server'
     option proto 'udp'
     option tls_server '1'
-"""
-        )
+""")
         self.assertEqual(c.render(), expected)
 
     _server_bridge_netjson = {
@@ -549,8 +551,7 @@ config openvpn 'routed'
         self.assertIn("option enabled '0'", c.render())
 
     def test_parse_disabled(self):
-        c = OpenWrt(
-            native="""package openvpn
+        c = OpenWrt(native="""package openvpn
 
 config openvpn 'test_disabled'
     option ca 'ca.pem'
@@ -562,13 +563,11 @@ config openvpn 'test_disabled'
     option key 'key.pem'
     option mode 'server'
     option proto 'udp'
-    option tls_server '1'"""
-        )
+    option tls_server '1'""")
         self.assertTrue(c.config["openvpn"][0]["disabled"])
 
     def test_parse_disabled_default(self):
-        c = OpenWrt(
-            native="""package openvpn
+        c = OpenWrt(native="""package openvpn
 
 config openvpn 'test_disabled'
     option ca 'ca.pem'
@@ -579,6 +578,93 @@ config openvpn 'test_disabled'
     option key 'key.pem'
     option mode 'server'
     option proto 'udp'
-    option tls_server '1'"""
-        )
+    option tls_server '1'""")
         self.assertTrue(c.config["openvpn"][0]["disabled"])
+
+    _compress_netjson = {
+        "openvpn": [
+            {
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "compress": "lz4-v2",
+                "dev": "tun0",
+                "dev_type": "tun",
+                "disabled": False,
+                "key": "key.pem",
+                "mode": "p2p",
+                "name": "tun0",
+                "proto": "udp",
+                "remote": [{"host": "vpn.example.com", "port": 1194}],
+                "tls_client": True,
+            }
+        ]
+    }
+    _compress_uci = """package openvpn
+
+config openvpn 'tun0'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option compress 'lz4-v2'
+    option dev 'tun0'
+    option dev_type 'tun'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'p2p'
+    option proto 'udp'
+    list remote 'vpn.example.com 1194'
+    option tls_client '1'
+"""
+
+    def test_render_compress(self):
+        """Render compress option in UCI format"""
+        config = OpenWrt(self._compress_netjson)
+        self.assertEqual(config.render(), self._tabs(self._compress_uci))
+
+    def test_parse_compress(self):
+        """Parse compress option from UCI format"""
+        c = OpenWrt(native=self._compress_uci)
+        self.assertEqual(c.config, self._compress_netjson)
+
+    _allow_compression_netjson = {
+        "openvpn": [
+            {
+                "allow_compression": "no",
+                "ca": "ca.pem",
+                "cert": "cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "dh.pem",
+                "disabled": False,
+                "key": "key.pem",
+                "mode": "server",
+                "name": "test_allow_compression",
+                "proto": "udp",
+                "tls_server": True,
+            }
+        ]
+    }
+    _allow_compression_uci = """package openvpn
+
+config openvpn 'test_allow_compression'
+    option allow_compression 'no'
+    option ca 'ca.pem'
+    option cert 'cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh 'dh.pem'
+    option enabled '1'
+    option key 'key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option tls_server '1'
+"""
+
+    def test_render_allow_compression(self):
+
+        config = OpenWrt(self._allow_compression_netjson)
+        expected = self._tabs(self._allow_compression_uci)
+        self.assertEqual(config.render(), expected)
+
+    def test_parse_allow_compression(self):
+        config = OpenWrt(native=self._allow_compression_uci)
+        self.assertEqual(config.config, self._allow_compression_netjson)

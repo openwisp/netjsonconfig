@@ -47,8 +47,7 @@ class TestDefault(unittest.TestCase, _TabsMixin):
                 ],
             }
         )
-        expected = self._tabs(
-            """package firewall
+        expected = self._tabs("""package firewall
 
 config rule 'rule_1'
     option family 'ipv6'
@@ -82,16 +81,14 @@ config core 'main'
     option mediaurlbase '/luci-static/bootstrap'
     option number '4'
     option resourcebase '/luci-static/resources'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
         # try a second time to ensure that the usage of dict.pop
         # in templates does not cause any issue
         self.assertEqual(o.render(), expected)
 
     def test_parse_default(self):
-        native = self._tabs(
-            """package firewall
+        native = self._tabs("""package firewall
 
 config rule 'rule_1'
     option family 'ipv6'
@@ -131,8 +128,7 @@ config led 'led_usb1'
 
 config custom 'custom'
     option test '1'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "luci": [
@@ -240,16 +236,14 @@ config custom 'custom'
                 ],
             }
         )
-        expected = self._tabs(
-            """package olsrd2
+        expected = self._tabs("""package olsrd2
 
 config olsrv2 'lan_hna'
     option lan '10.150.25.0/24 domain=0'
 
 config olsrv2 'internet_hna'
     option lan '0.0.0.0/24 domain=1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_merge_invalid_format(self):

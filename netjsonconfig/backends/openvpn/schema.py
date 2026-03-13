@@ -1,5 +1,5 @@
 """
-OpenVpn 2.3 specific JSON-Schema definition
+OpenVpn 2.6 specific JSON-Schema definition
 """
 
 from copy import deepcopy
@@ -89,6 +89,16 @@ data_ciphers = [
     "RC2-OFB",
     "none",
 ]
+
+compression_algorithms = [
+    "lzo",
+    "lz4",
+    "lz4-v2",
+    "stub",
+    "stub-v2",
+    "migrate",
+]
+
 default_cipher = "AES-256-GCM"
 
 base_openvpn_schema = {
@@ -125,7 +135,7 @@ base_openvpn_schema = {
                     "description": "tun (layer3) or tap (layer2)",
                     "type": "string",
                     "enum": ["tun", "tap"],
-                    "propertyOrder": 5,
+                    "propertyOrder": 6,
                 },
                 "dev": {
                     "title": "device name",
@@ -134,7 +144,7 @@ base_openvpn_schema = {
                     "minLength": 2,
                     "maxLength": 15,
                     "pattern": "^[^\\s]*$",
-                    "propertyOrder": 6,
+                    "propertyOrder": 5,
                 },
                 "local": {
                     "title": "local",
@@ -142,15 +152,6 @@ base_openvpn_schema = {
                     "description": "Local hostname or IP address on which OpenVPN will listen to. "
                     "If unspecified, OpenVPN will bind to all interfaces.",
                     "propertyOrder": 8,
-                },
-                "comp_lzo": {
-                    "title": "LZO compression",
-                    "description": "Use fast LZO compression; may add up to 1 "
-                    "byte per packet for incompressible data",
-                    "type": "string",
-                    "enum": ["yes", "no", "adaptive"],
-                    "default": "adaptive",
-                    "propertyOrder": 9,
                 },
                 "auth": {
                     "title": "auth digest algorithm",
@@ -568,6 +569,61 @@ base_openvpn_schema = {
                     "description": "Set output verbosity for logging and debugging",
                     "propertyOrder": 52,
                 },
+                "allow_compression": {
+                    "title": "allow compression",
+                    "description": (
+                        "Controls whether the peer is allowed to negotiate compression for the"
+                        " VPN data channel. OpenVPN discourages the use of compression due to security"
+                        " risks such as the VORACLE attack."
+                    ),
+                    "type": "string",
+                    "enum": ["", "asym", "no", "yes"],
+                    "default": "",
+                    "propertyOrder": 53,
+                },
+                "compress": {
+                    "title": "compression algorithm",
+                    "description": (
+                        "Specifies the compression algorithm for the VPN data channel."
+                        " OpenVPN discourages the use of compression due to security risks such as the"
+                        " VORACLE attack. Leaving the value empty removes the compress directive from the"
+                        " generated configuration."
+                    ),
+                    "type": "string",
+                    "enum": [""] + compression_algorithms,
+                    "options": {
+                        "enum_titles": [
+                            "Disabled",
+                            "LZO",
+                            "LZ4",
+                            "LZ4 v2",
+                            "Stub (framing only)",
+                            "Stub v2 (framing only)",
+                            "Migrate (transition from comp-lzo)",
+                        ]
+                    },
+                    "default": "",
+                    "propertyOrder": 54,
+                },
+                "comp_lzo": {
+                    "title": "LZO compression",
+                    "description": (
+                        'DEPRECATED: Legacy LZO compression option. Use the "compression algorithm" option'
+                        " instead. Leave empty unless compatibility with legacy OpenVPN clients is required."
+                    ),
+                    "type": "string",
+                    "enum": ["", "yes", "no", "adaptive"],
+                    "options": {
+                        "enum_titles": [
+                            "disabled",
+                            "yes",
+                            "no",
+                            "adaptive",
+                        ]
+                    },
+                    "default": "",
+                    "propertyOrder": 55,
+                },
             },
         },
         "client": {
@@ -583,14 +639,6 @@ base_openvpn_schema = {
                             "enum": ["udp", "tcp-client"],
                             "default": "udp",
                             "options": {"enum_titles": ["UDP", "TCP"]},
-                        },
-                        "nobind": {
-                            "title": "nobind",
-                            "description": "ports are dynamically selected",
-                            "type": "boolean",
-                            "default": True,
-                            "format": "checkbox",
-                            "propertyOrder": 5,
                         },
                         "remote": {
                             "title": "remote",
@@ -647,9 +695,28 @@ base_openvpn_schema = {
                                 },
                             },
                         },
+                        "remote_random": {
+                            "title": "random remote",
+                            "description": "When multiple remote address/ports are specified, or if "
+                            "connection profiles are being used, initially randomize "
+                            "the order of the list as a basic load-balancing measure",
+                            "type": "boolean",
+                            "default": False,
+                            "format": "checkbox",
+                            "propertyOrder": 8.1,
+                        },
                         "port": {
                             "description": "Use specific local port, ignored if nobind is enabled",
                             "type": "integer",
+                            "default": "",
+                        },
+                        "nobind": {
+                            "title": "nobind",
+                            "description": "ports are dynamically selected",
+                            "type": "boolean",
+                            "default": True,
+                            "format": "checkbox",
+                            "propertyOrder": 4.1,
                         },
                         "resolv_retry": {
                             "title": "resolv-retry",
@@ -678,16 +745,6 @@ base_openvpn_schema = {
                             "default": True,
                             "format": "checkbox",
                             "propertyOrder": 11,
-                        },
-                        "remote_random": {
-                            "title": "random remote",
-                            "description": "When multiple remote address/ports are specified, or if "
-                            "connection profiles are being used, initially randomize "
-                            "the order of the list as a basic load-balancing measure",
-                            "type": "boolean",
-                            "default": False,
-                            "format": "checkbox",
-                            "propertyOrder": 12,
                         },
                         "ns_cert_type": {
                             "description": "Require that peer certificate was signed with an explicit "

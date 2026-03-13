@@ -155,21 +155,18 @@ class TestBackend(unittest.TestCase, _TabsMixin):
         # network
         network = tar.getmember("etc/config/network")
         contents = tar.extractfile(network).read().decode()
-        expected = self._tabs(
-            """config interface 'wlan0'
+        expected = self._tabs("""config interface 'wlan0'
     option device 'wlan0'
     option ipaddr '192.168.1.1'
     option netmask '255.255.255.0'
     option proto 'static'
 
-"""
-        )
+""")
         self.assertEqual(contents, expected)
         # wireless
         wireless = tar.getmember("etc/config/wireless")
         contents = tar.extractfile(wireless).read().decode()
-        expected = self._tabs(
-            """config wifi-device 'radio0'
+        expected = self._tabs("""config wifi-device 'radio0'
     option band '2g'
     option channel '3'
     option htmode 'HT20'
@@ -184,8 +181,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'wlan0'
     option ssid 'MyWifiAP'
-"""
-        )
+""")
         self.assertEqual(contents, expected)
         tar.close()
 

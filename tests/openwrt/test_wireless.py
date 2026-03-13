@@ -63,6 +63,23 @@ config wifi-iface 'wifi_wlan0'
         expected = self._tabs(self._wifi_uci)
         self.assertEqual(o.render(), expected)
 
+    def test_render_ssid_boolean_bug(self):
+        """Regression test for https://github.com/openwisp/netjsonconfig/issues/383"""
+        ssid_values = [
+            "TrueGait Living Guest",
+            "FalseGait Living Guest",
+            "MyTrueNetwork",
+            "True",
+            "False",
+        ]
+        for ssid in ssid_values:
+            with self.subTest(ssid=ssid):
+                netjson = deepcopy(self._wifi_netjson)
+                netjson["interfaces"][0]["wireless"]["ssid"] = ssid
+                o = OpenWrt(netjson)
+                expected_uci = self._wifi_uci.replace("'MyWifiAP'", f"'{ssid}'")
+                self.assertEqual(o.render(), self._tabs(expected_uci))
+
     def test_parse_wifi_interface(self):
         o = OpenWrt(native=self._wifi_uci)
         self.assertDictEqual(o.config, self._wifi_netjson)
@@ -72,16 +89,14 @@ config wifi-iface 'wifi_wlan0'
         self.assertDictEqual(o.config, self._wifi_netjson)
 
     def test_parse_wifi_interface_partial(self):
-        o = OpenWrt(
-            native="""package wireless
+        o = OpenWrt(native="""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
     option ssid 'MyWifiAP'
-"""
-        )
+""")
         expected = {
             "interfaces": [
                 {
@@ -277,16 +292,14 @@ config wifi-iface 'wifi_wsta0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
     option ifname 'wlan0'
     option mode 'ap'
     option ssid 'open'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_wireless_network_attr_validation(self):
@@ -361,8 +374,7 @@ config wifi-iface 'wifi_wlan0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -370,8 +382,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'eth0_1'
     option ssid 'open'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     def test_network_dash_conversion(self):
@@ -391,8 +402,7 @@ config wifi-iface 'wifi_wlan0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -400,8 +410,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option network 'eth0_1'
     option ssid 'open'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _disabled_netjson = {
@@ -444,8 +453,7 @@ config wifi-iface 'wifi_wlan0'
         self.assertDictEqual(o.config, self._disabled_netjson)
 
     def test_parse_interface_disabled_partial(self):
-        o = OpenWrt(
-            native="""package wireless
+        o = OpenWrt(native="""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option bssid '00:11:22:33:44:55'
@@ -455,8 +463,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'sta'
     option network 'wlan0'
     option ssid 'mywifi'
-"""
-        )
+""")
         self.assertDictEqual(o.config, self._disabled_netjson)
 
     _wds_netjson = {
@@ -516,8 +523,7 @@ config wifi-iface 'wifi_wlan0'
                 ]
             }
         )
-        expected = self._tabs(
-            """package wireless
+        expected = self._tabs("""package wireless
 
 config wifi-iface 'wifi_wlan0'
     option device 'radio0'
@@ -525,8 +531,7 @@ config wifi-iface 'wifi_wlan0'
     option mode 'ap'
     option ssid 'MyWifiAP'
     option wmm '1'
-"""
-        )
+""")
         self.assertEqual(o.render(), expected)
 
     _macfilter_netjson = {

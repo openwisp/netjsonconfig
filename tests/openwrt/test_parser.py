@@ -48,14 +48,12 @@ config system system
         self.assertDictEqual(o.intermediate_data, self._system_intermediate)
 
     def test_parse_text_comment(self):
-        native = self._tabs(
-            """package system
+        native = self._tabs("""package system
 
 config system 'system'
     # this is a comment
     option hostname 'test-system'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "system": [
@@ -65,8 +63,7 @@ config system 'system'
         self.assertDictEqual(o.intermediate_data, expected)
 
     def test_parse_text_multiple_packages(self):
-        native = self._tabs(
-            """package system
+        native = self._tabs("""package system
 
 config system 'system'
     option hostname 'test-system'
@@ -76,8 +73,7 @@ package network
 config interface 'lan'
     option ifname 'eth0'
     option proto 'none'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "system": [
@@ -95,8 +91,7 @@ config interface 'lan'
         self.assertDictEqual(o.intermediate_data, expected)
 
     def test_parse_anonymous_block(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
 config interface
     option ifname 'eth0'
@@ -109,8 +104,7 @@ config interface 'vpn'
 config interface
     option ifname 'eth1'
     option proto 'none'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "network": [
@@ -137,29 +131,25 @@ config interface
         self.assertDictEqual(o.intermediate_data, expected)
 
     def test_parsed_renders_equally(self):
-        native = self._tabs(
-            """package system
+        native = self._tabs("""package system
 
 config system 'system'
     option custom_setting '1'
     option hostname 'test-system'
     option timezone 'CET-1CEST,M3.5.0,M10.5.0/3'
     option zonename 'Europe/Rome'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertEqual(o.render(), native)
 
     def test_parse_list(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 config interface 'lan'
     option ifname 'eth0'
     option proto 'static'
     list ipaddr '192.168.1.1/24'
     list ipaddr '10.0.0.1/24'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "network": [
@@ -175,14 +165,12 @@ config interface 'lan'
         self.assertDictEqual(o.intermediate_data, expected)
 
     def test_parse_inline_list(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 config interface 'lan'
     option ifname 'eth0 eth1'
     option proto 'none'
     option type 'bridge'
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "network": [
@@ -241,34 +229,28 @@ config interface 'lan'
         OpenWrt(native="")
 
     def test_parse_empty_package(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 
-"""
-        )
+""")
         o = OpenWrt(native=native)
         self.assertDictEqual(o.intermediate_data, {"network": []})
 
     def test_parse_empty_config(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 config interface "lan"
-"""
-        )
+""")
         expected = {"network": [{".type": "interface", ".name": "lan"}]}
         o = OpenWrt(native=native)
         self.assertDictEqual(o.intermediate_data, expected)
 
     def test_parse_empty_option(self):
-        native = self._tabs(
-            """package network
+        native = self._tabs("""package network
 config interface "lan"
     option 'ifname' eth0
     option proto 'none'
     option forgotten
     VERYWRONG hey i'm wrong
-"""
-        )
+""")
         o = OpenWrt(native=native)
         expected = {
             "network": [
