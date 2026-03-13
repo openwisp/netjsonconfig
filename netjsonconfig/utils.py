@@ -27,14 +27,19 @@ def merge_config(template, config, list_identifiers=None):
     """
     result = deepcopy(template)
     for key, value in config.items():
-        if isinstance(value, dict) and isinstance(result.get(key), dict):
-            result[key] = merge_config(result.get(key), value, list_identifiers)
-        elif isinstance(value, list) and isinstance(result.get(key), list):
-            result[key] = merge_list(result[key], value, list_identifiers)
-        elif result.get(key) is not None and type(value) is not type(result.get(key)):
+        existing = result.get(key)
+        if isinstance(value, dict) and isinstance(existing, dict):
+            result[key] = merge_config(existing, value, list_identifiers)
+        elif isinstance(value, list) and isinstance(existing, list):
+            result[key] = merge_list(existing, value, list_identifiers)
+        elif (
+            existing is not None
+            and (isinstance(value, (dict, list)) or isinstance(existing, (dict, list)))
+            and type(value) is not type(existing)
+        ):
             raise ValidationError(
                 JsonSchemaError(
-                    f"incompatible types for '{key}': expected {type(result.get(key)).__name__}, "
+                    f"incompatible types for '{key}': expected {type(existing).__name__}, "
                     f"got {type(value).__name__}"
                 )
             )
