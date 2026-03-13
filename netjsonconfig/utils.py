@@ -2,6 +2,10 @@ import re
 from collections import OrderedDict
 from copy import deepcopy
 
+from jsonschema import ValidationError as JsonSchemaError
+
+from .exceptions import ValidationError
+
 
 def merge_config(template, config, list_identifiers=None):
     """
@@ -19,14 +23,26 @@ def merge_config(template, config, list_identifiers=None):
     :param config: config ``dict``
     :param list_identifiers: ``list`` or ``None``
     :returns: merged ``dict``
+    :raises ValidationError: if incompatible types are found
     """
     result = deepcopy(template)
     for key, value in config.items():
-        if isinstance(value, dict):
-            node = result.get(key, OrderedDict())
-            result[key] = merge_config(node, value)
-        elif isinstance(value, list) and isinstance(result.get(key), list):
-            result[key] = merge_list(result[key], value, list_identifiers)
+        existing = result.get(key)
+        if isinstance(value, dict) and isinstance(existing, dict):
+            result[key] = merge_config(existing, value, list_identifiers)
+        elif isinstance(value, list) and isinstance(existing, list):
+            result[key] = merge_list(existing, value, list_identifiers)
+        elif (
+            existing is not None
+            and (isinstance(value, (dict, list)) or isinstance(existing, (dict, list)))
+            and type(value) is not type(existing)
+        ):
+            raise ValidationError(
+                JsonSchemaError(
+                    f"incompatible types for '{key}': expected {type(existing).__name__}, "
+                    f"got {type(value).__name__}"
+                )
+            )
         else:
             result[key] = value
     return result
