@@ -3,6 +3,7 @@ import unittest
 from openwisp_utils.tests import capture_stdout
 
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -245,3 +246,28 @@ config olsrv2 'internet_hna'
     option lan '0.0.0.0/24 domain=1'
 """)
         self.assertEqual(o.render(), expected)
+
+    def test_merge_invalid_format(self):
+        invalid = {
+            "dhcp": {
+                "lan": {
+                    "interface": "lan",
+                    "start": 100,
+                    "limit": 150,
+                    "leasetime": "12h",
+                }
+            }
+        }
+        valid = {
+            "dhcp": [
+                {
+                    "dhcpv6": "disabled",
+                    "ignore": True,
+                    "ra": "disabled",
+                    "config_value": "lan",
+                    "config_name": "dhcp",
+                }
+            ]
+        }
+        with self.assertRaises(ValidationError):
+            OpenWrt({}, templates=[valid, invalid])
