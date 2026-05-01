@@ -1,4 +1,4 @@
-nose2[coverage_plugin]>=0.6.5
+nose2[coverage_plugin]>=0.16.0
 coveralls
 sphinx
 openwisp-sphinx-theme~=1.0.2
