@@ -1,5 +1,6 @@
 import unittest
 
+from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import evaluate_vars, get_copy, merge_config, merge_list
 
 
@@ -54,6 +55,20 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(
             result, {"list": [{"a": "original"}, {"b": "changed"}, {"c": "original"}]}
         )
+
+    def test_merge_config_list_scalar_overrides(self):
+        template = {"server": ["1.1.1.1"]}
+        config = {"server": "8.8.8.8"}
+        result = merge_config(template, config)
+        self.assertEqual(result, {"server": "8.8.8.8"})
+
+    def test_merge_config_incompatible_dict_list(self):
+        template = {"a": {"b": "c"}}
+        config = {"a": ["x"]}
+        with self.assertRaises(ValidationError) as context:
+            merge_config(template, config)
+        self.assertIn("incompatible types", str(context.exception))
+        self.assertIn("ValidationError", str(context.exception))
 
     def test_evaluate_vars(self):
         self.assertEqual(evaluate_vars("{{ tz }}", {"tz": "UTC"}), "UTC")

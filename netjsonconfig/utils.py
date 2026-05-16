@@ -34,7 +34,8 @@ def merge_config(template, config, list_identifiers=None):
             result[key] = merge_list(existing, value, list_identifiers)
         elif (
             existing is not None
-            and (isinstance(value, (dict, list)) or isinstance(existing, (dict, list)))
+            and isinstance(existing, (dict, list))
+            and isinstance(value, (dict, list))
             and type(value) is not type(existing)
         ):
             raise ValidationError(
