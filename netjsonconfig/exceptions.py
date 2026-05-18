@@ -7,6 +7,10 @@ def _list_errors(e):
     :param e: ``jsonschema.exceptions.ValidationError`` instance
     """
     error_list = []
+    if not getattr(e, "context", None):
+        return error_list
+    if not getattr(e, "validator_value", None):
+        return error_list
     for value, error in zip(e.validator_value, e.context):
         error_list.append((value, error.message))
         if error.context:
@@ -25,6 +29,8 @@ class NetJsonConfigException(Exception):
             self.details,
         )
         errors = _list_errors(self.details)
+        if not errors:
+            return message
         separator = "\nAgainst schema %s\n%s\n"
         details = reduce(lambda x, y: x + separator % y, errors, "")
         return message + details
