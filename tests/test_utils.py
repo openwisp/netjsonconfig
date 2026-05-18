@@ -67,7 +67,7 @@ class TestUtils(unittest.TestCase):
         config = {"a": ["x"]}
         with self.assertRaises(ValidationError) as context:
             merge_config(template, config)
-        self.assertIn("incompatible types", str(context.exception))
+        self.assertIn("Incompatible type", str(context.exception))
         self.assertIn("ValidationError", str(context.exception))
 
     def test_evaluate_vars(self):

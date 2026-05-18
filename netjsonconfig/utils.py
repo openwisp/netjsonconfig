@@ -40,8 +40,8 @@ def merge_config(template, config, list_identifiers=None):
         ):
             raise ValidationError(
                 JsonSchemaError(
-                    f"incompatible types for '{key}': expected {type(existing).__name__}, "
-                    f"got {type(value).__name__}"
+                    f"Incompatible type for '{key}': expected {type(existing).__name__}, "
+                    f"got {type(value).__name__}."
                 )
             )
         else:
