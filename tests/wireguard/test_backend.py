@@ -119,6 +119,40 @@ PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
 """
         self.assertEqual(c.render(), expected)
 
+    def test_peers_shared_ips(self):
+        c = Wireguard(
+            {
+                "wireguard": [
+                    {
+                        "name": "test1",
+                        "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
+                        "port": 40842,
+                        "address": "10.0.0.1/24",
+                        "peers": [
+                            {
+                                "public_key": "jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=",
+                                "allowed_ips": "10.0.0.3/32",
+                                "shared_ips": ["192.168.1.0/24"],
+                            }
+                        ],
+                    }
+                ]
+            }
+        )
+        c.validate()
+        expected = """# wireguard config: test1
+
+[Interface]
+Address = 10.0.0.1/24
+ListenPort = 40842
+PrivateKey = QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
+
+[Peer]
+AllowedIPs = 10.0.0.3/32, 192.168.1.0/24
+PublicKey = jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=
+"""
+        self.assertEqual(c.render(), expected)
+
     def test_generate(self):
         c = Wireguard(
             {

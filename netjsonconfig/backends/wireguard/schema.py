@@ -181,6 +181,17 @@ base_wireguard_schema = {
                                     "pattern": "^[^\\s]*$",
                                     "propertyOrder": 5,
                                 },
+                                "shared_ips": {
+                                    "title": "shared IP addresses",
+                                    "type": "array",
+                                    "uniqueItems": True,
+                                    "propertyOrder": 6,
+                                    "items": {
+                                        "type": "string",
+                                        "title": "IP/prefix",
+                                        "minLength": 1,
+                                    },
+                                },
                             },
                         },
                     },

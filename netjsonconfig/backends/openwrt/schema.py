@@ -1229,6 +1229,17 @@ schema = merge_config(
                                 "minLength": 1,
                             },
                         },
+                        "shared_ips": {
+                            "type": "array",
+                            "title": "shared IPs",
+                            "propertyOrder": 3,
+                            "uniqueItems": True,
+                            "items": {
+                                "type": "string",
+                                "title": "IP/prefix",
+                                "minLength": 1,
+                            },
+                        },
                         "endpoint_host": wireguard_peers["endpoint_host"],
                         "endpoint_port": wireguard_peers["endpoint_port"],
                         "preshared_key": wireguard_peers["preshared_key"],

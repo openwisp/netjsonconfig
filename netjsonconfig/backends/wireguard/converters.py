@@ -49,7 +49,12 @@ class Wireguard(BaseConverter):
     def __intermediate_peers(self, peers):
         peer_list = []
         for peer in peers:
-            peer["AllowedIPs"] = peer.pop("allowed_ips")
+            allowed_ips = peer.pop("allowed_ips")
+            shared_ips = peer.pop("shared_ips", [])
+            if shared_ips:
+                extra = ", ".join(ip for ip in shared_ips if ip)
+                allowed_ips = f"{allowed_ips}, {extra}"
+            peer["AllowedIPs"] = allowed_ips
             peer["PublicKey"] = peer.pop("public_key")
             peer["PreSharedKey"] = peer.pop("preshared_key", None)
             host = peer.pop("endpoint_host", None)

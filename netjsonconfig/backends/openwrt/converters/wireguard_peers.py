@@ -21,6 +21,7 @@ class WireguardPeers(OpenWrtConverter):
         if index > 1:
             uci_name = f"{uci_name}_{index}"
         peer.update({".type": f"wireguard_{interface}", ".name": uci_name})
+        peer.pop("shared_ips", None)
         if not peer.get("endpoint_host") and "endpoint_port" in peer:
             del peer["endpoint_port"]
         return self.sorted_dict(peer)
