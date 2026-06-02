@@ -16,12 +16,15 @@ Core code lives in `netjsonconfig/`:
 - Use `.github/workflows/ci.yml` for CI-tested dependencies, QA/test commands, env vars, and supported Python versions.
 - Use GitHub issue/PR templates when asked to open issues or PRs.
 
+Follow the DRY principle: do not duplicate information or code across files.
+
 If instructions conflict, repository config and CI workflows win first, docs next, and this file is supplemental.
 
 ## Development Notes
 
 - Keep changes focused. Avoid unrelated refactors and formatting churn.
 - Preserve public APIs, schema validation, backend output formats, and generated configuration compatibility unless explicitly required.
+- Place imports at the top of the file. Only defer imports when necessary (e.g., Django model imports inside functions or methods where the app registry is not yet ready).
 - Avoid unnecessary blank lines inside function and method bodies.
 - Update docs when behavior, settings, public APIs, setup steps, or supported versions change.
 
