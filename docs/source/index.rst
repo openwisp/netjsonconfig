@@ -21,7 +21,7 @@ Netjsonconfig is part of the `OpenWISP project <http://openwrt.org>`_ and
 it's the official configuration engine of `OpenWISP 2
 <https://github.com/openwisp/ansible-openwisp2>`_.
 
-.. image:: ./images/openwisp.org.svg
+.. image:: https://openwisp.io/docs/dev/_static/openwisp-logo-black.svg
     :target: http://openwisp.org
 
 **netjsonconfig** is a python library that converts `NetJSON
