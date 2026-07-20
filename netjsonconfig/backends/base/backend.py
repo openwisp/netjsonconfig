@@ -16,6 +16,10 @@ from ...utils import evaluate_vars, merge_config
 
 format_checker = Draft4Validator.FORMAT_CHECKER
 _host_name_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9\.\-]{1,255}$")
+# Public file paths allow only letters, numbers, dots, underscores, dashes
+# and slashes; internal placeholders are handled separately by
+# _validate_file_path_chars().
+_file_path_re = re.compile(r"\A/?[A-Za-z0-9._/-]+\Z")
 
 
 class BaseBackend(object):
@@ -158,8 +162,56 @@ class BaseBackend(object):
             Draft4Validator(self.schema, format_checker=format_checker).validate(
                 self.config
             )
+            self._validate_file_paths()
         except JsonSchemaError as e:
             raise ValidationError(e)
+
+    def _validate_file_paths(self):
+        """
+        Validates paths used by extra configuration files.
+
+        These paths are later written to configuration archives and applied on
+        devices, so accepting malformed or surprising paths can lead to unsafe
+        or broken behavior outside netjsonconfig.
+        """
+        for index, file_item in enumerate(self.config.get("files", [])):
+            path = file_item["path"]
+            components = path.lstrip("/").split("/")
+            valid_path = self._validate_file_path_chars(path)
+            valid_components = all(
+                component and component not in {".", ".."} for component in components
+            )
+            if valid_path and valid_components:
+                continue
+            raise JsonSchemaError(
+                'Invalid file path "{0}". Allowed characters are letters, numbers, '
+                '".", "_", "-", and "/".'.format(path),
+                path=("files", index, "path"),
+            )
+
+    def _validate_file_path_chars(self, path):
+        """
+        Checks the visible characters of a file path.
+
+        Template placeholders are internal values, so this method accepts them
+        only when they are properly wrapped in ``{{`` and ``}}`` while keeping
+        the public path character set strict and easy to explain.
+        """
+        index = 0
+        clean_path = ""
+        while index < len(path):
+            if path[index : index + 2] == "{{":
+                end_index = path.find("}}", index + 2)
+                if end_index == -1:
+                    return False
+                clean_path += "x"
+                index = end_index + 2
+                continue
+            if path[index] in "{}":
+                return False
+            clean_path += path[index]
+            index += 1
+        return bool(_file_path_re.match(clean_path))
 
     def render(self, files=True):
         """
