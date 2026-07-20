@@ -16,9 +16,8 @@ from ...utils import evaluate_vars, merge_config
 
 format_checker = Draft4Validator.FORMAT_CHECKER
 _host_name_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9\.\-]{1,255}$")
-# Public file paths allow only letters, numbers, dots, underscores, dashes
-# and slashes; internal placeholders are handled separately by
-# _validate_file_path_chars().
+# Literal path text is intentionally limited to common path characters.
+# Template variables are checked separately.
 _file_path_re = re.compile(r"\A/?[A-Za-z0-9._/-]+\Z")
 
 
@@ -176,7 +175,11 @@ class BaseBackend(object):
         """
         for index, file_item in enumerate(self.config.get("files", [])):
             path = file_item["path"]
-            components = path.lstrip("/").split("/")
+            # Keep one leading slash valid, but do not hide extra slashes.
+            # They are empty path components and should fail validation.
+            components = (
+                path[1:].split("/") if path.startswith("/") else path.split("/")
+            )
             valid_path = self._validate_file_path_chars(path)
             valid_components = all(
                 component and component not in {".", ".."} for component in components
@@ -194,7 +197,7 @@ class BaseBackend(object):
         """
         Checks the visible characters of a file path.
 
-        Template placeholders are internal values, so this method accepts them
+        Template variables are internal values, so this method accepts them
         only when they are properly wrapped in ``{{`` and ``}}`` while keeping
         the public path character set strict and easy to explain.
         """
@@ -202,6 +205,8 @@ class BaseBackend(object):
         clean_path = ""
         while index < len(path):
             if path.startswith("{{", index):
+                # Variable names are not part of the path syntax. Only the
+                # delimiters matter here; callers decide what names are valid.
                 end_index = path.find("}}", index + 2)
                 if end_index == -1:
                     return False
@@ -270,6 +275,9 @@ class BaseBackend(object):
 
         :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
+        # Do not validate here. Old saved configs should still be downloadable
+        # after stricter validation is introduced; new data should be rejected
+        # when validate() is called.
         tar_bytes = BytesIO()
         tar = tarfile.open(fileobj=tar_bytes, mode="w")
         self._generate_contents(tar)

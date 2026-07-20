@@ -63,6 +63,8 @@ class TestBase(unittest.TestCase):
             "tmp/a b",
             "tmp/file\n",
             "tmp/$(reboot)",
+            "//etc/passwd",
+            "///etc/passwd",
             "tmp//file",
             "tmp/./file",
             "tmp/{file}",
