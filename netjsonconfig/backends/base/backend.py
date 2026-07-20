@@ -185,7 +185,8 @@ class BaseBackend(object):
                 continue
             raise JsonSchemaError(
                 'Invalid file path "{0}". Allowed characters are letters, numbers, '
-                '".", "_", "-", and "/".'.format(path),
+                '".", "_", "-", and "/". Empty path parts and "." or ".." '
+                "components are not allowed.".format(path),
                 path=("files", index, "path"),
             )
 
@@ -200,7 +201,7 @@ class BaseBackend(object):
         index = 0
         clean_path = ""
         while index < len(path):
-            if path[index : index + 2] == "{{":
+            if path.startswith("{{", index):
                 end_index = path.find("}}", index + 2)
                 if end_index == -1:
                     return False
