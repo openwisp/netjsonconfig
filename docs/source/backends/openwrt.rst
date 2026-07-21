@@ -2846,6 +2846,9 @@ key name     type   required function
 The ``files`` key of the *configuration dictionary* is a custom NetJSON
 extension not present in the original NetJSON RFC.
 
+File paths may contain only letters, numbers, dots, underscores, dashes
+and slashes. Empty path parts, ``.`` and ``..`` are not allowed.
+
 .. warning::
 
     The files are included in the output of the ``render`` method unless
