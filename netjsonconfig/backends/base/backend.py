@@ -16,6 +16,9 @@ from ...utils import evaluate_vars, merge_config
 
 format_checker = Draft4Validator.FORMAT_CHECKER
 _host_name_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9\.\-]{1,255}$")
+# Literal path text is intentionally limited to common path characters.
+# Template variables are checked separately.
+_file_path_re = re.compile(r"\A/?[A-Za-z0-9._/-]+\Z")
 
 
 class BaseBackend(object):
@@ -158,8 +161,63 @@ class BaseBackend(object):
             Draft4Validator(self.schema, format_checker=format_checker).validate(
                 self.config
             )
+            self._validate_file_paths()
         except JsonSchemaError as e:
             raise ValidationError(e)
+
+    def _validate_file_paths(self):
+        """
+        Validates paths used by extra configuration files.
+
+        These paths are later written to configuration archives and applied on
+        devices, so accepting malformed or surprising paths can lead to unsafe
+        or broken behavior outside netjsonconfig.
+        """
+        for index, file_item in enumerate(self.config.get("files", [])):
+            path = file_item["path"]
+            # Keep one leading slash valid, but do not hide extra slashes.
+            # They are empty path components and should fail validation.
+            components = (
+                path[1:].split("/") if path.startswith("/") else path.split("/")
+            )
+            valid_path = self._validate_file_path_chars(path)
+            valid_components = all(
+                component and component not in {".", ".."} for component in components
+            )
+            if valid_path and valid_components:
+                continue
+            raise JsonSchemaError(
+                'Invalid file path "{0}". Allowed characters are letters, numbers, '
+                '".", "_", "-", and "/". Empty path parts and "." or ".." '
+                "components are not allowed.".format(path),
+                path=("files", index, "path"),
+            )
+
+    def _validate_file_path_chars(self, path):
+        """
+        Checks the visible characters of a file path.
+
+        Template variables are internal values, so this method accepts them
+        only when they are properly wrapped in ``{{`` and ``}}`` while keeping
+        the public path character set strict and easy to explain.
+        """
+        index = 0
+        clean_path = ""
+        while index < len(path):
+            if path.startswith("{{", index):
+                # Variable names are not part of the path syntax. Only the
+                # delimiters matter here; callers decide what names are valid.
+                end_index = path.find("}}", index + 2)
+                if end_index == -1:
+                    return False
+                clean_path += "x"
+                index = end_index + 2
+                continue
+            if path[index] in "{}":
+                return False
+            clean_path += path[index]
+            index += 1
+        return bool(_file_path_re.match(clean_path))
 
     def render(self, files=True):
         """
@@ -217,6 +275,9 @@ class BaseBackend(object):
 
         :returns: in-memory tar.gz archive, instance of ``BytesIO``
         """
+        # Do not validate here. Old saved configs should still be downloadable
+        # after stricter validation is introduced; new data should be rejected
+        # when validate() is called.
         tar_bytes = BytesIO()
         tar = tarfile.open(fileobj=tar_bytes, mode="w")
         self._generate_contents(tar)
