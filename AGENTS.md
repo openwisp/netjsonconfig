@@ -50,6 +50,7 @@ If instructions conflict, repository config and CI workflows win first, docs nex
 - Prefer method decorators for context managers that apply to the entire test method and would otherwise create unnecessary nesting, unless decorator ordering conflicts or the context manager requires data unavailable when the method is defined.
 - Use targeted tests while iterating, then run the documented full test command before considering the change complete.
 - Prefer in-process tests so coverage tools can measure changed code.
+- Keep helpers and classes used by only one test method inside that method. Promote them to class or module scope only when genuinely reused.
 
 ## Security Notes
 
