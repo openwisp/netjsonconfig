@@ -36,6 +36,7 @@ If instructions conflict, repository config and CI workflows win first, docs nex
 
 ## Development Notes
 
+- Respect module boundaries and encapsulation. The module that owns a model, stored state, lifecycle, or domain invariant must expose the cohesive public operation that reads or changes it. Integrations must use that operation, not write its fields, coordinate multi-step changes to its internal state, or depend on its storage representation. Prefer behavior-oriented public APIs over setters for internal flags. When an integration needs a missing capability, add it to the owning module with invariant tests, then call it from the integration.
 - Preserve public APIs, schema validation, backend output formats, and generated configuration compatibility unless explicitly required.
 - Edit `docs/source/` and regenerate `docs/_build/` or `docs/build/` instead of editing generated documentation directly.
 - Place imports at the top of the file. Only defer imports when necessary (e.g., Django model imports inside functions or methods where the app registry is not yet ready).
