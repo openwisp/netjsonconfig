@@ -1,3 +1,5 @@
+from ipaddress import ip_network
+
 from jsonschema import ValidationError as JsonSchemaError
 
 from ...exceptions import ValidationError
@@ -133,15 +135,31 @@ class OpenWrt(BaseBackend):
             ],
         }
         if data["client"]["ip_address"]:
+            family, mask = cls._get_wireguard_address_family(
+                kwargs.get("server_ip_network")
+            )
             config["interfaces"][0]["addresses"] = [
                 {
                     "proto": "static",
-                    "family": "ipv4",
+                    "family": family,
                     "address": data["client"]["ip_address"],
-                    "mask": 32,
+                    "mask": mask,
                 },
             ]
         return config
+
+    @staticmethod
+    def _get_wireguard_address_family(server_ip_network):
+        """
+        Returns the (family, mask) of the client address, derived from the
+        server network. Defaults to IPv4 when the network is missing or
+        unparsable, which preserves the previous behavior.
+        """
+        try:
+            version = ip_network(server_ip_network, strict=False).version
+        except (TypeError, ValueError):
+            return "ipv4", 32
+        return ("ipv6", 128) if version == 6 else ("ipv4", 32)
 
     @classmethod
     def vxlan_wireguard_auto_client(cls, **kwargs):

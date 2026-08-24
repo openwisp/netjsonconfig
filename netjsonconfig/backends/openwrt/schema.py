@@ -647,7 +647,11 @@ schema = merge_config(
                                                     "type": "string",
                                                     "title": "ipv6 address",
                                                     "minLength": 3,
-                                                    "format": "ipv6",
+                                                    # no "format": "ipv6" here, on
+                                                    # purpose: like the ipv4 variant
+                                                    # above, this address is often a
+                                                    # template variable which is only
+                                                    # resolved at render time
                                                     "propertyOrder": 3,
                                                 },
                                                 "mask": {

@@ -507,6 +507,59 @@ config wifi-iface 'wifi_wlan0'
                 expected,
             )
 
+    def test_wireguard_auto_client_ipv6(self):
+        """An IPv6 server network must produce an IPv6 client address."""
+        expected = self._get_wireguard_empty_configuration()
+        expected["interfaces"][0].update(
+            {
+                "name": "wg",
+                "private_key": "{{private_key}}",
+                "addresses": [
+                    {
+                        "address": "fdb3:d5aa:1c3a::2",
+                        "family": "ipv6",
+                        "mask": 128,
+                        "proto": "static",
+                    },
+                ],
+            }
+        )
+        expected["wireguard_peers"][0].update(
+            {
+                "allowed_ips": ["fdb3:d5aa:1c3a::/64"],
+                "endpoint_host": "::1",
+                "public_key": "server_public_key",
+                "interface": "wg",
+            }
+        )
+        self.assertDictEqual(
+            OpenWrt.wireguard_auto_client(
+                host="::1",
+                public_key="server_public_key",
+                server={"name": "wg", "port": 51820},
+                server_ip_network="fdb3:d5aa:1c3a::/64",
+                ip_address="fdb3:d5aa:1c3a::2",
+            ),
+            expected,
+        )
+
+    def test_wireguard_auto_client_ipv6_template_address(self):
+        """
+        The client address is usually a template variable resolved at render
+        time, so it must still validate against the wireguard schema.
+        """
+        config = OpenWrt.wireguard_auto_client(
+            host="::1",
+            public_key="server_public_key",
+            server={"name": "wg", "port": 51820},
+            server_ip_network="fdb3:d5aa:1c3a::/64",
+            ip_address="{{ip_address_1c3a}}",
+        )
+        self.assertEqual(config["interfaces"][0]["addresses"][0]["family"], "ipv6")
+        self.assertEqual(config["interfaces"][0]["addresses"][0]["mask"], 128)
+        # must not raise
+        OpenWrt({"interfaces": config["interfaces"]}).validate()
+
     def test_vxlan_wireguard_auto_client(self):
         with self.subTest("No arguments provided"):
             expected = self._get_vxlan_wireguard_empty_configuration()
