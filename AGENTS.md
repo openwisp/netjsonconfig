@@ -38,6 +38,10 @@ If instructions conflict, repository config and CI workflows win first, docs nex
 - Respect module boundaries and encapsulation. The module that owns a model, stored state, lifecycle, or domain invariant must expose the cohesive public operation that reads or changes it. Integrations must use that operation, not write its fields, coordinate multi-step changes to its internal state, or depend on its storage representation. Prefer behavior-oriented public APIs over setters for internal flags. When an integration needs a missing capability, add it to the owning module with invariant tests, then call it from the integration.
 - Preserve public APIs, schema validation, backend output formats, and generated configuration compatibility unless explicitly required.
 - Edit `docs/source/` and regenerate `docs/_build/` or `docs/build/` instead of editing generated documentation directly.
+- Process large input files, API responses, and generated output incrementally or in bounded batches when the operation permits it.
+- Do not create unnecessary full copies of a large collection in memory.
+- When a parser or algorithm requires the complete input in memory, avoid additional full-size intermediate collections unless they are necessary.
+- When consuming a paginated remote API, process one page at a time instead of collecting every page before doing work.
 - Place imports at the top of the file. Only defer imports when necessary (e.g., Django model imports inside functions or methods where the app registry is not yet ready).
 - Avoid unnecessary blank lines inside function and method bodies.
 - Prefer short, precise names that rely on their nearest meaningful scope. Do not repeat a feature, domain object, or namespace already named by the containing module, class, or function. For example, prefer `EstimatedLocation.refresh()` over `EstimatedLocation.refresh_estimated_location()`. Repeat that context only when the name is used outside that scope or is needed to distinguish genuinely different concepts. When a concise name cannot express a necessary distinction, use a concise docstring to describe it rather than encoding it in an excessively long name.
