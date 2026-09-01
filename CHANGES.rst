@@ -1,10 +1,39 @@
 Change log
 ==========
 
-Version 1.3.0 [unreleased]
+Version 1.3.0 [2026-09-01]
 --------------------------
 
-Work in progress.
+Features
+~~~~~~~~
+
+- Added support for `newer OpenVPN compression options
+  <https://github.com/openwisp/netjsonconfig/issues/198>`_.
+
+Changes
+~~~~~~~
+
+Other changes
++++++++++++++
+
+- `Changed configuration merging to raise a validation error when merging
+  incompatible formats
+  <https://github.com/openwisp/netjsonconfig/issues/351>`_ instead of
+  silently accepting invalid configurations.
+
+Dependencies
+++++++++++++
+
+- Bumped ``jsonschema`` from ``~=4.25.1`` to `~=4.26.0
+  <https://github.com/python-jsonschema/jsonschema/blob/main/CHANGELOG.rst#v4260>`_.
+- Dropped support for Python ``3.9``.
+
+Bugfixes
+~~~~~~~~
+
+- Fixed `validation of extra file paths
+  <https://github.com/openwisp/netjsonconfig/issues/400>`_ to prevent
+  malformed paths from being included in generated archives.
 
 Version 1.2.1 [2026-03-12]
 --------------------------
