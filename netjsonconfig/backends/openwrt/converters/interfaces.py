@@ -322,7 +322,9 @@ class Interfaces(OpenWrtConverter):
                     "type": interface["type"],
                     "vid": interface.pop("vid"),
                     "name": interface.pop("name"),
-                    ".name": "device_{}".format(interface[".name"].lstrip("vlan_")),
+                    ".name": "device_{}".format(
+                        interface[".name"].removeprefix("vlan_")
+                    ),
                     "ifname": interface.pop("ifname"),
                     "ingress_qos_mapping": interface.pop("ingress_qos_mapping", []),
                     "egress_qos_mapping": interface.pop("egress_qos_mapping", []),

@@ -2030,6 +2030,32 @@ config interface 'vlan_br_lan_1'
         expected = self._tabs(self._vlan8021q_uci)
         self.assertEqual(o.render(), expected)
 
+    def test_render_vlan8021q_network_with_vlan_characters(self):
+        o = OpenWrt(
+            {
+                "interfaces": [
+                    {"type": "8021q", "vid": 10, "name": "eth0", "network": "lan"}
+                ]
+            }
+        )
+        expected = self._tabs("""package network
+
+config device 'device_lan'
+    option ifname 'eth0'
+    option name 'eth0.10'
+    option type '8021q'
+    option vid '10'
+
+config interface 'lan'
+    option device 'eth0.10'
+    option proto 'none'
+""")
+        self.assertEqual(
+            o.render(),
+            expected,
+            "Only the literal 'vlan_' prefix may be removed from generated device names.",
+        )
+
     _vlan8021ad_netjson = {
         "interfaces": [
             {"type": "8021ad", "vid": 6, "name": "eth0", "network": "iot_vlan"}
