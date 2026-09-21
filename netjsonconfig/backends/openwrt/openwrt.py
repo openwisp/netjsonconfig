@@ -34,7 +34,7 @@ class OpenWrt(BaseBackend):
     ]
     parser = OpenWrtParser
     renderer = OpenWrtRenderer
-    list_identifiers = ["name", "config_value", "id"]
+    list_identifiers = ["config_value", "id", "network", "name"]
 
     def __init__(
         self, config=None, native=None, templates=None, context=None, dsa=True

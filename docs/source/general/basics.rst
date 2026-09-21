@@ -368,6 +368,12 @@ allowing to reduce or even eliminate repetitions.
     When using multiple templates, their order is important. Templates
     that are specified afterwards override the ones that come first.
 
+    List entries are matched by their backend-specific identifiers. For
+    OpenWrt configurations, the matching order is ``config_value``,
+    ``id``, ``network``, and finally ``name``. For example, multiple VLAN
+    interfaces can share the same physical interface in ``name`` as long
+    as they use distinct logical interface names in ``network``.
+
     To understand this, read the section :ref:`multiple_overrides`.
 
 .. _multiple_overrides:
