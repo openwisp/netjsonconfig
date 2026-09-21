@@ -168,3 +168,25 @@ class TestUtils(unittest.TestCase):
         conf2 = [{"name": ["walledgarden"], "contents": "test"}]
         result = merge_list(conf1, conf2, identifiers=["name"])
         self.assertEqual(result, conf2)
+
+    def test_merge_list_type_identifier_without_default(self):
+        template = [
+            {"type": "8021q", "name": "eth0", "vid": 10},
+            {"type": "ethernet", "name": "eth1", "source": "template"},
+        ]
+        config = [
+            {"type": "8021q", "name": "eth0", "vid": 10, "mtu": 1500},
+            {"type": "ethernet", "name": "eth1", "source": "config"},
+        ]
+        result = merge_list(
+            template, config, identifiers={"8021q": ["type", "name", "vid"]}
+        )
+        self.assertEqual(
+            result,
+            [
+                {"type": "8021q", "name": "eth0", "vid": 10, "mtu": 1500},
+                {"type": "ethernet", "name": "eth1", "source": "template"},
+                {"type": "ethernet", "name": "eth1", "source": "config"},
+            ],
+            "Entries without a type-specific identifier must retain their default key.",
+        )

@@ -21,7 +21,7 @@ def merge_config(template, config, list_identifiers=None):
 
     :param template: template ``dict``
     :param config: config ``dict``
-    :param list_identifiers: ``list`` or ``None``
+    :param list_identifiers: ``list``, ``dict`` or ``None``
     :returns: merged ``dict``
     :raises ValidationError: if incompatible types are found
     """
@@ -61,10 +61,14 @@ def merge_list(list1, list2, identifiers=None):
 
     :param list1: ``list`` from template
     :param list2: ``list`` from config
-    :param identifiers: ``list`` or ``None``
+    :param identifiers: ``list``, ``dict`` or ``None``
     :returns: merged ``list``
     """
     identifiers = identifiers or []
+    # Convert ``identifiers`` from list to dict, this allows maintaining
+    # backward compatibility while simplifying the new merging logic.
+    if isinstance(identifiers, list):
+        identifiers = {None: identifiers}
     dict_map = {"list1": OrderedDict(), "list2": OrderedDict()}
     counter = 1
     for list_ in [list1, list2]:
@@ -81,10 +85,19 @@ def merge_list(list1, list2, identifiers=None):
                 continue
             # if el is a dict, merge by keys specified in ``identifiers``
             if isinstance(el, dict):
-                for id_key in identifiers:
-                    if id_key in el:
-                        key = el[id_key]
-                        break
+                # detect special interface cases like VLANs
+                el_type = el.get("type")
+                if el_type and el_type in identifiers:
+                    # Use a composite identifier
+                    key = tuple(
+                        el[id_key] for id_key in identifiers[el_type] if id_key in el
+                    )
+                # default first-match behavior
+                else:
+                    for id_key in identifiers.get(None, []):
+                        if id_key in el:
+                            key = el[id_key]
+                            break
             # if key is a list, convert it to tuple which is
             # hashable and can be used as a dictionary key
             if isinstance(key, list):

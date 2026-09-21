@@ -268,6 +268,29 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config["interfaces"][0]["name"], "lo")
         self.assertEqual(o.config["interfaces"][1]["name"], "wlan0")
 
+    def test_templates_keep_vlans_with_same_base_device(self):
+        for vlan_type in ["8021q", "8021ad"]:
+            template = {
+                "interfaces": [
+                    {"name": "eth0", "network": "lan", "type": vlan_type, "vid": 10},
+                    {
+                        "name": "eth0",
+                        "network": "vmnet",
+                        "type": vlan_type,
+                        "vid": 20,
+                    },
+                ]
+            }
+            config = {"interfaces": [{"name": "eth1", "type": "ethernet"}]}
+            with self.subTest(vlan_type=vlan_type):
+                o = OpenWrt(config, templates=[template])
+                self.assertEqual(
+                    o.config["interfaces"],
+                    template["interfaces"] + config["interfaces"],
+                    "Merging an unrelated interface must retain VLANs with the same base "
+                    "device and distinct VLAN IDs.",
+                )
+
     def test_file_inclusion(self):
         o = OpenWrt(
             {

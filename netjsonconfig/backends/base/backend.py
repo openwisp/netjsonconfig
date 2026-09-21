@@ -87,8 +87,17 @@ class BaseBackend(object):
         result = {}
         config_list = templates + [config]
         for merging in config_list:
-            result = merge_config(result, self._load(merging), self.list_identifiers)
+            merging = self._load(merging)
+            result = merge_config(
+                result, merging, self._get_merge_config_identifiers(merging)
+            )
         return result
+
+    def _get_merge_config_identifiers(self, merging):
+        """
+        Allows handling special cases which need different list_identifiers.
+        """
+        return self.list_identifiers
 
     def _evaluate_vars(self, config, context):
         """
