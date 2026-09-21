@@ -58,23 +58,7 @@ class OpenWrt(BaseBackend):
     def validate(self):
         self._validate_radios()
         super().validate()
-        # When VLAN filtering is enabled on a "bridge" interfaces,
-        # primary VLAN ID can be set for only one VLAN.
-        for index, interface in enumerate(self.config.get("interfaces", [])):
-            pvid_mapping = []
-            if interface.get("type") != "bridge":
-                continue
-            for vlan in interface.get("vlan_filtering", []):
-                for port in vlan.get("ports", []):
-                    if port.get("primary_vid", False):
-                        if port["ifname"] in pvid_mapping:
-                            raise ValidationError(
-                                JsonSchemaError(
-                                    f'Invalid configuration triggered by "#/interfaces/{index}"'
-                                    " says: Primary VID can be set only one VLAN for a port."
-                                )
-                            )
-                        pvid_mapping.append(port["ifname"])
+        self._validate_bridge_vlan_filtering()
 
     def _generate_contents(self, tar):
         """
@@ -172,12 +156,13 @@ class OpenWrt(BaseBackend):
         return {"zerotier": [data]}
 
     def _validate_radios(self):
-        # We use "hwmode" or "band" property of "radio" configuration
-        # to predict the radio frequency. If both of these
-        # properties are absent from the configuration, then channels
-        # are used to predict the radio frequency. If the channel is
-        # set to "auto" (0) in the configuration, then netjsonconfig
-        # cannot predict the radio frequency. Thus, raises an error.
+        """
+        Predict radio frequency from the ``hwmode`` or ``band`` property.
+
+        If both properties are absent, the channel is used instead. A channel
+        set to ``auto`` (0) does not provide enough information to predict the
+        radio frequency.
+        """
         for radio in self.config.get("radios", []):
             if radio["protocol"] not in ["802.11n", "802.11ax"]:
                 continue
@@ -190,3 +175,24 @@ class OpenWrt(BaseBackend):
                     '"channel" cannot be set to "auto" when'
                     ' "hwmode" or "band" property is not configured.'
                 )
+
+    def _validate_bridge_vlan_filtering(self):
+        """
+        When VLAN filtering is enabled on a bridge, a primary VLAN ID can be
+        set only once per port.
+        """
+        for index, interface in enumerate(self.config.get("interfaces", [])):
+            pvid_mapping = []
+            if interface.get("type") != "bridge":
+                continue
+            for vlan in interface.get("vlan_filtering", []):
+                for port in vlan.get("ports", []):
+                    if port.get("primary_vid", False):
+                        if port["ifname"] in pvid_mapping:
+                            raise ValidationError(
+                                JsonSchemaError(
+                                    f'Invalid configuration triggered by "#/interfaces/{index}"'
+                                    " says: Primary VID can be set only one VLAN for a port."
+                                )
+                            )
+                        pvid_mapping.append(port["ifname"])
