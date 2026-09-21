@@ -2023,6 +2023,47 @@ config interface 'vlan_br_lan_1'
         expected["interfaces"][0]["network"] = "vlan_br_lan_1"
         self.assertEqual(expected, o.config)
 
+    def test_parse_multiple_vlan8021q_on_same_base_device(self):
+        native = self._tabs("""package network
+
+config device 'device_lan'
+    option ifname 'eth0'
+    option name 'eth0.10'
+    option type '8021q'
+    option vid '10'
+
+config interface 'lan'
+    option device 'eth0.10'
+    option proto 'none'
+
+config device 'device_vmnet'
+    option ifname 'eth0'
+    option name 'eth0.20'
+    option type '8021q'
+    option vid '20'
+
+config interface 'vmnet'
+    option device 'eth0.20'
+    option proto 'none'
+""")
+        expected = {
+            "interfaces": [
+                {"name": "eth0", "type": "8021q", "vid": 10, "network": "lan"},
+                {
+                    "name": "eth0",
+                    "type": "8021q",
+                    "vid": 20,
+                    "network": "vmnet",
+                },
+            ]
+        }
+        o = OpenWrt(native=native)
+        self.assertEqual(
+            expected,
+            o.config,
+            "Parsing VLANs on one base device must retain entries with distinct VLAN IDs.",
+        )
+
     def test_render_vlan8021q_empty_network(self):
         netjson = deepcopy(self._vlan8021q_netjson)
         netjson["interfaces"][0]["network"] = ""

@@ -35,6 +35,14 @@ class OpenWrt(BaseBackend):
     parser = OpenWrtParser
     renderer = OpenWrtRenderer
     list_identifiers = ["name", "config_value", "id"]
+    list_identifiers_interfaces = {
+        # Default identifiers, for backward compatibility
+        None: list_identifiers,
+        # VLANs use a composite key: different VLANs config objects are
+        # merged only when their type, base device and VLAN ID match.
+        "8021q": ["type", "name", "vid"],
+        "8021ad": ["type", "name", "vid"],
+    }
 
     def __init__(
         self, config=None, native=None, templates=None, context=None, dsa=True
@@ -75,6 +83,14 @@ class OpenWrt(BaseBackend):
                                 )
                             )
                         pvid_mapping.append(port["ifname"])
+
+    def _get_merge_config_identifiers(self, merging):
+        """Returns interface-aware identifiers when merging interface lists.
+
+        Allows handling special cases like VLANs."""
+        if "interfaces" in merging:
+            return self.list_identifiers_interfaces
+        return self.list_identifiers
 
     def _generate_contents(self, tar):
         """
