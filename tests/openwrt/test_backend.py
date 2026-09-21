@@ -268,6 +268,48 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(o.config["interfaces"][0]["name"], "lo")
         self.assertEqual(o.config["interfaces"][1]["name"], "wlan0")
 
+    def test_templates_match_interfaces_by_network_before_name(self):
+        templates = [
+            {
+                "interfaces": [
+                    {
+                        "name": "{{ trunk_iface }}",
+                        "network": "lan",
+                        "type": "8021q",
+                        "vid": 10,
+                    }
+                ]
+            },
+            {
+                "interfaces": [
+                    {
+                        "name": "{{ trunk_iface }}",
+                        "network": "lan2",
+                        "type": "8021q",
+                        "vid": 20,
+                    }
+                ]
+            },
+        ]
+        o = OpenWrt({}, templates=templates)
+        self.assertEqual(
+            o.config["interfaces"],
+            [
+                {
+                    "name": "{{ trunk_iface }}",
+                    "network": "lan",
+                    "type": "8021q",
+                    "vid": 10,
+                },
+                {
+                    "name": "{{ trunk_iface }}",
+                    "network": "lan2",
+                    "type": "8021q",
+                    "vid": 20,
+                },
+            ],
+        )
+
     def test_file_inclusion(self):
         o = OpenWrt(
             {
