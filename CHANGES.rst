@@ -6,6 +6,15 @@ Version 1.4.0 [unreleased]
 
 Work in progress.
 
+Version 1.3.1 [2026-09-25]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Defined special rules for merging VLAN objects `#412
+  <https://github.com/openwisp/netjsonconfig/issues/412>`_
+
 Version 1.3.0 [2026-09-01]
 --------------------------
 
