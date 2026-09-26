@@ -236,6 +236,8 @@ class Interfaces(OpenWrtConverter):
         interface["proto"] = "vxlan"
         interface["peeraddr"] = interface.pop("vtep")
         interface["vid"] = interface.pop("vni")
+        if self.dsa:
+            interface["device"] = interface.pop("ifname")
         return interface
 
     def _intermediate_8021_vlan(self, interface):
