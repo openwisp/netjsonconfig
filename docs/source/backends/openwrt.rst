@@ -3140,8 +3140,8 @@ Will be rendered as follows:
     package network
 
     config interface 'vxlan'
+            option device 'vxlan'
             option enabled '0'
-            option ifname 'vxlan'
             option mtu '1280'
             option peeraddr '10.0.0.1'
             option port '4789'
@@ -3227,8 +3227,8 @@ Will be rendered as follows:
             option proto 'wireguard'
 
     config interface 'vxlan'
+            option device 'vxlan'
             option enabled '1'
-            option ifname 'vxlan'
             option mtu '1280'
             option peeraddr '10.0.0.1'
             option port '4789'
