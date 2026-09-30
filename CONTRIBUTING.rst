@@ -1,6 +1,2 @@
-Contributing
-============
-
-Please read our `Contributing guidelines
-<http://netjsonconfig.openwisp.org/en/latest/general/contributing.html>`_
-on the documentation.
+Please refer to the `OpenWISP Contribution Guidelines
+<https://openwisp.io/docs/dev/developer/contributing.html>`_.
