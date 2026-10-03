@@ -185,6 +185,34 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(contents, expected)
         tar.close()
 
+    def test_generate_multibyte_contents(self):
+        ssid = "محمدين وحسنين"
+        motd = "中文 ñ\n"
+        o = OpenWrt(
+            {
+                "radios": self._config1["radios"],
+                "interfaces": [
+                    {
+                        "name": "wlan0",
+                        "type": "wireless",
+                        "wireless": {
+                            "radio": "radio0",
+                            "mode": "access_point",
+                            "ssid": ssid,
+                        },
+                    }
+                ],
+                "files": [{"path": "/etc/motd", "mode": "0644", "contents": motd}],
+            }
+        )
+        tar = tarfile.open(fileobj=o.generate(), mode="r")
+        wireless = tar.extractfile("etc/config/wireless").read()
+        self.assertIn(f"option ssid '{ssid}'\n".encode(), wireless)
+        motd_member = tar.getmember("etc/motd")
+        self.assertEqual(motd_member.size, len(motd.encode()))
+        self.assertEqual(tar.extractfile(motd_member).read().decode(), motd)
+        tar.close()
+
     def test_double_rendering(self):
         o = OpenWrt(self._config1)
         self.assertEqual(o.render(), o.render())

@@ -353,9 +353,10 @@ class BaseBackend(object):
         :param mode: string representing file mode, defaults to 644
         :returns: None
         """
-        byte_contents = BytesIO(contents.encode("utf8"))
+        encoded = contents.encode("utf8")
+        byte_contents = BytesIO(encoded)
         info = tarfile.TarInfo(name=name)
-        info.size = len(contents)
+        info.size = len(encoded)
         # mtime must be 0 or any checksum operation
         # will return a different digest even when content is the same
         info.mtime = 0
