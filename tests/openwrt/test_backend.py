@@ -185,6 +185,14 @@ config wifi-iface 'wifi_wlan0'
         self.assertEqual(contents, expected)
         tar.close()
 
+    def test_generate_utf8(self):
+        ssid = "محمدين وحسنين"
+        o = OpenWrt(self._config1)
+        o.config["interfaces"][0]["wireless"]["ssid"] = ssid
+        with tarfile.open(fileobj=o.generate(), mode="r") as tar:
+            contents = tar.extractfile("etc/config/wireless").read().decode("utf8")
+        self.assertIn(f"option ssid '{ssid}'\n", contents)
+
     def test_double_rendering(self):
         o = OpenWrt(self._config1)
         self.assertEqual(o.render(), o.render())
