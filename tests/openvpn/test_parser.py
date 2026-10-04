@@ -43,6 +43,26 @@ tls-server
         }
         self.assertDictEqual(o.config, expected)
 
+    def test_parse_tls_crypt(self):
+        native = """# openvpn config: test
+
+ca ca.pem
+cert cert.pem
+dev tap0
+dev-type tap
+dh dh.pem
+key key.pem
+mode server
+proto udp
+tls-crypt /etc/openvpn/tap0_tls_crypt.key
+tls-server
+"""
+        o = OpenVpn(native=native)
+        self.assertEqual(
+            o.config["openvpn"][0]["tls_crypt"], "/etc/openvpn/tap0_tls_crypt.key"
+        )
+        self.assertNotIn("tls_auth", o.config["openvpn"][0])
+
     def test_parse_server(self):
         native = """# openvpn config: test-server
 
