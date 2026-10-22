@@ -1,6 +1,9 @@
 from ..base.converter import BaseConverter
 from .schema import schema
 
+wireguard_definitions = schema["properties"]["wireguard"]["items"]
+peer_definitions = wireguard_definitions["properties"]["peers"]["items"]
+
 
 class Wireguard(BaseConverter):
     netjson_key = "wireguard"
@@ -45,6 +48,55 @@ class Wireguard(BaseConverter):
                 config.pop(option, None)
         config["peers"] = self.__intermediate_peers(config.get("peers", []))
         return self.sorted_dict(config)
+
+    def to_netjson_loop(self, block, result, index):
+        vpn = self.__netjson_vpn(block)
+        result.setdefault("wireguard", [])
+        result["wireguard"].append(vpn)
+        return result
+
+    def __netjson_vpn(self, vpn):
+        backward_property_map = {
+            value: key for key, value in self._forward_property_map.items()
+        }
+        peers = vpn.pop("peers", [])
+        for native, netjson in backward_property_map.items():
+            if native not in vpn:
+                continue
+            value = vpn.pop(native)
+            if netjson == "dns":
+                value = [item.strip() for item in value.split(",") if item.strip()]
+            elif netjson == "save_config" and not isinstance(value, bool):
+                value = str(value).lower() == "true"
+            vpn[netjson] = value
+        vpn = self.type_cast(vpn, wireguard_definitions)
+        vpn["peers"] = self.__netjson_peers(peers)
+        if not vpn["peers"]:
+            del vpn["peers"]
+        return vpn
+
+    def __netjson_peers(self, peers):
+        peer_list = []
+        for peer in peers:
+            peer = dict(peer)
+            if "AllowedIPs" in peer:
+                peer["allowed_ips"] = peer.pop("AllowedIPs")
+            if "PublicKey" in peer:
+                peer["public_key"] = peer.pop("PublicKey")
+            if "PreSharedKey" in peer:
+                peer["preshared_key"] = peer.pop("PreSharedKey")
+            endpoint = peer.pop("Endpoint", None)
+            if endpoint:
+                # the port is separated by the last colon, so that
+                # IPv6 endpoints are not split on their own colons
+                host, separator, port = endpoint.rpartition(":")
+                if separator:
+                    peer["endpoint_host"] = host
+                    peer["endpoint_port"] = port
+                else:
+                    peer["endpoint_host"] = endpoint
+            peer_list.append(self.sorted_dict(self.type_cast(peer, peer_definitions)))
+        return peer_list
 
     def __intermediate_peers(self, peers):
         peer_list = []
