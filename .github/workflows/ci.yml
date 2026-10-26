@@ -11,6 +11,13 @@ on:
       - master
       - "[0-9]+.[0-9]+"
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Python==${{ matrix.python-version }}
@@ -26,12 +33,13 @@ jobs:
           - "3.13"
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
@@ -57,7 +65,7 @@ jobs:
 
       - name: Upload Coverage
         if: ${{ success() }}
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
           parallel: true
           format: cobertura
@@ -65,10 +73,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   coveralls:
+    name: Finalize Coveralls report
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
           parallel-finished: true
