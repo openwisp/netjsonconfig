@@ -119,6 +119,9 @@ key name                  type    default    allowed values
 ``pkcs12``                string             any non whitespace character
 ``tls_auth``              string             string containing TLS Auth
                                              key
+``tls_crypt``             string             string containing TLS Crypt
+                                             key, mutually exclusive with
+                                             ``tls_auth``
 ``ns_cert_type``          string             ``client``, ``server`` or
                                              empty string
 ``mtu_disc``              string  ``no``     ``no``, ``maybe`` or ``yes``

@@ -1,5 +1,8 @@
 from copy import deepcopy
 
+from jsonschema import ValidationError as JsonSchemaError
+
+from ...exceptions import ValidationError
 from ...schema import X509_FILE_MODE
 from ..base.converter import BaseConverter
 from .schema import schema
@@ -17,6 +20,22 @@ class OpenVpn(BaseConverter):
     netjson_key = "openvpn"
     intermediate_key = "openvpn"
     _schema = openvpn_definitions
+
+    @classmethod
+    def validate_tls_crypt(cls, config):
+        """
+        ``tls_auth`` and ``tls_crypt`` are mutually exclusive in OpenVPN,
+        empty values are ignored because they are removed during conversion
+        """
+        for index, vpn in enumerate(config.get(cls.netjson_key, [])):
+            if vpn.get("tls_auth") and vpn.get("tls_crypt"):
+                raise ValidationError(
+                    JsonSchemaError(
+                        "Invalid configuration triggered by "
+                        f'"#/{cls.netjson_key}/{index}" says: '
+                        "tls_auth and tls_crypt are mutually exclusive."
+                    )
+                )
 
     def to_intermediate_loop(self, block, result, index=None):
         vpn = self.__intermediate_vpn(block)
@@ -57,6 +76,7 @@ class OpenVpn(BaseConverter):
             del config["status_version"]
         config = self.__output_data_ciphers(config)
         config = self.__add_tls_auth_key(config)
+        config = self.__add_tls_crypt_key(config)
         return self.sorted_dict(config)
 
     def __output_data_ciphers(self, config):
@@ -83,26 +103,40 @@ class OpenVpn(BaseConverter):
             pass
         else:
             # The TLS Auth key is present in the field.
-            # Determine TLS Auth key file path from CA's file path.
-            ca_path = config.get("ca", "")
-            dev = config.get("dev", "")
-            tls_auth_path = "/".join(ca_path.split("/")[:-1] + [f"{dev}_tls_auth.key"])
+            tls_auth_path = self.__add_key_file(config, "tls_auth", tls_auth)
             if config.get("mode") == "server":
                 tls_auth_direction = 0
             else:
                 tls_auth_direction = 1
             config["tls_auth"] = f"{tls_auth_path} {tls_auth_direction}"
-            # Add TLS Auth key file
-            file_data = {
-                "path": tls_auth_path,
-                "mode": X509_FILE_MODE,
-                "contents": tls_auth,
-            }
-            try:
-                self.netjson["files"].append(file_data)
-            except KeyError:
-                self.netjson["files"] = [file_data]
         return config
+
+    def __add_tls_crypt_key(self, config):
+        tls_crypt = config.get("tls_crypt", None)
+        if not tls_crypt:
+            return config
+        tls_crypt = tls_crypt.strip()
+        if len(tls_crypt.split()) > 1:
+            # The TLS Crypt key is present in the field (not a path),
+            # tls-crypt keys are symmetric: no key direction is needed.
+            config["tls_crypt"] = self.__add_key_file(config, "tls_crypt", tls_crypt)
+        return config
+
+    def __add_key_file(self, config, name, contents):
+        """
+        Adds a key file to the files of the configuration,
+        next to the CA file and named after the VPN device,
+        returns the path of the added file
+        """
+        ca_path = config.get("ca", "")
+        dev = config.get("dev", "")
+        path = "/".join(ca_path.split("/")[:-1] + [f"{dev}_{name}.key"])
+        file_data = {"path": path, "mode": X509_FILE_MODE, "contents": contents}
+        try:
+            self.netjson["files"].append(file_data)
+        except KeyError:
+            self.netjson["files"] = [file_data]
+        return path
 
     def to_netjson_loop(self, block, result, index):
         vpn = self.__netjson_vpn(block)
