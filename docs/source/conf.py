@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # netjsonconfig documentation build configuration file, created by
 # sphinx-quickstart on Thu Nov 26 11:37:44 2015.
 #
