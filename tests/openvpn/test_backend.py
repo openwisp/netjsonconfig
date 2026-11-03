@@ -1150,6 +1150,120 @@ tls-auth-key
         client = OpenVpn(client_config)
         self.assertEqual(client.render(), self._openvpn_client_tls_auth_render)
 
+    _openvpn_server_tls_crypt_config = {
+        "openvpn": [
+            {
+                "name": "test",
+                "ca": "/etc/openvpn/ca.pem",
+                "cert": "/etc/openvpn/cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "/etc/openvpn/dh.pem",
+                "key": "/etc/openvpn/key.pem",
+                "mode": "server",
+                "proto": "udp",
+                "tls_server": True,
+                "tls_crypt": (
+                    "#\n"
+                    "# 2048 bit OpenVPN static key\n"
+                    "#\n-----BEGIN OpenVPN Static key V1-----\n"
+                    "tls-crypt-key\n"
+                    "-----END OpenVPN Static key V1-----"
+                ),
+            }
+        ],
+    }
+
+    _openvpn_server_tls_crypt_render = """# openvpn config: test
+
+ca /etc/openvpn/ca.pem
+cert /etc/openvpn/cert.pem
+dev tap0
+dev-type tap
+dh /etc/openvpn/dh.pem
+key /etc/openvpn/key.pem
+mode server
+proto udp
+tls-crypt /etc/openvpn/tap0_tls_crypt.key
+tls-server
+
+# ---------- files ---------- #
+
+# path: /etc/openvpn/tap0_tls_crypt.key
+# mode: 0600
+
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+tls-crypt-key
+-----END OpenVPN Static key V1-----
+
+"""
+
+    _openvpn_client_tls_crypt_render = """# openvpn config: test
+
+ca /etc/openvpn/ca.pem
+cert /etc/openvpn/cert.pem
+dev tap0
+dev-type tap
+key /etc/openvpn/key.pem
+mode p2p
+nobind
+proto udp
+remote vpn1.test.com 1195
+resolv-retry infinite
+tls-client
+tls-crypt /etc/openvpn/tap0_tls_crypt.key
+
+# ---------- files ---------- #
+
+# path: /etc/openvpn/tap0_tls_crypt.key
+# mode: 0600
+
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+tls-crypt-key
+-----END OpenVPN Static key V1-----
+
+"""
+
+    def test_tls_crypt_schema(self):
+        properties = OpenVpn.schema["definitions"]["tunnel"]["properties"]
+        self.assertIn("tls_crypt", properties)
+
+    def test_tls_crypt_key_present(self):
+        server = OpenVpn(self._openvpn_server_tls_crypt_config)
+        self.assertEqual(server.render(), self._openvpn_server_tls_crypt_render)
+
+    def test_tls_crypt_path_present(self):
+        config = copy.deepcopy(self._openvpn_server_tls_crypt_config)
+        config["openvpn"][0]["tls_crypt"] = "/etc/openvpn/tls_crypt.key"
+        output = OpenVpn(config).render()
+        self.assertIn("tls-crypt /etc/openvpn/tls_crypt.key\n", output)
+        self.assertNotIn("# ---------- files ---------- #", output)
+
+    def test_auto_client_tls_crypt(self):
+        client_config = OpenVpn.auto_client(
+            "vpn1.test.com", self._openvpn_server_tls_crypt_config["openvpn"][0]
+        )
+        client = OpenVpn(client_config)
+        self.assertEqual(client.render(), self._openvpn_client_tls_crypt_render)
+
+    def test_tls_auth_and_tls_crypt_mutually_exclusive(self):
+        config = copy.deepcopy(self._openvpn_server_tls_crypt_config)
+        config["openvpn"][0]["tls_auth"] = "/etc/openvpn/tls_auth.key 0"
+        with self.assertRaises(ValidationError) as context:
+            OpenVpn(config).validate()
+        self.assertIn(
+            "tls_auth and tls_crypt are mutually exclusive", str(context.exception)
+        )
+        # an empty value does not count as a conflict
+        config["openvpn"][0]["tls_auth"] = ""
+        OpenVpn(config).validate()
+
     def test_ca_same_file_path_for_same_device(self):
         conf = {
             "ca": "/etc/x509/ca.pem",

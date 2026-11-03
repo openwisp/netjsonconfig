@@ -20,6 +20,10 @@ class OpenVpn(BaseVpnBackend):
     vpn_pattern = vpn_pattern
     config_suffix = config_suffix
 
+    def validate(self):
+        super().validate()
+        converters.OpenVpn.validate_tls_crypt(self.config)
+
     @classmethod
     def auto_client(
         cls,
@@ -76,17 +80,7 @@ class OpenVpn(BaseVpnBackend):
         # remote_cert_tls
         remote_cert_tls = {None: "", "": "", "client": "server"}
         client["remote_cert_tls"] = remote_cert_tls[server.get("remote_cert_tls")]
-        tls_auth = server.get("tls_auth")
-        if tls_auth:
-            if len(tls_auth.strip().split(" ")) == 2:
-                # The field contains path to auth key and direction.
-                # auto_client does not support such format.
-                pass
-            else:
-                # The TLS Auth key is present in the field.
-                # Copy the TLS Auth key. Convertor will handle
-                # parsing it into file.
-                client["tls_auth"] = tls_auth
+        cls._auto_client_tls_keys(client, server)
         copy_keys = [
             "name",
             "dev_type",
@@ -140,6 +134,22 @@ class OpenVpn(BaseVpnBackend):
             key_contents,
         )
         return {"openvpn": [client], "files": files}
+
+    @classmethod
+    def _auto_client_tls_keys(cls, client, server):
+        """
+        copies the TLS Auth and TLS Crypt keys of the server to the client
+        when the fields contain the keys themselves (the converter will
+        handle writing them to files); paths are not copied because
+        auto_client does not support such format
+        produces side effects in ``client`` dictionary
+        """
+        tls_auth = server.get("tls_auth")
+        if tls_auth and len(tls_auth.strip().split(" ")) != 2:
+            client["tls_auth"] = tls_auth
+        tls_crypt = server.get("tls_crypt")
+        if tls_crypt and len(tls_crypt.strip().split()) > 1:
+            client["tls_crypt"] = tls_crypt
 
     @classmethod
     def _auto_client_files(
