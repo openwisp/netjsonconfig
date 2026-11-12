@@ -179,10 +179,10 @@ key name                  type    default    allowed values
 
 Use the ``tcp-client``, ``tcp4-client``, and ``tcp6-client`` protocols for
 clients, and the corresponding ``-server`` protocols for servers. Both
-support ``udp``, ``udp4``, and ``udp6``. The ``4`` and ``6`` variants
-restrict connections to IPv4 and IPv6, respectively. These values are also
-supported by the OpenWrt backend. Automatically generated clients preserve
-the server's address family and use the corresponding client protocol.
+support ``udp``, ``udp4``, and ``udp6``. On dual-stack hosts, wildcard
+``udp6`` and ``tcp6-server`` listeners may also accept IPv4-mapped
+connections. Do not rely on these protocol values alone to restrict access
+to IPv6.
 
 Client specific settings
 ~~~~~~~~~~~~~~~~~~~~~~~~
