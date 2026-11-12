@@ -94,7 +94,11 @@ key name                  type    default    allowed values
                                              underscores
 ``mode``                  string             ``p2p`` or ``server``
 ``proto``                 string             ``udp``, ``tcp-client``,
-                                             ``tcp-server``
+                                             ``tcp-server``, ``udp4``,
+                                             ``udp6``, ``tcp4-client``,
+                                             ``tcp6-client``,
+                                             ``tcp4-server``,
+                                             ``tcp6-server``
 ``port``                  integer ``1194``   integers
 ``data_ciphers``          list               list of dicts, each dict need
                                              to have ``cipher`` and
@@ -172,6 +176,13 @@ key name                  type    default    allowed values
                                              (``""``). Use ``compress``
                                              instead.
 ========================= ======= ========== =============================
+
+Use the ``tcp-client``, ``tcp4-client``, and ``tcp6-client`` protocols for
+clients, and the corresponding ``-server`` protocols for servers. Both
+support ``udp``, ``udp4``, and ``udp6``. The ``4`` and ``6`` variants
+restrict connections to IPv4 and IPv6, respectively. These values are also
+supported by the OpenWrt backend. Automatically generated clients preserve
+the server's address family and use the corresponding client protocol.
 
 Client specific settings
 ~~~~~~~~~~~~~~~~~~~~~~~~

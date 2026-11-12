@@ -636,9 +636,25 @@ base_openvpn_schema = {
                     "properties": {
                         "mode": {"enum": ["p2p"]},
                         "proto": {
-                            "enum": ["udp", "tcp-client"],
+                            "enum": [
+                                "udp",
+                                "tcp-client",
+                                "udp4",
+                                "udp6",
+                                "tcp4-client",
+                                "tcp6-client",
+                            ],
                             "default": "udp",
-                            "options": {"enum_titles": ["UDP", "TCP"]},
+                            "options": {
+                                "enum_titles": [
+                                    "UDP",
+                                    "TCP",
+                                    "UDP IPv4",
+                                    "UDP IPv6",
+                                    "TCP IPv4",
+                                    "TCP IPv6",
+                                ]
+                            },
                         },
                         "remote": {
                             "title": "remote",
@@ -785,9 +801,25 @@ base_openvpn_schema = {
             "properties": {
                 "mode": {"enum": ["server"]},
                 "proto": {
-                    "enum": ["udp", "tcp-server"],
+                    "enum": [
+                        "udp",
+                        "tcp-server",
+                        "udp4",
+                        "udp6",
+                        "tcp4-server",
+                        "tcp6-server",
+                    ],
                     "default": "udp",
-                    "options": {"enum_titles": ["UDP", "TCP"]},
+                    "options": {
+                        "enum_titles": [
+                            "UDP",
+                            "TCP",
+                            "UDP IPv4",
+                            "UDP IPv6",
+                            "TCP IPv4",
+                            "TCP IPv6",
+                        ]
+                    },
                 },
                 "topology": {
                     "title": "topology",
