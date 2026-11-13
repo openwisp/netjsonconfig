@@ -279,6 +279,29 @@ config openvpn 'test_client'
         c = OpenWrt(native=self._client_uci)
         self.assertEqual(c.config, self._client_netjson)
 
+    def test_client_protocol_address_families(self):
+        def check_protocol(protocol):
+            config = deepcopy(self._client_netjson)
+            config["openvpn"][0]["proto"] = protocol
+            rendered = OpenWrt(config).render()
+            expected = self._tabs(
+                self._client_uci.replace("'tcp-client'", f"'{protocol}'")
+            )
+            self.assertEqual(rendered, expected)
+            self.assertEqual(OpenWrt(native=rendered).config, config)
+
+        with self.subTest(protocol="udp4"):
+            check_protocol("udp4")
+
+        with self.subTest(protocol="udp6"):
+            check_protocol("udp6")
+
+        with self.subTest(protocol="tcp4-client"):
+            check_protocol("tcp4-client")
+
+        with self.subTest(protocol="tcp6-client"):
+            check_protocol("tcp6-client")
+
     def test_no_status_file(self):
         c = OpenWrt(
             {
