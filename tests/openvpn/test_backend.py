@@ -13,6 +13,63 @@ class TestBackend(unittest.TestCase):
 
     maxDiff = None
 
+    def test_server_protocol_address_families(self):
+        def check_protocol(protocol):
+            backend = OpenVpn(
+                {
+                    "openvpn": [
+                        {
+                            "name": "test-server",
+                            "mode": "server",
+                            "dev": "tun0",
+                            "proto": protocol,
+                        }
+                    ]
+                }
+            )
+            rendered = backend.render()
+            self.assertIn(f"\nproto {protocol}\n", rendered)
+            parsed = OpenVpn(native=rendered)
+            self.assertEqual(parsed.config["openvpn"][0]["proto"], protocol)
+
+        with self.subTest(protocol="udp4"):
+            check_protocol("udp4")
+
+        with self.subTest(protocol="udp6"):
+            check_protocol("udp6")
+
+        with self.subTest(protocol="tcp4-server"):
+            check_protocol("tcp4-server")
+
+        with self.subTest(protocol="tcp6-server"):
+            check_protocol("tcp6-server")
+
+    def test_auto_client_protocol_address_families(self):
+        def check_protocol(server_protocol, client_protocol):
+            config = OpenVpn.auto_client(
+                host="vpn.test.com",
+                server={
+                    "name": "test-client",
+                    "mode": "server",
+                    "dev": "tun0",
+                    "proto": server_protocol,
+                },
+            )
+            self.assertEqual(config["openvpn"][0]["proto"], client_protocol)
+            self.assertIn(f"\nproto {client_protocol}\n", OpenVpn(config).render())
+
+        with self.subTest(protocol="udp4"):
+            check_protocol(server_protocol="udp4", client_protocol="udp4")
+
+        with self.subTest(protocol="udp6"):
+            check_protocol(server_protocol="udp6", client_protocol="udp6")
+
+        with self.subTest(protocol="tcp4-server"):
+            check_protocol(server_protocol="tcp4-server", client_protocol="tcp4-client")
+
+        with self.subTest(protocol="tcp6-server"):
+            check_protocol(server_protocol="tcp6-server", client_protocol="tcp6-client")
+
     def test_server_mode(self):
         c = OpenVpn(
             {

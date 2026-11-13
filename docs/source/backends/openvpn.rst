@@ -93,8 +93,13 @@ key name                  type    default    allowed values
                                              characters, dashes and
                                              underscores
 ``mode``                  string             ``p2p`` or ``server``
-``proto``                 string             ``udp``, ``tcp-client``,
-                                             ``tcp-server``
+``proto``                 string             ``udp``, ``udp4``, ``udp6``,
+                                             ``tcp-client``,
+                                             ``tcp4-client``,
+                                             ``tcp6-client``,
+                                             ``tcp-server``,
+                                             ``tcp4-server``,
+                                             ``tcp6-server``
 ``port``                  integer ``1194``   integers
 ``data_ciphers``          list               list of dicts, each dict need
                                              to have ``cipher`` and
@@ -172,6 +177,13 @@ key name                  type    default    allowed values
                                              (``""``). Use ``compress``
                                              instead.
 ========================= ======= ========== =============================
+
+Use the ``tcp-client``, ``tcp4-client``, and ``tcp6-client`` protocols for
+clients, and the corresponding ``-server`` protocols for servers. Both
+support ``udp``, ``udp4``, and ``udp6``. On dual-stack hosts, wildcard
+``udp6`` and ``tcp6-server`` listeners may also accept IPv4-mapped
+connections. Do not rely on these protocol values alone to restrict access
+to IPv6.
 
 Client specific settings
 ~~~~~~~~~~~~~~~~~~~~~~~~
