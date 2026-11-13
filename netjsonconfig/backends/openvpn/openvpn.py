@@ -60,10 +60,13 @@ class OpenVpn(BaseVpnBackend):
         port = server.get("port") or 1195
         client["remote"] = [{"host": host, "port": port}]
         # proto
-        if server.get("proto") == "tcp-server":
-            client["proto"] = "tcp-client"
-        else:
-            client["proto"] = "udp"
+        client["proto"] = {
+            "tcp-server": "tcp-client",
+            "udp4": "udp4",
+            "udp6": "udp6",
+            "tcp4-server": "tcp4-client",
+            "tcp6-server": "tcp6-client",
+        }.get(server.get("proto"), "udp")
         # determine if pull must be True
         if "server" in server or "server_bridge" in server:
             client["pull"] = True
