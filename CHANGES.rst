@@ -1,6 +1,20 @@
 Change log
 ==========
 
+Version 1.3.2 [2026-11-13]
+--------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed missing IPv4 and IPv6 variants of UDP and TCP protocols in OpenVPN
+  configurations, ensuring the selected protocol is preserved in generated
+  client configurations.
+- Fixed Europe/Kyiv and Asia/Qostanay timezone entries `#429
+  <https://github.com/openwisp/netjsonconfig/issues/429>`_.
+- Fixed truncation of non-ASCII file contents in generated tar archives
+  `#341 <https://github.com/openwisp/netjsonconfig/issues/341>`_.
+
 Version 1.3.1 [2026-09-25]
 --------------------------
 
