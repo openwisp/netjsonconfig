@@ -638,9 +638,9 @@ base_openvpn_schema = {
                         "proto": {
                             "enum": [
                                 "udp",
-                                "tcp-client",
                                 "udp4",
                                 "udp6",
+                                "tcp-client",
                                 "tcp4-client",
                                 "tcp6-client",
                             ],
@@ -648,9 +648,9 @@ base_openvpn_schema = {
                             "options": {
                                 "enum_titles": [
                                     "UDP",
-                                    "TCP",
                                     "UDP IPv4",
                                     "UDP IPv6",
+                                    "TCP",
                                     "TCP IPv4",
                                     "TCP IPv6",
                                 ]
@@ -803,9 +803,9 @@ base_openvpn_schema = {
                 "proto": {
                     "enum": [
                         "udp",
-                        "tcp-server",
                         "udp4",
                         "udp6",
+                        "tcp-server",
                         "tcp4-server",
                         "tcp6-server",
                     ],
@@ -813,9 +813,9 @@ base_openvpn_schema = {
                     "options": {
                         "enum_titles": [
                             "UDP",
-                            "TCP",
                             "UDP IPv4",
                             "UDP IPv6",
+                            "TCP",
                             "TCP IPv4",
                             "TCP IPv6",
                         ]

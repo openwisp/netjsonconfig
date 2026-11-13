@@ -93,10 +93,11 @@ key name                  type    default    allowed values
                                              characters, dashes and
                                              underscores
 ``mode``                  string             ``p2p`` or ``server``
-``proto``                 string             ``udp``, ``tcp-client``,
-                                             ``tcp-server``, ``udp4``,
-                                             ``udp6``, ``tcp4-client``,
+``proto``                 string             ``udp``, ``udp4``, ``udp6``,
+                                             ``tcp-client``,
+                                             ``tcp4-client``,
                                              ``tcp6-client``,
+                                             ``tcp-server``,
                                              ``tcp4-server``,
                                              ``tcp6-server``
 ``port``                  integer ``1194``   integers
