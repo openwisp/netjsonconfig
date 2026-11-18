@@ -2,6 +2,7 @@ import unittest
 from copy import deepcopy
 
 from netjsonconfig import OpenWrt
+from netjsonconfig.exceptions import ValidationError
 from netjsonconfig.utils import _TabsMixin
 
 
@@ -173,6 +174,68 @@ config openvpn 'test_server'
         expected = deepcopy(self._server_netjson_data_ciphers)
         del expected["openvpn"][0]["fragment"]
         self.assertEqual(c.config, expected)
+
+    _server_tls_crypt_netjson = {
+        "openvpn": [
+            {
+                "ca": "/etc/openvpn/ca.pem",
+                "cert": "/etc/openvpn/cert.pem",
+                "dev": "tap0",
+                "dev_type": "tap",
+                "dh": "/etc/openvpn/dh.pem",
+                "key": "/etc/openvpn/key.pem",
+                "mode": "server",
+                "name": "test",
+                "proto": "udp",
+                "tls_server": True,
+                "tls_crypt": (
+                    "#\n"
+                    "# 2048 bit OpenVPN static key\n"
+                    "#\n-----BEGIN OpenVPN Static key V1-----\n"
+                    "tls-crypt-key\n"
+                    "-----END OpenVPN Static key V1-----"
+                ),
+            }
+        ]
+    }
+
+    def test_render_tls_crypt(self):
+        c = OpenWrt(self._server_tls_crypt_netjson)
+        expected = self._tabs("""package openvpn
+
+config openvpn 'test'
+    option ca '/etc/openvpn/ca.pem'
+    option cert '/etc/openvpn/cert.pem'
+    option dev 'tap0'
+    option dev_type 'tap'
+    option dh '/etc/openvpn/dh.pem'
+    option enabled '1'
+    option key '/etc/openvpn/key.pem'
+    option mode 'server'
+    option proto 'udp'
+    option tls_crypt '/etc/openvpn/tap0_tls_crypt.key'
+    option tls_server '1'
+
+# ---------- files ---------- #
+
+# path: /etc/openvpn/tap0_tls_crypt.key
+# mode: 0600
+
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+tls-crypt-key
+-----END OpenVPN Static key V1-----
+
+""")
+        self.assertEqual(c.render(), expected)
+
+    def test_tls_auth_and_tls_crypt_mutually_exclusive(self):
+        config = deepcopy(self._server_tls_crypt_netjson)
+        config["openvpn"][0]["tls_auth"] = "/etc/openvpn/tls_auth.key 0"
+        with self.assertRaises(ValidationError):
+            OpenWrt(config).validate()
 
     _client_netjson = {
         "openvpn": [
