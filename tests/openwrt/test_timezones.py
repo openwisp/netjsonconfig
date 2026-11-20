@@ -42,3 +42,13 @@ class TestTimezones(unittest.TestCase):
             timezones.timezones_reversed["HAST10HADT,M3.2.0,M11.1.0"],
             "America/Adak",
         )
+
+    def test_legacy_duplicates_keep_utc_offset(self):
+        rev = timezones.timezones_reversed
+        tz = timezones.timezones
+        mazatlan = rev["MST7MDT,M4.1.0,M10.5.0"]
+        self.assertEqual(mazatlan, "America/Mazatlan")
+        self.assertTrue(tz[mazatlan].startswith("MST7"))
+        boa_vista = rev["AMT4"]
+        self.assertEqual(boa_vista, "America/Boa Vista")
+        self.assertEqual(tz[boa_vista], "<-04>4")
