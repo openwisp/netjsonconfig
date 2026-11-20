@@ -25,7 +25,20 @@ class TestTimezones(unittest.TestCase):
         self.assertEqual(tz["Europe/Volgograd"], "MSK-3")
         for name in ("Asia/Magadan", "Asia/Novosibirsk", "Europe/Samara"):
             self.assertNotIn(",M3.5.0", tz[name])
+        self.assertEqual(tz["Asia/Magadan"], "<+11>-11")
+        self.assertEqual(tz["Asia/Novosibirsk"], "<+07>-7")
+        self.assertEqual(tz["Europe/Samara"], "<+04>-4")
 
     def test_new_timezones(self):
-        self.assertIn("America/Ciudad Juarez", timezones.timezones)
+        self.assertEqual(
+            timezones.timezones["America/Ciudad Juarez"],
+            "MST7MDT,M3.2.0,M11.1.0",
+        )
+        self.assertEqual(timezones.timezones["America/Coyhaique"], "<-03>3")
         self.assertIn("America/Coyhaique", timezones.timezones)
+
+    def test_legacy_posix_strings_still_convert_back(self):
+        self.assertEqual(
+            timezones.timezones_reversed["HAST10HADT,M3.2.0,M11.1.0"],
+            "America/Adak",
+        )
