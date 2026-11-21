@@ -13,7 +13,7 @@ jobs:
       github.event.issue.pull_request == null
     permissions:
       contents: read
-    uses: openwisp/openwisp-actions/.github/workflows/reusable-bot-autoassign.yml@181637bcf201c137cf836f841e1ddf85df44f277 # post-0.1.1
+    uses: openwisp/openwisp-actions/.github/workflows/reusable-bot-autoassign.yml@d6cc603701fe96a84115b060d34e8844a969cc41 # 0.3.0
     with:
       bot_command: issue_assignment
     secrets:
