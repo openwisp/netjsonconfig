@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+"""Run all tests or selected nose2 test labels."""
+
+import re
+import sys
+from importlib import import_module
+from unittest import TestCase
+
+import nose2
+
+# nose2 can invoke arbitrary named objects, so restrict labels to test modules
+# and TestCase classes and methods. Test code itself remains untrusted.
+pattern = re.compile(
+    r"(?P<module>tests(?:\.[a-zA-Z_]\w*)*\.test_\w+)"
+    r"(?:\.(?P<class>[A-Z]\w*)(?:\.test_\w+)?)?"
+)
+for argument in sys.argv[1:]:
+    if argument in ("-v", "-q", "-F", "--verbose", "--quiet", "--fail-fast"):
+        continue
+    match = pattern.fullmatch(argument)
+    if not match:
+        print(f"Unsupported test argument: {argument}", file=sys.stderr)
+        sys.exit(2)
+    if match.group("class"):
+        module = import_module(match.group("module"))
+        candidate = getattr(module, match.group("class"), None)
+        if not isinstance(candidate, type) or not issubclass(candidate, TestCase):
+            print(f"Unsupported test argument: {argument}", file=sys.stderr)
+            sys.exit(2)
+
+nose2.discover()
