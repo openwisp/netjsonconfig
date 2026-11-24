@@ -46,11 +46,6 @@ Run specific test files:
     # alternative way
     ./runtests tests.openwrt.test_backend.TestBackend
 
-The entry point accepts test module, class, and method labels under
-``tests``. The supported flags are ``-v``, ``-q``, ``-F``, ``--verbose``,
-``--quiet``, and ``--fail-fast``. Argument validation does not sandbox the
-test code or project configuration.
-
 See test coverage with:
 
 .. code-block:: shell
