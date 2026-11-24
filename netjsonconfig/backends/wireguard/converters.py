@@ -83,8 +83,11 @@ class Wireguard(BaseConverter):
                 peer["allowed_ips"] = peer.pop("AllowedIPs")
             if "PublicKey" in peer:
                 peer["public_key"] = peer.pop("PublicKey")
-            if "PreSharedKey" in peer:
-                peer["preshared_key"] = peer.pop("PreSharedKey")
+            # "PresharedKey" is the spelling documented in wg(8),
+            # "PreSharedKey" is the one used by the renderer
+            for preshared_key in ("PresharedKey", "PreSharedKey"):
+                if preshared_key in peer:
+                    peer["preshared_key"] = peer.pop(preshared_key)
             endpoint = peer.pop("Endpoint", None)
             if endpoint:
                 # the port is separated by the last colon, so that

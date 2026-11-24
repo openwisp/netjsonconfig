@@ -148,6 +148,76 @@ PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
         self.assertNotIn("# this is a comment", vpn)
         self.assertEqual(vpn["address"], "10.0.0.1/24")
 
+    def test_parse_inline_comments(self):
+        native = """# wireguard config: wg0
+
+[Interface] # local side
+Address = 10.0.0.1/24 # tunnel address
+ListenPort = 51820 # listener
+PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+
+[Peer] # remote side
+AllowedIPs = 10.0.0.2/32
+PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
+"""
+        vpn = Wireguard(native=native).config["wireguard"][0]
+        self.assertEqual(vpn["address"], "10.0.0.1/24")
+        self.assertEqual(vpn["port"], 51820)
+        self.assertEqual(len(vpn["peers"]), 1)
+        self.assertEqual(vpn["peers"][0]["allowed_ips"], "10.0.0.2/32")
+
+    def test_parse_repeated_list_directives(self):
+        native = """# wireguard config: wg0
+
+[Interface]
+Address = 10.0.0.1/24
+Address = fd00::1/64
+DNS = 1.1.1.1
+DNS = 8.8.8.8, 8.8.4.4
+ListenPort = 51820
+PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+
+[Peer]
+AllowedIPs = 10.0.0.2/32
+AllowedIPs = fd00::2/128
+PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
+"""
+        vpn = Wireguard(native=native).config["wireguard"][0]
+        self.assertEqual(vpn["address"], "10.0.0.1/24, fd00::1/64")
+        self.assertEqual(vpn["dns"], ["1.1.1.1", "8.8.8.8", "8.8.4.4"])
+        self.assertEqual(vpn["peers"][0]["allowed_ips"], "10.0.0.2/32, fd00::2/128")
+
+    def test_parse_empty_dns(self):
+        native = """# wireguard config: wg0
+
+[Interface]
+Address = 10.0.0.1/24
+DNS =
+ListenPort = 51820
+PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+"""
+        vpn = Wireguard(native=native).config["wireguard"][0]
+        self.assertEqual(vpn["dns"], [])
+
+    def test_parse_standard_preshared_key_spelling(self):
+        native = """# wireguard config: wg0
+
+[Interface]
+Address = 10.0.0.1/24
+ListenPort = 51820
+PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+
+[Peer]
+AllowedIPs = 10.0.0.2/32
+PresharedKey = xisFXck9KfEZga4hlkproH6+86S8ki1tmLtMtqVipjg=
+PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
+"""
+        peer = Wireguard(native=native).config["wireguard"][0]["peers"][0]
+        self.assertEqual(
+            peer["preshared_key"], "xisFXck9KfEZga4hlkproH6+86S8ki1tmLtMtqVipjg="
+        )
+        self.assertNotIn("PresharedKey", peer)
+
     def test_parse_multiple_vpns(self):
         native = """# wireguard config: wg0
 
