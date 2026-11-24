@@ -85,3 +85,34 @@ class TestCiStandardization(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 1)
         self.assertIn("intentional failure", result.stderr)
+
+    def test_rejects_test_method_on_non_test_class(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copy2(RUNTESTS, root / "runtests")
+            (root / "tests").mkdir()
+            (root / "tests" / "__init__.py").touch()
+            (root / "tests" / "test_example.py").write_text(
+                "class Helper:\n"
+                "    @staticmethod\n"
+                "    def test_action():\n"
+                '        print("unexpected execution")\n'
+                "class helper:\n"
+                "    @staticmethod\n"
+                "    def test_action():\n"
+                '        print("unexpected execution")\n'
+            )
+            for name in ("Helper", "helper"):
+                with self.subTest(name=name):
+                    result = subprocess.run(
+                        [
+                            str(root / "runtests"),
+                            f"tests.test_example.{name}.test_action",
+                        ],
+                        cwd=root,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(result.returncode, 2)
+                    self.assertIn("unsupported", result.stderr.lower())
+                    self.assertNotIn("unexpected execution", result.stdout)

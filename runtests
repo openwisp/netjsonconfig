@@ -10,8 +10,9 @@ import nose2
 
 # nose2 can invoke arbitrary named objects, so restrict labels to test modules
 # and TestCase classes and methods. Test code itself remains untrusted.
+# Do not let the package prefix consume a test module and hide a class name.
 pattern = re.compile(
-    r"(?P<module>tests(?:\.[a-zA-Z_]\w*)*\.test_\w+)"
+    r"(?P<module>tests(?:\.(?!test_)[a-z_]\w*)*\.test_\w+)"
     r"(?:\.(?P<class>[A-Z]\w*)(?:\.test_\w+)?)?"
 )
 for argument in sys.argv[1:]:
