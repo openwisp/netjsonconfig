@@ -55,15 +55,15 @@ class TestCiStandardization(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("Ran 1 test", result.stderr)
 
-    def test_returns_failure_from_runner(self):
+    def test_rejects_missing_test_method(self):
         result = subprocess.run(
             [str(RUNTESTS), "tests.test_exceptions.TestJsonSchema.test_missing"],
             cwd=ROOT,
             capture_output=True,
             text=True,
         )
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("test_missing", result.stderr)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("unsupported", result.stderr.lower())
 
     def test_returns_failure_from_an_executed_test(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -116,3 +116,20 @@ class TestCiStandardization(unittest.TestCase):
                     self.assertEqual(result.returncode, 2)
                     self.assertIn("unsupported", result.stderr.lower())
                     self.assertNotIn("unexpected execution", result.stdout)
+
+    def test_rejects_callable_in_place_of_test_module(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copy2(RUNTESTS, root / "runtests")
+            (root / "tests").mkdir()
+            (root / "tests" / "__init__.py").write_text(
+                'def test_action(): print("unexpected execution")\n'
+            )
+            result = subprocess.run(
+                [str(root / "runtests"), "tests.test_action"],
+                cwd=root,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertNotIn("unexpected execution", result.stdout)
