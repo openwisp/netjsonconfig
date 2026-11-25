@@ -199,6 +199,38 @@ PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
         vpn = Wireguard(native=native).config["wireguard"][0]
         self.assertEqual(vpn["dns"], [])
 
+    def test_parse_repeated_dns_deduplicated(self):
+        native = """# wireguard config: wg0
+
+[Interface]
+Address = 10.0.0.1/24
+DNS = 1.1.1.1, 8.8.8.8
+DNS = 1.1.1.1
+ListenPort = 51820
+PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+"""
+        vpn = Wireguard(native=native).config["wireguard"][0]
+        self.assertEqual(vpn["dns"], ["1.1.1.1", "8.8.8.8"])
+
+    def test_parse_empty_optional_values(self):
+        native = """# wireguard config: wg0
+
+[Interface]
+Address = 10.0.0.1/24
+ListenPort = 51820
+MTU =
+PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+
+[Peer]
+AllowedIPs = 10.0.0.2/32
+PersistentKeepalive =
+PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
+"""
+        vpn = Wireguard(native=native).config["wireguard"][0]
+        self.assertNotIn("mtu", vpn)
+        self.assertNotIn("PersistentKeepalive", vpn["peers"][0])
+        self.assertNotIn("persistent_keepalive", vpn["peers"][0])
+
     def test_parse_standard_preshared_key_spelling(self):
         native = """# wireguard config: wg0
 

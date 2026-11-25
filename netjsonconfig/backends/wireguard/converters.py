@@ -65,7 +65,12 @@ class Wireguard(BaseConverter):
                 continue
             value = vpn.pop(native)
             if netjson == "dns":
-                value = [item.strip() for item in value.split(",") if item.strip()]
+                items = [item.strip() for item in value.split(",") if item.strip()]
+                # repeated DNS directives may list the same server twice
+                value = list(dict.fromkeys(items))
+            elif value == "":
+                # an empty optional value (eg: "MTU =") means "not set"
+                continue
             elif netjson == "save_config" and not isinstance(value, bool):
                 value = str(value).lower() == "true"
             vpn[netjson] = value
@@ -78,7 +83,8 @@ class Wireguard(BaseConverter):
     def __netjson_peers(self, peers):
         peer_list = []
         for peer in peers:
-            peer = dict(peer)
+            # empty optional values (eg: "PersistentKeepalive =") mean "not set"
+            peer = {key: value for key, value in peer.items() if value != ""}
             if "AllowedIPs" in peer:
                 peer["allowed_ips"] = peer.pop("AllowedIPs")
             if "PublicKey" in peer:
