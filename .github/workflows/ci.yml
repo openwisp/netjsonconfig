@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  test:
     name: Python==${{ matrix.python-version }}
     runs-on: ubuntu-24.04
 
@@ -32,6 +32,9 @@ jobs:
           - "3.13"
           - "3.14"
           - "3.15"
+        include:
+          - python-version: "3.13"
+            review_default: true # Used by on-demand AI reviews
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -40,19 +43,28 @@ jobs:
           persist-credentials: false
 
       - name: Set up Python ${{ matrix.python-version }}
+        id: python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
-          cache-dependency-path: |
-            **/requirements*.txt
+
+      - name: Identify runner image
+        id: platform
+        run: echo "image_os=$ImageOS" >> "$GITHUB_OUTPUT"
+
+      - name: Cache pip downloads
+        id: cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: >-
+            ${{ format('{0}-{1}-{2}-pip-{3}-{4}', runner.os, runner.arch,
+                steps.platform.outputs.image_os, steps.python.outputs.python-version,
+                hashFiles('requirements-test.txt', 'requirements.txt', 'setup.py', 'install-ci-deps.sh')) }}
 
       - name: Install Dependencies
         id: deps
-        run: |
-          pip install -U pip wheel setuptools
-          pip install -U -r requirements-test.txt
-          pip install -U -e .
+        run: ./install-ci-deps.sh
 
       - name: QA checks
         run: ./run-qa-checks
@@ -60,7 +72,7 @@ jobs:
       - name: Tests
         if: ${{ !cancelled() && steps.deps.conclusion == 'success' }}
         run: |
-          coverage run runtests.py
+          coverage run ./runtests
           coverage combine
           coverage xml
 
@@ -75,7 +87,7 @@ jobs:
 
   coveralls:
     name: Finalize Coveralls report
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
