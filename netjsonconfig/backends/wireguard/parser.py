@@ -15,6 +15,30 @@ option_pattern = re.compile(r"^([^=]+)=(.*)$")
 # directives which hold comma separated lists and may be repeated,
 # all their occurrences are combined in a single comma separated value
 list_directives = ("Address", "DNS", "AllowedIPs")
+# wg and wg-quick match directive names case-insensitively,
+# known names are normalized to the spelling used by the converter
+known_directives = {
+    name.lower(): name
+    for name in (
+        "PrivateKey",
+        "ListenPort",
+        "FwMark",
+        "Address",
+        "DNS",
+        "MTU",
+        "Table",
+        "PreUp",
+        "PostUp",
+        "PreDown",
+        "PostDown",
+        "SaveConfig",
+        "PublicKey",
+        "PresharedKey",
+        "AllowedIPs",
+        "Endpoint",
+        "PersistentKeepalive",
+    )
+}
 
 
 class WireguardParser(BaseParser):
@@ -70,6 +94,7 @@ class WireguardParser(BaseParser):
             if not option:
                 continue
             key = option.group(1).strip()
+            key = known_directives.get(key.lower(), key)
             value = option.group(2).strip()
             if key in list_directives and current.get(key):
                 value = f"{current[key]}, {value}" if value else current[key]

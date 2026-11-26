@@ -250,6 +250,35 @@ PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
         )
         self.assertNotIn("PresharedKey", peer)
 
+    def test_parse_case_insensitive_directives(self):
+        native = """# wireguard config: wg0
+
+[interface]
+address = 10.0.0.1/24
+dns = 1.1.1.1
+listenport = 51820
+privatekey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+CustomOption = value
+
+[peer]
+allowedips = 10.0.0.2/32
+publickey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
+"""
+        vpn = Wireguard(native=native).config["wireguard"][0]
+        self.assertEqual(vpn["port"], 51820)
+        self.assertEqual(
+            vpn["private_key"], "QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg="
+        )
+        self.assertEqual(vpn["address"], "10.0.0.1/24")
+        self.assertEqual(vpn["dns"], ["1.1.1.1"])
+        # unknown directives keep their original spelling
+        self.assertEqual(vpn["CustomOption"], "value")
+        peer = vpn["peers"][0]
+        self.assertEqual(peer["allowed_ips"], "10.0.0.2/32")
+        self.assertEqual(
+            peer["public_key"], "94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE="
+        )
+
     def test_parse_multiple_vpns(self):
         native = """# wireguard config: wg0
 
