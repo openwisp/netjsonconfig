@@ -3,8 +3,8 @@ Running tests
 
 Running the test suite is really straightforward!
 
-Using runtests.py
------------------
+Using runtests
+--------------
 
 Install your forked repo:
 
@@ -24,7 +24,7 @@ Run tests with:
 
 .. code-block:: shell
 
-    ./runtests.py
+    ./runtests
 
 Using nose2
 -----------
@@ -44,10 +44,10 @@ Run specific test files:
     nose2 -s tests/openwrt/ -v test_network
 
     # alternative way
-    ./runtests.py tests.openwrt.test_backend.TestBackend
+    ./runtests tests.openwrt.test_backend.TestBackend
 
 See test coverage with:
 
 .. code-block:: shell
 
-    coverage run --source=netjsonconfig runtests.py && coverage report
+    coverage run --source=netjsonconfig ./runtests && coverage report
