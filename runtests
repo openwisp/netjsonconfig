@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+"""Run all tests or selected nose2 test labels."""
+
+import sys
+
+import nose2
+from openwisp_utils.test.runner import (
+    InvalidTestArgument,
+    compile_test_label_pattern,
+    parse_test_arguments,
+    validate_test_labels,
+)
+
+try:
+    labels, _ = parse_test_arguments(
+        sys.argv[1:],
+        compile_test_label_pattern(allow_subpackages=True),
+        ("-v", "-q", "-F", "--verbose", "--quiet", "--fail-fast"),
+    )
+    validate_test_labels(labels)
+except InvalidTestArgument as error:
+    print(error, file=sys.stderr)
+    sys.exit(2)
+
+nose2.discover()
