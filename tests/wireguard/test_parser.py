@@ -3,6 +3,7 @@ import tarfile
 import unittest
 
 from netjsonconfig import Wireguard
+from netjsonconfig.exceptions import ParseError
 
 
 class TestParser(unittest.TestCase):
@@ -278,6 +279,45 @@ publickey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
         self.assertEqual(
             peer["public_key"], "94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE="
         )
+
+    def test_parse_text_without_marker(self):
+        native = """[Interface]
+Address = 10.0.0.1/24
+ListenPort = 51820
+PrivateKey = QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=
+"""
+        # the tunnel name cannot be inferred, it must not become "[Interface]"
+        with self.assertRaises(ParseError):
+            Wireguard(native=native)
+
+    def _get_config_with_files(self, contents):
+        return {
+            "wireguard": [
+                {
+                    "name": "wg0",
+                    "port": 51820,
+                    "private_key": "QFdbnuYr7rVVt3rIzDQHIjJvl3Z9IrDM1W/0oBYPThg=",
+                    "address": "10.0.0.1/24",
+                    "peers": [
+                        {
+                            "public_key": "94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=",
+                            "allowed_ips": "10.0.0.2/32",
+                        }
+                    ],
+                }
+            ],
+            "files": [{"path": "etc/app.conf", "mode": "0644", "contents": contents}],
+        }
+
+    def test_parse_rendered_files_not_parsed_as_options(self):
+        config = self._get_config_with_files("AllowedIPs = 0.0.0.0/0\n")
+        parsed = Wireguard(native=Wireguard(config).render()).config
+        self.assertEqual(parsed["wireguard"], config["wireguard"])
+
+    def test_parse_tar_additional_files_not_parsed_as_tunnels(self):
+        config = self._get_config_with_files("hello")
+        parsed = Wireguard(native=Wireguard(config).generate()).config
+        self.assertEqual(parsed["wireguard"], config["wireguard"])
 
     def test_parse_multiple_vpns(self):
         native = """# wireguard config: wg0

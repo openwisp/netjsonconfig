@@ -1,7 +1,9 @@
 import re
 import tarfile
 
+from ...exceptions import ParseError
 from ...utils import sorted_dict
+from ..base.backend import BaseBackend
 from ..base.parser import BaseParser
 
 vpn_pattern = re.compile(r"^# wireguard config:\s", flags=re.MULTILINE)
@@ -50,7 +52,9 @@ class WireguardParser(BaseParser):
         tar = tarfile.open(fileobj=fileobj)
         text = ""
         for member in tar.getmembers():
-            if not member.name.endswith(config_suffix):
+            # tunnels are generated in the root of the archive,
+            # additional files (eg: "etc/app.conf") are not tunnels
+            if "/" in member.name or not member.name.endswith(config_suffix):
                 continue
             text += "# wireguard config: {name}\n\n{contents}\n".format(
                 **{
@@ -61,9 +65,19 @@ class WireguardParser(BaseParser):
         return self.parse_text(text)
 
     def _get_vpns(self, text):
+        # additional files rendered after the delimiter are not
+        # WireGuard configuration and must not be parsed as such
+        text = text.split(BaseBackend.FILE_SECTION_DELIMITER, 1)[0]
         results = re.split(vpn_pattern, text)
+        # the tunnel name is only known from the "# wireguard config:"
+        # marker, it cannot be inferred from a bare "[Interface]" block
+        if results[0].strip():
+            raise ParseError(
+                "Each WireGuard configuration must start with "
+                '"# wireguard config: <name>"'
+            )
         vpns = []
-        for result in results:
+        for result in results[1:]:
             result = result.strip()
             if not result:
                 continue
