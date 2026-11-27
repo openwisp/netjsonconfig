@@ -71,6 +71,62 @@ Will return the following output:
     PreSharedKey = xisFXck9KfEZga4hlkproH6+86S8ki1tmLtMtqVipjg=
     PublicKey = 94a+MnZSdzHCzOy5y2K+0+Xe7lQzaa4v7lEiBZ7elVE=
 
+Backward conversion
+-------------------
+
+The backend can also parse a native WireGuard configuration and convert it
+back to NetJSON, either from a string or from a tarball generated with
+``generate()``:
+
+.. code-block:: python
+
+    from netjsonconfig import Wireguard
+
+    native = """# wireguard config: wg0
+
+    [Interface]
+    Address = 10.0.0.1/24
+    ListenPort = 51820
+    PrivateKey = QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=
+
+    [Peer]
+    AllowedIPs = 10.0.0.3/32
+    Endpoint = 192.168.1.35:4908
+    PublicKey = jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=
+    """
+
+    router = Wireguard(native=native)
+    print(router.config)
+
+Will return the following NetJSON configuration:
+
+.. code-block:: python
+
+    {
+        "wireguard": [
+            {
+                "name": "wg0",
+                "port": 51820,
+                "private_key": "QFdbnuYr7rrF4eONCAs7FhZwP7BXX/jD/jq2LXCpaXI=",
+                "address": "10.0.0.1/24",
+                "peers": [
+                    {
+                        "allowed_ips": "10.0.0.3/32",
+                        "endpoint_host": "192.168.1.35",
+                        "endpoint_port": 4908,
+                        "public_key": "jqHs76yCH0wThMSqogDshndAiXelfffUJVcFmz352HI=",
+                    }
+                ],
+            }
+        ]
+    }
+
+Each ``[Peer]`` section becomes an entry of the ``peers`` list, while the
+``[Interface]`` section is mapped onto the properties of the VPN instance.
+Directives which are not recognized by the :ref:`schema
+<wireguard_backend_schema>` are preserved as they are, in the same way the
+``OpenVpn`` backend does.
+
 .. _wireguard_backend_schema:
 
 WireGuard backend schema
