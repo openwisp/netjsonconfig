@@ -67,6 +67,7 @@ class OpenWrt(BaseBackend):
         self._validate_radios()
         super().validate()
         self._validate_bridge_vlan_filtering()
+        converters.OpenVpn.validate_tls_crypt(self.config)
 
     def _get_merge_config_identifiers(self, merging):
         """Returns interface-aware identifiers when merging interface lists.

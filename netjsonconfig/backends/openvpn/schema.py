@@ -303,6 +303,19 @@ base_openvpn_schema = {
                     "format": "textarea",
                     "propertyOrder": 18,
                 },
+                "tls_crypt": {
+                    "title": "TLS Crypt",
+                    "description": (
+                        "Encrypts and authenticates all control channel packets "
+                        "with the supplied key, hiding the TLS handshake and "
+                        "providing the same DoS protection as TLS Auth "
+                        "(OpenVPN 2.4 and later), cannot be used together with "
+                        "TLS Auth"
+                    ),
+                    "type": "string",
+                    "format": "textarea",
+                    "propertyOrder": 18.1,
+                },
                 "ns_cert_type": {
                     "title": "NS cert type",
                     "type": "string",
